@@ -1,0 +1,1894 @@
+openapi: 3.0.0
+info:
+  description: >-
+    This is the RESTful API documentation of the microservice for HANIoT platform user account.
+  version: 1.0.0
+  title: HANIoT Account Service
+  license:
+    name: Apache 2.0
+    url: 'http://www.apache.org/licenses/LICENSE-2.0.html'
+servers:
+  - description: SwaggerHub API Auto Mocking
+    url: https://virtserver.swaggerhub.com/haniot/haniot-account-service/1.0.0
+  - description: localhost http
+    url: 'http://localhost'
+tags:
+  - name: auth
+    description: Operations for the user authentication in plataform.
+  - name: users
+    description: Operations for the User resource.
+  - name: users.admins
+    description: Operations for the User Admin resource.
+  - name: users.healthprofessionals
+    description: Operations for the User HealthProfessional resource.
+  - name: users.healthprofessionals.pilotstudies
+    description: Operations for the User HealthProfessional Pilot Studies resource.
+  - name: pilotstudies
+    description: Operations for the Pilot Study resource.
+  - name: pilotstudies.healthprofessionals
+    description: Operations for the Health Professionals associated with a Pilot Study.
+paths:
+  #auth
+  /auth:
+    post:
+      tags:
+        - auth
+      summary: Authenticate user.
+      description: |
+        Authenticate a user. User authentication is performed using JWT token generation. In generating the JWT token, there are following types of attributes:
+
+        **Reserved Claims**: Non-mandatory (but recommended) attributes used in token validation by API security protocols. These are used to create a pattern and are defined in RFC-7519.
+        * sub (subject) - Entity that the token belongs to, usually the user ID;
+        * iss (emitter) - sets the emitter of the token;
+        * exp (expiration) - Timestamp of when the token will expire;
+        * iat (issued at) - Timestamp from when the token was created.
+
+        **Public claims**: Attributes that are not part of the pattern, and are defined especially for sharing information between applications.
+
+        * scopes - A developer-defined attribute that specifies token access scopes.
+
+        Example of values that can compose the payload.:
+
+
+        ```json
+        {
+          "sub": "5accb6215ba48413e81e7853e",
+          "iss": "haniot",
+          "exp": 1534020202,
+          "iat": 1534009474,
+          "scopes": "users:readAll users:register users:read users:update users:remove"
+        }
+
+      operationId: authUser
+      responses:
+        '200':
+          description: User successfully authenticated.
+          content:
+            application/json:
+              example:
+                token: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiI1YWNjYjYyMTViYTQ4NDEzZTgxZTc4NTNlIiwiaXNzIjoiaGFuaW90IiwiZXhwIjoxNTM0MDIwMjAyLCJpYXQiOjE1MzQwMDk0NzQsInNjb3BlcyI6InVzZXJzOnJlYWRBbGwgdXNlcnM6cmVnaXN0ZXIgdXNlcnM6cmVhZCB1c2Vyczp1cGRhdGUgdXNlcnM6cmVtb3ZlIn0.vkan_NyX-PwPwlACkg7PqqTKUEbnBOSBSu_aq3gUZRM
+
+        '400':
+          description: >-
+            Request can not be met, syntactically incorrect or violates the
+            schema. Normally it occurs due to validation issues, such as
+            fields that are expected in the request body and not passed.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '401':
+          description: Authentication failed due to invalid authentication credentials.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '403':
+          description: >-
+            User password must be changed. It occours when the system requires that user change your password during the auth proccess.
+          content:
+            application/json:
+              schema:
+                example:
+                  code: 403
+                  message: Change password is necessary.
+                  description: "To ensure information security, the user must change the access password. Access /users/{user_id}/password to update then."
+                  redirect_link: /users/{user_id}/password
+        '404':
+          description: >-
+            Specified resource does not exist. Usually when the URI is incorrect
+            or the resource is not found, or even no longer exists.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '406':
+          description: >-
+            The server is not implementing the media type requested by the client
+            for the application response. Only application/json is currently
+            accepted.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '415':
+          description: >-
+            The server does not support the requested payload format. Only
+            application/json is accepted.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '429':
+          description: The rate limit for requests exceeded.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '500':
+          description: >-
+            An internal server error occurred. Although the client appears to
+            provide a correct request, the server encountered an unexpected
+            condition that prevented it from responding to the request."
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+      requestBody:
+        content:
+          application/json:
+            schema:
+              example:
+                email: loremipsum@mail.com
+                password: loremipsum123
+        description: Data of the user to perform authentication.
+        required: true
+
+  # users
+  /users/{user_id}:
+    delete:
+      security:
+        - JWTAuth: []
+      tags:
+        - users
+      summary: Delete user data.
+      description: Delete the user data.
+      operationId: deleteUserById
+      parameters:
+        - name: user_id
+          in: path
+          required: true
+          description: User ID
+          example: '5c86d00c7a8618923481b48b'
+          schema:
+            type: string
+      responses:
+        '204':
+          description: >-
+            Operation performed successfully. There is no data to be returned
+        '401':
+          description: Authentication failed due to invalid authentication credentials.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '403':
+          description: User does not have permission to delete users.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '404':
+          description: >-
+            Specified resource does not exist. Usually when the URI is incorrect or the
+            resource is not found, or even no longer exists.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '406':
+          description: >-
+            The server is not implementing the media type requested by the client for
+            the application response. Only application/json is currently accepted.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '429':
+          description: The rate limit for requests exceeded.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '500':
+          description: >-
+            An internal server error occurred. Although the client appears to provide a
+            correct request, the server encountered an unexpected condition that
+            prevented it from responding to the request.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+  /users/{user_id}/password:
+    patch:
+      tags:
+        - users
+      summary: Change user password.
+      description: Change the user password.
+      operationId: changePassword
+      parameters:
+        - name: user_id
+          in: path
+          required: true
+          description: Id of user.
+          example: 5c86d00c7a8618923481b48b
+          schema:
+            type: string
+      responses:
+        '204':
+          description: >-
+            Operation performed successfully. There is no data to be returned
+        '400':
+          description: >-
+            Request can not be met, syntactically incorrect or violates the
+            schema. Normally it occurs due to validation issues, such as
+            fields that are expected in the request body and not passed.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '401':
+          description: Authentication failed due to invalid authentication credentials.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '403':
+          description: User does not have permission to update password.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '404':
+          description: >-
+            Specified resource does not exist. Usually when the URI is incorrect
+            or the resource is not found, or even no longer exists.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '406':
+          description: >-
+            The server is not implementing the media type requested by the client
+            for the application response. Only application/json is currently
+            accepted.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '415':
+          description: >-
+            The server does not support the requested payload format. Only
+            application/json is accepted.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '429':
+          description: The rate limit for requests exceeded.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '500':
+          description: >-
+            An internal server error occurred. Although the client appears to
+            provide a correct request, the server encountered an unexpected
+            condition that prevented it from responding to the request."
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                old_password:
+                  type: string
+                  example: 'lorem123'
+                new_password:
+                  type: string
+                  example: 'loremipsum123'
+        description: Old and new user passwords.
+        required: true
+
+  # users.admins
+  /users/admins:
+    post:
+      security:
+        - JWTAuth: []
+      tags:
+        - users.admins
+      summary: Register admin user.
+      description: Register a new user as admin.
+      operationId: addAdminUser
+      responses:
+        '201':
+          description: Admin successfully registered.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Admin'
+        '400':
+          description: >-
+            Request can not be met, syntactically incorrect or violates the
+            schema. Normally it occurs due to validation issues, such as
+            fields that are expected in the request body and not passed.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '401':
+          description: Authentication failed due to invalid authentication credentials.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '403':
+          description: User does not have permission to register admin.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '404':
+          description: >-
+            Specified resource does not exist. Usually when the URI is incorrect
+            or the resource is not found, or even no longer exists.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '406':
+          description: >-
+            The server is not implementing the media type requested by the client
+            for the application response. Only application/json is currently
+            accepted.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '415':
+          description: >-
+            The server does not support the requested payload format. Only
+            application/json is accepted.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '429':
+          description: The rate limit for requests exceeded.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '500':
+          description: >-
+            An internal server error occurred. Although the client appears to
+            provide a correct request, the server encountered an unexpected
+            condition that prevented it from responding to the request."
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                username:
+                  type: string
+                  example: admin
+                password:
+                  type: string
+                  example: 'admin123'
+                email:
+                  type: string
+                  example: admin@mail.com
+        description: Data of the user to be saved.
+        required: true
+    get:
+      security:
+        - JWTAuth: []
+      tags:
+        - users.admins
+      summary: Recover admins.
+      description: >-
+        Returns list with all admins. The query supports Field Selection, Paging,
+        Sorting, and Filtering.
+      operationId: getAllAdmins
+      parameters:
+        - $ref: '#/components/parameters/fieldsParam'
+        - $ref: '#/components/parameters/pageParam'
+        - $ref: '#/components/parameters/limitParam'
+        - $ref: '#/components/parameters/sortParam'
+        - $ref: '#/components/parameters/filterParam'
+      responses:
+        '200':
+          description: List of admins.
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Admin'
+        '401':
+          description: Authentication failed due to invalid authentication credentials.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '403':
+          description: User does not have permission to get admins list.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '404':
+          description: >-
+            Specified resource does not exist. Usually when the URI is incorrect
+            or the resource is not found, or even no longer exists.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '406':
+          description: >-
+            The server is not implementing the media type requested by the client
+            for the application response. Only application/json is currently
+            accepted.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '429':
+          description: The rate limit for requests exceeded.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '500':
+          description: >-
+            An internal server error occurred. Although the client appears to
+            provide a correct request, the server encountered an unexpected
+            condition that prevented it from responding to the request.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+  /users/admins/{admin_id}:
+    get:
+      security:
+        - JWTAuth: []
+      tags:
+        - users.admins
+      summary: Recover admin data.
+      description: Recover the admin data. The query suports Fields param.
+      operationId: getAdminById
+      parameters:
+        - name: admin_id
+          in: path
+          required: true
+          description: Id of admin.
+          example: '5c86d00c7a8618923481b48b'
+          schema:
+            type: string
+        - $ref: '#/components/parameters/fieldsParam'
+      responses:
+        '200':
+          description: Requested user data.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Admin'
+        '401':
+          description: Authentication failed due to invalid authentication credentials.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '403':
+          description: User does not have permission to get admin data.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '404':
+          description: >-
+            Specified resource does not exist. Usually when the URI is incorrect or the
+            resource is not found, or even no longer exists.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '406':
+          description: >-
+            The server is not implementing the media type requested by the client for
+            the application response. Only application/json is currently accepted.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '429':
+          description: The rate limit for requests exceeded.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '500':
+          description: >-
+            An internal server error occurred. Although the client appears to provide a
+            correct request, the server encountered an unexpected condition that
+            prevented it from responding to the request.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+    patch:
+      security:
+        - JWTAuth: []
+      tags:
+        - users.admins
+      summary: Update admin data.
+      description: Update the admin data.
+      operationId: updateAdminById
+      parameters:
+        - name: admin_id
+          in: path
+          required: true
+          description: Id of admin.
+          example: '5c86d00c7a8618923481b48b'
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Updated admin data.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Admin'
+        '401':
+          description: Authentication failed due to invalid authentication credentials.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '403':
+          description: User does not have permission to update admin data.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '404':
+          description: >-
+            Specified resource does not exist. Usually when the URI is incorrect
+            or the resource is not found, or even no longer exists.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '406':
+          description: >-
+            The server is not implementing the media type requested by the client
+            for the application response. Only application/json is currently
+            accepted.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '409':
+          description: ->
+            Conflicts have probably occurred with data that can not be duplicated.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '415':
+          description: >-
+            The server does not support the requested payload format. Only
+            application/json is accepted.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '429':
+          description: The rate limit for requests exceeded.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '500':
+          description: >-
+            An internal server error occurred. Although the client appears to
+            provide a correct request, the server encountered an unexpected
+            condition that prevented it from responding to the request.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Admin'
+        description: Data of the admin to be updated.
+        required: true
+
+  # users.healthprofessionals
+  /users/healthprofessionals:
+    post:
+      security:
+        - JWTAuth: []
+      tags:
+        - users.healthprofessionals
+      summary: Register health professional user.
+      description: Register a new user as health professional.
+      operationId: addHealthprofessionalUser
+      responses:
+        '201':
+          description: Health professional successfully registered.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HealthProfessional'
+        '400':
+          description: >-
+            Request can not be met, syntactically incorrect or violates the
+            schema. Normally it occurs due to validation issues, such as
+            fields that are expected in the request body and not passed.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '401':
+          description: Authentication failed due to invalid authentication credentials.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '403':
+          description: User does not have permission to register health professionals.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '404':
+          description: >-
+            Specified resource does not exist. Usually when the URI is incorrect
+            or the resource is not found, or even no longer exists.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '406':
+          description: >-
+            The server is not implementing the media type requested by the client
+            for the application response. Only application/json is currently
+            accepted.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '415':
+          description: >-
+            The server does not support the requested payload format. Only
+            application/json is accepted.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '429':
+          description: The rate limit for requests exceeded.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '500':
+          description: >-
+            An internal server error occurred. Although the client appears to
+            provide a correct request, the server encountered an unexpected
+            condition that prevented it from responding to the request."
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                username:
+                  type: string
+                  example: elvisaaron
+                password:
+                  type: string
+                  example: 'lorem123'
+                email:
+                  type: string
+                  example: elvisaaron@mail.com
+                name:
+                  type: string
+                  example: Elvis Aaron
+                health_area:
+                  type: string
+                  example: 'nutrition'
+        description: Data of the health professional to be saved.
+        required: true
+    get:
+      security:
+        - JWTAuth: []
+      tags:
+        - users.healthprofessionals
+      summary: Recover health professionals.
+      description: >-
+        Returns list with all health professionals. The query supports Field Selection, Paging,
+        Sorting, and Filtering.
+      operationId: getAllHealthProfessionals
+      parameters:
+        - $ref: '#/components/parameters/fieldsParam'
+        - $ref: '#/components/parameters/pageParam'
+        - $ref: '#/components/parameters/limitParam'
+        - $ref: '#/components/parameters/sortParam'
+        - $ref: '#/components/parameters/filterParam'
+      responses:
+        '200':
+          description: List of health professionals.
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/HealthProfessional'
+        '401':
+          description: Authentication failed due to invalid authentication credentials.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '403':
+          description: User does not have permission to get health professionals list.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '404':
+          description: >-
+            Specified resource does not exist. Usually when the URI is incorrect
+            or the resource is not found, or even no longer exists.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '406':
+          description: >-
+            The server is not implementing the media type requested by the client
+            for the application response. Only application/json is currently
+            accepted.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '429':
+          description: The rate limit for requests exceeded.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '500':
+          description: >-
+            An internal server error occurred. Although the client appears to
+            provide a correct request, the server encountered an unexpected
+            condition that prevented it from responding to the request.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+  /users/healthprofessionals/{healthprofessional_id}:
+    get:
+      security:
+        - JWTAuth: []
+      tags:
+        - users.healthprofessionals
+      summary: Recover health professional data.
+      description: Recover the health professional data. The query suports Fields param.
+      operationId: getHealthProfessionalById
+      parameters:
+        - name: healthprofessional_id
+          in: path
+          required: true
+          description: Id of health professional.
+          example: '5c86d00cfc25e7036d51d652'
+          schema:
+            type: string
+        - $ref: '#/components/parameters/fieldsParam'
+      responses:
+        '200':
+          description: Requested user data.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HealthProfessional'
+        '401':
+          description: Authentication failed due to invalid authentication credentials.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '403':
+          description: User does not have permission to get health professional data.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '404':
+          description: >-
+            Specified resource does not exist. Usually when the URI is incorrect or the
+            resource is not found, or even no longer exists.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '406':
+          description: >-
+            The server is not implementing the media type requested by the client for
+            the application response. Only application/json is currently accepted.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '429':
+          description: The rate limit for requests exceeded.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '500':
+          description: >-
+            An internal server error occurred. Although the client appears to provide a
+            correct request, the server encountered an unexpected condition that
+            prevented it from responding to the request.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+    patch:
+      security:
+        - JWTAuth: []
+      tags:
+        - users.healthprofessionals
+      summary: Update health professional data.
+      description: Update the health professional data.
+      operationId: updateHealthProfessionalById
+      parameters:
+        - name: healthprofessional_id
+          in: path
+          required: true
+          description: Id of health professional.
+          example: '5c86d00cfc25e7036d51d652'
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Updated health professional data.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HealthProfessional'
+        '401':
+          description: Authentication failed due to invalid authentication credentials.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '403':
+          description: User does not have permission to update health professional data.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '404':
+          description: >-
+            Specified resource does not exist. Usually when the URI is incorrect
+            or the resource is not found, or even no longer exists.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '406':
+          description: >-
+            The server is not implementing the media type requested by the client
+            for the application response. Only application/json is currently
+            accepted.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '409':
+          description: ->
+            Conflicts have probably occurred with data that can not be duplicated.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '415':
+          description: >-
+            The server does not support the requested payload format. Only
+            application/json is accepted.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '429':
+          description: The rate limit for requests exceeded.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '500':
+          description: >-
+            An internal server error occurred. Although the client appears to
+            provide a correct request, the server encountered an unexpected
+            condition that prevented it from responding to the request.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/HealthProfessional'
+        description: Data of the health professional to be updated.
+        required: true
+
+  # users.healthprofessionals.pilotstudies
+  /users/healthprofessionals/{healthprofessional_id}/pilotstudies:
+    get:
+      security:
+        - JWTAuth: []
+      tags:
+        -  users.healthprofessionals.pilotstudies
+      summary: Recover all pilot studies from health professional.
+      description: >-
+        Returns list with pilot studies that health professional is associated. The query supports Field Selection, Paging,
+        Sorting, and Filtering.
+      operationId: getAllPilotStudiesFromHealthProfessional
+      parameters:
+        - name: healthprofessional_id
+          in: path
+          required: true
+          description: Id of health professional.
+          example: '5c86d00cfc25e7036d51d652'
+          schema:
+            type: string
+        - $ref: '#/components/parameters/fieldsParam'
+        - $ref: '#/components/parameters/pageParam'
+        - $ref: '#/components/parameters/limitParam'
+        - $ref: '#/components/parameters/sortParam'
+        - $ref: '#/components/parameters/filterParam'
+      responses:
+        '200':
+          description: List of pilot studies.
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  type: object
+                  properties:
+                    id:
+                      readOnly: true
+                      type: string
+                      format: uuid
+                      description: Automatically generated key field.
+                      example: '5c86d00c2239a48ea20a0134'
+                    name:
+                      type: string
+                      description: Name of pilot study.
+                      example: 'Pilot Odonto 01'
+                    is_active:
+                      type: boolean
+                      description: Status of pilot study. The value is true if it is active, false otherwise.
+                      example: true
+                    start:
+                      type: string
+                      description: Start of pilot study in UTC format, according to ISO 8601.
+                      example: '2018-11-19T14:40:00'
+                    end:
+                      type: string
+                      description: End of pilot study in UTC format, according to ISO 8601.
+                      example: '2019-01-23T18:00:00'
+        '401':
+          description: Authentication failed due to invalid authentication credentials.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '403':
+          description: User does not have permission to get pilot studies.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '404':
+          description: >-
+            Specified resource does not exist. Usually when the URI is incorrect
+            or the resource is not found, or even no longer exists.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '406':
+          description: >-
+            The server is not implementing the media type requested by the client
+            for the application response. Only application/json is currently
+            accepted.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '429':
+          description: The rate limit for requests exceeded.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '500':
+          description: >-
+            An internal server error occurred. Although the client appears to
+            provide a correct request, the server encountered an unexpected
+            condition that prevented it from responding to the request.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+  # pilotstudies
+  /pilotstudies:
+    post:
+      security:
+        - JWTAuth: []
+      tags:
+        - pilotstudies
+      summary: Register pilot study.
+      description: Register a new pilot study.
+      operationId: addPilotStudy
+      responses:
+        '201':
+          description: Pilot study successfully registered.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PilotStudy'
+        '400':
+          description: >-
+            Request can not be met, syntactically incorrect or violates the
+            schema. Normally it occurs due to validation issues, such as
+            fields that are expected in the request body and not passed.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '401':
+          description: Authentication failed due to invalid authentication credentials.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '403':
+          description: User does not have permission to register pilot studies.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '404':
+          description: >-
+            Specified resource does not exist. Usually when the URI is incorrect
+            or the resource is not found, or even no longer exists.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '406':
+          description: >-
+            The server is not implementing the media type requested by the client
+            for the application response. Only application/json is currently
+            accepted.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '415':
+          description: >-
+            The server does not support the requested payload format. Only
+            application/json is accepted.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '429':
+          description: The rate limit for requests exceeded.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '500':
+          description: >-
+            An internal server error occurred. Although the client appears to
+            provide a correct request, the server encountered an unexpected
+            condition that prevented it from responding to the request."
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PilotStudy'
+        description: Data of the pilot study to be saved.
+        required: true
+    get:
+      security:
+        - JWTAuth: []
+      tags:
+        - pilotstudies
+      summary: Recover all pilot studies.
+      description: >-
+        Returns list with pilot studies. The query supports Field Selection, Paging,
+        Sorting, and Filtering.
+      operationId: getAllPilotStudies
+      parameters:
+        - $ref: '#/components/parameters/fieldsParam'
+        - $ref: '#/components/parameters/pageParam'
+        - $ref: '#/components/parameters/limitParam'
+        - $ref: '#/components/parameters/sortParam'
+        - $ref: '#/components/parameters/filterParam'
+      responses:
+        '200':
+          description: List of pilot studies.
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/PilotStudy'
+        '401':
+          description: Authentication failed due to invalid authentication credentials.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '403':
+          description: User does not have permission to get pilot studies.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '404':
+          description: >-
+            Specified resource does not exist. Usually when the URI is incorrect
+            or the resource is not found, or even no longer exists.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '406':
+          description: >-
+            The server is not implementing the media type requested by the client
+            for the application response. Only application/json is currently
+            accepted.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '429':
+          description: The rate limit for requests exceeded.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '500':
+          description: >-
+            An internal server error occurred. Although the client appears to
+            provide a correct request, the server encountered an unexpected
+            condition that prevented it from responding to the request.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+  /pilotstudies/{pilotstudy_id}:
+    get:
+      security:
+        - JWTAuth: []
+      tags:
+        - pilotstudies
+      summary: Recover pilot sudy data.
+      description: Recover the pilot study data. The query supports Field Selection.
+      operationId: getPilotStudyById
+      parameters:
+        - name: pilotstudy_id
+          in: path
+          required: true
+          description: Id of pilot study.
+          example: '5c86d00c2239a48ea20a0134'
+          schema:
+            type: string
+        - $ref: '#/components/parameters/fieldsParam'
+      responses:
+        '200':
+          description: Requested user data.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PilotStudy'
+        '401':
+          description: Authentication failed due to invalid authentication credentials.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '403':
+          description: User does not have permission to get pilot study data.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '404':
+          description: >-
+            Specified resource does not exist. Usually when the URI is incorrect or the
+            resource is not found, or even no longer exists.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '406':
+          description: >-
+            The server is not implementing the media type requested by the client for
+            the application response. Only application/json is currently accepted.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '429':
+          description: The rate limit for requests exceeded.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '500':
+          description: >-
+            An internal server error occurred. Although the client appears to provide a
+            correct request, the server encountered an unexpected condition that
+            prevented it from responding to the request.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+    patch:
+      security:
+        - JWTAuth: []
+      tags:
+        - pilotstudies
+      summary: Update pilot sudy data.
+      description: Update the pilot study data.
+      operationId: updatePilotStudy
+      parameters:
+        - in: path
+          name: pilotstudy_id
+          required: true
+          description: Id of pilot study.
+          example: '5c86d00c2239a48ea20a0134'
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Updated pilot study data.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PilotStudy'
+        '401':
+          description: Authentication failed due to invalid authentication credentials.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '403':
+          description: User does not have permission to update pilot study data.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '404':
+          description: >-
+            Specified resource does not exist. Usually when the URI is incorrect
+            or the resource is not found, or even no longer exists.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '406':
+          description: >-
+            The server is not implementing the media type requested by the client
+            for the application response. Only application/json is currently
+            accepted.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '409':
+          description: ->
+            Conflicts have probably occurred with data that can not be duplicated.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '415':
+          description: >-
+            The server does not support the requested payload format. Only
+            application/json is accepted.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '429':
+          description: The rate limit for requests exceeded.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '500':
+          description: >-
+            An internal server error occurred. Although the client appears to
+            provide a correct request, the server encountered an unexpected
+            condition that prevented it from responding to the request.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PilotStudy'
+        description: Pilot Study data to be updated.
+        required: true
+    delete:
+      security:
+        - JWTAuth: []
+      tags:
+        - pilotstudies
+      summary: Delete pilot sudy data.
+      description: Delete the pilot study data.
+      operationId: deletePilotStudy
+      parameters:
+        - in: path
+          name: pilotstudy_id
+          required: true
+          description: Id of pilot study.
+          example: '5c86d00c2239a48ea20a0134'
+          schema:
+            type: string
+      responses:
+        '204':
+          description: Operation performed successfully. There is no data to be returned.
+        '401':
+          description: Authentication failed due to invalid authentication credentials.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '403':
+          description: User does not have permission to delete pilot study data.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '404':
+          description: >-
+            Specified resource does not exist. Usually when the URI is incorrect
+            or the resource is not found, or even no longer exists.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '406':
+          description: >-
+            The server is not implementing the media type requested by the
+            client for the application response. Only application/json is
+            currently accepted.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '429':
+          description: The rate limit for requests exceeded.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '500':
+          description: >-
+            An internal server error occurred. Although the client appears to
+            provide a correct request, the server encountered an unexpected
+            condition that prevented it from responding to the request.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+
+  # pilotstudies.healthprofessionals
+  /pilotstudies/{pilotstudy_id}/healthprofessionals:
+    get:
+      security:
+        - JWTAuth: []
+      tags:
+        - pilotstudies.healthprofessionals
+      summary: Recover all health professionals from pilot study.
+      description: >-
+        Returns list with all health professionals from pilot study. The query supports Field Selection, Paging,
+        Sorting, and Filtering.
+      operationId: getAllHealthprofessionalsFromPilotStudy
+      parameters:
+        - name: pilotstudy_id
+          in: path
+          required: true
+          description: Id of pilot study.
+          example: '5c86d00c2239a48ea20a0134'
+          schema:
+            type: string
+        - $ref: '#/components/parameters/fieldsParam'
+        - $ref: '#/components/parameters/pageParam'
+        - $ref: '#/components/parameters/limitParam'
+        - $ref: '#/components/parameters/sortParam'
+        - $ref: '#/components/parameters/filterParam'
+      responses:
+        '200':
+          description: List of pilot studies.
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/HealthProfessional'
+        '401':
+          description: Authentication failed due to invalid authentication credentials.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '403':
+          description: User does not have permission to get pilot studies.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '404':
+          description: >-
+            Specified resource does not exist. Usually when the URI is incorrect
+            or the resource is not found, or even no longer exists.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '406':
+          description: >-
+            The server is not implementing the media type requested by the client
+            for the application response. Only application/json is currently
+            accepted.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '429':
+          description: The rate limit for requests exceeded.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '500':
+          description: >-
+            An internal server error occurred. Although the client appears to
+            provide a correct request, the server encountered an unexpected
+            condition that prevented it from responding to the request.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+  /pilotstudies/{pilotstudy_id}/healthprofessionals/{healthprofessional_id}:
+    post:
+      security:
+        - JWTAuth: []
+      tags:
+        - pilotstudies.healthprofessionals
+      summary: Associate health professionals with pilot study.
+      description: Associate a health professionals with a pilot study by id.
+      operationId: associateHealthprofessionalToPilotStudy
+      parameters:
+        - name: pilotstudy_id
+          in: path
+          required: true
+          description: Id of pilot study.
+          example: '5c86d00c2239a48ea20a0134'
+          schema:
+            type: string
+        - name: healthprofessional_id
+          in: path
+          required: true
+          description: Id of health professional.
+          example: '5c86d00cfc25e7036d51d652'
+          schema:
+            type: string
+      responses:
+        '201':
+          description: Health professional successfully associated.
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/HealthProfessional'
+        '400':
+          description: >-
+            Request can not be met, syntactically incorrect or violates the
+            schema. Normally it occurs due to validation issues, such as
+            fields that are expected in the request body and not passed.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '401':
+          description: Authentication failed due to invalid authentication credentials.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '403':
+          description: User does not have permission to associate health professionals to pilot studies.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '404':
+          description: >-
+            Specified resource does not exist. Usually when the URI is incorrect
+            or the resource is not found, or even no longer exists.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '406':
+          description: >-
+            The server is not implementing the media type requested by the client
+            for the application response. Only application/json is currently
+            accepted.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '415':
+          description: >-
+            The server does not support the requested payload format. Only
+            application/json is accepted.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '429':
+          description: The rate limit for requests exceeded.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '500':
+          description: >-
+            An internal server error occurred. Although the client appears to
+            provide a correct request, the server encountered an unexpected
+            condition that prevented it from responding to the request."
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+    delete:
+      security:
+        - JWTAuth: []
+      tags:
+        - pilotstudies.healthprofessionals
+      summary: Disassociate health professionals from pilot study.
+      description: Disassociate a health professionals from a pilot study by id.
+      operationId: disassociateHealthprofessionalFromPilotStudy
+      parameters:
+        - name: pilotstudy_id
+          in: path
+          required: true
+          description: Id of pilot study.
+          example: '5c86d00c2239a48ea20a0134'
+          schema:
+            type: string
+        - name: healthprofessional_id
+          in: path
+          required: true
+          description: Id of health professional.
+          example: '5c86d00cfc25e7036d51d652'
+          schema:
+            type: string
+      responses:
+        '204':
+          description: Operation performed successfully. There is no data to be returned.
+        '401':
+          description: Authentication failed due to invalid authentication credentials.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '403':
+          description: User does not have permission to disassociate health professionals from pilot study.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '404':
+          description: >-
+            Specified resource does not exist. Usually when the URI is incorrect
+            or the resource is not found, or even no longer exists.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '406':
+          description: >-
+            The server is not implementing the media type requested by the
+            client for the application response. Only application/json is
+            currently accepted.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '429':
+          description: The rate limit for requests exceeded.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '500':
+          description: >-
+            An internal server error occurred. Although the client appears to
+            provide a correct request, the server encountered an unexpected
+            condition that prevented it from responding to the request.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+components:
+  securitySchemes:
+    JWTAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+  schemas:
+    Admin:
+      type: object
+      required:
+        - id
+        - email
+      properties:
+        id:
+          readOnly: true
+          type: string
+          format: uuid
+          description: Automatically generated key field.
+          example: '5c86d00c7a8618923481b48b'
+        email:
+          type: string
+          description: Email of admin for authentication.
+          example: admin@haniot.com
+    HealthProfessional:
+      type: object
+      required:
+        - id
+        - email
+        - name
+        - health_area
+      properties:
+        id:
+          readOnly: true
+          type: string
+          format: uuid
+          description: Automatically generated key field.
+          example: '5c86d00cfc25e7036d51d652'
+        email:
+          type: string
+          description: Email of health professional for authentication.
+          example: elvisaaron@haniot.com
+        name:
+          type: string
+          description: Name of the health professional.
+          example: Elvis Aaron
+        health_area:
+          type: string
+          description: Area of medical performance of the health professional. Could be nutrition or dentistry.
+          enum: ["nutrition", "dentistry"]
+    PilotStudy:
+      type: object
+      required:
+        - id
+        - name
+        - is_active
+        - start
+        - end
+        - health_professionals_id
+      properties:
+        id:
+          readOnly: true
+          type: string
+          format: uuid
+          description: Automatically generated key field.
+          example: '5c86d00c2239a48ea20a0134'
+        name:
+          type: string
+          description: Name of pilot study.
+          example: 'Pilot Odonto 01'
+        is_active:
+          type: boolean
+          description: Status of pilot study. The value is true if it is active, false otherwise.
+          example: true
+        start:
+          type: string
+          description: Start of pilot study in UTC format, according to ISO 8601.
+          example: '2018-11-19T14:40:00'
+        end:
+          type: string
+          description: End of pilot study in UTC format, according to ISO 8601.
+          example: '2019-01-23T18:00:00'
+        health_professionals_id:
+          type: array
+          description: List of id of the health professionals who are participating in the pilot study.
+          items:
+            type: string
+          example:
+            - '5c86d00cfc25e7036d51d652'
+    Error:
+      type: object
+      description: >-
+        Default template for error message. All returned errors will follow this
+        template.
+      required:
+        - code
+        - message
+      properties:
+        code:
+          type: integer
+          description: >-
+            Unique API code that indicates specific details of the error, or
+            the actual status code of the response when the unique code is not
+            appropriate.
+        message:
+          type: string
+          description: Readable and short description of the error.
+        description:
+          type: string
+          description: Detailed description of the error.
+        redirect_link:
+          type: string
+  parameters:
+    fieldsParam:
+      in: query
+      name: fields
+      required: false
+      description: >-
+        Allows you to retrieve only the information you want. To do this,
+        simply provide the name of the attributes separated by commas.
+        For example: **_fields=field1,field2_** indicates that only
+        field1 and field2 should be listed in the query result.
+      schema:
+        type: array
+        items:
+          type: string
+    pageParam:
+      in: query
+      name: page
+      required: false
+      description: The page number.
+      schema:
+        type: integer
+        format: int32
+        minimum: 1
+        default: 1
+    limitParam:
+      in: query
+      name: limit
+      required: false
+      description: The number of items to return.
+      schema:
+        type: integer
+        format: int32
+        maximum: 100
+        default: 20
+    sortParam:
+      in: query
+      name: sort
+      required: false
+      description: >-
+        Contains the names of the attributes, separated by commas, that
+        will be used to sort the result of the query. For ascending sort,
+        use the '+' character before the attribute name. For descending
+        sort, use the '-' character before the attribute name. By default,
+        the order is ascending, so the '+' symbol is optional, just enter
+        the attribute.
+      schema:
+        type: array
+        items:
+          type: string
+        default:
+          - created_at
+    filterParam:
+      in: query
+      name: ''
+      required: false
+      description: >-
+        To filter a collection by multiple concurrent attributes or filter
+        multiple values for an attribute, simply use the attribute/property
+        name with an equal sign and the expected values, separated by a comma.
+        **_property=value1,value2,value3_**. The query is not case sensitive.
+        Example: **_?name=elvis,john_** to retrieve exactly the same users with
+        elvis or john name.
+        For filtering with logical operators, just follow the syntax:
+        **_property=operator:value_**. The available operators are:
+         - **gt** -> Defines which value of the attribute is greater than
+                    (that is,>) the specified value.
+         - **gte** -> Defines which attribute value is greater than or equal to
+                    (that is,>=) the specified value.
+         - **lt** -> Define the value of the attribute to be less than (that is, <)
+                    the specified value.
+         - **lte** -> Defines which value of the attribute is less than or equal to
+                    (that is, <=) the specified value.
+
+        Example: **_?field1=gte:80&age=lt:100_** to recover the users with age
+        is greater than or equal to 80 and less then 100.
+      schema:
+        type: string
+    dateStartParam:
+      in: query
+      name: date_start
+      required: false
+      description: >-
+        Define start date in format: YYYY-MM-DD ou YYYY-MM-DD hh:mm:ss. The
+        attribute used for the query will be the registration_date.
+      schema:
+        type: string
+    dateEndParam:
+      in: query
+      name: date_end
+      required: false
+      description: >-
+        Define end date in format: YYYY-MM-DD ou YYYY-MM-DD hh:mm:ss.The
+        attribute used for the query will be the registration_date.
+      schema:
+        type: string
+        default: today
+    periodParam:
+      in: query
+      name: period
+      required: false
+      description: |-
+        Sets the period from the available ones:
+         - **[1..n]d** - Total days (1d, 2d, ...)
+         - **[1..n]w** - Total of weeks (1w, 2w, ...)
+         - **[1..n]m** - Total of months (1m, 2m, ...)
+         - **[1..n]y** - Total of years (1y, 2y, ...)
+        The attribute used for the query will be the registration_date.
+      schema:
+        type: string

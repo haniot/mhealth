@@ -1,0 +1,90 @@
+{
+  "name": "haniot-account-service",
+  "version": "1.0.0",
+  "description": "Microservice responsible for adding, updating, providing, deleting and authenticating users.",
+  "main": "dist/server.js",
+  "scripts": {
+    "build": "gulp build",
+    "build:doc": "typedoc --options typedoc.json",
+    "start": "node dist/server.js",
+    "start:dev": "gulp dev",
+    "tslint": "tslint -c tslint.json -p tsconfig.json",
+    "test": "nyc --clean --all --reporter=text mocha --opts test/mocha.opts test/**/*.spec.ts",
+    "test:integration": "mocha --opts test/mocha.opts test/integration/**/*.spec.ts",
+    "test:unit": "mocha --opts test/mocha.opts test/unit/**/*.spec.ts",
+    "test:cov": "nyc --clean --all --reporter=html --reporter=text mocha --opts test/mocha.opts test/**/*.spec.ts"
+  },
+  "repository": {
+    "type": "git",
+    "url": ""
+  },
+  "keywords": [
+    "microservice",
+    "nodejs",
+    "typescipt",
+    "express"
+  ],
+  "author": "NUTES/UEPB",
+  "license": "MIT",
+  "nyc": {
+    "include": [
+      "**/*.tsx",
+      "**/*.ts"
+    ],
+    "exclude": [
+      "**/*.d.ts",
+      "test/*",
+      "config/*"
+    ],
+    "extension": [
+      ".ts",
+      ".tsx"
+    ],
+    "reporter": [
+      "text-summary",
+      "html"
+    ],
+    "all": true
+  },
+  "dependencies": {
+    "bcryptjs": "^2.4.3",
+    "body-parser": "^1.18.3",
+    "dotenv": "^6.2.0",
+    "express": "^4.16.4",
+    "helmet": "^3.15.1",
+    "inversify": "^5.0.1",
+    "inversify-express-utils": "^6.3.2",
+    "jsonwebtoken": "^8.5.0",
+    "mongoose": "^5.4.16",
+    "morgan": "^1.9.1",
+    "query-strings-parser": "^2.0.0",
+    "reflect-metadata": "^0.1.13",
+    "swagger-ui-express": "^4.0.2",
+    "winston": "^3.2.1",
+    "winston-daily-rotate-file": "^3.8.0"
+  },
+  "devDependencies": {
+    "@types/body-parser": "^1.17.0",
+    "@types/chai": "^4.1.6",
+    "@types/express": "^4.16.0",
+    "@types/helmet": "^0.0.42",
+    "@types/mocha": "^5.2.5",
+    "@types/mongoose": "^5.2.20",
+    "@types/morgan": "^1.7.35",
+    "@types/swagger-ui-express": "^3.0.0",
+    "chai": "^4.2.0",
+    "gulp": "^4.0.0",
+    "gulp-nodemon": "^2.4.2",
+    "gulp-tslint": "^8.1.4",
+    "gulp-typescript": "^5.0.0",
+    "mocha": "^6.0.2",
+    "nyc": "^13.3.0",
+    "sinon": "^7.2.4",
+    "sinon-mongoose": "^2.2.1",
+    "supertest": "^3.4.2",
+    "ts-node": "^8.0.2",
+    "tslint": "^5.13.0",
+    "typedoc": "^0.14.2",
+    "typescript": "^3.3.3333"
+  }
+}
