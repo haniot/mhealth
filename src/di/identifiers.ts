@@ -8,14 +8,24 @@ export abstract class Identifier {
 
     // Controllers
     public static readonly HOME_CONTROLLER: any = Symbol.for('HomeController')
+    public static readonly DEVICE_CONTROLLER: any = Symbol.for('DeviceController')
+    public static readonly MEASUREMENT_CONTROLLER: any = Symbol.for('MeasurementController')
 
     // Services
+    public static readonly DEVICE_SERVICE: any = Symbol.for('DeviceService')
+    public static readonly MEASUREMENT_SERVICE: any = Symbol.for('MeasurementService')
 
     // Repositories
+    public static readonly DEVICE_REPOSITORY: any = Symbol.for('DeviceRepository')
+    public static readonly MEASUREMENT_REPOSITORY: any = Symbol.for('MeasurementRepository')
 
     // Models
+    public static readonly DEVICE_REPO_MODEL: any = Symbol.for('DeviceRepoModel')
+    public static readonly MEASUREMENT_REPO_MODEL: any = Symbol.for('MeasurementRepoModel')
 
     // Mappers
+    public static readonly DEVICE_ENTITY_MAPPER: any = Symbol.for('DeviceEntityMapper')
+    public static readonly MEASUREMENT_ENTITY_MAPPER: any = Symbol.for('MeasurementEntityMapper')
 
     // Background Services
     public static readonly MONGODB_CONNECTION_FACTORY: any = Symbol.for('ConnectionFactoryMongodb')

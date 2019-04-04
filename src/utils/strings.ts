@@ -9,8 +9,8 @@
  */
 export abstract class Strings {
     public static readonly APP: any = {
-        TITLE: 'Account Service',
-        APP_DESCRIPTION: 'Micro-service for Account.'
+        TITLE: 'Data Acquisition Service',
+        APP_DESCRIPTION: 'Micro-service for Data Acquisition.'
     }
 
     public static readonly ERROR_MESSAGE: any = {
@@ -18,5 +18,10 @@ export abstract class Strings {
         UUID_NOT_VALID_FORMAT: 'Some ID provided does not have a valid format!',
         UUID_NOT_VALID_FORMAT_DESC: 'A 24-byte hex ID similar to this: 507f191e810c19729de860ea is expected.',
         PARAMETER_COULD_NOT_BE_UPDATED: 'This parameter could not be updated.'
+    }
+
+    public static readonly ENUM_VALIDATOR: any = {
+        NOT_MAPPED: 'Value not mapped for ',
+        NOT_MAPPED_DESC: 'The mapped values are: '
     }
 }
