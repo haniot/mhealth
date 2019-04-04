@@ -10,6 +10,7 @@ export abstract class Identifier {
     public static readonly HOME_CONTROLLER: any = Symbol.for('HomeController')
     public static readonly DEVICE_CONTROLLER: any = Symbol.for('DeviceController')
     public static readonly MEASUREMENT_CONTROLLER: any = Symbol.for('MeasurementController')
+    public static readonly USER_DEVICE_CONTROLLER: any = Symbol.for('UserDeviceController')
 
     // Services
     public static readonly DEVICE_SERVICE: any = Symbol.for('DeviceService')
