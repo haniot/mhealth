@@ -92,7 +92,7 @@ export class Measurement extends Entity implements IJSONSerializable, IJSONDeser
         if (json.unit !== undefined) this.unit = json.unit
         if (json.type !== undefined) this.type = json.type
         if (json.measurements !== undefined && json.measurements.length) {
-            this.measurements = json.measurements.map(item => this.fromJSON(item))
+            this.measurements = json.measurements.map(item => new Measurement().fromJSON(item))
         }
         if (json.contexts !== undefined && json.contexts.length) {
             this.contexts = json.contexts.map(item => new Context().fromJSON(item))

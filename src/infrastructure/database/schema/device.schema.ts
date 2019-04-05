@@ -10,7 +10,8 @@ const deviceSchema = new Mongoose.Schema({
         },
         address: {
             type: String,
-            required: 'Address of device is required!'
+            required: 'Address of device is required!',
+            index: { unique: true }
         },
         type: {
             type: String,

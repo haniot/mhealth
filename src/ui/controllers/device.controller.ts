@@ -30,6 +30,10 @@ export class DeviceController {
     }
 
     private toJSONView(devices: Array<Device>): object {
-        return devices.map(device => device.toJSON())
+        return devices.map(device => {
+            device.user_id = undefined
+            device.address = undefined
+            return device.toJSON()
+        })
     }
 }

@@ -15,13 +15,13 @@ export abstract class Default {
     public static readonly PORT_HTTP: number = 80
     public static readonly PORT_HTTPS: number = 443
     public static readonly SWAGGER_PATH: string = './src/ui/swagger/api.yaml'
-    public static readonly SWAGGER_URI: string = 'https://api.swaggerhub.com/apis/haniot/haniot-data-acquisition/1.0.0/' +
+    public static readonly SWAGGER_URI: string = 'https://api.swaggerhub.com/apis/haniot/haniot-data-acquisition-service/1.0.0/' +
         'swagger.json'
     public static readonly LOGO_URI: string = 'http://www.ocariot.com.br/wp-content/uploads/2018/08/cropped-512-32x32.png'
 
     // MongoDB
-    public static readonly MONGODB_URI: string = 'mongodb://127.0.0.1:27017/haniot-data-acquisition'
-    public static readonly MONGODB_URI_TEST: string = 'mongodb://127.0.0.1:27017/haniot-data-acquisition-test'
+    public static readonly MONGODB_URI: string = 'mongodb://127.0.0.1:27017/haniot-data-acquisition-service'
+    public static readonly MONGODB_URI_TEST: string = 'mongodb://127.0.0.1:27017/haniot-data-acquisition-service-test'
     public static readonly MONGODB_CON_RETRY_COUNT: number = 0 // infinite
     public static readonly MONGODB_CON_RETRY_INTERVAL: number = 1000 // 1s
 

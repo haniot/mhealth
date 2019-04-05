@@ -3,7 +3,7 @@ import { ContextTypes } from '../utils/context.types'
 import { Strings } from '../../../utils/strings'
 
 export class ContextTypeValidator {
-    public static validator(value: string): void | ValidationException {
+    public static validate(value: string): void | ValidationException {
         if (!Object.values(ContextTypes).includes(value)) {
             throw new ValidationException(
                 Strings.ENUM_VALIDATOR.NOT_MAPPED.concat(`context.type: ${value}`),

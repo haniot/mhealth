@@ -3,26 +3,26 @@ import { controller, httpDelete, httpGet, httpPatch, httpPost, request, response
 import { Request, Response } from 'express'
 import { inject } from 'inversify'
 import { Identifier } from '../../di/identifiers'
-import { IDeviceService } from '../../application/port/device.service.interface'
 import { ApiExceptionManager } from '../exception/api.exception.manager'
-import { Device } from '../../application/domain/model/device'
 import { Query } from '../../infrastructure/repository/query/query'
 import { Strings } from '../../utils/strings'
 import { ApiException } from '../exception/api.exception'
+import { IMeasurementService } from '../../application/port/measurement.service.interface'
+import { Measurement } from '../../application/domain/model/measurement'
 
-@controller('/users/:user_id/devices')
-export class UserDeviceController {
+@controller('/users/:user_id/measurements')
+export class UserMeasurementController {
     constructor(
-        @inject(Identifier.DEVICE_SERVICE) private readonly _service: IDeviceService
+        @inject(Identifier.MEASUREMENT_SERVICE) private readonly _service: IMeasurementService
     ) {
     }
 
     @httpPost('/')
-    public async addDeviceFromUser(@request() req: Request, @response() res: Response): Promise<Response> {
+    public async addMeasurementFromUser(@request() req: Request, @response() res: Response): Promise<Response> {
         try {
-            const device: Device = new Device().fromJSON(req.body)
-            device.user_id = req.params.user_id
-            const result: Device = await this._service.add(device)
+            const measurement: Measurement = new Measurement().fromJSON(req.body)
+            measurement.user_id = req.params.user_id
+            const result: Measurement = await this._service.add(measurement)
             return res.status(HttpStatus.CREATED).send(this.toJSONView(result))
         } catch (err) {
             const handlerError = ApiExceptionManager.build(err)
@@ -34,11 +34,11 @@ export class UserDeviceController {
     }
 
     @httpGet('/')
-    public async getAllDevicesFromUser(@request() req: Request, @response() res: Response): Promise<Response> {
+    public async getAllMeasurementsFromUser(@request() req: Request, @response() res: Response): Promise<Response> {
         try {
             const query: Query = new Query().fromJSON(req.query)
             query.addFilter({ user_id: req.params.user_id })
-            const result: Array<Device> = await this._service.getAll(query)
+            const result: Array<Measurement> = await this._service.getAll(query)
             return res.status(HttpStatus.OK).send(this.toJSONView(result))
         } catch (err) {
             const handlerError = ApiExceptionManager.build(err)
@@ -49,13 +49,13 @@ export class UserDeviceController {
         }
     }
 
-    @httpGet('/:device_id')
-    public async getDeviceFromUser(@request() req: Request, @response() res: Response): Promise<Response> {
+    @httpGet('/:measurement_id')
+    public async getMeasurementFromUser(@request() req: Request, @response() res: Response): Promise<Response> {
         try {
             const query: Query = new Query().fromJSON(req.query)
             query.addFilter({ user_id: req.params.user_id })
-            const result: Device = await this._service.getById(req.params.device_id, query)
-            if (!result) return res.status(HttpStatus.NOT_FOUND).send(this.getMessageDeviceNotFound())
+            const result: Measurement = await this._service.getById(req.params.measurement_id, query)
+            if (!result) return res.status(HttpStatus.NOT_FOUND).send(this.getMessageMeasurementNotFound())
             return res.status(HttpStatus.OK).send(this.toJSONView(result))
         } catch (err) {
             const handlerError = ApiExceptionManager.build(err)
@@ -66,14 +66,14 @@ export class UserDeviceController {
         }
     }
 
-    @httpPatch('/:device_id')
-    public async updateDeviceFromUser(@request() req: Request, @response() res: Response): Promise<Response> {
+    @httpPatch('/:measurement_id')
+    public async updateMeasurementFromUser(@request() req: Request, @response() res: Response): Promise<Response> {
         try {
-            const device: Device = new Device().fromJSON(req.body)
-            device.id = req.params.device_id
-            device.user_id = req.params.user_id
-            const result: Device = await this._service.update(device)
-            if (!result) return res.status(HttpStatus.NOT_FOUND).send(this.getMessageDeviceNotFound())
+            const measurement: Measurement = new Measurement().fromJSON(req.body)
+            measurement.id = req.params.measurement_id
+            measurement.user_id = req.params.user_id
+            const result: Measurement = await this._service.update(measurement)
+            if (!result) return res.status(HttpStatus.NOT_FOUND).send(this.getMessageMeasurementNotFound())
             return res.status(HttpStatus.OK).send(this.toJSONView(result))
         } catch (err) {
             const handlerError = ApiExceptionManager.build(err)
@@ -82,10 +82,10 @@ export class UserDeviceController {
         }
     }
 
-    @httpDelete('/:device_id')
-    public async deleteDeviceFromUser(@request() req: Request, @response() res: Response): Promise<Response> {
+    @httpDelete('/:measurement_id')
+    public async deleteMeasurementFromUser(@request() req: Request, @response() res: Response): Promise<Response> {
         try {
-            await this._service.removeDevice(req.params.device_id, req.params.user_id)
+            await this._service.removeMeasurement(req.params.measurement_id, req.params.user_id)
             return res.status(HttpStatus.NO_CONTENT).send()
         } catch (err) {
             const handlerError = ApiExceptionManager.build(err)
@@ -94,16 +94,16 @@ export class UserDeviceController {
         }
     }
 
-    private toJSONView(item: Device | Array<Device>): object {
-        if (item instanceof Array) return item.map(device => device.toJSON())
+    private toJSONView(item: Measurement | Array<Measurement>): object {
+        if (item instanceof Array) return item.map(measurement => measurement.toJSON())
         return item.toJSON()
     }
 
-    private getMessageDeviceNotFound(): object {
+    private getMessageMeasurementNotFound(): object {
         return new ApiException(
             HttpStatus.NOT_FOUND,
-            Strings.DEVICE.NOT_FOUND,
-            Strings.DEVICE.NOT_FOUND_DESC
+            Strings.MEASUREMENT.NOT_FOUND,
+            Strings.MEASUREMENT.NOT_FOUND_DESC
         ).toJson()
     }
 }
