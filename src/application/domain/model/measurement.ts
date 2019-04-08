@@ -110,12 +110,15 @@ export class Measurement extends Entity implements IJSONSerializable, IJSONDeser
             value: this.value,
             unit: this.unit,
             type: this.type,
-            measurements: this.measurements ? this.measurements : [],
+            measurements: this.measurements && this.measurements.length ?
+                this.measurements.map(measurement => {
+                    measurement.user_id = undefined
+                    return measurement.toJSON()
+                }) : [],
             contexts: this.contexts ? this.contexts : [],
             timestamp: this.timestamp,
             device_id: this.device_id,
             user_id: this.user_id
         }
     }
-
 }

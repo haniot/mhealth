@@ -61,7 +61,13 @@ export class DeviceService implements IDeviceService {
     }
 
     public update(item: Device): Promise<Device> {
-        UpdateDeviceValidator.validate(item)
+        try {
+            if (item.user_id) ObjectIdValidator.validate(item.user_id)
+            item.user_id = undefined
+            UpdateDeviceValidator.validate(item)
+        } catch (err) {
+            return Promise.reject(err)
+        }
         return this._repository.update(item)
     }
 }

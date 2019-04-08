@@ -15,13 +15,25 @@ export class MeasurementService implements IMeasurementService {
     ) {
     }
 
-    public add(item: Measurement): Promise<Measurement> {
+    public async add(item: Measurement): Promise<Measurement> {
         try {
             CreateMeasurementValidator.validate(item)
         } catch (err) {
             return Promise.reject(err)
         }
-        return this._repository.create(item)
+
+        if (item.measurements && item.measurements.length) {
+            for (const measurement of item.measurements) {
+                try {
+                    CreateMeasurementValidator.validate(item)
+                } catch (err) {
+                    return Promise.reject(err)
+                }
+                const result = await this._repository.create(measurement)
+                measurement.id = result.id
+            }
+        }
+        return await this._repository.create(item)
     }
 
     public getAll(query: IQuery): Promise<Array<Measurement>> {
@@ -62,6 +74,8 @@ export class MeasurementService implements IMeasurementService {
 
     public update(item: Measurement): Promise<Measurement> {
         try {
+            if (item.user_id) ObjectIdValidator.validate(item.user_id)
+            item.user_id = undefined
             UpdateMeasurementValidator.validate(item)
         } catch (err) {
             return Promise.reject(err)

@@ -19,10 +19,10 @@ export class MeasurementEntityMapper implements IEntityMapper<Measurement, Measu
         if (json.value !== undefined) result.value = json.value
         if (json.unit !== undefined) result.unit = json.unit
         if (json.type !== undefined) result.type = json.type
-        if (json.measurements !== undefined && json.measurements.length) {
+        if (json.measurements !== undefined && json.measurements.length > 0) {
             result.measurements = json.measurements.map(value => new Measurement().fromJSON(value))
         }
-        if (json.contexts !== undefined && json.contexts.length) {
+        if (json.contexts !== undefined && json.contexts.length > 0) {
             result.contexts = json.contexts.map(value => new Context().fromJSON(value))
         }
         if (json.timestamp !== undefined) result.timestamp = json.timestamp
@@ -42,10 +42,12 @@ export class MeasurementEntityMapper implements IEntityMapper<Measurement, Measu
         if (item.value !== undefined) result.value = item.value
         if (item.unit !== undefined) result.unit = item.unit
         if (item.type !== undefined) result.type = item.type
-        if (item.measurements !== undefined && item.measurements.length) {
-            result.measurements = item.measurements.map(value => value.toJSON())
+        if (item.measurements !== undefined && item.measurements.length > 0) {
+            item.measurements.forEach(value => {
+                result.measurements.push(value.id!)
+            })
         }
-        if (item.contexts !== undefined && item.contexts.length) {
+        if (item.contexts !== undefined && item.contexts.length > 0) {
             result.contexts = item.contexts.map(value => value.toJSON())
         }
         if (item.timestamp !== undefined) result.timestamp = item.timestamp

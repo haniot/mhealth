@@ -16,7 +16,10 @@ const measurementSchema = new Mongoose.Schema({
             type: String,
             required: 'Type of measurement is required!'
         },
-        measurements: [this],
+        measurements: [{
+            type: Schema.Types.ObjectId,
+            ref: 'Measurement'
+        }],
         contexts: [{
             type: {
                 type: String
@@ -29,7 +32,7 @@ const measurementSchema = new Mongoose.Schema({
             type: Date
         },
         device_id: {
-            type: Mongoose.Schema.Types.ObjectId,
+            type: Schema.Types.ObjectId,
             ref: 'Device'
         },
         user_id: {
