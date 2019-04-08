@@ -3,14 +3,14 @@ import { IJSONDeserializable } from '../utils/json.deserializable.interface'
 import { JsonUtils } from '../utils/json.utils'
 
 export class Context implements IJSONSerializable, IJSONDeserializable<Context> {
-    private _value?: string
+    private _value?: number
     private _type?: string
 
-    get value(): string | undefined {
+    get value(): number | undefined {
         return this._value
     }
 
-    set value(value: string | undefined) {
+    set value(value: number | undefined) {
         this._value = value
     }
 

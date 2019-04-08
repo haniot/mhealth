@@ -17,7 +17,7 @@ export class CreateMeasurementValidator {
         if (item.contexts && item.contexts.length) {
             item.contexts.forEach(context => {
                 if (!context.value) fields.push('context.value')
-                if (!context.type) fields.push('context.value')
+                if (!context.type) fields.push('context.type')
                 else ContextTypeValidator.validate(context.type)
             })
         }
