@@ -85,7 +85,6 @@ describe('Mappers: measurementEntityMapper', () => {
 
             it('should return a model entity with basic parameters for empty model', () => {
                 const result = mapper.transform(new Measurement())
-                console.log(result)
                 assert.isEmpty(result)
             })
         })
