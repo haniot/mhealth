@@ -43,13 +43,11 @@ export class MeasurementEntityMapper implements IEntityMapper<Measurement, Measu
         if (item.unit !== undefined) result.unit = item.unit
         if (item.type !== undefined) result.type = item.type
         if (item.measurements !== undefined && item.measurements.length > 0) {
-            item.measurements.forEach(value => {
-                result.measurements.push(value.id!)
-            })
-        }
+            item.measurements.forEach(value => result.measurements.push(value.id!))
+        } else delete result.measurements
         if (item.contexts !== undefined && item.contexts.length > 0) {
             result.contexts = item.contexts.map(value => value.toJSON())
-        }
+        } else delete result.contexts
         if (item.timestamp !== undefined) result.timestamp = item.timestamp
         if (item.device_id !== undefined) result.device_id = item.device_id
         if (item.user_id !== undefined) result.user_id = item.user_id

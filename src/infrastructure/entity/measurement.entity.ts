@@ -8,4 +8,9 @@ export class MeasurementEntity {
     public timestamp?: string
     public device_id?: string
     public user_id?: string
+
+    constructor() {
+        this.measurements = []
+        this.contexts = []
+    }
 }
