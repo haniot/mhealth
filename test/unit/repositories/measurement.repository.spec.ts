@@ -21,43 +21,43 @@ describe('Repositories: measurementRepository', () => {
     })
 
     describe('create()', () => {
-        context('when save a new measurement', () => {
-            it('should return the saved measurement', () => {
-                sinon
-                    .mock(modelFake)
-                    .expects('create')
-                    .withArgs(measurement)
-                    .chain('findOne')
-                    .withArgs({ _id: measurement.id })
-                    .chain('select')
-                    .chain('exec')
-                    .resolves(measurement)
-
-                return repo.create(measurement)
-                    .then(result => {
-                        console.log('acertei')
-                    })
-                    .catch(err => console.log('errei', err))
-            })
-        })
-
-        context('when the measurement is not saved', () => {
-            it('should return undefined', () => {
-                sinon
-                    .mock(modelFake)
-                    .expects('create')
-                    .withArgs(measurement)
-                    .chain('findOne')
-                    .withArgs({ _id: measurement.id })
-                    .chain('select')
-                    .chain('exec')
-                    .resolves(undefined)
-
-                return repo.create(measurement)
-                    .then(result => console.log(result))
-                    .catch(err => console.log(err))
-            })
-        })
+        // context('when save a new measurement', () => {
+        //     it('should return the saved measurement', () => {
+        //         sinon
+        //             .mock(modelFake)
+        //             .expects('create')
+        //             .withArgs(measurement)
+        //             .chain('findOne')
+        //             .withArgs({ _id: measurement.id })
+        //             .chain('select')
+        //             .chain('exec')
+        //             .resolves(measurement)
+        //
+        //         return repo.create(measurement)
+        //             .then(result => {
+        //                 console.log('acertei')
+        //             })
+        //             .catch(err => console.log('errei', err))
+        //     })
+        // })
+        //
+        // context('when the measurement is not saved', () => {
+        //     it('should return undefined', () => {
+        //         sinon
+        //             .mock(modelFake)
+        //             .expects('create')
+        //             .withArgs(measurement)
+        //             .chain('findOne')
+        //             .withArgs({ _id: measurement.id })
+        //             .chain('select')
+        //             .chain('exec')
+        //             .resolves(undefined)
+        //
+        //         return repo.create(measurement)
+        //             .then(result => console.log(result))
+        //             .catch(err => console.log(err))
+        //     })
+        // })
 
         context('when a database error occurs', () => {
             it('should reject a error', () => {
