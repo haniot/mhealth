@@ -35,12 +35,10 @@ describe('Repositories: measurementRepository', () => {
         //
         //         return repo.create(measurement)
         //             .then(result => {
-        //                 console.log('acertei')
+        //                 console.log(result)
         //             })
-        //             .catch(err => console.log('errei', err))
         //     })
         // })
-        //
         // context('when the measurement is not saved', () => {
         //     it('should return undefined', () => {
         //         sinon

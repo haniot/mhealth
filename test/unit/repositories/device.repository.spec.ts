@@ -353,4 +353,60 @@ describe('Repositories: DeviceRepository', () => {
             })
         })
     })
+
+    describe('checkExists()', () => {
+        context('when the device exists', () => {
+            it('should return true', () => {
+                sinon
+                    .mock(modelFake)
+                    .expects('findOne')
+                    .withArgs({ _id: device.id })
+                    .chain('select')
+                    .chain('exec')
+                    .resolves(device)
+
+                return repo.checkExists(device.id!)
+                    .then(result => {
+                        assert.isBoolean(result)
+                        assert.isTrue(result)
+                    })
+            })
+        })
+
+        context('when the device does not exists', () => {
+            it('should return false', () => {
+                sinon
+                    .mock(modelFake)
+                    .expects('findOne')
+                    .withArgs({ _id: device.id })
+                    .chain('select')
+                    .chain('exec')
+                    .resolves(undefined)
+
+                return repo.checkExists(device.id!)
+                    .then(result => {
+                        assert.isBoolean(result)
+                        assert.isFalse(result)
+                    })
+            })
+        })
+
+        context('when a database error occurs', () => {
+            it('should reject a error', () => {
+                sinon
+                    .mock(modelFake)
+                    .expects('findOne')
+                    .withArgs({ _id: device.id })
+                    .chain('select')
+                    .chain('exec')
+                    .rejects({ message: 'An internal error has occurred in the database!' })
+
+                return repo.checkExists(device.id!)
+                    .catch(err => {
+                        assert.propertyVal(err, 'name', 'Error')
+                        assert.propertyVal(err, 'message', 'An internal error has occurred in the database!')
+                    })
+            })
+        })
+    })
 })

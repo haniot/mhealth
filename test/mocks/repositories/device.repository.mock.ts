@@ -29,4 +29,8 @@ export class DeviceRepositoryMock implements IDeviceRepository {
     public update(item: Device): Promise<Device> {
         return Promise.resolve(device)
     }
+
+    public checkExists(id: string): Promise<boolean> {
+        return Promise.resolve(id === DefaultEntityMock.MEASUREMENT.device_id)
+    }
 }

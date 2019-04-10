@@ -7,17 +7,27 @@ import { IQuery } from '../port/query.interface'
 import { ObjectIdValidator } from '../domain/validator/object.id.validator'
 import { CreateMeasurementValidator } from '../domain/validator/create.measurement.validator'
 import { UpdateMeasurementValidator } from '../domain/validator/update.measurement.validator'
+import { IDeviceRepository } from '../port/device.repository.interface'
+import { ValidationException } from '../domain/exception/validation.exception'
+import { Strings } from '../../utils/strings'
 
 @injectable()
 export class MeasurementService implements IMeasurementService {
     constructor(
-        @inject(Identifier.MEASUREMENT_REPOSITORY) private readonly _repository: IMeasurementRepository
+        @inject(Identifier.MEASUREMENT_REPOSITORY) private readonly _repository: IMeasurementRepository,
+        @inject(Identifier.DEVICE_REPOSITORY) private readonly _deviceRepository: IDeviceRepository
     ) {
     }
 
     public async add(item: Measurement): Promise<Measurement> {
         try {
             CreateMeasurementValidator.validate(item)
+            if (item.device_id) {
+                const result = await this._deviceRepository.checkExists(item.device_id)
+                if (!result) {
+                    return Promise.reject(new ValidationException(Strings.DEVICE.NOT_FOUND, Strings.DEVICE.NOT_FOUND_DESC))
+                }
+            }
         } catch (err) {
             return Promise.reject(err)
         }

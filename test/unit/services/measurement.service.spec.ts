@@ -4,11 +4,14 @@ import { MeasurementService } from '../../../src/application/service/measurement
 import { MeasurementRepositoryMock } from '../../mocks/repositories/measurement.repository.mock'
 import { assert } from 'chai'
 import { Query } from '../../../src/infrastructure/repository/query/query'
+import { DeviceRepositoryMock } from '../../mocks/repositories/device.repository.mock'
+import { ObjectID } from 'bson'
+import { Strings } from '../../../src/utils/strings'
 
 describe('Services: MeasurementService', () => {
     const measurement: Measurement = new Measurement().fromJSON(DefaultEntityMock.MEASUREMENT)
     measurement.id = DefaultEntityMock.MEASUREMENT.id
-    const service: MeasurementService = new MeasurementService(new MeasurementRepositoryMock())
+    const service: MeasurementService = new MeasurementService(new MeasurementRepositoryMock(), new DeviceRepositoryMock())
 
     describe('add()', () => {
         context('when add a new measurement', () => {
@@ -30,6 +33,16 @@ describe('Services: MeasurementService', () => {
                     .catch(err => {
                         assert.propertyVal(err, 'message', 'Required fields were not provided...')
                         assert.propertyVal(err, 'description', 'Measurement validation: value, unit, type, user_id required!')
+                    })
+            })
+
+            it('should reject an error for not found device_id', () => {
+                measurement.device_id = `${new ObjectID()}`
+                return service.add(measurement)
+                    .catch(err => {
+                        assert.propertyVal(err, 'message', Strings.DEVICE.NOT_FOUND)
+                        assert.propertyVal(err, 'description', Strings.DEVICE.NOT_FOUND_DESC)
+                        measurement.device_id = DefaultEntityMock.MEASUREMENT.device_id
                     })
             })
         })
@@ -162,7 +175,7 @@ describe('Services: MeasurementService', () => {
         })
     })
 
-    describe('removeMeasurement()', () =>{
+    describe('removeMeasurement()', () => {
         context('when remove a measurement', () => {
             it('should return true', () => {
                 measurement.id = DefaultEntityMock.MEASUREMENT.id

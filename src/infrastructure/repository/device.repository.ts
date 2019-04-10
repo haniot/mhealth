@@ -6,6 +6,7 @@ import { Identifier } from '../../di/identifiers'
 import { IEntityMapper } from '../port/entity.mapper.interface'
 import { ILogger } from '../../utils/custom.logger'
 import { IDeviceRepository } from '../../application/port/device.repository.interface'
+import { Query } from './query/query'
 
 @injectable()
 export class DeviceRepository extends BaseRepository<Device, DeviceEntity> implements IDeviceRepository {
@@ -15,5 +16,15 @@ export class DeviceRepository extends BaseRepository<Device, DeviceEntity> imple
         @inject(Identifier.LOGGER) readonly _logger: ILogger
     ) {
         super(_model, _entityMapper, _logger)
+    }
+
+    public checkExists(id: string): Promise<boolean> {
+        return new Promise<boolean>((resolve, reject) => {
+            super.findOne(new Query().fromJSON({ filters: { _id: id } }))
+                .then(result => {
+                    if (!result) return resolve(false)
+                    return resolve(true)
+                }).catch(err => reject(this.mongoDBErrorListener(err)))
+        })
     }
 }

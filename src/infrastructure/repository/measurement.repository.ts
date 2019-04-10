@@ -19,7 +19,7 @@ export class MeasurementRepository extends BaseRepository<Measurement, Measureme
         super(_model, _entityMapper, _logger)
     }
 
-    public create(item: Measurement): Promise<Measurement> {
+    public async create(item: Measurement): Promise<Measurement> {
         const itemNew: Measurement = this.mapper.transform(item)
         return new Promise<Measurement>((resolve, reject) => {
             this.Model.create(itemNew)
@@ -32,7 +32,7 @@ export class MeasurementRepository extends BaseRepository<Measurement, Measureme
         })
     }
 
-    public findOne(query: IQuery): Promise<Measurement> {
+    public async findOne(query: IQuery): Promise<Measurement> {
         const q: any = query.toJSON()
         return new Promise<Measurement>((resolve, reject) => {
             this.Model.findOne(q.filters)
@@ -46,7 +46,7 @@ export class MeasurementRepository extends BaseRepository<Measurement, Measureme
         })
     }
 
-    public find(query: IQuery): Promise<Array<Measurement>> {
+    public async find(query: IQuery): Promise<Array<Measurement>> {
         const q: any = query.toJSON()
         return new Promise<Array<Measurement>>((resolve, reject) => {
             this.Model.find(q.filters)
@@ -63,7 +63,7 @@ export class MeasurementRepository extends BaseRepository<Measurement, Measureme
         })
     }
 
-    public update(item: Measurement): Promise<Measurement> {
+    public async update(item: Measurement): Promise<Measurement> {
         const itemUp: any = this.mapper.transform(item)
         return new Promise<Measurement>((resolve, reject) => {
             this.Model.findOneAndUpdate({ _id: itemUp.id }, itemUp, { new: true })
