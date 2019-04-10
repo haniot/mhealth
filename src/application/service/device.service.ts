@@ -15,7 +15,7 @@ export class DeviceService implements IDeviceService {
     ) {
     }
 
-    public add(item: Device): Promise<Device> {
+    public async add(item: Device): Promise<Device> {
         try {
             CreateDeviceValidator.validate(item)
         } catch (err) {
@@ -24,7 +24,7 @@ export class DeviceService implements IDeviceService {
         return this._repository.create(item)
     }
 
-    public getAll(query: IQuery): Promise<Array<Device>> {
+    public async getAll(query: IQuery): Promise<Array<Device>> {
         try {
             const user_id = query.toJSON().filters.user_id
             if (user_id) ObjectIdValidator.validate(user_id)
@@ -34,7 +34,7 @@ export class DeviceService implements IDeviceService {
         return this._repository.find(query)
     }
 
-    public getById(id: string, query: IQuery): Promise<Device> {
+    public async getById(id: string, query: IQuery): Promise<Device> {
         try {
             ObjectIdValidator.validate(id)
             const user_id = query.toJSON().filters.user_id
@@ -46,7 +46,7 @@ export class DeviceService implements IDeviceService {
         return this._repository.findOne(query)
     }
 
-    public removeDevice(deviceId: string, userId: string): Promise<boolean> {
+    public async removeDevice(deviceId: string, userId: string): Promise<boolean> {
         try {
             ObjectIdValidator.validate(deviceId)
             ObjectIdValidator.validate(userId)
@@ -56,11 +56,11 @@ export class DeviceService implements IDeviceService {
         return this._repository.delete(deviceId)
     }
 
-    public remove(id: string): Promise<boolean> {
+    public async remove(id: string): Promise<boolean> {
         throw Error('Not implemented!')
     }
 
-    public update(item: Device): Promise<Device> {
+    public async update(item: Device): Promise<Device> {
         try {
             if (item.user_id) ObjectIdValidator.validate(item.user_id)
             item.user_id = undefined

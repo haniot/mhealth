@@ -24,11 +24,6 @@ export class MeasurementService implements IMeasurementService {
 
         if (item.measurements && item.measurements.length) {
             for (const measurement of item.measurements) {
-                try {
-                    CreateMeasurementValidator.validate(item)
-                } catch (err) {
-                    return Promise.reject(err)
-                }
                 const result = await this._repository.create(measurement)
                 measurement.id = result.id
             }
@@ -36,7 +31,7 @@ export class MeasurementService implements IMeasurementService {
         return await this._repository.create(item)
     }
 
-    public getAll(query: IQuery): Promise<Array<Measurement>> {
+    public async getAll(query: IQuery): Promise<Array<Measurement>> {
         try {
             const user_id = query.toJSON().filters.user_id
             if (user_id) ObjectIdValidator.validate(user_id)
@@ -46,7 +41,7 @@ export class MeasurementService implements IMeasurementService {
         return this._repository.find(query)
     }
 
-    public getById(id: string, query: IQuery): Promise<Measurement> {
+    public async getById(id: string, query: IQuery): Promise<Measurement> {
         try {
             ObjectIdValidator.validate(id)
             const user_id = query.toJSON().filters.user_id
@@ -58,7 +53,7 @@ export class MeasurementService implements IMeasurementService {
         return this._repository.findOne(query)
     }
 
-    public removeMeasurement(measurementId: string, userId: string): Promise<boolean> {
+    public async removeMeasurement(measurementId: string, userId: string): Promise<boolean> {
         try {
             ObjectIdValidator.validate(measurementId)
             ObjectIdValidator.validate(userId)
@@ -68,11 +63,11 @@ export class MeasurementService implements IMeasurementService {
         return this._repository.delete(measurementId)
     }
 
-    public remove(id: string): Promise<boolean> {
+    public async remove(id: string): Promise<boolean> {
         throw Error('Not implemented!')
     }
 
-    public update(item: Measurement): Promise<Measurement> {
+    public async update(item: Measurement): Promise<Measurement> {
         try {
             if (item.user_id) ObjectIdValidator.validate(item.user_id)
             item.user_id = undefined

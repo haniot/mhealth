@@ -14,8 +14,6 @@ describe('Validators: ContextTypeValidator', () => {
             try {
                 ContextTypeValidator.validate('invalid')
             } catch (err) {
-                assert.property(err, 'message')
-                assert.property(err, 'description')
                 assert.equal(err.message, Strings.ENUM_VALIDATOR.NOT_MAPPED.concat('context.type: invalid'))
                 assert.equal(err.description, Strings.ENUM_VALIDATOR.NOT_MAPPED_DESC
                     .concat(Object.values(ContextTypes).join(', ').concat('.')))

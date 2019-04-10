@@ -97,17 +97,10 @@ describe('Repositories: measurementRepository', () => {
                     .then(result => {
                         assert.isArray(result)
                         assert.lengthOf(result, 1)
-                        assert.property(result[0], 'id')
-                        assert.property(result[0], 'value')
                         assert.propertyVal(result[0], 'value', measurement.value)
-                        assert.property(result[0], 'unit')
                         assert.propertyVal(result[0], 'unit', measurement.unit)
-                        assert.property(result[0], 'type')
                         assert.propertyVal(result[0], 'type', measurement.type)
-                        assert.property(result[0], 'timestamp')
-                        assert.property(result[0], 'user_id')
                         assert.propertyVal(result[0], 'user_id', measurement.user_id)
-                        assert.property(result[0], 'device_id')
                         assert.propertyVal(result[0], 'device_id', measurement.device_id)
                     })
             })
@@ -149,9 +142,7 @@ describe('Repositories: measurementRepository', () => {
 
                 return repo.find(new Query())
                     .catch(err => {
-                        assert.property(err, 'name')
                         assert.propertyVal(err, 'name', 'Error')
-                        assert.property(err, 'message')
                         assert.propertyVal(err, 'message', 'An internal error has occurred in the database!')
                     })
             })
@@ -175,17 +166,10 @@ describe('Repositories: measurementRepository', () => {
 
                 return repo.findOne(query)
                     .then(result => {
-                        assert.property(result, 'id')
-                        assert.property(result, 'value')
                         assert.propertyVal(result, 'value', measurement.value)
-                        assert.property(result, 'unit')
                         assert.propertyVal(result, 'unit', measurement.unit)
-                        assert.property(result, 'type')
                         assert.propertyVal(result, 'type', measurement.type)
-                        assert.property(result, 'timestamp')
-                        assert.property(result, 'user_id')
                         assert.propertyVal(result, 'user_id', measurement.user_id)
-                        assert.property(result, 'device_id')
                         assert.propertyVal(result, 'device_id', measurement.device_id)
                     })
             })
@@ -228,9 +212,7 @@ describe('Repositories: measurementRepository', () => {
 
                 return repo.findOne(query)
                     .catch(err => {
-                        assert.property(err, 'name')
                         assert.propertyVal(err, 'name', 'Error')
-                        assert.property(err, 'message')
                         assert.propertyVal(err, 'message', 'An internal error has occurred in the database!')
                     })
             })
@@ -251,17 +233,10 @@ describe('Repositories: measurementRepository', () => {
 
                 return repo.update(measurement)
                     .then(result => {
-                        assert.property(result, 'id')
-                        assert.property(result, 'value')
                         assert.propertyVal(result, 'value', measurement.value)
-                        assert.property(result, 'unit')
                         assert.propertyVal(result, 'unit', measurement.unit)
-                        assert.property(result, 'type')
                         assert.propertyVal(result, 'type', measurement.type)
-                        assert.property(result, 'timestamp')
-                        assert.property(result, 'user_id')
                         assert.propertyVal(result, 'user_id', measurement.user_id)
-                        assert.property(result, 'device_id')
                         assert.propertyVal(result, 'device_id', measurement.device_id)
                     })
             })
@@ -296,9 +271,7 @@ describe('Repositories: measurementRepository', () => {
 
                 return repo.update(measurement)
                     .catch(err => {
-                        assert.property(err, 'name')
                         assert.propertyVal(err, 'name', 'Error')
-                        assert.property(err, 'message')
                         assert.propertyVal(err, 'message', 'An internal error has occurred in the database!')
                     })
             })
@@ -351,9 +324,7 @@ describe('Repositories: measurementRepository', () => {
 
                 return repo.delete(measurement.id!)
                     .catch(err => {
-                        assert.property(err, 'name')
                         assert.propertyVal(err, 'name', 'Error')
-                        assert.property(err, 'message')
                         assert.propertyVal(err, 'message', 'An internal error has occurred in the database!')
                     })
             })
@@ -389,9 +360,7 @@ describe('Repositories: measurementRepository', () => {
 
                 return repo.count(new Query())
                     .catch(err => {
-                        assert.property(err, 'name')
                         assert.propertyVal(err, 'name', 'Error')
-                        assert.property(err, 'message')
                         assert.propertyVal(err, 'message', 'An internal error has occurred in the database!')
                     })
             })

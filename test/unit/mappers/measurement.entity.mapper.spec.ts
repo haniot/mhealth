@@ -19,49 +19,28 @@ describe('Mappers: measurementEntityMapper', () => {
         context('when the parameter is a json', () => {
             it('should call the jsonToModel() method', () => {
                 const result = mapper.transform(measurement.toJSON())
-                assert.property(result, 'id')
-                assert.property(result, 'value')
                 assert.propertyVal(result, 'value', measurement.value)
-                assert.property(result, 'unit')
                 assert.propertyVal(result, 'unit', measurement.unit)
-                assert.property(result, 'type')
                 assert.propertyVal(result, 'type', measurement.type)
-                assert.property(result, 'timestamp')
-                assert.property(result, 'user_id')
                 assert.propertyVal(result, 'user_id', measurement.user_id)
-                assert.property(result, 'device_id')
                 assert.propertyVal(result, 'device_id', measurement.device_id)
             })
 
             it('should return model without parameters for empty json', () => {
                 const result = mapper.transform({})
-                assert.property(result, 'id')
-                assert.property(result, 'value')
                 assert.propertyVal(result, 'value', undefined)
-                assert.property(result, 'unit')
                 assert.propertyVal(result, 'unit', undefined)
-                assert.property(result, 'type')
                 assert.propertyVal(result, 'type', undefined)
-                assert.property(result, 'timestamp')
-                assert.property(result, 'user_id')
                 assert.propertyVal(result, 'user_id', undefined)
-                assert.property(result, 'device_id')
                 assert.propertyVal(result, 'device_id', undefined)
             })
 
             it('should return model without parameter for undefined json', () => {
                 const result = mapper.transform(undefined)
-                assert.property(result, 'id')
-                assert.property(result, 'value')
                 assert.propertyVal(result, 'value', undefined)
-                assert.property(result, 'unit')
                 assert.propertyVal(result, 'unit', undefined)
-                assert.property(result, 'type')
                 assert.propertyVal(result, 'type', undefined)
-                assert.property(result, 'timestamp')
-                assert.property(result, 'user_id')
                 assert.propertyVal(result, 'user_id', undefined)
-                assert.property(result, 'device_id')
                 assert.propertyVal(result, 'device_id', undefined)
             })
 
@@ -70,16 +49,10 @@ describe('Mappers: measurementEntityMapper', () => {
         context('when the parameter is a model', () => {
             it('should call the modelToModelEntity() method', () => {
                 const result = mapper.transform(measurement)
-                assert.property(result, 'value')
                 assert.propertyVal(result, 'value', measurement.value)
-                assert.property(result, 'unit')
                 assert.propertyVal(result, 'unit', measurement.unit)
-                assert.property(result, 'type')
                 assert.propertyVal(result, 'type', measurement.type)
-                assert.property(result, 'timestamp')
-                assert.property(result, 'user_id')
                 assert.propertyVal(result, 'user_id', measurement.user_id)
-                assert.property(result, 'device_id')
                 assert.propertyVal(result, 'device_id', measurement.device_id)
             })
 
@@ -96,8 +69,7 @@ describe('Mappers: measurementEntityMapper', () => {
                 try {
                     mapper.modelEntityToModel(new MeasurementEntity())
                 } catch (err) {
-                    assert.property(err, 'message')
-                    assert.property(err, 'message', 'Not implemented!')
+                    assert.propertyVal(err, 'message', 'Not implemented!')
                 }
             })
         })

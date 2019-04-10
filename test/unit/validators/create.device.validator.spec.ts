@@ -19,8 +19,6 @@ describe('Validators: CreateDeviceValidator', () => {
             try {
                 CreateDeviceValidator.validate(device)
             } catch (err) {
-                assert.property(err, 'message')
-                assert.property(err, 'description')
                 assert.equal(err.message, 'Required fields were not provided...')
                 assert.equal(err.description, 'Device validation: name required!')
                 device.name = DefaultEntityMock.DEVICE.name
@@ -32,8 +30,6 @@ describe('Validators: CreateDeviceValidator', () => {
             try {
                 CreateDeviceValidator.validate(device)
             } catch (err) {
-                assert.property(err, 'message')
-                assert.property(err, 'description')
                 assert.equal(err.message, 'Required fields were not provided...')
                 assert.equal(err.description, 'Device validation: address required!')
                 device.address = DefaultEntityMock.DEVICE.address
@@ -45,8 +41,6 @@ describe('Validators: CreateDeviceValidator', () => {
             try {
                 CreateDeviceValidator.validate(device)
             } catch (err) {
-                assert.property(err, 'message')
-                assert.property(err, 'description')
                 assert.equal(err.message, 'Required fields were not provided...')
                 assert.equal(err.description, 'Device validation: type required!')
             }
@@ -57,8 +51,6 @@ describe('Validators: CreateDeviceValidator', () => {
             try {
                 CreateDeviceValidator.validate(device)
             } catch (err) {
-                assert.property(err, 'message')
-                assert.property(err, 'description')
                 assert.equal(err.message, Strings.ENUM_VALIDATOR.NOT_MAPPED.concat('type: invalid'))
                 assert.equal(err.description, Strings.ENUM_VALIDATOR.NOT_MAPPED_DESC
                     .concat(Object.values(DeviceTypes).join(', ').concat('.')))
@@ -71,8 +63,6 @@ describe('Validators: CreateDeviceValidator', () => {
             try {
                 CreateDeviceValidator.validate(device)
             } catch (err) {
-                assert.property(err, 'message')
-                assert.property(err, 'description')
                 assert.equal(err.message, 'Required fields were not provided...')
                 assert.equal(err.description, 'Device validation: manufacturer required!')
                 device.manufacturer = DefaultEntityMock.DEVICE.manufacturer
@@ -84,8 +74,6 @@ describe('Validators: CreateDeviceValidator', () => {
             try {
                 CreateDeviceValidator.validate(device)
             } catch (err) {
-                assert.property(err, 'message')
-                assert.property(err, 'description')
                 assert.equal(err.message, 'Required fields were not provided...')
                 assert.equal(err.description, 'Device validation: user_id required!')
             }
@@ -96,8 +84,6 @@ describe('Validators: CreateDeviceValidator', () => {
             try {
                 CreateDeviceValidator.validate(device)
             } catch (err) {
-                assert.property(err, 'message')
-                assert.property(err, 'description')
                 assert.propertyVal(err, 'message', 'Some ID provided does not have a valid format!')
                 assert.equal(err.description, 'A 24-byte hex ID similar to this: 507f191e810c19729de860ea is expected.')
             }

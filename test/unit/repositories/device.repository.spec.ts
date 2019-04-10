@@ -32,16 +32,10 @@ describe('Repositories: DeviceRepository', () => {
 
                 return repo.create(device)
                     .then(result => {
-                        assert.property(result, 'id')
-                        assert.property(result, 'name')
                         assert.propertyVal(result, 'name', device.name)
-                        assert.property(result, 'type')
                         assert.propertyVal(result, 'type', device.type)
-                        assert.property(result, 'model_number')
                         assert.propertyVal(result, 'model_number', device.model_number)
-                        assert.property(result, 'manufacturer')
                         assert.propertyVal(result, 'manufacturer', device.manufacturer)
-                        assert.property(result, 'user_id')
                         assert.propertyVal(result, 'user_id', device.user_id)
                     })
             })
@@ -74,9 +68,7 @@ describe('Repositories: DeviceRepository', () => {
 
                 return repo.create(device)
                     .catch(err => {
-                        assert.property(err, 'name')
                         assert.propertyVal(err, 'name', 'Error')
-                        assert.property(err, 'message')
                         assert.propertyVal(err, 'message', 'An internal error has occurred in the database!')
                     })
             })
@@ -100,16 +92,10 @@ describe('Repositories: DeviceRepository', () => {
                     .then(result => {
                         assert.isArray(result)
                         assert.lengthOf(result, 1)
-                        assert.property(result[0], 'id')
-                        assert.property(result[0], 'name')
                         assert.propertyVal(result[0], 'name', device.name)
-                        assert.property(result[0], 'type')
                         assert.propertyVal(result[0], 'type', device.type)
-                        assert.property(result[0], 'model_number')
                         assert.propertyVal(result[0], 'model_number', device.model_number)
-                        assert.property(result[0], 'manufacturer')
                         assert.propertyVal(result[0], 'manufacturer', device.manufacturer)
-                        assert.property(result[0], 'user_id')
                         assert.propertyVal(result[0], 'user_id', device.user_id)
                     })
             })
@@ -149,9 +135,7 @@ describe('Repositories: DeviceRepository', () => {
 
                 return repo.find(new Query())
                     .catch(err => {
-                        assert.property(err, 'name')
                         assert.propertyVal(err, 'name', 'Error')
-                        assert.property(err, 'message')
                         assert.propertyVal(err, 'message', 'An internal error has occurred in the database!')
                     })
             })
@@ -174,16 +158,10 @@ describe('Repositories: DeviceRepository', () => {
 
                 return repo.findOne(query)
                     .then(result => {
-                        assert.property(result, 'id')
-                        assert.property(result, 'name')
                         assert.propertyVal(result, 'name', device.name)
-                        assert.property(result, 'type')
                         assert.propertyVal(result, 'type', device.type)
-                        assert.property(result, 'model_number')
                         assert.propertyVal(result, 'model_number', device.model_number)
-                        assert.property(result, 'manufacturer')
                         assert.propertyVal(result, 'manufacturer', device.manufacturer)
-                        assert.property(result, 'user_id')
                         assert.propertyVal(result, 'user_id', device.user_id)
                     })
             })
@@ -224,9 +202,7 @@ describe('Repositories: DeviceRepository', () => {
 
                 return repo.findOne(query)
                     .catch(err => {
-                        assert.property(err, 'name')
                         assert.propertyVal(err, 'name', 'Error')
-                        assert.property(err, 'message')
                         assert.propertyVal(err, 'message', 'An internal error has occurred in the database!')
                     })
             })
@@ -246,16 +222,10 @@ describe('Repositories: DeviceRepository', () => {
 
                 return repo.update(device)
                     .then(result => {
-                        assert.property(result, 'id')
-                        assert.property(result, 'name')
                         assert.propertyVal(result, 'name', device.name)
-                        assert.property(result, 'type')
                         assert.propertyVal(result, 'type', device.type)
-                        assert.property(result, 'model_number')
                         assert.propertyVal(result, 'model_number', device.model_number)
-                        assert.property(result, 'manufacturer')
                         assert.propertyVal(result, 'manufacturer', device.manufacturer)
-                        assert.property(result, 'user_id')
                         assert.propertyVal(result, 'user_id', device.user_id)
                     })
             })
@@ -288,9 +258,7 @@ describe('Repositories: DeviceRepository', () => {
 
                 return repo.update(device)
                     .catch(err => {
-                        assert.property(err, 'name')
                         assert.propertyVal(err, 'name', 'Error')
-                        assert.property(err, 'message')
                         assert.propertyVal(err, 'message', 'An internal error has occurred in the database!')
                     })
             })
@@ -343,9 +311,7 @@ describe('Repositories: DeviceRepository', () => {
 
                 return repo.delete(device.id!)
                     .catch(err => {
-                        assert.property(err, 'name')
                         assert.propertyVal(err, 'name', 'Error')
-                        assert.property(err, 'message')
                         assert.propertyVal(err, 'message', 'An internal error has occurred in the database!')
                     })
             })
@@ -381,9 +347,7 @@ describe('Repositories: DeviceRepository', () => {
 
                 return repo.count(new Query())
                     .catch(err => {
-                        assert.property(err, 'name')
                         assert.propertyVal(err, 'name', 'Error')
-                        assert.property(err, 'message')
                         assert.propertyVal(err, 'message', 'An internal error has occurred in the database!')
                     })
             })

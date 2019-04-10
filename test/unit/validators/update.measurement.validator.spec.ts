@@ -24,8 +24,6 @@ describe('Validators: CreateMeasurementValidator', () => {
             try {
                 UpdateMeasurementValidator.validate(measurement)
             } catch (err) {
-                assert.property(err, 'message')
-                assert.property(err, 'description')
                 assert.propertyVal(err, 'message', 'Some ID provided does not have a valid format!')
                 assert.equal(err.description, 'A 24-byte hex ID similar to this: 507f191e810c19729de860ea is expected.')
                 measurement.id = DefaultEntityMock.MEASUREMENT.id
@@ -36,8 +34,6 @@ describe('Validators: CreateMeasurementValidator', () => {
             try {
                 UpdateMeasurementValidator.validate(measurement)
             } catch (err) {
-                assert.property(err, 'message')
-                assert.property(err, 'description')
                 assert.equal(err.message, Strings.ENUM_VALIDATOR.NOT_MAPPED.concat('type: invalid'))
                 assert.equal(err.description, Strings.ENUM_VALIDATOR.NOT_MAPPED_DESC
                     .concat(Object.values(MeasurementTypes).join(', ').concat('.')))
@@ -50,8 +46,6 @@ describe('Validators: CreateMeasurementValidator', () => {
             try {
                 UpdateMeasurementValidator.validate(measurement)
             } catch (err) {
-                assert.property(err, 'message')
-                assert.property(err, 'description')
                 assert.equal(err.message, 'Required fields were not provided...')
                 assert.equal(err.description, 'Measurement validation: value, unit, type, user_id required!')
                 measurement.measurements = []
@@ -63,8 +57,6 @@ describe('Validators: CreateMeasurementValidator', () => {
             try {
                 UpdateMeasurementValidator.validate(measurement)
             } catch (err) {
-                assert.property(err, 'message')
-                assert.property(err, 'description')
                 assert.propertyVal(err, 'message', Strings.ENUM_VALIDATOR.NOT_MAPPED.concat('context.type: invalid'))
                 assert.propertyVal(err, 'description', Strings.ENUM_VALIDATOR.NOT_MAPPED_DESC
                     .concat(Object.values(ContextTypes).join(', ').concat('.')))
@@ -77,8 +69,6 @@ describe('Validators: CreateMeasurementValidator', () => {
             try {
                 UpdateMeasurementValidator.validate(measurement)
             } catch (err) {
-                assert.property(err, 'message')
-                assert.property(err, 'description')
                 assert.equal(err.message, 'Datetime: 12-01-2013 is not in valid ISO 8601 format.')
                 assert.equal(err.description, 'Date must be in the format: yyyy-MM-dd\'T\'HH:mm:ssZ')
                 measurement.timestamp = DefaultEntityMock.MEASUREMENT.timestamp
@@ -90,8 +80,6 @@ describe('Validators: CreateMeasurementValidator', () => {
             try {
                 UpdateMeasurementValidator.validate(measurement)
             } catch (err) {
-                assert.property(err, 'message')
-                assert.property(err, 'description')
                 assert.equal(err.message, Strings.ERROR_MESSAGE.PARAMETER_COULD_NOT_BE_UPDATED)
                 assert.equal(err.description, Strings.ERROR_MESSAGE.PARAMETER_COULD_NOT_BE_UPDATED_DESC.concat('device_id'))
                 measurement.device_id = undefined
@@ -103,8 +91,6 @@ describe('Validators: CreateMeasurementValidator', () => {
             try {
                 UpdateMeasurementValidator.validate(measurement)
             } catch (err) {
-                assert.property(err, 'message')
-                assert.property(err, 'description')
                 assert.equal(err.message, Strings.ERROR_MESSAGE.PARAMETER_COULD_NOT_BE_UPDATED)
                 assert.equal(err.description, Strings.ERROR_MESSAGE.PARAMETER_COULD_NOT_BE_UPDATED_DESC.concat('user_id'))
             }
