@@ -70,7 +70,7 @@ describe('Repositories: measurementRepository', () => {
 
                 return repo.create(measurement)
                     .then(result => {
-                        console.log(result)
+                        assert.isUndefined(result)
                     })
             })
         })
