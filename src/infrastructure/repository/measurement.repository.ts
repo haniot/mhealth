@@ -19,20 +19,22 @@ export class MeasurementRepository extends BaseRepository<Measurement, Measureme
         super(_model, _entityMapper, _logger)
     }
 
-    public async create(item: Measurement): Promise<Measurement> {
+    public create(item: Measurement): Promise<Measurement> {
         const itemNew: Measurement = this.mapper.transform(item)
-        return new Promise<Measurement>((resolve, reject) => {
+        return new Promise<Measurement>(async (resolve, reject) => {
             this.Model.create(itemNew)
                 .then(result => {
                     if (!result) return resolve(undefined)
+
                     const query = new Query()
                     query.addFilter({ _id: result.id })
+
                     return resolve(this.findOne(query))
                 }).catch(err => reject(this.mongoDBErrorListener(err)))
         })
     }
 
-    public async findOne(query: IQuery): Promise<Measurement> {
+    public findOne(query: IQuery): Promise<Measurement> {
         const q: any = query.toJSON()
         return new Promise<Measurement>((resolve, reject) => {
             this.Model.findOne(q.filters)
@@ -46,7 +48,7 @@ export class MeasurementRepository extends BaseRepository<Measurement, Measureme
         })
     }
 
-    public async find(query: IQuery): Promise<Array<Measurement>> {
+    public find(query: IQuery): Promise<Array<Measurement>> {
         const q: any = query.toJSON()
         return new Promise<Array<Measurement>>((resolve, reject) => {
             this.Model.find(q.filters)
@@ -63,7 +65,7 @@ export class MeasurementRepository extends BaseRepository<Measurement, Measureme
         })
     }
 
-    public async update(item: Measurement): Promise<Measurement> {
+    public update(item: Measurement): Promise<Measurement> {
         const itemUp: any = this.mapper.transform(item)
         return new Promise<Measurement>((resolve, reject) => {
             this.Model.findOneAndUpdate({ _id: itemUp.id }, itemUp, { new: true })

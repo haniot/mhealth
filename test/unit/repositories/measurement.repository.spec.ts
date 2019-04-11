@@ -21,41 +21,59 @@ describe('Repositories: measurementRepository', () => {
     })
 
     describe('create()', () => {
-        // context('when save a new measurement', () => {
-        //     it('should return the saved measurement', () => {
-        //         sinon
-        //             .mock(modelFake)
-        //             .expects('create')
-        //             .withArgs(measurement)
-        //             .chain('findOne')
-        //             .withArgs({ _id: measurement.id })
-        //             .chain('select')
-        //             .chain('exec')
-        //             .resolves(measurement)
-        //
-        //         return repo.create(measurement)
-        //             .then(result => {
-        //                 console.log(result)
-        //             })
-        //     })
-        // })
-        // context('when the measurement is not saved', () => {
-        //     it('should return undefined', () => {
-        //         sinon
-        //             .mock(modelFake)
-        //             .expects('create')
-        //             .withArgs(measurement)
-        //             .chain('findOne')
-        //             .withArgs({ _id: measurement.id })
-        //             .chain('select')
-        //             .chain('exec')
-        //             .resolves(undefined)
-        //
-        //         return repo.create(measurement)
-        //             .then(result => console.log(result))
-        //             .catch(err => console.log(err))
-        //     })
-        // })
+        context('when save a new measurement', () => {
+            it('should return the saved measurement', () => {
+                sinon
+                    .mock(modelFake)
+                    .expects('create')
+                    .withArgs(measurement)
+                    .resolves(measurement)
+
+                sinon
+                    .mock(modelFake)
+                    .expects('findOne')
+                    .withArgs({ _id: measurement.id })
+                    .chain('select')
+                    .chain('populate')
+                    .withArgs('measurements')
+                    .chain('exec')
+                    .resolves(measurement)
+
+                return repo.create(measurement)
+                    .then(result => {
+                        assert.propertyVal(result, 'value', measurement.value)
+                        assert.propertyVal(result, 'unit', measurement.unit)
+                        assert.propertyVal(result, 'type', measurement.type)
+                        assert.propertyVal(result, 'user_id', measurement.user_id)
+                        assert.propertyVal(result, 'device_id', measurement.device_id)
+                    })
+            })
+        })
+
+        context('when the measurement is not saved', () => {
+            it('should return undefined', () => {
+                sinon
+                    .mock(modelFake)
+                    .expects('create')
+                    .withArgs(measurement)
+                    .resolves(undefined)
+
+                sinon
+                    .mock(modelFake)
+                    .expects('findOne')
+                    .withArgs({ _id: measurement.id })
+                    .chain('select')
+                    .chain('populate')
+                    .withArgs('measurements')
+                    .chain('exec')
+                    .resolves(undefined)
+
+                return repo.create(measurement)
+                    .then(result => {
+                        console.log(result)
+                    })
+            })
+        })
 
         context('when a database error occurs', () => {
             it('should reject a error', () => {
