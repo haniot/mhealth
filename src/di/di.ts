@@ -26,7 +26,6 @@ import { IDeviceService } from '../application/port/device.service.interface'
 import { DeviceService } from '../application/service/device.service'
 import { IMeasurementService } from '../application/port/measurement.service.interface'
 import { MeasurementService } from '../application/service/measurement.service'
-import { DeviceController } from '../ui/controllers/device.controller'
 import { MeasurementController } from '../ui/controllers/measurement.controller'
 import { UserDeviceController } from '../ui/controllers/user.device.controller'
 import { UserMeasurementController } from '../ui/controllers/user.measurement.controller'
@@ -77,8 +76,6 @@ export class DI {
         // Controllers
         this.container.bind<HomeController>(Identifier.HOME_CONTROLLER)
             .to(HomeController).inSingletonScope()
-        this.container.bind<DeviceController>(Identifier.DEVICE_CONTROLLER)
-            .to(DeviceController).inSingletonScope()
         this.container.bind<MeasurementController>(Identifier.MEASUREMENT_CONTROLLER)
             .to(MeasurementController).inSingletonScope()
         this.container.bind<UserDeviceController>(Identifier.USER_DEVICE_CONTROLLER)

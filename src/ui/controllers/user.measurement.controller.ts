@@ -9,6 +9,14 @@ import { Strings } from '../../utils/strings'
 import { ApiException } from '../exception/api.exception'
 import { IMeasurementService } from '../../application/port/measurement.service.interface'
 import { Measurement } from '../../application/domain/model/measurement'
+import { MeasurementTypes } from '../../application/domain/utils/measurement.types'
+import { Height } from '../../application/domain/model/height'
+import { HeartRate } from '../../application/domain/model/heart.rate'
+import { BloodPressure } from '../../application/domain/model/blood.pressure'
+import { Weight } from '../../application/domain/model/weight'
+import { BloodGlucose } from '../../application/domain/model/blood.glucose'
+import { BodyTemperature } from '../../application/domain/model/body.temperature'
+import { WaistCircumference } from '../../application/domain/model/waist.circumference'
 
 @controller('/users/:user_id/measurements')
 export class UserMeasurementController {
@@ -20,6 +28,11 @@ export class UserMeasurementController {
     @httpPost('/')
     public async addMeasurementFromUser(@request() req: Request, @response() res: Response): Promise<Response> {
         try {
+            if (req.body instanceof Array) {
+                req.body.forEach(async item => {
+                    item.user_id = req.params.user_id
+                })
+            }
             const measurement: Measurement = new Measurement().fromJSON(req.body)
             measurement.user_id = req.params.user_id
             const result: Measurement = await this._service.add(measurement)
@@ -105,5 +118,28 @@ export class UserMeasurementController {
             Strings.MEASUREMENT.NOT_FOUND,
             Strings.MEASUREMENT.NOT_FOUND_DESC
         ).toJson()
+    }
+
+    private jsonToModel(item: any): any {
+        if (item instanceof Array) return item.map(value => this.jsonToModel(value))
+        if (item.type) {
+            switch (item.type) {
+                case MeasurementTypes.HEIGHT:
+                    return new Height().fromJSON(item)
+                case MeasurementTypes.HEART_RATE:
+                    return new HeartRate().fromJSON(item)
+                case MeasurementTypes.BLOOD_PRESSURE:
+                    return new BloodPressure().fromJSON(item)
+                case MeasurementTypes.WEIGHT:
+                    return new Weight().fromJSON(item)
+                case MeasurementTypes.BLOOD_GLUCOSE:
+                    return new BloodGlucose().fromJSON(item)
+                case MeasurementTypes.BODY_TEMPERATURE:
+                    return new BodyTemperature().fromJSON(item)
+                case MeasurementTypes.WAIST_CIRCUMFERENCE:
+                    return new WaistCircumference().fromJSON(item)
+            }
+        }
+        return undefined
     }
 }

@@ -8,7 +8,6 @@ export abstract class Identifier {
 
     // Controllers
     public static readonly HOME_CONTROLLER: any = Symbol.for('HomeController')
-    public static readonly DEVICE_CONTROLLER: any = Symbol.for('DeviceController')
     public static readonly MEASUREMENT_CONTROLLER: any = Symbol.for('MeasurementController')
     public static readonly USER_DEVICE_CONTROLLER: any = Symbol.for('UserDeviceController')
     public static readonly USER_MEASUREMENT_CONTROLLER: any = Symbol.for('UserMeasurementController')
