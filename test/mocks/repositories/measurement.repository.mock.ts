@@ -29,4 +29,8 @@ export class MeasurementRepositoryMock implements IMeasurementRepository {
     public update(item: Measurement): Promise<Measurement> {
         return Promise.resolve(measurement)
     }
+
+    public checkExists(item: any): Promise<boolean> {
+        return Promise.resolve(true)
+    }
 }

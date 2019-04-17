@@ -6,9 +6,6 @@ export class DataSetItem implements IJSONSerializable, IJSONDeserializable<DataS
     private _value?: number
     private _timestamp?: string
 
-    public constructor() {
-    }
-
     get value(): number | undefined {
         return this._value
     }

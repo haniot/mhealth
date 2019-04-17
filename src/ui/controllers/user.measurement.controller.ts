@@ -28,14 +28,17 @@ export class UserMeasurementController {
     @httpPost('/')
     public async addMeasurementFromUser(@request() req: Request, @response() res: Response): Promise<Response> {
         try {
+            let result: any
             if (req.body instanceof Array) {
-                req.body.forEach(async item => {
+                result = await this._service.addMeasurement(req.body.map(item => {
                     item.user_id = req.params.user_id
-                })
+                    return this.jsonToModel(item)
+                }))
+            } else {
+                req.body.user_id = req.params.user_id
+                result = await this._service.addMeasurement(this.jsonToModel(req.body))
             }
-            const measurement: Measurement = new Measurement().fromJSON(req.body)
-            measurement.user_id = req.params.user_id
-            const result: Measurement = await this._service.add(measurement)
+            if (result.success && result.error) return res.status(HttpStatus.MULTI_STATUS).send(this.toJSONView(result))
             return res.status(HttpStatus.CREATED).send(this.toJSONView(result))
         } catch (err) {
             const handlerError = ApiExceptionManager.build(err)
@@ -107,7 +110,7 @@ export class UserMeasurementController {
         }
     }
 
-    private toJSONView(item: Measurement | Array<Measurement>): object {
+    private toJSONView(item: any | Array<any>): object {
         if (item instanceof Array) return item.map(measurement => measurement.toJSON())
         return item.toJSON()
     }
@@ -121,7 +124,6 @@ export class UserMeasurementController {
     }
 
     private jsonToModel(item: any): any {
-        if (item instanceof Array) return item.map(value => this.jsonToModel(value))
         if (item.type) {
             switch (item.type) {
                 case MeasurementTypes.HEIGHT:
@@ -138,6 +140,8 @@ export class UserMeasurementController {
                     return new BodyTemperature().fromJSON(item)
                 case MeasurementTypes.WAIST_CIRCUMFERENCE:
                     return new WaistCircumference().fromJSON(item)
+                default:
+                    return item
             }
         }
         return undefined

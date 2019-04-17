@@ -33,6 +33,8 @@ export abstract class Strings {
 
     public static readonly MEASUREMENT: any = {
         NOT_FOUND: 'Measurement not found!',
-        NOT_FOUND_DESC: 'Measurement not found or already removed. A new operation for the same resource is required.'
+        NOT_FOUND_DESC: 'Measurement not found or already removed. A new operation for the same resource is required.',
+        UNIT_ERROR: 'The unit value is not valid for ',
+        UNIT_ERROR_DESC: 'According with the SI, the correct unit value is: '
     }
 }

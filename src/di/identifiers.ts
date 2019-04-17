@@ -19,14 +19,35 @@ export abstract class Identifier {
     // Repositories
     public static readonly DEVICE_REPOSITORY: any = Symbol.for('DeviceRepository')
     public static readonly MEASUREMENT_REPOSITORY: any = Symbol.for('MeasurementRepository')
+    public static readonly BLOOD_GLUCOSE_REPOSITORY: any = Symbol.for('BloodGlucoseRepository')
+    public static readonly BLOOD_PRESSURE_REPOSITORY: any = Symbol.for('BloodPressureRepository')
+    public static readonly BODY_TEMPERATURE_REPOSITORY: any = Symbol.for('BodyTemperatureRepository')
+    public static readonly HEART_RATE_REPOSITORY: any = Symbol.for('HeartRateRepository')
+    public static readonly HEIGHT_REPOSITORY: any = Symbol.for('HeightRepository')
+    public static readonly WAIST_CIRCUMFERENCE_REPOSITORY: any = Symbol.for('WaistCircumferenceRepository')
+    public static readonly WEIGHT_REPOSITORY: any = Symbol.for('WeightRepository')
 
     // Models
     public static readonly DEVICE_REPO_MODEL: any = Symbol.for('DeviceRepoModel')
     public static readonly MEASUREMENT_REPO_MODEL: any = Symbol.for('MeasurementRepoModel')
+    public static readonly BLOOD_GLUCOSE_REPO_MODEL: any = Symbol.for('BloodGlucoseRepoModel')
+    public static readonly BLOOD_PRESSURE_REPO_MODEL: any = Symbol.for('BloodPressureRepoModel')
+    public static readonly BODY_TEMPERATURE_REPO_MODEL: any = Symbol.for('BodyTemperatureRepoModel')
+    public static readonly HEART_RATE_REPO_MODEL: any = Symbol.for('HeartRateRepoModel')
+    public static readonly HEIGHT_REPO_MODEL: any = Symbol.for('HeightRepoModel')
+    public static readonly WAIST_CIRCUMFERENCE_REPO_MODEL: any = Symbol.for('WaistCircumferenceRepoModel')
+    public static readonly WEIGHT_REPO_MODEL: any = Symbol.for('WeightRepoModel')
 
     // Mappers
     public static readonly DEVICE_ENTITY_MAPPER: any = Symbol.for('DeviceEntityMapper')
     public static readonly MEASUREMENT_ENTITY_MAPPER: any = Symbol.for('MeasurementEntityMapper')
+    public static readonly BLOOD_GLUCOSE_ENTITY_MAPPER: any = Symbol.for('BloodGlucoseEntityMapper')
+    public static readonly BLOOD_PRESSURE_ENTITY_MAPPER: any = Symbol.for('BloodPressureEntityMapper')
+    public static readonly BODY_TEMPERATURE_ENTITY_MAPPER: any = Symbol.for('BodyTemperatureEntityMapper')
+    public static readonly HEART_RATE_ENTITY_MAPPER: any = Symbol.for('HeartRateEntityMapper')
+    public static readonly HEIGHT_ENTITY_MAPPER: any = Symbol.for('HeightEntityMapper')
+    public static readonly WAIST_CIRCUMFERENCE_ENTITY_MAPPER: any = Symbol.for('WaistCircumferenceEntityMapper')
+    public static readonly WEIGHT_ENTITY_MAPPER: any = Symbol.for('WeightEntityMapper')
 
     // Background Services
     public static readonly MONGODB_CONNECTION_FACTORY: any = Symbol.for('ConnectionFactoryMongodb')

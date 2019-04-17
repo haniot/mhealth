@@ -17,7 +17,6 @@ export class MeasurementEntityMapper implements IEntityMapper<Measurement, Measu
         if (json.id !== undefined) result.id = json.id
         if (json.unit !== undefined) result.unit = json.unit
         if (json.type !== undefined) result.type = json.type
-        if (json.timestamp !== undefined) result.timestamp = json.timestamp
         if (json.device_id !== undefined) result.device_id = json.device_id
         if (json.user_id !== undefined) result.user_id = json.user_id
         return result
@@ -33,7 +32,6 @@ export class MeasurementEntityMapper implements IEntityMapper<Measurement, Measu
         if (item.id !== undefined) result.id = item.id
         if (item.unit !== undefined) result.unit = item.unit
         if (item.type !== undefined) result.type = item.type
-        if (item.timestamp !== undefined) result.timestamp = item.timestamp
         if (item.device_id !== undefined) result.device_id = item.device_id
         if (item.user_id !== undefined) result.user_id = item.user_id
         return result

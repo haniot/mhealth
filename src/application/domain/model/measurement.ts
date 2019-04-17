@@ -52,7 +52,6 @@ export class Measurement extends Entity implements IJSONSerializable, IJSONDeser
         }
 
         if (json.unit !== undefined) this.unit = json.unit
-        if (json.type !== undefined) this.type = json.type
         if (json.device_id !== undefined) this.device_id = json.device_id
         if (json.user_id !== undefined) this.user_id = json.user_id
 

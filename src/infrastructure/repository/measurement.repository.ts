@@ -6,6 +6,7 @@ import { Identifier } from '../../di/identifiers'
 import { IEntityMapper } from '../port/entity.mapper.interface'
 import { ILogger } from '../../utils/custom.logger'
 import { IMeasurementRepository } from '../../application/port/measurement.repository.interface'
+import { Query } from './query/query'
 
 @injectable()
 export class MeasurementRepository extends BaseRepository<Measurement, MeasurementEntity> implements IMeasurementRepository {
@@ -15,5 +16,16 @@ export class MeasurementRepository extends BaseRepository<Measurement, Measureme
         @inject(Identifier.LOGGER) readonly _logger: ILogger
     ) {
         super(_model, _entityMapper, _logger)
+    }
+
+    public async checkExists(item: any): Promise<boolean> {
+        return new Promise<boolean>((resolve, reject) => {
+            const query: Query = new Query()
+            query.addFilter({ type: item.type, user_id: item.user_id, timestamp: item.timestamp })
+            this.findOne(query).then(result => {
+                if (!result) return resolve(false)
+                return resolve(true)
+            }).catch(err => reject(this.mongoDBErrorListener(err)))
+        })
     }
 }

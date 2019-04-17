@@ -14,7 +14,7 @@ export abstract class Default {
     public static readonly PORT_HTTP: number = 80
     public static readonly PORT_HTTPS: number = 443
     public static readonly SWAGGER_PATH: string = './src/ui/swagger/api.yaml'
-    public static readonly SWAGGER_URI: string = 'https://app.swaggerhub.com/apis/haniot/haniot-mhealth-service/2.0.0' +
+    public static readonly SWAGGER_URI: string = 'https://api.swaggerhub.com/apis/haniot/haniot-mhealth-service/2.0.0/' +
         'swagger.json'
     public static readonly LOGO_URI: string = 'http://www.ocariot.com.br/wp-content/uploads/2018/08/cropped-512-32x32.png'
 
