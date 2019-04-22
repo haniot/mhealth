@@ -1,7 +1,7 @@
 {
-  "name": "haniot-account-service",
-  "version": "1.0.0",
-  "description": "Microservice responsible for adding, updating, providing, deleting and authenticating users.",
+  "name": "haniot-mhealth-service",
+  "version": "2.0.0",
+  "description": "Microservice responsible for manage user measurements.",
   "main": "dist/server.js",
   "scripts": {
     "build": "gulp build",

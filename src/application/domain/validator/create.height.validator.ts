@@ -1,11 +1,8 @@
 import { ValidationException } from '../exception/validation.exception'
-import { MeasurementUnitsValidator } from './measurement.units.validator'
-import { Strings } from '../../../utils/strings'
 import { MeasurementTypesValidator } from './measurement.types.validator'
 import { DatetimeValidator } from './date.time.validator'
 import { ObjectIdValidator } from './object.id.validator'
 import { Height } from '../model/height'
-import { MeasurementUnits } from '../utils/measurement.units'
 
 export class CreateHeightValidator {
     public static validate(item: Height): void | ValidationException {
@@ -13,14 +10,6 @@ export class CreateHeightValidator {
 
         if (!item.value) fields.push('value')
         if (!item.unit) fields.push('unit')
-        else {
-            MeasurementUnitsValidator.validate(item.unit)
-            if (item.unit !== MeasurementUnits.LENGTH) {
-                throw new ValidationException(
-                    Strings.MEASUREMENT.UNIT_ERROR.concat(`height: ${item.unit}`),
-                    Strings.MEASUREMENT.UNIT_ERROR_DESC.concat(MeasurementUnits.LENGTH))
-            }
-        }
         if (!item.type) fields.push('type')
         else MeasurementTypesValidator.validate(item.type)
         if (!item.timestamp) fields.push('timestamp')

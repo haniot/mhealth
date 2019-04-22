@@ -1,9 +1,8 @@
 import { IMeasurementRepository } from '../../../src/application/port/measurement.repository.interface'
 import { Measurement } from '../../../src/application/domain/model/measurement'
 import { IQuery } from '../../../src/application/port/query.interface'
-import { DefaultEntityMock } from '../models/default.entity.mock'
 
-const measurement: Measurement = new Measurement().fromJSON(DefaultEntityMock.MEASUREMENT)
+const measurement: Measurement = new Measurement()
 
 export class MeasurementRepositoryMock implements IMeasurementRepository {
     public count(query: IQuery): Promise<number> {
