@@ -18,7 +18,7 @@ export class MeasurementController {
     public async getAllMeasurements(@request() req: Request, @response() res: Response): Promise<Response> {
         try {
             const result: Array<any> = await this._service.getAll(new Query().fromJSON(req.query))
-            return res.status(HttpStatus.OK).send(result)
+            return res.status(HttpStatus.OK).send(this.toJSONView(result))
         } catch (err) {
             const handlerError = ApiExceptionManager.build(err)
             return res.status(handlerError.code)
@@ -26,5 +26,9 @@ export class MeasurementController {
         } finally {
             req.query = {}
         }
+    }
+
+    private toJSONView(measurements: Array<any>): object {
+        return measurements.map(measurement => measurement.toJSON())
     }
 }
