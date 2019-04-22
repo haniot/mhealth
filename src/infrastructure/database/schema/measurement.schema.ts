@@ -26,14 +26,23 @@ const measurementSchema = new Mongoose.Schema({
             type: Schema.Types.ObjectId,
             required: 'Id of user associated with a measurement is required!'
         },
-        dataset: [{
+        meal: { // Blood Glucose
+            type: String
+        },
+        dataset: [{ // Heart Rate
             value: {
                 type: String
             },
             timestamp: {
                 type: Date
             }
-        }]
+        }],
+        systolic: { // Blood Pressure
+            type: String
+        },
+        diastolic: {
+            type: String
+        }
     },
     {
         timestamps: { createdAt: 'created_at', updatedAt: false },

@@ -28,6 +28,7 @@ import { CreateHeartRateValidator } from '../domain/validator/create.heart.rate.
 import { CreateHeightValidator } from '../domain/validator/create.height.validator'
 import { CreateWaistCircumferenceValidator } from '../domain/validator/create.waist.circumference.validator'
 import { CreateWeightValidator } from '../domain/validator/create.weight.validator'
+import { Query } from '../../infrastructure/repository/query/query'
 
 @injectable()
 export class MeasurementService implements IMeasurementService {
@@ -50,7 +51,7 @@ export class MeasurementService implements IMeasurementService {
         return await this.add(item)
     }
 
-    public async getAll(query: IQuery): Promise<Array<any>> {
+    public async getAll(query: Query): Promise<Array<any>> {
         try {
             const user_id = query.toJSON().filters.user_id
             if (user_id) ObjectIdValidator.validate(user_id)

@@ -111,7 +111,11 @@ export class UserMeasurementController {
     }
 
     private toJSONView(item: any | Array<any>): object {
-        if (item instanceof Array) return item.map(measurement => measurement.toJSON())
+        if (item instanceof Array) return item.map(measurement => {
+            measurement.user_id = undefined
+            return measurement.toJSON()
+        })
+        item.user_id = undefined
         return item.toJSON()
     }
 
