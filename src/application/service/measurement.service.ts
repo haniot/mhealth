@@ -14,13 +14,6 @@ import { MultiStatus } from '../domain/model/multi.status'
 import { StatusError } from '../domain/model/status.error'
 import { Strings } from '../../utils/strings'
 import { MeasurementTypes } from '../domain/utils/measurement.types'
-import { IBloodGlucoseRepository } from '../port/blood.glucose.repository.interface'
-import { IBloodPressureRepository } from '../port/blood.pressure.repository.interface'
-import { IBodyTemperatureRepository } from '../port/body.temperature.repository.interface'
-import { IHeartRateRepository } from '../port/heart.rate.repository.interface'
-import { IHeightRepository } from '../port/height.repository.interface'
-import { IWaistCircumferenceRepository } from '../port/waist.circumference.repository.interface'
-import { IWeightRepository } from '../port/weight.repository.interface'
 import { CreateBloodGlucoseValidator } from '../domain/validator/create.blood.glucose.validator'
 import { CreateBloodPressureValidator } from '../domain/validator/create.blood.pressure.validator'
 import { CreateBodyTemperatureValidator } from '../domain/validator/create.body.temperature.validator'
@@ -29,22 +22,12 @@ import { CreateHeightValidator } from '../domain/validator/create.height.validat
 import { CreateWaistCircumferenceValidator } from '../domain/validator/create.waist.circumference.validator'
 import { CreateWeightValidator } from '../domain/validator/create.weight.validator'
 import { Query } from '../../infrastructure/repository/query/query'
-import { IFatRepository } from '../port/fat.repository.interface'
 import { CreateFatValidator } from '../domain/validator/create.fat.validator'
 
 @injectable()
 export class MeasurementService implements IMeasurementService {
     constructor(
         @inject(Identifier.MEASUREMENT_REPOSITORY) private readonly _repository: IMeasurementRepository,
-        @inject(Identifier.BLOOD_GLUCOSE_REPOSITORY) private readonly _bloodGlucoseRepository: IBloodGlucoseRepository,
-        @inject(Identifier.BLOOD_PRESSURE_REPOSITORY) private readonly _bloodPressureRepository: IBloodPressureRepository,
-        @inject(Identifier.BODY_TEMPERATURE_REPOSITORY) private readonly _bodyTemperatureRepository: IBodyTemperatureRepository,
-        @inject(Identifier.HEART_RATE_REPOSITORY) private readonly _heartRateRepository: IHeartRateRepository,
-        @inject(Identifier.HEIGHT_REPOSITORY) private readonly _heightRepository: IHeightRepository,
-        @inject(Identifier.WAIST_CIRCUMFERENCE_REPOSITORY)
-        private readonly _waistCircumferenceRepository: IWaistCircumferenceRepository,
-        @inject(Identifier.WEIGHT_REPOSITORY) private readonly _weightRepository: IWeightRepository,
-        @inject(Identifier.FAT_REPOSITORY) private readonly _fatRepository: IFatRepository,
         @inject(Identifier.DEVICE_REPOSITORY) private readonly _deviceRepository: IDeviceRepository
     ) {
     }
@@ -114,22 +97,22 @@ export class MeasurementService implements IMeasurementService {
             switch (item.type) {
                 case(MeasurementTypes.BLOOD_GLUCOSE):
                     CreateBloodGlucoseValidator.validate(item)
-                    return await this._bloodGlucoseRepository.create(item)
+                    break
                 case(MeasurementTypes.BLOOD_PRESSURE):
                     CreateBloodPressureValidator.validate(item)
-                    return await this._bloodPressureRepository.create(item)
+                    break
                 case(MeasurementTypes.BODY_TEMPERATURE):
                     CreateBodyTemperatureValidator.validate(item)
-                    return await this._bodyTemperatureRepository.create(item)
+                    break
                 case(MeasurementTypes.HEART_RATE):
                     CreateHeartRateValidator.validate(item)
-                    return await this._heartRateRepository.create(item)
+                    break
                 case(MeasurementTypes.HEIGHT):
                     CreateHeightValidator.validate(item)
-                    return await this._heightRepository.create(item)
+                    break
                 case(MeasurementTypes.WAIST_CIRCUMFERENCE):
                     CreateWaistCircumferenceValidator.validate(item)
-                    return await this._waistCircumferenceRepository.create(item)
+                    break
                 case(MeasurementTypes.WEIGHT):
                     CreateWeightValidator.validate(item)
                     if (item.fat) {
@@ -140,19 +123,20 @@ export class MeasurementService implements IMeasurementService {
                                 `A ${item.fat.type} measurement from ${item.fat.user_id} ` +
                                 `collected by device ${item.fat.device_id} at ${item.fat.timestamp} already exists.`)
                         }
-                        const result = await this._fatRepository.create(item.fat)
+                        const result = await this._repository.create(item.fat)
                         if (result) item.fat.id = result.id
                     }
-                    return await this._weightRepository.create(item)
+                    break
                 case(MeasurementTypes.FAT):
                     CreateFatValidator.validate(item)
-                    return await this._fatRepository.create(item)
+                    break
                 default:
                     throw new ValidationException(
                         Strings.ENUM_VALIDATOR.NOT_MAPPED.concat(`type: ${item.type}`),
                         Strings.ENUM_VALIDATOR.NOT_MAPPED_DESC
                             .concat(Object.values(MeasurementTypes).join(', ').concat('.')))
             }
+            return await this._repository.create(item)
         } catch (err) {
             return Promise.reject(err)
         }

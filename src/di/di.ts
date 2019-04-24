@@ -50,33 +50,9 @@ import { WaistCircumferenceEntityMapper } from '../infrastructure/entity/mapper/
 import { Weight } from '../application/domain/model/weight'
 import { WeightEntity } from '../infrastructure/entity/weight.entity'
 import { WeightEntityMapper } from '../infrastructure/entity/mapper/weight.entity.mapper'
-import { IBloodGlucoseRepository } from '../application/port/blood.glucose.repository.interface'
-import { BloodGlucoseRepository } from '../infrastructure/repository/blood.glucose.repository'
-import { IBloodPressureRepository } from '../application/port/blood.pressure.repository.interface'
-import { BloodPressureRepository } from '../infrastructure/repository/blood.pressure.repository'
-import { IBodyTemperatureRepository } from '../application/port/body.temperature.repository.interface'
-import { BodyTemperatureRepository } from '../infrastructure/repository/body.temperature.repository'
-import { IHeartRateRepository } from '../application/port/heart.rate.repository.interface'
-import { HeartRateRepository } from '../infrastructure/repository/heart.rate.repository'
-import { IHeightRepository } from '../application/port/height.repository.interface'
-import { HeightRepository } from '../infrastructure/repository/height.repository'
-import { IWaistCircumferenceRepository } from '../application/port/waist.circumference.repository.interface'
-import { WaistCircumferenceRepository } from '../infrastructure/repository/waist.circumference.repository'
-import { IWeightRepository } from '../application/port/weight.repository.interface'
-import { WeightRepository } from '../infrastructure/repository/weight.repository'
-import { HeightRepoModel } from '../infrastructure/database/schema/height.schema'
-import { BloodGlucoseRepoModel } from '../infrastructure/database/schema/blood.glucose.schema'
-import { WeightRepoModel } from '../infrastructure/database/schema/weight.schema'
-import { WaistCircumferenceRepoModel } from '../infrastructure/database/schema/waist.circumference.schema'
-import { HeartRateRepoModel } from '../infrastructure/database/schema/heart.rate.schema'
-import { BodyTemperatureRepoModel } from '../infrastructure/database/schema/body.temperature.schema'
-import { BloodPressureRepoModel } from '../infrastructure/database/schema/blood.pressure.schema'
-import { FatRepoModel } from '../infrastructure/database/schema/fat.schema'
 import { FatEntity } from '../infrastructure/entity/fat.entity'
 import { Fat } from '../application/domain/model/fat'
 import { FatEntityMapper } from '../infrastructure/entity/mapper/fat.entity.mapper'
-import { IFatRepository } from '../application/port/fat.repository.interface'
-import { FatRepository } from '../infrastructure/repository/fat.repository'
 
 export class DI {
     private static instance: DI
@@ -140,34 +116,10 @@ export class DI {
             .to(DeviceRepository).inSingletonScope()
         this.container.bind<IMeasurementRepository>(Identifier.MEASUREMENT_REPOSITORY)
             .to(MeasurementRepository).inSingletonScope()
-        this.container.bind<IBloodGlucoseRepository>(Identifier.BLOOD_GLUCOSE_REPOSITORY)
-            .to(BloodGlucoseRepository).inSingletonScope()
-        this.container.bind<IBloodPressureRepository>(Identifier.BLOOD_PRESSURE_REPOSITORY)
-            .to(BloodPressureRepository).inSingletonScope()
-        this.container.bind<IBodyTemperatureRepository>(Identifier.BODY_TEMPERATURE_REPOSITORY)
-            .to(BodyTemperatureRepository).inSingletonScope()
-        this.container.bind<IHeartRateRepository>(Identifier.HEART_RATE_REPOSITORY)
-            .to(HeartRateRepository).inSingletonScope()
-        this.container.bind<IHeightRepository>(Identifier.HEIGHT_REPOSITORY)
-            .to(HeightRepository).inSingletonScope()
-        this.container.bind<IWaistCircumferenceRepository>(Identifier.WAIST_CIRCUMFERENCE_REPOSITORY)
-            .to(WaistCircumferenceRepository).inSingletonScope()
-        this.container.bind<IWeightRepository>(Identifier.WEIGHT_REPOSITORY)
-            .to(WeightRepository).inSingletonScope()
-        this.container.bind<IFatRepository>(Identifier.FAT_REPOSITORY)
-            .to(FatRepository).inSingletonScope()
 
         // Models
         this.container.bind(Identifier.DEVICE_REPO_MODEL).toConstantValue(DeviceRepoModel)
         this.container.bind(Identifier.MEASUREMENT_REPO_MODEL).toConstantValue(MeasurementRepoModel)
-        this.container.bind(Identifier.BLOOD_GLUCOSE_REPO_MODEL).toConstantValue(BloodGlucoseRepoModel)
-        this.container.bind(Identifier.BLOOD_PRESSURE_REPO_MODEL).toConstantValue(BloodPressureRepoModel)
-        this.container.bind(Identifier.BODY_TEMPERATURE_REPO_MODEL).toConstantValue(BodyTemperatureRepoModel)
-        this.container.bind(Identifier.HEART_RATE_REPO_MODEL).toConstantValue(HeartRateRepoModel)
-        this.container.bind(Identifier.HEIGHT_REPO_MODEL).toConstantValue(HeightRepoModel)
-        this.container.bind(Identifier.WAIST_CIRCUMFERENCE_REPO_MODEL).toConstantValue(WaistCircumferenceRepoModel)
-        this.container.bind(Identifier.WEIGHT_REPO_MODEL).toConstantValue(WeightRepoModel)
-        this.container.bind(Identifier.FAT_REPO_MODEL).toConstantValue(FatRepoModel)
 
         // Mappers
         this.container

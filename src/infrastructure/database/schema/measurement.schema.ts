@@ -42,6 +42,10 @@ const measurementSchema = new Mongoose.Schema({
         },
         diastolic: {
             type: String
+        }, // Weight
+        fat: {
+            type: Schema.Types.ObjectId,
+            ref: 'Measurement'
         }
     },
     {
