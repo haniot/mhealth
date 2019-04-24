@@ -12,6 +12,7 @@ export class BloodPressureEntityMapper implements IEntityMapper<BloodPressure, B
         if (json.id !== undefined) result.id = json.id
         if (json.systolic !== undefined) result.systolic = json.systolic
         if (json.diastolic !== undefined) result.diastolic = json.diastolic
+        if (json.pulse !== undefined) result.pulse = json.pulse
         if (json.unit !== undefined) result.unit = json.unit
         if (json.type !== undefined) result.type = json.type
         if (json.timestamp !== undefined) result.timestamp = json.timestamp
@@ -30,6 +31,7 @@ export class BloodPressureEntityMapper implements IEntityMapper<BloodPressure, B
         if (item.id !== undefined) result.id = item.id
         if (item.systolic !== undefined) result.systolic = item.systolic
         if (item.diastolic !== undefined) result.diastolic = item.diastolic
+        if (item.pulse !== undefined) result.pulse = item.pulse
         if (item.unit !== undefined) result.unit = item.unit
         if (item.type !== undefined) result.type = item.type
         if (item.timestamp !== undefined) result.timestamp = item.timestamp

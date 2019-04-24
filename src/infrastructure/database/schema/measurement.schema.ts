@@ -31,17 +31,20 @@ const measurementSchema = new Mongoose.Schema({
         },
         dataset: [{ // Heart Rate
             value: {
-                type: String
+                type: Number
             },
             timestamp: {
                 type: Date
             }
         }],
         systolic: { // Blood Pressure
-            type: String
+            type: Number
         },
         diastolic: {
-            type: String
+            type: Number
+        },
+        pulse: {
+            type: Number
         }, // Weight
         fat: {
             type: Schema.Types.ObjectId,
