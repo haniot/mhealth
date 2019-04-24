@@ -16,7 +16,8 @@ const measurementSchema = new Mongoose.Schema({
             required: 'Type of measurement is required!'
         },
         timestamp: {
-            type: Date
+            type: Date,
+            index: true
         },
         device_id: {
             type: Schema.Types.ObjectId,
@@ -24,7 +25,8 @@ const measurementSchema = new Mongoose.Schema({
         },
         user_id: {
             type: Schema.Types.ObjectId,
-            required: 'Id of user associated with a measurement is required!'
+            required: 'Id of user associated with a measurement is required!',
+            index: true
         },
         meal: { // Blood Glucose
             type: String

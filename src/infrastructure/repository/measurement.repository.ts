@@ -40,7 +40,7 @@ export class MeasurementRepository extends BaseRepository<Measurement, Measureme
     public async checkExists(item: any): Promise<boolean> {
         return new Promise<boolean>((resolve, reject) => {
             const query: Query = new Query()
-            query.addFilter({ type: item.type, user_id: item.user_id, timestamp: item.timestamp })
+            query.addFilter({ type: item.type, value: item.value, user_id: item.user_id, timestamp: item.timestamp })
             this.findOne(query).then(result => {
                 if (!result) return resolve(false)
                 return resolve(true)

@@ -31,6 +31,7 @@ export class HeartRateEntityMapper implements IEntityMapper<HeartRate, HeartRate
         if (item.id !== undefined) result.id = item.id
         if (item.dataset !== undefined && item.dataset.length) {
             result.dataset = item.dataset.map(object => object.toJSON())
+            result.timestamp = item.dataset.sort()[0].timestamp
         }
         if (item.unit !== undefined) result.unit = item.unit
         if (item.type !== undefined) result.type = item.type
