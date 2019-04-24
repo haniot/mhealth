@@ -71,6 +71,12 @@ import { WaistCircumferenceRepoModel } from '../infrastructure/database/schema/w
 import { HeartRateRepoModel } from '../infrastructure/database/schema/heart.rate.schema'
 import { BodyTemperatureRepoModel } from '../infrastructure/database/schema/body.temperature.schema'
 import { BloodPressureRepoModel } from '../infrastructure/database/schema/blood.pressure.schema'
+import { FatRepoModel } from '../infrastructure/database/schema/fat.schema'
+import { FatEntity } from '../infrastructure/entity/fat.entity'
+import { Fat } from '../application/domain/model/fat'
+import { FatEntityMapper } from '../infrastructure/entity/mapper/fat.entity.mapper'
+import { IFatRepository } from '../application/port/fat.repository.interface'
+import { FatRepository } from '../infrastructure/repository/fat.repository'
 
 export class DI {
     private static instance: DI
@@ -148,6 +154,8 @@ export class DI {
             .to(WaistCircumferenceRepository).inSingletonScope()
         this.container.bind<IWeightRepository>(Identifier.WEIGHT_REPOSITORY)
             .to(WeightRepository).inSingletonScope()
+        this.container.bind<IFatRepository>(Identifier.FAT_REPOSITORY)
+            .to(FatRepository).inSingletonScope()
 
         // Models
         this.container.bind(Identifier.DEVICE_REPO_MODEL).toConstantValue(DeviceRepoModel)
@@ -159,6 +167,7 @@ export class DI {
         this.container.bind(Identifier.HEIGHT_REPO_MODEL).toConstantValue(HeightRepoModel)
         this.container.bind(Identifier.WAIST_CIRCUMFERENCE_REPO_MODEL).toConstantValue(WaistCircumferenceRepoModel)
         this.container.bind(Identifier.WEIGHT_REPO_MODEL).toConstantValue(WeightRepoModel)
+        this.container.bind(Identifier.FAT_REPO_MODEL).toConstantValue(FatRepoModel)
 
         // Mappers
         this.container
@@ -188,6 +197,9 @@ export class DI {
         this.container
             .bind<IEntityMapper<Weight, WeightEntity>>(Identifier.WEIGHT_ENTITY_MAPPER)
             .to(WeightEntityMapper).inSingletonScope()
+        this.container
+            .bind<IEntityMapper<Fat, FatEntity>>(Identifier.FAT_ENTITY_MAPPER)
+            .to(FatEntityMapper).inSingletonScope()
 
         // Background Services
         this.container

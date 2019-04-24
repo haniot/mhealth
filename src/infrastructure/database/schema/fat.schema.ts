@@ -3,34 +3,30 @@ import Mongoose, { Schema } from 'mongoose'
 interface IMeasurement extends Mongoose.Document {
 }
 
-const weightSchema = new Mongoose.Schema({
+const fatSchema = new Mongoose.Schema({
         value: {
             type: Number,
-            required: 'Value of weight measurement is required!'
+            required: 'Value of fat measurement is required!'
         },
         unit: {
             type: String,
-            required: 'Unit of weight measurement is required!'
+            required: 'Unit of fat measurement is required!'
         },
         type: {
             type: String,
-            required: 'Type of weight measurement is required!'
+            required: 'Type of fat measurement is required!'
         },
         timestamp: {
             type: Date,
-            required: 'Timestamp of weight measurement is required!'
+            required: 'Timestamp of fat measurement is required!'
         },
         user_id: {
             type: Schema.Types.ObjectId,
-            required: 'Id of user associated with a weight measurement is required!'
+            required: 'Id of user associated with a fat measurement is required!'
         },
         device_id: {
             type: Schema.Types.ObjectId,
             ref: 'Device'
-        },
-        fat: {
-            type: Schema.Types.ObjectId,
-            ref: 'Fat'
         }
     },
     {
@@ -45,4 +41,4 @@ const weightSchema = new Mongoose.Schema({
         }
     })
 
-export const WeightRepoModel = Mongoose.model<IMeasurement>('Weight', weightSchema, 'measurements')
+export const FatRepoModel = Mongoose.model<IMeasurement>('Fat', fatSchema, 'measurements')

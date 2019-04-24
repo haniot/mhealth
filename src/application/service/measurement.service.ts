@@ -29,6 +29,8 @@ import { CreateHeightValidator } from '../domain/validator/create.height.validat
 import { CreateWaistCircumferenceValidator } from '../domain/validator/create.waist.circumference.validator'
 import { CreateWeightValidator } from '../domain/validator/create.weight.validator'
 import { Query } from '../../infrastructure/repository/query/query'
+import { IFatRepository } from '../port/fat.repository.interface'
+import { CreateFatValidator } from '../domain/validator/create.fat.validator'
 
 @injectable()
 export class MeasurementService implements IMeasurementService {
@@ -42,6 +44,7 @@ export class MeasurementService implements IMeasurementService {
         @inject(Identifier.WAIST_CIRCUMFERENCE_REPOSITORY)
         private readonly _waistCircumferenceRepository: IWaistCircumferenceRepository,
         @inject(Identifier.WEIGHT_REPOSITORY) private readonly _weightRepository: IWeightRepository,
+        @inject(Identifier.FAT_REPOSITORY) private readonly _fatRepository: IFatRepository,
         @inject(Identifier.DEVICE_REPOSITORY) private readonly _deviceRepository: IDeviceRepository
     ) {
     }
@@ -129,7 +132,21 @@ export class MeasurementService implements IMeasurementService {
                     return await this._waistCircumferenceRepository.create(item)
                 case(MeasurementTypes.WEIGHT):
                     CreateWeightValidator.validate(item)
+                    if (item.fat) {
+                        const measurementExists = await this._repository.checkExists(item.fat)
+                        if (measurementExists) {
+                            throw new ConflictException(
+                                'Measurement already registered!',
+                                `A ${item.fat.type} measurement from ${item.fat.user_id} ` +
+                                `collected by device ${item.fat.device_id} at ${item.fat.timestamp} already exists.`)
+                        }
+                        const result = await this._fatRepository.create(item.fat)
+                        if (result) item.fat.id = result.id
+                    }
                     return await this._weightRepository.create(item)
+                case(MeasurementTypes.FAT):
+                    CreateFatValidator.validate(item)
+                    return await this._fatRepository.create(item)
                 default:
                     throw new ValidationException(
                         Strings.ENUM_VALIDATOR.NOT_MAPPED.concat(`type: ${item.type}`),

@@ -26,6 +26,7 @@ export abstract class Identifier {
     public static readonly HEIGHT_REPOSITORY: any = Symbol.for('HeightRepository')
     public static readonly WAIST_CIRCUMFERENCE_REPOSITORY: any = Symbol.for('WaistCircumferenceRepository')
     public static readonly WEIGHT_REPOSITORY: any = Symbol.for('WeightRepository')
+    public static readonly FAT_REPOSITORY: any = Symbol.for('FatRepository')
 
     // Models
     public static readonly DEVICE_REPO_MODEL: any = Symbol.for('DeviceRepoModel')
@@ -37,6 +38,7 @@ export abstract class Identifier {
     public static readonly HEIGHT_REPO_MODEL: any = Symbol.for('HeightRepoModel')
     public static readonly WAIST_CIRCUMFERENCE_REPO_MODEL: any = Symbol.for('WaistCircumferenceRepoModel')
     public static readonly WEIGHT_REPO_MODEL: any = Symbol.for('WeightRepoModel')
+    public static readonly FAT_REPO_MODEL: any = Symbol.for('FatRepoModel')
 
     // Mappers
     public static readonly DEVICE_ENTITY_MAPPER: any = Symbol.for('DeviceEntityMapper')
@@ -48,6 +50,7 @@ export abstract class Identifier {
     public static readonly HEIGHT_ENTITY_MAPPER: any = Symbol.for('HeightEntityMapper')
     public static readonly WAIST_CIRCUMFERENCE_ENTITY_MAPPER: any = Symbol.for('WaistCircumferenceEntityMapper')
     public static readonly WEIGHT_ENTITY_MAPPER: any = Symbol.for('WeightEntityMapper')
+    public static readonly FAT_ENTITY_MAPPER: any = Symbol.for('FatEntityMapper')
 
     // Background Services
     public static readonly MONGODB_CONNECTION_FACTORY: any = Symbol.for('ConnectionFactoryMongodb')

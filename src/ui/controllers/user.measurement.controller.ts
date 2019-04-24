@@ -17,6 +17,7 @@ import { Weight } from '../../application/domain/model/weight'
 import { BloodGlucose } from '../../application/domain/model/blood.glucose'
 import { BodyTemperature } from '../../application/domain/model/body.temperature'
 import { WaistCircumference } from '../../application/domain/model/waist.circumference'
+import { Fat } from '../../application/domain/model/fat'
 
 @controller('/users/:user_id/measurements')
 export class UserMeasurementController {
@@ -137,6 +138,16 @@ export class UserMeasurementController {
                 case MeasurementTypes.BLOOD_PRESSURE:
                     return new BloodPressure().fromJSON(item)
                 case MeasurementTypes.WEIGHT:
+                    if (item.fat !== undefined) {
+                        item.fat = {
+                            ...item.fat,
+                            ...{
+                                device_id: item.device_id,
+                                timestamp: item.timestamp,
+                                user_id: item.user_id
+                            }
+                        }
+                    }
                     return new Weight().fromJSON(item)
                 case MeasurementTypes.BLOOD_GLUCOSE:
                     return new BloodGlucose().fromJSON(item)
@@ -144,6 +155,8 @@ export class UserMeasurementController {
                     return new BodyTemperature().fromJSON(item)
                 case MeasurementTypes.WAIST_CIRCUMFERENCE:
                     return new WaistCircumference().fromJSON(item)
+                case MeasurementTypes.FAT:
+                    return new Fat().fromJSON(item)
                 default:
                     return item
             }

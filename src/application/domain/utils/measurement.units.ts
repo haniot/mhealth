@@ -4,5 +4,6 @@ export enum MeasurementUnits {
     BLOOD_GLUCOSE = 'mg/dl',
     HEART_RATE = 'bpm',
     BLOOD_PRESSURE = 'mmHg',
-    LENGTH = 'cm'
+    LENGTH = 'cm',
+    PERCENTUAL = '%'
 }

@@ -5,5 +5,6 @@ export enum MeasurementTypes {
     BLOOD_PRESSURE = 'blood_pressure',
     HEIGHT = 'height',
     WAIST_CIRCUMFERENCE = 'waist_circumference',
-    BODY_TEMPERATURE = 'body_temperature'
+    BODY_TEMPERATURE = 'body_temperature',
+    FAT = 'fat'
 }
