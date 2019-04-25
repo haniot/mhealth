@@ -89,32 +89,11 @@ export abstract class DefaultEntityMock {
     }
 
     public static MEASUREMENT: any = {
+        id: '5cb488279ea138bd6abf937b',
         unit: '-',
+        type: 'measurement',
         user_id: '5a62be07d6f33400146c9b61',
         device_id: '5ca77314bc08ec205689a736'
-    }
-
-    public static MULTI_STATUS: any = {
-        success: [{
-            code: 200,
-            item: {
-                unit: '-',
-                type: 'measurement',
-                user_id: '5a62be07d6f33400146c9b61',
-                device_id: '5ca77314bc08ec205689a736'
-            }
-        }],
-        err: [{
-            code: 400,
-            message: 'any message',
-            description: 'any description',
-            item: {
-                unit: '-',
-                type: 'measurement',
-                user_id: '5a62be07d6f33400146c9b61',
-                device_id: '5ca77314bc08ec205689a736'
-            }
-        }]
     }
 
     public static STATUS_ERROR: any = {
