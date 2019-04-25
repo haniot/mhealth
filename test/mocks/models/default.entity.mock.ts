@@ -4,6 +4,45 @@ import { MeasurementUnits } from '../../../src/application/domain/utils/measurem
 
 export abstract class DefaultEntityMock {
 
+    public static GENERIC_MEASUREMENT_MOCK: any = {
+        id: '5cb488278cf5f9e6760c14ee',
+        value: 99,
+        systolic: 120,
+        diastolic: 80,
+        pulse: 80,
+        dataset: [
+            {
+                value: 90,
+                timestamp: '2018-11-19T14:40:00Z'
+            },
+            {
+                value: 87,
+                timestamp: '2018-11-19T14:41:00Z'
+            },
+            {
+                value: 89,
+                timestamp: '2018-11-19T14:42:00Z'
+            },
+            {
+                value: 90,
+                timestamp: '2018-11-19T14:43:00Z'
+            },
+            {
+                value: 91,
+                timestamp: '2018-11-19T14:44:00Z'
+            }
+        ],
+        meal: MealTypes.PREPRANDIAL,
+        fat: {
+            value: 30,
+            unit: MeasurementUnits.PERCENTUAL
+        },
+        unit: 'generic',
+        timestamp: '2018-11-19T14:40:00Z',
+        user_id: '5a62be07d6f33400146c9b61',
+        device_id: '5ca77314bc08ec205689a736'
+    }
+
     public static BLOOD_GLUCOSE: any = {
         id: '5cb488278cf5f9e6760c14ed',
         value: 99,
