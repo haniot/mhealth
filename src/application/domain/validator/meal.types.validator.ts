@@ -6,7 +6,7 @@ export class MealTypesValidator {
     public static validate(value: string): void | ValidationException {
         if (!Object.values(MealTypes).includes(value)) {
             throw new ValidationException(
-                Strings.ENUM_VALIDATOR.NOT_MAPPED.concat(`unit: ${value}`),
+                Strings.ENUM_VALIDATOR.NOT_MAPPED.concat(`meal: ${value}`),
                 Strings.ENUM_VALIDATOR.NOT_MAPPED_DESC
                     .concat(Object.values(MealTypes).join(', ').concat('.')))
         }
