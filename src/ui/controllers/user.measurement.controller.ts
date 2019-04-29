@@ -1,5 +1,5 @@
 import HttpStatus from 'http-status-codes'
-import { controller, httpDelete, httpGet, httpPatch, httpPost, request, response } from 'inversify-express-utils'
+import { controller, httpDelete, httpGet, httpPost, request, response } from 'inversify-express-utils'
 import { Request, Response } from 'express'
 import { inject } from 'inversify'
 import { Identifier } from '../../di/identifiers'
@@ -80,22 +80,6 @@ export class UserMeasurementController {
                 .send(handlerError.toJson())
         } finally {
             req.query = {}
-        }
-    }
-
-    @httpPatch('/:measurement_id')
-    public async updateMeasurementFromUser(@request() req: Request, @response() res: Response): Promise<Response> {
-        try {
-            const measurement: Measurement = new Measurement().fromJSON(req.body)
-            measurement.id = req.params.measurement_id
-            measurement.user_id = req.params.user_id
-            const result: Measurement = await this._service.update(measurement)
-            if (!result) return res.status(HttpStatus.NOT_FOUND).send(this.getMessageMeasurementNotFound())
-            return res.status(HttpStatus.OK).send(this.toJSONView(result))
-        } catch (err) {
-            const handlerError = ApiExceptionManager.build(err)
-            return res.status(handlerError.code)
-                .send(handlerError.toJson())
         }
     }
 
