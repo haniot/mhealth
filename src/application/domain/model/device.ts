@@ -7,7 +7,7 @@ export class Device extends Entity implements IJSONSerializable, IJSONDeserializ
     private _name?: string
     private _address?: string
     private _type?: string
-    private _model_number?: number
+    private _model_number?: string
     private _manufacturer?: string
     private _user_id?: string
 
@@ -39,11 +39,11 @@ export class Device extends Entity implements IJSONSerializable, IJSONDeserializ
         this._type = value
     }
 
-    get model_number(): number | undefined {
+    get model_number(): string | undefined {
         return this._model_number
     }
 
-    set model_number(value: number | undefined) {
+    set model_number(value: string | undefined) {
         this._model_number = value
     }
 

@@ -186,7 +186,7 @@ export abstract class DefaultEntityMock {
         name: 'YUNMAI SCALE',
         address: 'D4:36:39:91:75:71',
         type: 'thermometer',
-        model_number: 5028,
+        model_number: '502C8',
         manufacturer: 'XIAOMI',
         user_id: '5a62be07d6f33400146c9b61'
     }
