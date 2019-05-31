@@ -18,7 +18,7 @@ const deviceSchema = new Mongoose.Schema({
             required: 'Type of device is required!'
         },
         model_number: {
-            type: Number
+            type: String
         },
         manufacturer: {
             type: String,

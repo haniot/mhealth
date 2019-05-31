@@ -26,10 +26,33 @@ import { IDeviceService } from '../application/port/device.service.interface'
 import { DeviceService } from '../application/service/device.service'
 import { IMeasurementService } from '../application/port/measurement.service.interface'
 import { MeasurementService } from '../application/service/measurement.service'
-import { DeviceController } from '../ui/controllers/device.controller'
 import { MeasurementController } from '../ui/controllers/measurement.controller'
 import { UserDeviceController } from '../ui/controllers/user.device.controller'
 import { UserMeasurementController } from '../ui/controllers/user.measurement.controller'
+import { BloodGlucose } from '../application/domain/model/blood.glucose'
+import { BloodGlucoseEntityMapper } from '../infrastructure/entity/mapper/blood.glucose.entity.mapper'
+import { BloodGlucoseEntity } from '../infrastructure/entity/blood.glucose.entity'
+import { BloodPressure } from '../application/domain/model/blood.pressure'
+import { BloodPressureEntity } from '../infrastructure/entity/blood.pressure.entity'
+import { BloodPressureEntityMapper } from '../infrastructure/entity/mapper/blood.pressure.entity.mapper'
+import { BodyTemperature } from '../application/domain/model/body.temperature'
+import { BodyTemperatureEntity } from '../infrastructure/entity/body.temperature.entity'
+import { BodyTemperatureEntityMapper } from '../infrastructure/entity/mapper/body.temperature.entity.mapper'
+import { HeartRate } from '../application/domain/model/heart.rate'
+import { HeartRateEntity } from '../infrastructure/entity/heart.rate.entity'
+import { HeartRateEntityMapper } from '../infrastructure/entity/mapper/heart.rate.entity.mapper'
+import { Height } from '../application/domain/model/height'
+import { HeightEntity } from '../infrastructure/entity/height.entity'
+import { HeightEntityMapper } from '../infrastructure/entity/mapper/height.entity.mapper'
+import { WaistCircumference } from '../application/domain/model/waist.circumference'
+import { WaistCircumferenceEntity } from '../infrastructure/entity/waist.circumference.entity'
+import { WaistCircumferenceEntityMapper } from '../infrastructure/entity/mapper/waist.circumference.entity.mapper'
+import { Weight } from '../application/domain/model/weight'
+import { WeightEntity } from '../infrastructure/entity/weight.entity'
+import { WeightEntityMapper } from '../infrastructure/entity/mapper/weight.entity.mapper'
+import { FatEntity } from '../infrastructure/entity/fat.entity'
+import { Fat } from '../application/domain/model/fat'
+import { FatEntityMapper } from '../infrastructure/entity/mapper/fat.entity.mapper'
 
 export class DI {
     private static instance: DI
@@ -77,8 +100,6 @@ export class DI {
         // Controllers
         this.container.bind<HomeController>(Identifier.HOME_CONTROLLER)
             .to(HomeController).inSingletonScope()
-        this.container.bind<DeviceController>(Identifier.DEVICE_CONTROLLER)
-            .to(DeviceController).inSingletonScope()
         this.container.bind<MeasurementController>(Identifier.MEASUREMENT_CONTROLLER)
             .to(MeasurementController).inSingletonScope()
         this.container.bind<UserDeviceController>(Identifier.USER_DEVICE_CONTROLLER)
@@ -107,6 +128,30 @@ export class DI {
         this.container
             .bind<IEntityMapper<Measurement, MeasurementEntity>>(Identifier.MEASUREMENT_ENTITY_MAPPER)
             .to(MeasurementEntityMapper).inSingletonScope()
+        this.container
+            .bind<IEntityMapper<BloodGlucose, BloodGlucoseEntity>>(Identifier.BLOOD_GLUCOSE_ENTITY_MAPPER)
+            .to(BloodGlucoseEntityMapper).inSingletonScope()
+        this.container
+            .bind<IEntityMapper<BloodPressure, BloodPressureEntity>>(Identifier.BLOOD_PRESSURE_ENTITY_MAPPER)
+            .to(BloodPressureEntityMapper).inSingletonScope()
+        this.container
+            .bind<IEntityMapper<BodyTemperature, BodyTemperatureEntity>>(Identifier.BODY_TEMPERATURE_ENTITY_MAPPER)
+            .to(BodyTemperatureEntityMapper).inSingletonScope()
+        this.container
+            .bind<IEntityMapper<HeartRate, HeartRateEntity>>(Identifier.HEART_RATE_ENTITY_MAPPER)
+            .to(HeartRateEntityMapper).inSingletonScope()
+        this.container
+            .bind<IEntityMapper<Height, HeightEntity>>(Identifier.HEIGHT_ENTITY_MAPPER)
+            .to(HeightEntityMapper).inSingletonScope()
+        this.container
+            .bind<IEntityMapper<WaistCircumference, WaistCircumferenceEntity>>(Identifier.WAIST_CIRCUMFERENCE_ENTITY_MAPPER)
+            .to(WaistCircumferenceEntityMapper).inSingletonScope()
+        this.container
+            .bind<IEntityMapper<Weight, WeightEntity>>(Identifier.WEIGHT_ENTITY_MAPPER)
+            .to(WeightEntityMapper).inSingletonScope()
+        this.container
+            .bind<IEntityMapper<Fat, FatEntity>>(Identifier.FAT_ENTITY_MAPPER)
+            .to(FatEntityMapper).inSingletonScope()
 
         // Background Services
         this.container

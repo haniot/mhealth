@@ -5,8 +5,7 @@ interface IMeasurement extends Mongoose.Document {
 
 const measurementSchema = new Mongoose.Schema({
         value: {
-            type: Number,
-            required: 'Value of measurement is required!'
+            type: Number
         },
         unit: {
             type: String,
@@ -16,20 +15,9 @@ const measurementSchema = new Mongoose.Schema({
             type: String,
             required: 'Type of measurement is required!'
         },
-        measurements: [{
-            type: Schema.Types.ObjectId,
-            ref: 'Measurement'
-        }],
-        contexts: [{
-            type: {
-                type: String
-            },
-            value: {
-                type: Number
-            }
-        }],
         timestamp: {
-            type: Date
+            type: Date,
+            index: true
         },
         device_id: {
             type: Schema.Types.ObjectId,
@@ -37,7 +25,32 @@ const measurementSchema = new Mongoose.Schema({
         },
         user_id: {
             type: Schema.Types.ObjectId,
-            required: 'Id of user associated with a measurement is required!'
+            required: 'Id of user associated with a measurement is required!',
+            index: true
+        },
+        meal: { // Blood Glucose
+            type: String
+        },
+        dataset: [{ // Heart Rate
+            value: {
+                type: Number
+            },
+            timestamp: {
+                type: Date
+            }
+        }],
+        systolic: { // Blood Pressure
+            type: Number
+        },
+        diastolic: {
+            type: Number
+        },
+        pulse: {
+            type: Number
+        }, // Weight
+        fat: {
+            type: Schema.Types.ObjectId,
+            ref: 'Measurement'
         }
     },
     {
@@ -52,4 +65,5 @@ const measurementSchema = new Mongoose.Schema({
         }
     }
 )
+
 export const MeasurementRepoModel = Mongoose.model<IMeasurement>('Measurement', measurementSchema)

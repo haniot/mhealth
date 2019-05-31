@@ -3,7 +3,7 @@ export class DeviceEntity {
     public name?: string
     public address?: string
     public type?: string
-    public model_number?: number
+    public model_number?: string
     public manufacturer?: string
     public user_id?: string
 }

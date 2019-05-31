@@ -1,7 +1,7 @@
-# HANIoT Data Acquisition Service
+# HANIoT M-Health Service
 [![license](https://img.shields.io/github/license/mashape/apistatus.svg)](https://github.com/LIBE-NUTES/template-base-ts/blob/master/LICENSE) [![node](https://img.shields.io/badge/node-v11.1.0-red.svg)](https://nodejs.org/) [![npm](https://img.shields.io/badge/npm-v6.4.1-red.svg)](https://nodejs.org/) [![Swagger](https://img.shields.io/badge/swagger-v3.0-green.svg?longCache=true&style=flat)](https://swagger.io/) [![TypeScript](https://badges.frapsoft.com/typescript/love/typescript.png?v=101)](https://www.typescriptlang.org/)
 --
-Microservice responsible for adding, updating, providing, deleting and authenticating measurement and device data.
+Service used to store and manage health measurements, such as temperature, heart rate, weight, blood pressure, and blood glucose.
 
 This project follows with an implementation example containing integration with Swagger for API design and MongoDB for data storage.
 
@@ -74,7 +74,7 @@ Follow all the steps present in the [official documentation](https://docs.docker
 
 Example:
 
-``docker build -t haniot-data-acquisition:v0.1 .``
+``docker build -t haniot-mhealth-service:v0.1 .``
 
 ## Executing the project container image
 
@@ -82,7 +82,7 @@ Example:
 
 Example:
 
-``docker run -p 80:80 -it haniot-data-acquisition:v0.1``
+``docker run -p 80:80 -it haniot-mhealth-service:v0.1``
 
 ## Access API
 

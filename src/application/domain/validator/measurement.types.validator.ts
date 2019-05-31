@@ -2,7 +2,7 @@ import { ValidationException } from '../exception/validation.exception'
 import { Strings } from '../../../utils/strings'
 import { MeasurementTypes } from '../utils/measurement.types'
 
-export class MeasurementTypeValidator {
+export class MeasurementTypesValidator {
     public static validate(value: string): void | ValidationException {
         if (!Object.values(MeasurementTypes).includes(value)) {
             throw new ValidationException(

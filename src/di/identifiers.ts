@@ -8,7 +8,6 @@ export abstract class Identifier {
 
     // Controllers
     public static readonly HOME_CONTROLLER: any = Symbol.for('HomeController')
-    public static readonly DEVICE_CONTROLLER: any = Symbol.for('DeviceController')
     public static readonly MEASUREMENT_CONTROLLER: any = Symbol.for('MeasurementController')
     public static readonly USER_DEVICE_CONTROLLER: any = Symbol.for('UserDeviceController')
     public static readonly USER_MEASUREMENT_CONTROLLER: any = Symbol.for('UserMeasurementController')
@@ -28,6 +27,14 @@ export abstract class Identifier {
     // Mappers
     public static readonly DEVICE_ENTITY_MAPPER: any = Symbol.for('DeviceEntityMapper')
     public static readonly MEASUREMENT_ENTITY_MAPPER: any = Symbol.for('MeasurementEntityMapper')
+    public static readonly BLOOD_GLUCOSE_ENTITY_MAPPER: any = Symbol.for('BloodGlucoseEntityMapper')
+    public static readonly BLOOD_PRESSURE_ENTITY_MAPPER: any = Symbol.for('BloodPressureEntityMapper')
+    public static readonly BODY_TEMPERATURE_ENTITY_MAPPER: any = Symbol.for('BodyTemperatureEntityMapper')
+    public static readonly HEART_RATE_ENTITY_MAPPER: any = Symbol.for('HeartRateEntityMapper')
+    public static readonly HEIGHT_ENTITY_MAPPER: any = Symbol.for('HeightEntityMapper')
+    public static readonly WAIST_CIRCUMFERENCE_ENTITY_MAPPER: any = Symbol.for('WaistCircumferenceEntityMapper')
+    public static readonly WEIGHT_ENTITY_MAPPER: any = Symbol.for('WeightEntityMapper')
+    public static readonly FAT_ENTITY_MAPPER: any = Symbol.for('FatEntityMapper')
 
     // Background Services
     public static readonly MONGODB_CONNECTION_FACTORY: any = Symbol.for('ConnectionFactoryMongodb')

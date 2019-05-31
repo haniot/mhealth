@@ -2,7 +2,6 @@ import { injectable } from 'inversify'
 import { IEntityMapper } from '../../port/entity.mapper.interface'
 import { Measurement } from '../../../application/domain/model/measurement'
 import { MeasurementEntity } from '../measurement.entity'
-import { Context } from '../../../application/domain/model/context'
 
 @injectable()
 export class MeasurementEntityMapper implements IEntityMapper<Measurement, MeasurementEntity> {
@@ -16,16 +15,8 @@ export class MeasurementEntityMapper implements IEntityMapper<Measurement, Measu
         if (!json) return result
 
         if (json.id !== undefined) result.id = json.id
-        if (json.value !== undefined) result.value = json.value
         if (json.unit !== undefined) result.unit = json.unit
         if (json.type !== undefined) result.type = json.type
-        if (json.measurements !== undefined && json.measurements.length > 0) {
-            result.measurements = json.measurements.map(value => new Measurement().fromJSON(value))
-        }
-        if (json.contexts !== undefined && json.contexts.length > 0) {
-            result.contexts = json.contexts.map(value => new Context().fromJSON(value))
-        }
-        if (json.timestamp !== undefined) result.timestamp = json.timestamp
         if (json.device_id !== undefined) result.device_id = json.device_id
         if (json.user_id !== undefined) result.user_id = json.user_id
         return result
@@ -39,16 +30,8 @@ export class MeasurementEntityMapper implements IEntityMapper<Measurement, Measu
         const result: MeasurementEntity = new MeasurementEntity()
 
         if (item.id !== undefined) result.id = item.id
-        if (item.value !== undefined) result.value = item.value
         if (item.unit !== undefined) result.unit = item.unit
         if (item.type !== undefined) result.type = item.type
-        if (item.measurements !== undefined && item.measurements.length > 0) {
-            item.measurements.forEach(value => result.measurements.push(value.id!))
-        } else delete result.measurements
-        if (item.contexts !== undefined && item.contexts.length > 0) {
-            result.contexts = item.contexts.map(value => value.toJSON())
-        } else delete result.contexts
-        if (item.timestamp !== undefined) result.timestamp = item.timestamp
         if (item.device_id !== undefined) result.device_id = item.device_id
         if (item.user_id !== undefined) result.user_id = item.user_id
         return result

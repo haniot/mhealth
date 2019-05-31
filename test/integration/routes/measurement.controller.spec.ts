@@ -6,7 +6,7 @@ import { Identifier } from '../../../src/di/identifiers'
 import { App } from '../../../src/app'
 import { expect } from 'chai'
 import { MeasurementRepoModel } from '../../../src/infrastructure/database/schema/measurement.schema'
-import { Measurement } from '../../../src/application/domain/model/measurement'
+import { BloodGlucose } from '../../../src/application/domain/model/blood.glucose'
 
 const container: Container = DI.getInstance().getContainer()
 const dbConnection: IConnectionDB = container.get(Identifier.MONGODB_CONNECTION)
@@ -15,7 +15,7 @@ const request = require('supertest')(app.getExpress())
 
 describe('Routes: Measurement', () => {
 
-    const measurement: Measurement = new Measurement().fromJSON(DefaultEntityMock.MEASUREMENT)
+    const measurement: BloodGlucose = new BloodGlucose().fromJSON(DefaultEntityMock.BLOOD_GLUCOSE)
 
     before(async () => {
             try {
@@ -60,6 +60,8 @@ describe('Routes: Measurement', () => {
                         expect(res.body[0].device_id).to.eql(measurement.device_id)
                         expect(res.body[0]).to.have.property('user_id')
                         expect(res.body[0].user_id).to.eql(measurement.user_id)
+                        expect(res.body[0]).to.have.property('meal')
+                        expect(res.body[0].meal).to.eql(measurement.meal)
                     })
             })
         })
@@ -67,7 +69,7 @@ describe('Routes: Measurement', () => {
 })
 
 async function createMeasurement() {
-    return await MeasurementRepoModel.create(DefaultEntityMock.MEASUREMENT)
+    return await MeasurementRepoModel.create(DefaultEntityMock.BLOOD_GLUCOSE)
 }
 
 async function deleteAllMeasurements() {

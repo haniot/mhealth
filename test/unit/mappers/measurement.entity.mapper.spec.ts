@@ -1,47 +1,41 @@
 import { DefaultEntityMock } from '../../mocks/models/default.entity.mock'
 import { assert } from 'chai'
 import { Measurement } from '../../../src/application/domain/model/measurement'
-import { MeasurementEntity } from '../../../src/infrastructure/entity/measurement.entity'
 import { MeasurementEntityMapper } from '../../../src/infrastructure/entity/mapper/measurement.entity.mapper'
-import { Context } from '../../../src/application/domain/model/context'
+import { MeasurementEntity } from '../../../src/infrastructure/entity/measurement.entity'
 
-describe('Mappers: measurementEntityMapper', () => {
+describe('Mappers: MeasurementEntityMapper', () => {
     const mapper: MeasurementEntityMapper = new MeasurementEntityMapper()
     const measurement: Measurement = new Measurement().fromJSON(DefaultEntityMock.MEASUREMENT)
     measurement.id = DefaultEntityMock.MEASUREMENT.id
-    measurement.contexts = [new Context().fromJSON(DefaultEntityMock.CONTEXT)]
-
-    const measurement_temperature: Measurement = new Measurement().fromJSON(DefaultEntityMock.MEASUREMENT_TEMPERATURE)
-    measurement_temperature.id = DefaultEntityMock.MEASUREMENT_TEMPERATURE.id
-    measurement.measurements = [measurement_temperature]
-
+    measurement.type = DefaultEntityMock.MEASUREMENT.type
     describe('transform()', () => {
         context('when the parameter is a json', () => {
             it('should call the jsonToModel() method', () => {
-                const result = mapper.transform(measurement.toJSON())
-                assert.propertyVal(result, 'value', measurement.value)
-                assert.propertyVal(result, 'unit', measurement.unit)
-                assert.propertyVal(result, 'type', measurement.type)
-                assert.propertyVal(result, 'user_id', measurement.user_id)
-                assert.propertyVal(result, 'device_id', measurement.device_id)
+                const result = mapper.transform(DefaultEntityMock.MEASUREMENT)
+                assert.propertyVal(result, 'id', DefaultEntityMock.MEASUREMENT.id)
+                assert.propertyVal(result, 'type', DefaultEntityMock.MEASUREMENT.type)
+                assert.propertyVal(result, 'unit', DefaultEntityMock.MEASUREMENT.unit)
+                assert.propertyVal(result, 'device_id', DefaultEntityMock.MEASUREMENT.device_id)
+                assert.propertyVal(result, 'user_id', DefaultEntityMock.MEASUREMENT.user_id)
             })
 
             it('should return model without parameters for empty json', () => {
                 const result = mapper.transform({})
-                assert.propertyVal(result, 'value', undefined)
+                assert.propertyVal(result, 'id', undefined)
                 assert.propertyVal(result, 'unit', undefined)
                 assert.propertyVal(result, 'type', undefined)
-                assert.propertyVal(result, 'user_id', undefined)
                 assert.propertyVal(result, 'device_id', undefined)
+                assert.propertyVal(result, 'user_id', undefined)
             })
 
             it('should return model without parameter for undefined json', () => {
                 const result = mapper.transform(undefined)
-                assert.propertyVal(result, 'value', undefined)
+                assert.propertyVal(result, 'id', undefined)
                 assert.propertyVal(result, 'unit', undefined)
                 assert.propertyVal(result, 'type', undefined)
-                assert.propertyVal(result, 'user_id', undefined)
                 assert.propertyVal(result, 'device_id', undefined)
+                assert.propertyVal(result, 'user_id', undefined)
             })
 
         })
@@ -49,15 +43,16 @@ describe('Mappers: measurementEntityMapper', () => {
         context('when the parameter is a model', () => {
             it('should call the modelToModelEntity() method', () => {
                 const result = mapper.transform(measurement)
-                assert.propertyVal(result, 'value', measurement.value)
-                assert.propertyVal(result, 'unit', measurement.unit)
-                assert.propertyVal(result, 'type', measurement.type)
-                assert.propertyVal(result, 'user_id', measurement.user_id)
-                assert.propertyVal(result, 'device_id', measurement.device_id)
+                assert.propertyVal(result, 'id', DefaultEntityMock.MEASUREMENT.id)
+                assert.propertyVal(result, 'unit', DefaultEntityMock.MEASUREMENT.unit)
+                assert.propertyVal(result, 'device_id', DefaultEntityMock.MEASUREMENT.device_id)
+                assert.propertyVal(result, 'user_id', DefaultEntityMock.MEASUREMENT.user_id)
             })
 
             it('should return a model entity with basic parameters for empty model', () => {
-                const result = mapper.transform(new Measurement())
+                const emptyMeasurement: Measurement = new Measurement()
+                emptyMeasurement.type = undefined
+                const result = mapper.transform(emptyMeasurement)
                 assert.isEmpty(result)
             })
         })
