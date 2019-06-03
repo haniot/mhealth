@@ -59,3 +59,24 @@ typings/
 
 # next.js build output
 .next
+<<<<<<< HEAD
+=======
+
+# IDE
+.idea
+
+# Directory files dist
+dist
+
+# Docs
+docs
+
+# certificates and keys directories and files
+.certs
+*.pem
+*.crt
+*.key
+*.csr
+*.cert
+certs
+>>>>>>> release/1.0.0
