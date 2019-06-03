@@ -1,4 +1,6 @@
+import fs from 'fs'
 import http from 'http'
+import https from 'https'
 import { Application } from 'express'
 import { Identifier } from './src/di/identifiers'
 import { DI } from './src/di/di'
@@ -17,20 +19,36 @@ import { App } from './src/app'
  *
  *  The fastest way is to create a copy of the .env.example file.
  */
-require(`dotenv`).load()
+require(`dotenv`).config()
 
 const logger: ILogger = DI.getInstance().getContainer().get<ILogger>(Identifier.LOGGER)
 const app: Application = (DI.getInstance().getContainer().get<App>(Identifier.APP)).getExpress()
 const backgroundServices: BackgroundService = DI.getInstance().getContainer().get(Identifier.BACKGROUND_SERVICE)
 const port_http = process.env.PORT_HTTP || Default.PORT_HTTP
+const port_https = process.env.PORT_HTTPS || Default.PORT_HTTPS
+const https_options = {
+    key: fs.readFileSync(process.env.SSL_KEY_PATH || Default.SSL_KEY_PATH),
+    cert: fs.readFileSync(process.env.SSL_CERT_PATH || Default.SSL_CERT_PATH)
+}
 
 /**
- * Up Server HTTP.
- * Accessing http will be redirected to https.
+ * Initializes HTTP server and redirects accesses to HTTPS.
  */
-http.createServer(app)
-    .listen(port_http, () => {
-        logger.debug(`Server HTTP running on port ${port_http}`)
+http.createServer((req, res) => {
+    const host = req.headers.host || ''
+    const newLocation = 'https://' + host.replace(/:\d+/, ':' + port_https) + req.url
+    res.writeHead(301, { Location: newLocation })
+    res.end()
+}).listen(port_http)
+
+/**
+ * Initializes HTTPS server.
+ * After the successful startup, listener is initialized
+ * for important events and background services.
+ */
+https.createServer(https_options, app)
+    .listen(port_https, () => {
+        logger.debug(`Server HTTPS running on port ${port_https}`)
 
         initListener()
         backgroundServices.startServices()
@@ -39,9 +57,14 @@ http.createServer(app)
             })
             .catch(err => {
                 logger.error(err.message)
+                process.exit()
             })
     })
 
+/**
+ * Function to listen to the SIGINT event and end services
+ * in the background, when the respective event is triggered.
+ */
 function initListener(): void {
     process.on('SIGINT', async () => {
         try {

@@ -35,7 +35,6 @@ build/Release
 # Dependency directories
 node_modules/
 jspm_packages/
-package-lock.json
 
 # TypeScript v1 declaration files
 typings/
@@ -69,3 +68,12 @@ dist
 
 # Docs
 docs
+
+# certificates and keys directories and files
+.certs
+*.pem
+*.crt
+*.key
+*.csr
+*.cert
+certs

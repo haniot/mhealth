@@ -1,5 +1,5 @@
 {
-  "name": "haniot-mhealth-service",
+  "name": "mhealth-service",
   "version": "2.0.0",
   "description": "Microservice responsible for manage user measurements.",
   "main": "dist/server.js",
@@ -16,7 +16,7 @@
   },
   "repository": {
     "type": "git",
-    "url": ""
+    "url": "https://github.com/nutes-uepb/haniot-mhealth-service.git"
   },
   "keywords": [
     "microservice",
@@ -47,44 +47,43 @@
     "all": true
   },
   "dependencies": {
-    "bcryptjs": "^2.4.3",
-    "body-parser": "^1.18.3",
-    "dotenv": "^6.2.0",
-    "express": "^4.16.4",
-    "helmet": "^3.15.1",
+    "body-parser": "^1.19.0",
+    "dotenv": "^8.0.0",
+    "express": "^4.17.1",
+    "express-ip-access-control": "^1.0.5",
+    "helmet": "^3.18.0",
     "inversify": "^5.0.1",
     "inversify-express-utils": "^6.3.2",
-    "jsonwebtoken": "^8.5.0",
-    "mongoose": "^5.4.16",
+    "mongoose": "^5.5.12",
     "morgan": "^1.9.1",
     "query-strings-parser": "^2.0.0",
     "reflect-metadata": "^0.1.13",
-    "swagger-ui-express": "^4.0.2",
+    "swagger-ui-express": "^4.0.5",
     "winston": "^3.2.1",
-    "winston-daily-rotate-file": "^3.8.0"
+    "winston-daily-rotate-file": "^3.9.0"
   },
   "devDependencies": {
     "@types/body-parser": "^1.17.0",
-    "@types/chai": "^4.1.6",
-    "@types/express": "^4.16.0",
-    "@types/helmet": "^0.0.42",
-    "@types/mocha": "^5.2.5",
-    "@types/mongoose": "^5.2.20",
+    "@types/chai": "^4.1.7",
+    "@types/express": "^4.16.1",
+    "@types/helmet": "^0.0.43",
+    "@types/mocha": "^5.2.6",
+    "@types/mongoose": "^5.5.0",
     "@types/morgan": "^1.7.35",
     "@types/swagger-ui-express": "^3.0.0",
     "chai": "^4.2.0",
-    "gulp": "^4.0.0",
+    "gulp": "^4.0.2",
     "gulp-nodemon": "^2.4.2",
     "gulp-tslint": "^8.1.4",
-    "gulp-typescript": "^5.0.0",
-    "mocha": "^6.0.2",
-    "nyc": "^13.3.0",
-    "sinon": "^7.2.4",
-    "sinon-mongoose": "^2.2.1",
-    "supertest": "^3.4.2",
-    "ts-node": "^8.0.2",
-    "tslint": "^5.13.0",
+    "gulp-typescript": "^5.0.1",
+    "mocha": "^6.1.4",
+    "nyc": "^14.1.1",
+    "sinon": "^7.3.2",
+    "sinon-mongoose": "^2.3.0",
+    "supertest": "^4.0.2",
+    "ts-node": "^8.2.0",
+    "tslint": "^5.17.0",
     "typedoc": "^0.14.2",
-    "typescript": "^3.3.3333"
+    "typescript": "^3.5.1"
   }
 }
