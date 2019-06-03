@@ -59,11 +59,10 @@ typings/
 
 # next.js build output
 .next
-<<<<<<< HEAD
-=======
 
 # IDE
 .idea
+.vscode
 
 # Directory files dist
 dist
@@ -79,4 +78,3 @@ docs
 *.csr
 *.cert
 certs
->>>>>>> release/1.0.0
