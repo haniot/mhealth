@@ -3,11 +3,13 @@ import { assert } from 'chai'
 import { WeightEntity } from '../../../src/infrastructure/entity/weight.entity'
 import { WeightEntityMapper } from '../../../src/infrastructure/entity/mapper/weight.entity.mapper'
 import { Weight } from '../../../src/application/domain/model/weight'
+import {Fat} from '../../../src/application/domain/model/fat'
 
 describe('Mappers: WeightEntityMapper', () => {
     const mapper: WeightEntityMapper = new WeightEntityMapper()
     const measurement: Weight = new Weight().fromJSON(DefaultEntityMock.WEIGHT)
     measurement.id = DefaultEntityMock.WEIGHT.id
+    const fat = new Fat().fromJSON(DefaultEntityMock.WEIGHT.fat)
     describe('transform()', () => {
         context('when the parameter is a json', () => {
             it('should call the jsonToModel() method', () => {
@@ -19,6 +21,7 @@ describe('Mappers: WeightEntityMapper', () => {
                 assert.propertyVal(result, 'user_id', DefaultEntityMock.WEIGHT.user_id)
                 assert.propertyVal(result, 'value', DefaultEntityMock.WEIGHT.value)
                 assert.propertyVal(result, 'timestamp', DefaultEntityMock.WEIGHT.timestamp)
+                assert.deepPropertyVal(result, 'fat', fat)
             })
 
             it('should return model without parameters for empty json', () => {
@@ -30,6 +33,7 @@ describe('Mappers: WeightEntityMapper', () => {
                 assert.propertyVal(result, 'user_id', undefined)
                 assert.propertyVal(result, 'value', undefined)
                 assert.propertyVal(result, 'timestamp', undefined)
+                assert.propertyVal(result, 'fat', undefined)
             })
 
             it('should return model without parameter for undefined json', () => {
@@ -41,6 +45,7 @@ describe('Mappers: WeightEntityMapper', () => {
                 assert.propertyVal(result, 'user_id', undefined)
                 assert.propertyVal(result, 'value', undefined)
                 assert.propertyVal(result, 'timestamp', undefined)
+                assert.propertyVal(result, 'fat', undefined)
             })
 
         })
@@ -55,6 +60,7 @@ describe('Mappers: WeightEntityMapper', () => {
                 assert.propertyVal(result, 'user_id', DefaultEntityMock.WEIGHT.user_id)
                 assert.propertyVal(result, 'value', DefaultEntityMock.WEIGHT.value)
                 assert.propertyVal(result, 'timestamp', DefaultEntityMock.WEIGHT.timestamp)
+                assert.propertyVal(result, 'fat', undefined) //fat is not generated id, so return undefined
             })
 
             it('should return a model entity with basic parameters for empty model', () => {

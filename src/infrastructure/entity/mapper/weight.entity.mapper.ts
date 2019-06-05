@@ -27,7 +27,6 @@ export class WeightEntityMapper implements IEntityMapper<Weight, WeightEntity> {
 
     public modelToModelEntity(item: Weight): WeightEntity {
         const result: WeightEntity = new WeightEntity()
-
         if (item.id !== undefined) result.id = item.id
         if (item.value !== undefined) result.value = item.value
         if (item.unit !== undefined) result.unit = item.unit

@@ -10,6 +10,7 @@ describe('Models: Measurement', () => {
                 assert.propertyVal(result, 'unit', DefaultEntityMock.MEASUREMENT.unit)
                 assert.propertyVal(result, 'device_id', DefaultEntityMock.MEASUREMENT.device_id)
                 assert.propertyVal(result, 'user_id', DefaultEntityMock.MEASUREMENT.user_id)
+                assert.propertyVal(result, 'type', undefined)
             })
         })
 
@@ -19,6 +20,7 @@ describe('Models: Measurement', () => {
                 assert.propertyVal(result, 'unit', DefaultEntityMock.MEASUREMENT.unit)
                 assert.propertyVal(result, 'device_id', DefaultEntityMock.MEASUREMENT.device_id)
                 assert.propertyVal(result, 'user_id', DefaultEntityMock.MEASUREMENT.user_id)
+                assert.propertyVal(result, 'type', undefined)
             })
         })
 
@@ -28,6 +30,7 @@ describe('Models: Measurement', () => {
                 assert.propertyVal(result, 'unit', undefined)
                 assert.propertyVal(result, 'device_id', undefined)
                 assert.propertyVal(result, 'user_id', undefined)
+                assert.propertyVal(result, 'type', undefined)
             })
         })
 
@@ -37,6 +40,7 @@ describe('Models: Measurement', () => {
                 assert.propertyVal(result, 'unit', undefined)
                 assert.propertyVal(result, 'device_id', undefined)
                 assert.propertyVal(result, 'user_id', undefined)
+                assert.propertyVal(result, 'type', undefined)
             })
         })
 
@@ -46,6 +50,7 @@ describe('Models: Measurement', () => {
                 assert.propertyVal(result, 'unit', undefined)
                 assert.propertyVal(result, 'device_id', undefined)
                 assert.propertyVal(result, 'user_id', undefined)
+                assert.propertyVal(result, 'type', undefined)
             })
         })
 
@@ -55,6 +60,7 @@ describe('Models: Measurement', () => {
                 assert.propertyVal(result, 'unit', undefined)
                 assert.propertyVal(result, 'device_id', undefined)
                 assert.propertyVal(result, 'user_id', undefined)
+                assert.propertyVal(result, 'type', undefined)
             })
         })
     })

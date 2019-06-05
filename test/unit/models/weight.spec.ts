@@ -4,6 +4,7 @@ import { Weight } from '../../../src/application/domain/model/weight'
 import { Fat } from '../../../src/application/domain/model/fat'
 
 describe('Models: Weight', () => {
+    const fat = new Fat().fromJSON(DefaultEntityMock.WEIGHT.fat)
     describe('fromJSON()', () => {
         context('when convert json to model', () => {
             it('should return a model with json parameters', () => {
@@ -14,7 +15,7 @@ describe('Models: Weight', () => {
                 assert.propertyVal(result, 'user_id', DefaultEntityMock.WEIGHT.user_id)
                 assert.propertyVal(result, 'value', DefaultEntityMock.WEIGHT.value)
                 assert.propertyVal(result, 'timestamp', DefaultEntityMock.WEIGHT.timestamp)
-                assert.deepPropertyVal(result, 'fat', new Fat().fromJSON(DefaultEntityMock.WEIGHT.fat))
+                assert.deepPropertyVal(result, 'fat', fat)
             })
         })
 
@@ -27,7 +28,7 @@ describe('Models: Weight', () => {
                 assert.propertyVal(result, 'user_id', DefaultEntityMock.WEIGHT.user_id)
                 assert.propertyVal(result, 'value', DefaultEntityMock.WEIGHT.value)
                 assert.propertyVal(result, 'timestamp', DefaultEntityMock.WEIGHT.timestamp)
-                assert.deepPropertyVal(result, 'fat', new Fat().fromJSON(DefaultEntityMock.WEIGHT.fat))
+                assert.deepPropertyVal(result, 'fat', fat)
             })
         })
 
