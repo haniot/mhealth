@@ -23,32 +23,32 @@ describe('Models: DataSetItem', () => {
         context('when pass a empty string json', () => {
             it('should return a model with undefined parameters', () => {
                 const result = new DataSetItem().fromJSON('')
-                assert.propertyVal(result, 'value', undefined)
-                assert.propertyVal(result, 'timestamp', undefined)
+                assert.isUndefined(result.value, 'no value defined')
+                assert.isUndefined(result.timestamp, 'no timestamp defined')
             })
         })
 
         context('when pass a invalid string json', () => {
             it('should return a model with undefined parameters', () => {
                 const result = new DataSetItem().fromJSON('invalid')
-                assert.propertyVal(result, 'value', undefined)
-                assert.propertyVal(result, 'timestamp', undefined)
+                assert.isUndefined(result.value, 'no value defined')
+                assert.isUndefined(result.timestamp, 'no timestamp defined')
             })
         })
 
         context('when pass a undefined json', () => {
             it('should return a model with undefined parameters', () => {
                 const result = new DataSetItem().fromJSON(undefined)
-                assert.propertyVal(result, 'value', undefined)
-                assert.propertyVal(result, 'timestamp', undefined)
+                assert.isUndefined(result.value, 'no value defined')
+                assert.isUndefined(result.timestamp, 'no timestamp defined')
             })
         })
 
         context('when pass a empty json', () => {
             it('should return a model with undefined parameters', () => {
                 const result = new DataSetItem().fromJSON({})
-                assert.propertyVal(result, 'value', undefined)
-                assert.propertyVal(result, 'timestamp', undefined)
+                assert.isUndefined(result.value, 'no value defined')
+                assert.isUndefined(result.timestamp, 'no timestamp defined')
             })
         })
     })
@@ -66,8 +66,8 @@ describe('Models: DataSetItem', () => {
         context('when the model does not have defined parameters', () => {
             it('should return json with undefined parameters', () => {
                 const result = new DataSetItem().toJSON()
-                assert.propertyVal(result, 'value', undefined)
-                assert.propertyVal(result, 'timestamp', undefined)
+                assert.isUndefined(result.value, 'no value defined')
+                assert.isUndefined(result.timestamp, 'no timestamp defined')
             })
         })
     })

@@ -41,41 +41,40 @@ describe('Models: StatusError', () => {
         context('when pass a empty string json', () => {
             it('should return a model with undefined parameters', () => {
                 const result = new StatusError().fromJSON('')
-                assert.propertyVal(result, 'code', undefined)
-                assert.propertyVal(result, 'message', undefined)
-                assert.propertyVal(result, 'description', undefined)
-                assert.deepPropertyVal(result, 'item', undefined)
-
+                assert.isUndefined(result.code, 'no code defined')
+                assert.isUndefined(result.message, 'no message defined')
+                assert.isUndefined(result.description, 'no description defined')
+                assert.isUndefined(result.item, 'no item defined')
             })
         })
 
         context('when pass a invalid string json', () => {
             it('should return a model with undefined parameters', () => {
                 const result = new StatusError().fromJSON('invalid')
-                assert.propertyVal(result, 'code', undefined)
-                assert.propertyVal(result, 'message', undefined)
-                assert.propertyVal(result, 'description', undefined)
-                assert.deepPropertyVal(result, 'item', undefined)
+                assert.isUndefined(result.code, 'no code defined')
+                assert.isUndefined(result.message, 'no message defined')
+                assert.isUndefined(result.description, 'no description defined')
+                assert.isUndefined(result.item, 'no item defined')
             })
         })
 
         context('when pass a undefined json', () => {
             it('should return a model with undefined parameters', () => {
                 const result = new StatusError().fromJSON(undefined)
-                assert.propertyVal(result, 'code', undefined)
-                assert.propertyVal(result, 'message', undefined)
-                assert.propertyVal(result, 'description', undefined)
-                assert.deepPropertyVal(result, 'item', undefined)
+                assert.isUndefined(result.code, 'no code defined')
+                assert.isUndefined(result.message, 'no message defined')
+                assert.isUndefined(result.description, 'no description defined')
+                assert.isUndefined(result.item, 'no item defined')
             })
         })
 
         context('when pass a empty json', () => {
             it('should return a model with undefined parameters', () => {
                 const result = new StatusError().fromJSON({})
-                assert.propertyVal(result, 'code', undefined)
-                assert.propertyVal(result, 'message', undefined)
-                assert.propertyVal(result, 'description', undefined)
-                assert.deepPropertyVal(result, 'item', undefined)
+                assert.isUndefined(result.code, 'no code defined')
+                assert.isUndefined(result.message, 'no message defined')
+                assert.isUndefined(result.description, 'no description defined')
+                assert.isUndefined(result.item, 'no item defined')
             })
         })
     })
@@ -95,10 +94,10 @@ describe('Models: StatusError', () => {
         context('when the model does not have defined parameters', () => {
             it('should return json with undefined parameters', () => {
                 const result = new StatusError().toJSON()
-                assert.propertyVal(result, 'code', undefined)
-                assert.propertyVal(result, 'message', undefined)
-                assert.propertyVal(result, 'description', undefined)
-                assert.deepPropertyVal(result, 'item', undefined)
+                assert.isUndefined(result.code, 'no code defined')
+                assert.isUndefined(result.message, 'no message defined')
+                assert.isUndefined(result.description, 'no description defined')
+                assert.isUndefined(result.item, 'no item defined')
             })
         })
     })

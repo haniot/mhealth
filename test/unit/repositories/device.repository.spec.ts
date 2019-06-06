@@ -52,7 +52,7 @@ describe('Repositories: DeviceRepository', () => {
 
                 return repo.create(device)
                     .then(result => {
-                        assert.equal(result, undefined)
+                        assert.isUndefined(result, 'no result defined')
                     })
             })
         })
@@ -182,7 +182,7 @@ describe('Repositories: DeviceRepository', () => {
 
                 return repo.findOne(query)
                     .then(result => {
-                        assert.equal(result, undefined)
+                        assert.isUndefined(result, 'no result defined')
                     })
             })
         })
@@ -242,7 +242,7 @@ describe('Repositories: DeviceRepository', () => {
 
                 return repo.update(device)
                     .then(result => {
-                        assert.equal(result, undefined)
+                        assert.isUndefined(result, 'no result defined')
                     })
             })
         })

@@ -18,7 +18,7 @@ describe('Validators: CreateBloodGlucoseValidator', () => {
         it('should throw an error for does not pass value', () => {
             measurement.value = undefined
             try {
-                CreateBloodGlucoseValidator.validate(measurement)
+                assert.ifError(CreateBloodGlucoseValidator.validate(measurement))
             } catch (err) {
                 assert.propertyVal(err, 'message', 'Required fields were not provided...')
                 assert.propertyVal(err, 'description', 'BloodGlucose validation: value required!')

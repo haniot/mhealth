@@ -22,20 +22,20 @@ describe('Mappers: MeasurementEntityMapper', () => {
 
             it('should return model without parameters for empty json', () => {
                 const result = mapper.transform({})
-                assert.propertyVal(result, 'id', undefined)
-                assert.propertyVal(result, 'unit', undefined)
-                assert.propertyVal(result, 'type', undefined)
-                assert.propertyVal(result, 'device_id', undefined)
-                assert.propertyVal(result, 'user_id', undefined)
+                assert.isUndefined(result.id, 'no id defined')
+                assert.isUndefined(result.unit, 'no unit defined')
+                assert.isUndefined(result.device_id, 'no device_id defined')
+                assert.isUndefined(result.user_id, 'no user_id defined')
+                assert.isUndefined(result.type, 'no type defined')
             })
 
             it('should return model without parameter for undefined json', () => {
                 const result = mapper.transform(undefined)
-                assert.propertyVal(result, 'id', undefined)
-                assert.propertyVal(result, 'unit', undefined)
-                assert.propertyVal(result, 'type', undefined)
-                assert.propertyVal(result, 'device_id', undefined)
-                assert.propertyVal(result, 'user_id', undefined)
+                assert.isUndefined(result.id, 'no id defined')
+                assert.isUndefined(result.unit, 'no unit defined')
+                assert.isUndefined(result.device_id, 'no device_id defined')
+                assert.isUndefined(result.user_id, 'no user_id defined')
+                assert.isUndefined(result.type, 'no type defined')
             })
 
         })

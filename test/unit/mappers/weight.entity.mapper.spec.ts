@@ -26,26 +26,27 @@ describe('Mappers: WeightEntityMapper', () => {
 
             it('should return model without parameters for empty json', () => {
                 const result = mapper.transform({})
-                assert.propertyVal(result, 'id', undefined)
                 assert.propertyVal(result, 'type', DefaultEntityMock.WEIGHT.type)
-                assert.propertyVal(result, 'unit', undefined)
-                assert.propertyVal(result, 'device_id', undefined)
-                assert.propertyVal(result, 'user_id', undefined)
-                assert.propertyVal(result, 'value', undefined)
-                assert.propertyVal(result, 'timestamp', undefined)
-                assert.propertyVal(result, 'fat', undefined)
+                assert.isUndefined(result.id, 'no id defined')
+                assert.isUndefined(result.unit, 'no unit defined')
+                assert.isUndefined(result.device_id, 'no device_id defined')
+                assert.isUndefined(result.user_id, 'no user_id defined')
+                assert.isUndefined(result.value, 'no value defined')
+                assert.isUndefined(result.timestamp, 'no timestamp defined')
+                assert.isUndefined(result.fat, 'no fat defined')
             })
 
             it('should return model without parameter for undefined json', () => {
                 const result = mapper.transform(undefined)
                 assert.propertyVal(result, 'id', undefined)
                 assert.propertyVal(result, 'type', DefaultEntityMock.WEIGHT.type)
-                assert.propertyVal(result, 'unit', undefined)
-                assert.propertyVal(result, 'device_id', undefined)
-                assert.propertyVal(result, 'user_id', undefined)
-                assert.propertyVal(result, 'value', undefined)
-                assert.propertyVal(result, 'timestamp', undefined)
-                assert.propertyVal(result, 'fat', undefined)
+                assert.isUndefined(result.id, 'no id defined')
+                assert.isUndefined(result.unit, 'no unit defined')
+                assert.isUndefined(result.device_id, 'no device_id defined')
+                assert.isUndefined(result.user_id, 'no user_id defined')
+                assert.isUndefined(result.value, 'no value defined')
+                assert.isUndefined(result.timestamp, 'no timestamp defined')
+                assert.isUndefined(result.fat, 'no fat defined')
             })
 
         })
@@ -60,7 +61,7 @@ describe('Mappers: WeightEntityMapper', () => {
                 assert.propertyVal(result, 'user_id', DefaultEntityMock.WEIGHT.user_id)
                 assert.propertyVal(result, 'value', DefaultEntityMock.WEIGHT.value)
                 assert.propertyVal(result, 'timestamp', DefaultEntityMock.WEIGHT.timestamp)
-                assert.propertyVal(result, 'fat', undefined) //fat is not generated id, so return undefined
+                assert.isUndefined(result.fat, 'no fat defined') //fat is not generated id, so return undefined
             })
 
             it('should return a model entity with basic parameters for empty model', () => {

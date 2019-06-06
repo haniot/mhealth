@@ -22,20 +22,22 @@ describe('Mappers: DeviceEntityMapper', () => {
 
             it('should return model without parameters for empty json', () => {
                 const result = mapper.transform({})
-                assert.propertyVal(result, 'name', undefined)
-                assert.propertyVal(result, 'type', undefined)
-                assert.propertyVal(result, 'model_number', undefined)
-                assert.propertyVal(result, 'manufacturer', undefined)
-                assert.propertyVal(result, 'user_id', undefined)
+                assert.isUndefined(result.name, 'no name defined')
+                assert.isUndefined(result.address, 'no address defined')
+                assert.isUndefined(result.type, 'no name type')
+                assert.isUndefined(result.model_number, 'no model_number defined')
+                assert.isUndefined(result.manufacturer, 'no manufacturer defined')
+                assert.isUndefined(result.user_id, 'no user_id defined')
             })
 
             it('should return model without parameter for undefined json', () => {
                 const result = mapper.transform(undefined)
-                assert.propertyVal(result, 'name', undefined)
-                assert.propertyVal(result, 'type', undefined)
-                assert.propertyVal(result, 'model_number', undefined)
-                assert.propertyVal(result, 'manufacturer', undefined)
-                assert.propertyVal(result, 'user_id', undefined)
+                assert.isUndefined(result.name, 'no name defined')
+                assert.isUndefined(result.address, 'no address defined')
+                assert.isUndefined(result.type, 'no name type')
+                assert.isUndefined(result.model_number, 'no model_number defined')
+                assert.isUndefined(result.manufacturer, 'no manufacturer defined')
+                assert.isUndefined(result.user_id, 'no user_id defined')
             })
 
         })
