@@ -18,9 +18,9 @@ export class DeviceRepository extends BaseRepository<Device, DeviceEntity> imple
         super(_model, _entityMapper, _logger)
     }
 
-    public checkExists(id: string): Promise<boolean> {
+    public checkExists(mac: string): Promise<boolean> {
         return new Promise<boolean>((resolve, reject) => {
-            super.findOne(new Query().fromJSON({ filters: { _id: id } }))
+            super.findOne(new Query().fromJSON({ filters: { address: mac } }))
                 .then(result => {
                     if (!result) return resolve(false)
                     return resolve(true)

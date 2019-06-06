@@ -13,7 +13,7 @@ export class CreateDeviceValidator {
         else DeviceTypeValidator.validate(item.type)
         if (!item.manufacturer) fields.push('manufacturer')
         if (!item.user_id) fields.push('user_id')
-        else ObjectIdValidator.validate(item.user_id)
+        else item.user_id.forEach(id => ObjectIdValidator.validate(id))
 
         if (fields.length) {
             throw new ValidationException('Required fields were not provided...',
