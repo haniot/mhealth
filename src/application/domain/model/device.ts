@@ -84,7 +84,7 @@ export class Device extends Entity implements IJSONSerializable, IJSONDeserializ
         if (json.type !== undefined) this.type = json.type
         if (json.model_number !== undefined) this.model_number = json.model_number
         if (json.manufacturer !== undefined) this.manufacturer = json.manufacturer
-        if (json.user_id !== undefined && json.user_id.length) this.user_id = json.user_id
+        if (json.user_id !== undefined && json.user_id instanceof Array) this.user_id = json.user_id
         return this
     }
 

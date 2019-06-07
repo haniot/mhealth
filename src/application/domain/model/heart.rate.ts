@@ -27,7 +27,7 @@ export class HeartRate extends Measurement implements IJSONSerializable, IJSONDe
             json = JSON.parse(json)
         }
         super.fromJSON(json)
-        if (json.dataset !== undefined && json.dataset.length) {
+        if (json.dataset !== undefined && json.dataset instanceof Array) {
             this.dataset = json.dataset.map(item => new DataSetItem().fromJSON(item))
         }
         return this
