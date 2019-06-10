@@ -21,8 +21,7 @@ export class UserDeviceController {
     public async addDeviceFromUser(@request() req: Request, @response() res: Response): Promise<Response> {
         try {
             const device: Device = new Device().fromJSON(req.body)
-            device.user_id = req.params.user_id
-            const result: Device = await this._service.add(device)
+            const result: Device = await this._service.addDevice(device, req.params.user_id)
             return res.status(HttpStatus.CREATED).send(this.toJSONView(result))
         } catch (err) {
             const handlerError = ApiExceptionManager.build(err)

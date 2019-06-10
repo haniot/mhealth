@@ -24,9 +24,9 @@ const deviceSchema = new Mongoose.Schema({
             type: String,
             required: 'Manufacturer of device is required!'
         },
-        user_id: {
+        user_id: [{
             type: Schema.Types.ObjectId
-        }
+        }]
     },
     {
         timestamps: { createdAt: 'created_at', updatedAt: false },

@@ -9,7 +9,7 @@ export class Device extends Entity implements IJSONSerializable, IJSONDeserializ
     private _type?: string
     private _model_number?: string
     private _manufacturer?: string
-    private _user_id?: string
+    private _user_id?: Array<string>
 
     public constructor() {
         super()
@@ -55,12 +55,22 @@ export class Device extends Entity implements IJSONSerializable, IJSONDeserializ
         this._manufacturer = value
     }
 
-    get user_id(): string | undefined {
+    get user_id(): Array<string> | undefined {
         return this._user_id
     }
 
-    set user_id(value: string | undefined) {
+    set user_id(value: Array<string> | undefined) {
         this._user_id = value
+    }
+
+    public addUser(userId: string): void {
+        if (!this.user_id) this.user_id = []
+        this.user_id.push(userId)
+        this.user_id = this.removeRepeatedUserIds(this.user_id)
+    }
+
+    public removeRepeatedUserIds(userIds: Array<string>): Array<string> {
+        return userIds.filter((v, i) => userIds.indexOf(v) === i)
     }
 
     public fromJSON(json: any): Device {
@@ -74,7 +84,7 @@ export class Device extends Entity implements IJSONSerializable, IJSONDeserializ
         if (json.type !== undefined) this.type = json.type
         if (json.model_number !== undefined) this.model_number = json.model_number
         if (json.manufacturer !== undefined) this.manufacturer = json.manufacturer
-        if (json.user_id !== undefined) this.user_id = json.user_id
+        if (json.user_id !== undefined && json.user_id instanceof Array) this.user_id = json.user_id
         return this
     }
 
@@ -85,8 +95,7 @@ export class Device extends Entity implements IJSONSerializable, IJSONDeserializ
             address: this.address,
             type: this.type,
             model_number: this.model_number,
-            manufacturer: this.manufacturer,
-            user_id: this.user_id
+            manufacturer: this.manufacturer
         }
     }
 }

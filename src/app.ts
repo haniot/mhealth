@@ -128,6 +128,10 @@ export class App {
                 default: {
                     pagination: { limit: 100 },
                     sort: { created_at: 'desc' }
+                },
+                date_fields: {
+                    start_at: 'timestamp',
+                    end_at: 'timestamp'
                 }
             }))
 

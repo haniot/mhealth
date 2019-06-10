@@ -7,6 +7,7 @@ import { Device } from '../domain/model/device'
 import { CreateDeviceValidator } from '../domain/validator/create.device.validator'
 import { ObjectIdValidator } from '../domain/validator/object.id.validator'
 import { UpdateDeviceValidator } from '../domain/validator/update.device.validator'
+import { Query } from '../../infrastructure/repository/query/query'
 
 @injectable()
 export class DeviceService implements IDeviceService {
@@ -22,6 +23,22 @@ export class DeviceService implements IDeviceService {
             return Promise.reject(err)
         }
         return this._repository.create(item)
+    }
+
+    public async addDevice(item: Device, userId: string): Promise<Device> {
+        try {
+            ObjectIdValidator.validate(userId)
+            const exists = await this._repository.checkExists(item.address!)
+            if (exists) {
+                const device: Device = await this._repository.findOne(new Query().fromJSON({ address: item.address }))
+                if (device) device.addUser(userId)
+                return this._repository.update(device)
+            }
+            item.addUser(userId)
+        } catch (err) {
+            return Promise.reject(err)
+        }
+        return this.add(item)
     }
 
     public async getAll(query: IQuery): Promise<Array<Device>> {
@@ -53,6 +70,14 @@ export class DeviceService implements IDeviceService {
         } catch (err) {
             return Promise.reject(err)
         }
+        const device: Device = await this.getById(deviceId, new Query())
+        if (device) {
+            device.user_id = device.user_id!.filter(id => id !== userId)
+            if (device.user_id!.length) {
+                const updatedDevice = await this._repository.update(device)
+                return Promise.resolve(!!updatedDevice)
+            }
+        }
         return this._repository.delete(deviceId)
     }
 
@@ -62,8 +87,6 @@ export class DeviceService implements IDeviceService {
 
     public async update(item: Device): Promise<Device> {
         try {
-            if (item.user_id) ObjectIdValidator.validate(item.user_id)
-            item.user_id = undefined
             UpdateDeviceValidator.validate(item)
         } catch (err) {
             return Promise.reject(err)
