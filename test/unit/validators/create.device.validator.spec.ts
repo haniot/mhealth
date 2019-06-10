@@ -10,14 +10,14 @@ describe('Validators: CreateDeviceValidator', () => {
 
     it('should return undefined when the validation was successful', () => {
         const result = CreateDeviceValidator.validate(device)
-        assert.equal(result, undefined)
+        assert.isUndefined(result)
     })
 
     context('when there are validation errors', () => {
         it('should throw an error for does not pass name', () => {
             device.name = undefined
             try {
-                CreateDeviceValidator.validate(device)
+                assert.ifError(CreateDeviceValidator.validate(device))
             } catch (err) {
                 assert.equal(err.message, 'Required fields were not provided...')
                 assert.equal(err.description, 'Device validation: name required!')
@@ -28,7 +28,7 @@ describe('Validators: CreateDeviceValidator', () => {
         it('should throw an error for does not pass address', () => {
             device.address = undefined
             try {
-                CreateDeviceValidator.validate(device)
+                assert.ifError(CreateDeviceValidator.validate(device))
             } catch (err) {
                 assert.equal(err.message, 'Required fields were not provided...')
                 assert.equal(err.description, 'Device validation: address required!')
@@ -39,7 +39,7 @@ describe('Validators: CreateDeviceValidator', () => {
         it('should throw an error for does not pass type', () => {
             device.type = undefined
             try {
-                CreateDeviceValidator.validate(device)
+                assert.ifError(CreateDeviceValidator.validate(device))
             } catch (err) {
                 assert.equal(err.message, 'Required fields were not provided...')
                 assert.equal(err.description, 'Device validation: type required!')
@@ -49,7 +49,7 @@ describe('Validators: CreateDeviceValidator', () => {
         it('should throw an error for does pass invalid type', () => {
             device.type = 'invalid'
             try {
-                CreateDeviceValidator.validate(device)
+                assert.ifError(CreateDeviceValidator.validate(device))
             } catch (err) {
                 assert.equal(err.message, Strings.ENUM_VALIDATOR.NOT_MAPPED.concat('type: invalid'))
                 assert.equal(err.description, Strings.ENUM_VALIDATOR.NOT_MAPPED_DESC
@@ -61,7 +61,7 @@ describe('Validators: CreateDeviceValidator', () => {
         it('should throw an error for does not pass manufacturer', () => {
             device.manufacturer = undefined
             try {
-                CreateDeviceValidator.validate(device)
+                assert.ifError(CreateDeviceValidator.validate(device))
             } catch (err) {
                 assert.equal(err.message, 'Required fields were not provided...')
                 assert.equal(err.description, 'Device validation: manufacturer required!')
@@ -72,7 +72,7 @@ describe('Validators: CreateDeviceValidator', () => {
         it('should throw an error for does not pass user_id', () => {
             device.user_id = undefined
             try {
-                CreateDeviceValidator.validate(device)
+                assert.ifError(CreateDeviceValidator.validate(device))
             } catch (err) {
                 assert.equal(err.message, 'Required fields were not provided...')
                 assert.equal(err.description, 'Device validation: user_id required!')
@@ -82,7 +82,7 @@ describe('Validators: CreateDeviceValidator', () => {
         it('should throw an error for does pass invalid user_id', () => {
             device.user_id = '123'
             try {
-                CreateDeviceValidator.validate(device)
+                assert.ifError(CreateDeviceValidator.validate(device))
             } catch (err) {
                 assert.propertyVal(err, 'message', 'Some ID provided does not have a valid format!')
                 assert.equal(err.description, 'A 24-byte hex ID similar to this: 507f191e810c19729de860ea is expected.')

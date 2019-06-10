@@ -11,7 +11,7 @@ describe('Validators: CreateBloodGlucoseValidator', () => {
 
     it('should return undefined when the validation was successful', () => {
         const result = CreateBloodGlucoseValidator.validate(measurement)
-        assert.equal(result, undefined)
+        assert.isUndefined(result)
     })
 
     context('when there are validation errors', () => {
@@ -19,6 +19,7 @@ describe('Validators: CreateBloodGlucoseValidator', () => {
             measurement.value = undefined
             try {
                 assert.ifError(CreateBloodGlucoseValidator.validate(measurement))
+
             } catch (err) {
                 assert.propertyVal(err, 'message', 'Required fields were not provided...')
                 assert.propertyVal(err, 'description', 'BloodGlucose validation: value required!')
@@ -29,7 +30,7 @@ describe('Validators: CreateBloodGlucoseValidator', () => {
         it('should throw an error for does not pass unit', () => {
             measurement.unit = undefined
             try {
-                CreateBloodGlucoseValidator.validate(measurement)
+                assert.ifError(CreateBloodGlucoseValidator.validate(measurement))
             } catch (err) {
                 assert.propertyVal(err, 'message', 'Required fields were not provided...')
                 assert.propertyVal(err, 'description', 'BloodGlucose validation: unit required!')
@@ -40,7 +41,7 @@ describe('Validators: CreateBloodGlucoseValidator', () => {
         it('should throw an error for does not pass meal', () => {
             measurement.meal = undefined
             try {
-                CreateBloodGlucoseValidator.validate(measurement)
+                assert.ifError(CreateBloodGlucoseValidator.validate(measurement))
             } catch (err) {
                 assert.propertyVal(err, 'message', 'Required fields were not provided...')
                 assert.propertyVal(err, 'description', 'BloodGlucose validation: meal required!')
@@ -49,7 +50,7 @@ describe('Validators: CreateBloodGlucoseValidator', () => {
         it('should throw an error for does pass invalid meal', () => {
             measurement.meal = 'invalid'
             try {
-                CreateBloodGlucoseValidator.validate(measurement)
+                assert.ifError(CreateBloodGlucoseValidator.validate(measurement))
             } catch (err) {
                 assert.propertyVal(err, 'message', Strings.ENUM_VALIDATOR.NOT_MAPPED.concat('meal: invalid'))
                 assert.propertyVal(err, 'description',
@@ -61,7 +62,7 @@ describe('Validators: CreateBloodGlucoseValidator', () => {
         it('should throw an error for does not pass type', () => {
             measurement.type = undefined
             try {
-                CreateBloodGlucoseValidator.validate(measurement)
+                assert.ifError(CreateBloodGlucoseValidator.validate(measurement))
             } catch (err) {
                 assert.propertyVal(err, 'message', 'Required fields were not provided...')
                 assert.propertyVal(err, 'description', 'BloodGlucose validation: type required!')
@@ -70,7 +71,7 @@ describe('Validators: CreateBloodGlucoseValidator', () => {
         it('should throw an error for does pass invalid type', () => {
             measurement.type = 'invalid'
             try {
-                CreateBloodGlucoseValidator.validate(measurement)
+                assert.ifError(CreateBloodGlucoseValidator.validate(measurement))
             } catch (err) {
                 assert.propertyVal(err, 'message', Strings.ENUM_VALIDATOR.NOT_MAPPED.concat('type: invalid'))
                 assert.propertyVal(err, 'description',
@@ -82,7 +83,7 @@ describe('Validators: CreateBloodGlucoseValidator', () => {
         it('should throw an error for does not pass timestamp', () => {
             measurement.timestamp = undefined
             try {
-                CreateBloodGlucoseValidator.validate(measurement)
+                assert.ifError(CreateBloodGlucoseValidator.validate(measurement))
             } catch (err) {
                 assert.propertyVal(err, 'message', 'Required fields were not provided...')
                 assert.propertyVal(err, 'description', 'BloodGlucose validation: timestamp required!')
@@ -91,7 +92,7 @@ describe('Validators: CreateBloodGlucoseValidator', () => {
         it('should throw an error for does pass invalid timestamp', () => {
             measurement.timestamp = '12-04-2012'
             try {
-                CreateBloodGlucoseValidator.validate(measurement)
+                assert.ifError(CreateBloodGlucoseValidator.validate(measurement))
             } catch (err) {
                 assert.propertyVal(err, 'message', 'Datetime: 12-04-2012 is not in valid ISO 8601 format.')
                 assert.propertyVal(err, 'description', 'Date must be in the format: yyyy-MM-dd\'T\'HH:mm:ssZ')
@@ -102,7 +103,7 @@ describe('Validators: CreateBloodGlucoseValidator', () => {
         it('should throw an error for does not pass user_id', () => {
             measurement.user_id = undefined
             try {
-                CreateBloodGlucoseValidator.validate(measurement)
+                assert.ifError(CreateBloodGlucoseValidator.validate(measurement))
             } catch (err) {
                 assert.propertyVal(err, 'message', 'Required fields were not provided...')
                 assert.propertyVal(err, 'description', 'BloodGlucose validation: user_id required!')
@@ -111,7 +112,7 @@ describe('Validators: CreateBloodGlucoseValidator', () => {
         it('should throw an error for does pass invalid user_id', () => {
             measurement.user_id = '123'
             try {
-                CreateBloodGlucoseValidator.validate(measurement)
+                assert.ifError(CreateBloodGlucoseValidator.validate(measurement))
             } catch (err) {
                 assert.propertyVal(err, 'message', Strings.ERROR_MESSAGE.UUID_NOT_VALID_FORMAT)
                 assert.propertyVal(err, 'description', Strings.ERROR_MESSAGE.UUID_NOT_VALID_FORMAT_DESC)
@@ -122,7 +123,7 @@ describe('Validators: CreateBloodGlucoseValidator', () => {
         it('should throw an error for does not pass device_id', () => {
             measurement.device_id = undefined
             try {
-                CreateBloodGlucoseValidator.validate(measurement)
+                assert.ifError(CreateBloodGlucoseValidator.validate(measurement))
             } catch (err) {
                 assert.propertyVal(err, 'message', 'Required fields were not provided...')
                 assert.propertyVal(err, 'description', 'BloodGlucose validation: device_id required!')
@@ -131,7 +132,7 @@ describe('Validators: CreateBloodGlucoseValidator', () => {
         it('should throw an error for does pass invalid device_id', () => {
             measurement.device_id = '123'
             try {
-                CreateBloodGlucoseValidator.validate(measurement)
+                assert.ifError(CreateBloodGlucoseValidator.validate(measurement))
             } catch (err) {
                 assert.propertyVal(err, 'message', Strings.ERROR_MESSAGE.UUID_NOT_VALID_FORMAT)
                 assert.propertyVal(err, 'description', Strings.ERROR_MESSAGE.UUID_NOT_VALID_FORMAT_DESC)

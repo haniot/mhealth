@@ -4,13 +4,13 @@ import { DatetimeValidator } from '../../../src/application/domain/validator/dat
 describe('Validators: DateTimeValidator', () => {
     it('should return undefined when the validation was successful', () => {
         const result = DatetimeValidator.validate('2018-01-02T00:04:03.000Z')
-        assert.equal(result, undefined)
+        assert.isUndefined(result)
     })
 
     context('when there are missing or invalid parameters', () => {
         it('should throw error for does pass invalid date time', () => {
             try {
-                DatetimeValidator.validate('02-08-2018')
+                assert.ifError(DatetimeValidator.validate('02-08-2018'))
             } catch (err) {
                 assert.equal(err.message, 'Datetime: 02-08-2018 is not in valid ISO 8601 format.')
                 assert.equal(err.description, 'Date must be in the format: yyyy-MM-dd\'T\'HH:mm:ssZ')

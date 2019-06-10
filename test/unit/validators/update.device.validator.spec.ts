@@ -10,14 +10,14 @@ describe('Validators: UpdateDeviceValidator', () => {
 
     it('should return undefined when the validation was successful', () => {
         const result = UpdateDeviceValidator.validate(device)
-        assert.equal(result, undefined)
+        assert.isUndefined(result)
     })
 
     context('when there are validation errors', () => {
         it('should throw an error for does pass invalid id', () => {
             device.id = '123'
             try {
-                UpdateDeviceValidator.validate(device)
+                assert.ifError(UpdateDeviceValidator.validate(device))
             } catch (err) {
                 assert.propertyVal(err, 'message', 'Some ID provided does not have a valid format!')
                 assert.equal(err.description, 'A 24-byte hex ID similar to this: 507f191e810c19729de860ea is expected.')
@@ -28,7 +28,7 @@ describe('Validators: UpdateDeviceValidator', () => {
         it('should throw an error for does pass user_id', () => {
             device.user_id = DefaultEntityMock.DEVICE.user_id
             try {
-                UpdateDeviceValidator.validate(device)
+                assert.ifError(UpdateDeviceValidator.validate(device))
             } catch (err) {
                 assert.equal(err.message, Strings.ERROR_MESSAGE.PARAMETER_COULD_NOT_BE_UPDATED)
                 assert.equal(err.description, Strings.ERROR_MESSAGE.PARAMETER_COULD_NOT_BE_UPDATED_DESC.concat('user_id'))
