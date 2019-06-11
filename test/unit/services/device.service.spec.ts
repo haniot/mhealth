@@ -4,6 +4,7 @@ import { Device } from '../../../src/application/domain/model/device'
 import { DefaultEntityMock } from '../../mocks/models/default.entity.mock'
 import { assert } from 'chai'
 import { Query } from '../../../src/infrastructure/repository/query/query'
+import { Strings } from '../../../src/utils/strings'
 
 describe('Services: DeviceService', () => {
     const device: Device = new Device().fromJSON(DefaultEntityMock.DEVICE)
@@ -120,21 +121,22 @@ describe('Services: DeviceService', () => {
 
         context('when there are validation errors', () => {
             it('should reject an error for invalid parameters', () => {
-                device.user_id = '123'
+                device.id = '123'
                 return service.update(device)
                     .catch(err => {
                         assert.equal(err.message, 'Some ID provided does not have a valid format!')
                         assert.equal(err.description, 'A 24-byte hex ID similar to this: 507f191e810c19729de860ea is expected.')
-                        device.user_id = undefined
+                        device.id = DefaultEntityMock.DEVICE.id
                     })
             })
 
-            it('should reject an error for empty parameters', () => {
-                device.id = ''
+            it('should reject an error for parameters that can not be updated', () => {
+                device.user_id = DefaultEntityMock.DEVICE.user_id
                 return service.update(device)
                     .catch(err => {
-                        assert.equal(err.message, 'Some ID provided does not have a valid format!')
-                        assert.equal(err.description, 'A 24-byte hex ID similar to this: 507f191e810c19729de860ea is expected.')
+                        assert.equal(err.message, Strings.ERROR_MESSAGE.PARAMETER_COULD_NOT_BE_UPDATED)
+                        assert.equal(err.description,
+                            Strings.ERROR_MESSAGE.PARAMETER_COULD_NOT_BE_UPDATED_DESC.concat('user_id'))
                     })
             })
         })
@@ -145,7 +147,7 @@ describe('Services: DeviceService', () => {
             it('should return true', () => {
                 device.id = DefaultEntityMock.DEVICE.id
                 device.user_id = DefaultEntityMock.DEVICE.user_id
-                return service.removeDevice(device.id!, device.user_id!)
+                return service.removeDevice(device.id!, device.user_id![0])
                     .then(result => {
                         assert.isBoolean(result)
                         assert.isTrue(result)
@@ -178,7 +180,7 @@ describe('Services: DeviceService', () => {
                 .remove(device.id!)
                 .catch(err => {
                     assert.propertyVal(err, 'message', 'Not implemented!')
-            })
+                })
         })
     })
 })

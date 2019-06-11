@@ -80,7 +80,7 @@ describe('Validators: CreateDeviceValidator', () => {
         })
 
         it('should throw an error for does pass invalid user_id', () => {
-            device.user_id = '123'
+            device.user_id = ['123']
             try {
                 assert.ifError(CreateDeviceValidator.validate(device))
             } catch (err) {

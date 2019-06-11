@@ -12,7 +12,7 @@ describe('Models: Device', () => {
                 assert.propertyVal(result, 'type', DefaultEntityMock.DEVICE.type)
                 assert.propertyVal(result, 'model_number', DefaultEntityMock.DEVICE.model_number)
                 assert.propertyVal(result, 'manufacturer', DefaultEntityMock.DEVICE.manufacturer)
-                assert.propertyVal(result, 'user_id', DefaultEntityMock.DEVICE.user_id)
+                assert.deepPropertyVal(result, 'user_id', DefaultEntityMock.DEVICE.user_id)
             })
         })
 
@@ -24,7 +24,7 @@ describe('Models: Device', () => {
                 assert.propertyVal(result, 'type', DefaultEntityMock.DEVICE.type)
                 assert.propertyVal(result, 'model_number', DefaultEntityMock.DEVICE.model_number)
                 assert.propertyVal(result, 'manufacturer', DefaultEntityMock.DEVICE.manufacturer)
-                assert.propertyVal(result, 'user_id', DefaultEntityMock.DEVICE.user_id)
+                assert.deepPropertyVal(result, 'user_id', DefaultEntityMock.DEVICE.user_id)
             })
         })
 
@@ -86,7 +86,6 @@ describe('Models: Device', () => {
                 assert.propertyVal(result, 'type', DefaultEntityMock.DEVICE.type)
                 assert.propertyVal(result, 'model_number', DefaultEntityMock.DEVICE.model_number)
                 assert.propertyVal(result, 'manufacturer', DefaultEntityMock.DEVICE.manufacturer)
-                assert.propertyVal(result, 'user_id', DefaultEntityMock.DEVICE.user_id)
             })
         })
 
@@ -98,7 +97,6 @@ describe('Models: Device', () => {
                 assert.isUndefined(result.type, 'no name type')
                 assert.isUndefined(result.model_number, 'no model_number defined')
                 assert.isUndefined(result.manufacturer, 'no manufacturer defined')
-                assert.isUndefined(result.user_id, 'no user_id defined')
             })
         })
     })

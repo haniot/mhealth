@@ -18,6 +18,7 @@ const request = require('supertest')(app.getExpress())
 describe('Routes: UserDevice', () => {
 
     const device: Device = new Device().fromJSON(DefaultEntityMock.DEVICE)
+    const user_id: string = DefaultEntityMock.DEVICE.user_id[0]
 
     before(async () => {
             try {
@@ -42,7 +43,7 @@ describe('Routes: UserDevice', () => {
         context('when save a device from user', () => {
             it('should return status code 201 and the created device', () => {
                 return request
-                    .post(`/users/${device.user_id}/devices`)
+                    .post(`/users/${user_id}/devices`)
                     .send(device.toJSON())
                     .set('Content-Type', 'application/json')
                     .expect(201)
@@ -53,21 +54,7 @@ describe('Routes: UserDevice', () => {
                         expect(res.body).to.have.property('type', device.type)
                         expect(res.body).to.have.property('model_number', device.model_number)
                         expect(res.body).to.have.property('manufacturer', device.manufacturer)
-                        expect(res.body).to.have.property('user_id')
                         device.id = res.body.id
-                    })
-            })
-        })
-
-        context('when there are a device with same unique parameters', () => {
-            it('should return status code 409 and message from duplicate items', () => {
-                return request
-                    .post(`/users/${device.user_id}/devices`)
-                    .send(device.toJSON())
-                    .set('Content-Type', 'application/json')
-                    .expect(409)
-                    .then(res => {
-                        expect(res.body).to.have.property('message', 'A registration with the same unique data already exists!')
                     })
             })
         })
@@ -91,7 +78,7 @@ describe('Routes: UserDevice', () => {
         context('when get a unique device from user', () => {
             it('should return status code 200 and a device', () => {
                 return request
-                    .get(`/users/${device.user_id}/devices/${device.id}`)
+                    .get(`/users/${user_id}/devices/${device.id}`)
                     .set('Content-Type', 'application/json')
                     .expect(200)
                     .then(res => {
@@ -101,7 +88,6 @@ describe('Routes: UserDevice', () => {
                         expect(res.body).to.have.property('type', device.type)
                         expect(res.body).to.have.property('model_number', device.model_number)
                         expect(res.body).to.have.property('manufacturer', device.manufacturer)
-                        expect(res.body).to.have.property('user_id')
                     })
             })
         })
@@ -109,7 +95,7 @@ describe('Routes: UserDevice', () => {
         context('when device is not founded', () => {
             it('should return status code 404 and message from device not found', () => {
                 return request
-                    .get(`/users/${device.user_id}/devices/${new ObjectID()}`)
+                    .get(`/users/${user_id}/devices/${new ObjectID()}`)
                     .set('Content-Type', 'application/json')
                     .expect(404)
                     .then(res => {
@@ -137,7 +123,7 @@ describe('Routes: UserDevice', () => {
         context('when update a device from user', () => {
             it('should return the updated device', () => {
                 return request
-                    .patch(`/users/${device.user_id}/devices/${device.id}`)
+                    .patch(`/users/${user_id}/devices/${device.id}`)
                     .set('Content-Type', 'application/json')
                     .send(device.toJSON())
                     .expect(200)
@@ -148,7 +134,6 @@ describe('Routes: UserDevice', () => {
                         expect(res.body).to.have.property('type', device.type)
                         expect(res.body).to.have.property('model_number', device.model_number)
                         expect(res.body).to.have.property('manufacturer', device.manufacturer)
-                        expect(res.body).to.have.property('user_id')
                     })
             })
         })
@@ -186,7 +171,7 @@ describe('Routes: UserDevice', () => {
         context('when get all devices from user', () => {
             it('should return status code 200 and a list of devices', () => {
                 return request
-                    .get(`/users/${device.user_id}/devices`)
+                    .get(`/users/${user_id}/devices`)
                     .set('Content-Type', 'application/json')
                     .expect(200)
                     .then(res => {
@@ -198,7 +183,6 @@ describe('Routes: UserDevice', () => {
                         expect(res.body[0]).to.have.property('type', device.type)
                         expect(res.body[0]).to.have.property('model_number', device.model_number)
                         expect(res.body[0]).to.have.property('manufacturer', device.manufacturer)
-                        expect(res.body[0]).to.have.property('user_id')
                     })
             })
         })
@@ -222,7 +206,7 @@ describe('Routes: UserDevice', () => {
         context('when delete a device from user', () => {
             it('should return status code 204 and no content', () => {
                 return request
-                    .delete(`/users/${device.user_id}/devices/${device.id}`)
+                    .delete(`/users/${user_id}/devices/${device.id}`)
                     .set('Content-Type', 'application/json')
                     .expect(204)
                     .then(res => {

@@ -17,7 +17,7 @@ describe('Mappers: DeviceEntityMapper', () => {
                 assert.propertyVal(result, 'type', device.type)
                 assert.propertyVal(result, 'model_number', device.model_number)
                 assert.propertyVal(result, 'manufacturer', device.manufacturer)
-                assert.propertyVal(result, 'user_id', device.user_id)
+                assert.deepPropertyVal(result, 'user_id', device.user_id)
             })
 
             it('should return model without parameters for empty json', () => {
@@ -49,7 +49,7 @@ describe('Mappers: DeviceEntityMapper', () => {
                 assert.propertyVal(result, 'type', device.type)
                 assert.propertyVal(result, 'model_number', device.model_number)
                 assert.propertyVal(result, 'manufacturer', device.manufacturer)
-                assert.propertyVal(result, 'user_id', device.user_id)
+                assert.deepPropertyVal(result, 'user_id', device.user_id)
             })
 
             it('should return a model entity with basic parameters for empty model', () => {

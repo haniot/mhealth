@@ -93,4 +93,13 @@ export class DeviceService implements IDeviceService {
         }
         return this._repository.update(item)
     }
+
+    public async updateDevice(item: Device, userId: string): Promise<Device> {
+        try {
+            ObjectIdValidator.validate(userId)
+        } catch (err) {
+            return Promise.reject(err)
+        }
+        return this.update(item)
+    }
 }

@@ -36,7 +36,7 @@ describe('Repositories: DeviceRepository', () => {
                         assert.propertyVal(result, 'type', device.type)
                         assert.propertyVal(result, 'model_number', device.model_number)
                         assert.propertyVal(result, 'manufacturer', device.manufacturer)
-                        assert.propertyVal(result, 'user_id', device.user_id)
+                        assert.deepPropertyVal(result, 'user_id', device.user_id)
                     })
             })
         })
@@ -96,7 +96,7 @@ describe('Repositories: DeviceRepository', () => {
                         assert.propertyVal(result[0], 'type', device.type)
                         assert.propertyVal(result[0], 'model_number', device.model_number)
                         assert.propertyVal(result[0], 'manufacturer', device.manufacturer)
-                        assert.propertyVal(result[0], 'user_id', device.user_id)
+                        assert.deepPropertyVal(result[0], 'user_id', device.user_id)
                     })
             })
         })
@@ -162,7 +162,7 @@ describe('Repositories: DeviceRepository', () => {
                         assert.propertyVal(result, 'type', device.type)
                         assert.propertyVal(result, 'model_number', device.model_number)
                         assert.propertyVal(result, 'manufacturer', device.manufacturer)
-                        assert.propertyVal(result, 'user_id', device.user_id)
+                        assert.deepPropertyVal(result, 'user_id', device.user_id)
                     })
             })
         })
@@ -226,7 +226,7 @@ describe('Repositories: DeviceRepository', () => {
                         assert.propertyVal(result, 'type', device.type)
                         assert.propertyVal(result, 'model_number', device.model_number)
                         assert.propertyVal(result, 'manufacturer', device.manufacturer)
-                        assert.propertyVal(result, 'user_id', device.user_id)
+                        assert.deepPropertyVal(result, 'user_id', device.user_id)
                     })
             })
         })
@@ -360,12 +360,12 @@ describe('Repositories: DeviceRepository', () => {
                 sinon
                     .mock(modelFake)
                     .expects('findOne')
-                    .withArgs({ _id: device.id })
+                    .withArgs({ address: device.address })
                     .chain('select')
                     .chain('exec')
                     .resolves(device)
 
-                return repo.checkExists(device.id!)
+                return repo.checkExists(device.address!)
                     .then(result => {
                         assert.isBoolean(result)
                         assert.isTrue(result)
@@ -378,12 +378,12 @@ describe('Repositories: DeviceRepository', () => {
                 sinon
                     .mock(modelFake)
                     .expects('findOne')
-                    .withArgs({ _id: device.id })
+                    .withArgs({ address: device.address })
                     .chain('select')
                     .chain('exec')
                     .resolves(undefined)
 
-                return repo.checkExists(device.id!)
+                return repo.checkExists(device.address!)
                     .then(result => {
                         assert.isBoolean(result)
                         assert.isFalse(result)
@@ -396,12 +396,12 @@ describe('Repositories: DeviceRepository', () => {
                 sinon
                     .mock(modelFake)
                     .expects('findOne')
-                    .withArgs({ _id: device.id })
+                    .withArgs({ address: device.address })
                     .chain('select')
                     .chain('exec')
                     .rejects({ message: 'An internal error has occurred in the database!' })
 
-                return repo.checkExists(device.id!)
+                return repo.checkExists(device.address!)
                     .catch(err => {
                         assert.propertyVal(err, 'name', 'Error')
                         assert.propertyVal(err, 'message', 'An internal error has occurred in the database!')
