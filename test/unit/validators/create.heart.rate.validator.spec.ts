@@ -18,8 +18,7 @@ describe('Validators: CreateHeartRateValidator', () => {
         it('should throw an error for does not pass dataset', () => {
             measurement.dataset = undefined
             try {
-
-                assert.ifError(CreateHeartRateValidator.validate(measurement))
+               CreateHeartRateValidator.validate(measurement)
             } catch (err) {
                 assert.propertyVal(err, 'message', 'Required fields were not provided...')
                 assert.propertyVal(err, 'description', 'HeartRate validation: dataset required!')
@@ -28,7 +27,7 @@ describe('Validators: CreateHeartRateValidator', () => {
         it('should throw an error for does pass dataset item without value', () => {
             measurement.dataset = [new DataSetItem().fromJSON({ timestamp: DefaultEntityMock.HEART_RATE.dataset[0].timestamp })]
             try {
-                assert.ifError(CreateHeartRateValidator.validate(measurement))
+                CreateHeartRateValidator.validate(measurement)
             } catch (err) {
                 assert.propertyVal(err, 'message', 'Required fields were not provided...')
                 assert.propertyVal(err, 'description', 'HeartRate validation: dataset.item.value required!')
@@ -37,7 +36,7 @@ describe('Validators: CreateHeartRateValidator', () => {
         it('should throw an error for does pass dataset item without timestamp', () => {
             measurement.dataset = [new DataSetItem().fromJSON({ value: DefaultEntityMock.HEART_RATE.dataset[0].value })]
             try {
-                assert.ifError(CreateHeartRateValidator.validate(measurement))
+                CreateHeartRateValidator.validate(measurement)
             } catch (err) {
                 assert.propertyVal(err, 'message', 'Required fields were not provided...')
                 assert.propertyVal(err, 'description', 'HeartRate validation: dataset.item.timestamp required!')
@@ -48,7 +47,7 @@ describe('Validators: CreateHeartRateValidator', () => {
         it('should throw an error for does not pass unit', () => {
             measurement.unit = undefined
             try {
-                assert.ifError(CreateHeartRateValidator.validate(measurement))
+                CreateHeartRateValidator.validate(measurement)
             } catch (err) {
                 assert.propertyVal(err, 'message', 'Required fields were not provided...')
                 assert.propertyVal(err, 'description', 'HeartRate validation: unit required!')
@@ -59,7 +58,7 @@ describe('Validators: CreateHeartRateValidator', () => {
         it('should throw an error for does not pass type', () => {
             measurement.type = undefined
             try {
-                assert.ifError(CreateHeartRateValidator.validate(measurement))
+                CreateHeartRateValidator.validate(measurement)
             } catch (err) {
                 assert.propertyVal(err, 'message', 'Required fields were not provided...')
                 assert.propertyVal(err, 'description', 'HeartRate validation: type required!')
@@ -68,7 +67,7 @@ describe('Validators: CreateHeartRateValidator', () => {
         it('should throw an error for does pass invalid type', () => {
             measurement.type = 'invalid'
             try {
-                assert.ifError(CreateHeartRateValidator.validate(measurement))
+                CreateHeartRateValidator.validate(measurement)
             } catch (err) {
                 assert.propertyVal(err, 'message', Strings.ENUM_VALIDATOR.NOT_MAPPED.concat('type: invalid'))
                 assert.propertyVal(err, 'description',
@@ -80,7 +79,7 @@ describe('Validators: CreateHeartRateValidator', () => {
         it('should throw an error for does not pass user_id', () => {
             measurement.user_id = undefined
             try {
-                assert.ifError(CreateHeartRateValidator.validate(measurement))
+                CreateHeartRateValidator.validate(measurement)
             } catch (err) {
                 assert.propertyVal(err, 'message', 'Required fields were not provided...')
                 assert.propertyVal(err, 'description', 'HeartRate validation: user_id required!')
@@ -89,7 +88,7 @@ describe('Validators: CreateHeartRateValidator', () => {
         it('should throw an error for does pass invalid user_id', () => {
             measurement.user_id = '123'
             try {
-                assert.ifError(CreateHeartRateValidator.validate(measurement))
+                CreateHeartRateValidator.validate(measurement)
             } catch (err) {
                 assert.propertyVal(err, 'message', Strings.ERROR_MESSAGE.UUID_NOT_VALID_FORMAT)
                 assert.propertyVal(err, 'description', Strings.ERROR_MESSAGE.UUID_NOT_VALID_FORMAT_DESC)
@@ -100,7 +99,7 @@ describe('Validators: CreateHeartRateValidator', () => {
         it('should throw an error for does not pass device_id', () => {
             measurement.device_id = undefined
             try {
-                assert.ifError(CreateHeartRateValidator.validate(measurement))
+                CreateHeartRateValidator.validate(measurement)
             } catch (err) {
                 assert.propertyVal(err, 'message', 'Required fields were not provided...')
                 assert.propertyVal(err, 'description', 'HeartRate validation: device_id required!')
@@ -109,7 +108,7 @@ describe('Validators: CreateHeartRateValidator', () => {
         it('should throw an error for does pass invalid device_id', () => {
             measurement.device_id = '123'
             try {
-                assert.ifError(CreateHeartRateValidator.validate(measurement))
+                CreateHeartRateValidator.validate(measurement)
             } catch (err) {
                 assert.propertyVal(err, 'message', Strings.ERROR_MESSAGE.UUID_NOT_VALID_FORMAT)
                 assert.propertyVal(err, 'description', Strings.ERROR_MESSAGE.UUID_NOT_VALID_FORMAT_DESC)

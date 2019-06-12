@@ -17,10 +17,10 @@ describe('Validators: UpdateDeviceValidator', () => {
         it('should throw an error for does pass invalid id', () => {
             device.id = '123'
             try {
-                assert.ifError(UpdateDeviceValidator.validate(device))
+                UpdateDeviceValidator.validate(device)
             } catch (err) {
                 assert.propertyVal(err, 'message', 'Some ID provided does not have a valid format!')
-                assert.equal(err.description, 'A 24-byte hex ID similar to this: 507f191e810c19729de860ea is expected.')
+                assert.propertyVal(err, 'description', 'A 24-byte hex ID similar to this: 507f191e810c19729de860ea is expected.')
                 device.id = DefaultEntityMock.DEVICE.id
             }
         })
@@ -28,10 +28,11 @@ describe('Validators: UpdateDeviceValidator', () => {
         it('should throw an error for does pass user_id', () => {
             device.user_id = DefaultEntityMock.DEVICE.user_id
             try {
-                assert.ifError(UpdateDeviceValidator.validate(device))
+                UpdateDeviceValidator.validate(device)
             } catch (err) {
-                assert.equal(err.message, Strings.ERROR_MESSAGE.PARAMETER_COULD_NOT_BE_UPDATED)
-                assert.equal(err.description, Strings.ERROR_MESSAGE.PARAMETER_COULD_NOT_BE_UPDATED_DESC.concat('user_id'))
+                assert.propertyVal(err, 'message', Strings.ERROR_MESSAGE.PARAMETER_COULD_NOT_BE_UPDATED)
+                assert.propertyVal(err, 'description',
+                    Strings.ERROR_MESSAGE.PARAMETER_COULD_NOT_BE_UPDATED_DESC.concat('user_id'))
             }
         })
     })

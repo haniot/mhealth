@@ -10,10 +10,10 @@ describe('Validators: DateTimeValidator', () => {
     context('when there are missing or invalid parameters', () => {
         it('should throw error for does pass invalid date time', () => {
             try {
-                assert.ifError(DatetimeValidator.validate('02-08-2018'))
+                DatetimeValidator.validate('02-08-2018')
             } catch (err) {
-                assert.equal(err.message, 'Datetime: 02-08-2018 is not in valid ISO 8601 format.')
-                assert.equal(err.description, 'Date must be in the format: yyyy-MM-dd\'T\'HH:mm:ssZ')
+                assert.propertyVal(err, 'message', 'Datetime: 02-08-2018 is not in valid ISO 8601 format.')
+                assert.propertyVal(err, 'description', 'Date must be in the format: yyyy-MM-dd\'T\'HH:mm:ssZ')
             }
         })
     })

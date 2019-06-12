@@ -11,20 +11,21 @@ describe('Validators: ObjectIdValidator', () => {
     context('when the object id is invalid', () => {
         it('should throw an error for invalid object id', () => {
             try {
-               assert.ifError(ObjectIdValidator.validate('123'))
+              ObjectIdValidator.validate('123')
             } catch (err) {
-                assert.equal(err.message, 'Some ID provided does not have a valid format!')
-                assert.equal(err.description, 'A 24-byte hex ID similar to this: 507f191e810c19729de860ea is expected.')
+                assert.propertyVal(err, 'message', 'Some ID provided does not have a valid format!')
+                assert.propertyVal(err, 'description', 'A 24-byte hex ID similar to this: 507f191e810c19729de860ea is expected.')
             }
         })
 
         context('when pass a message with the invalid object id', () => {
             it('should throw an error for invalid object id', () => {
                 try {
-                    assert.ifError(ObjectIdValidator.validate('123', 'any message'))
+                   ObjectIdValidator.validate('123', 'any message')
                 } catch (err) {
                     assert.propertyVal(err, 'message', 'any message')
-                    assert.equal(err.description, 'A 24-byte hex ID similar to this: 507f191e810c19729de860ea is expected.')
+                    assert.propertyVal(err, 'description',
+                        'A 24-byte hex ID similar to this: 507f191e810c19729de860ea is expected.')
                 }
             })
         })

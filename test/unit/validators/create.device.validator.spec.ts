@@ -17,10 +17,10 @@ describe('Validators: CreateDeviceValidator', () => {
         it('should throw an error for does not pass name', () => {
             device.name = undefined
             try {
-                assert.ifError(CreateDeviceValidator.validate(device))
+               CreateDeviceValidator.validate(device)
             } catch (err) {
-                assert.equal(err.message, 'Required fields were not provided...')
-                assert.equal(err.description, 'Device validation: name required!')
+                assert.propertyVal(err, 'message', 'Required fields were not provided...')
+                assert.propertyVal(err, 'description', 'Device validation: name required!')
                 device.name = DefaultEntityMock.DEVICE.name
             }
         })
@@ -28,10 +28,10 @@ describe('Validators: CreateDeviceValidator', () => {
         it('should throw an error for does not pass address', () => {
             device.address = undefined
             try {
-                assert.ifError(CreateDeviceValidator.validate(device))
+                CreateDeviceValidator.validate(device)
             } catch (err) {
-                assert.equal(err.message, 'Required fields were not provided...')
-                assert.equal(err.description, 'Device validation: address required!')
+                assert.propertyVal(err, 'message', 'Required fields were not provided...')
+                assert.propertyVal(err, 'description', 'Device validation: address required!')
                 device.address = DefaultEntityMock.DEVICE.address
             }
         })
@@ -39,20 +39,20 @@ describe('Validators: CreateDeviceValidator', () => {
         it('should throw an error for does not pass type', () => {
             device.type = undefined
             try {
-                assert.ifError(CreateDeviceValidator.validate(device))
+                CreateDeviceValidator.validate(device)
             } catch (err) {
-                assert.equal(err.message, 'Required fields were not provided...')
-                assert.equal(err.description, 'Device validation: type required!')
+                assert.propertyVal(err, 'message', 'Required fields were not provided...')
+                assert.propertyVal(err, 'description', 'Device validation: type required!')
             }
         })
 
         it('should throw an error for does pass invalid type', () => {
             device.type = 'invalid'
             try {
-                assert.ifError(CreateDeviceValidator.validate(device))
+                CreateDeviceValidator.validate(device)
             } catch (err) {
-                assert.equal(err.message, Strings.ENUM_VALIDATOR.NOT_MAPPED.concat('type: invalid'))
-                assert.equal(err.description, Strings.ENUM_VALIDATOR.NOT_MAPPED_DESC
+                assert.propertyVal(err, 'message', Strings.ENUM_VALIDATOR.NOT_MAPPED.concat('type: invalid'))
+                assert.propertyVal(err, 'description', Strings.ENUM_VALIDATOR.NOT_MAPPED_DESC
                     .concat(Object.values(DeviceTypes).join(', ').concat('.')))
                 device.type = DefaultEntityMock.DEVICE.type
             }
@@ -61,10 +61,10 @@ describe('Validators: CreateDeviceValidator', () => {
         it('should throw an error for does not pass manufacturer', () => {
             device.manufacturer = undefined
             try {
-                assert.ifError(CreateDeviceValidator.validate(device))
+                CreateDeviceValidator.validate(device)
             } catch (err) {
-                assert.equal(err.message, 'Required fields were not provided...')
-                assert.equal(err.description, 'Device validation: manufacturer required!')
+                assert.propertyVal(err, 'message', 'Required fields were not provided...')
+                assert.propertyVal(err, 'description', 'Device validation: manufacturer required!')
                 device.manufacturer = DefaultEntityMock.DEVICE.manufacturer
             }
         })
@@ -72,20 +72,21 @@ describe('Validators: CreateDeviceValidator', () => {
         it('should throw an error for does not pass user_id', () => {
             device.user_id = undefined
             try {
-                assert.ifError(CreateDeviceValidator.validate(device))
+                CreateDeviceValidator.validate(device)
             } catch (err) {
-                assert.equal(err.message, 'Required fields were not provided...')
-                assert.equal(err.description, 'Device validation: user_id required!')
+                assert.propertyVal(err, 'message', 'Required fields were not provided...')
+                assert.propertyVal(err, 'description', 'Device validation: user_id required!')
             }
         })
 
         it('should throw an error for does pass invalid user_id', () => {
             device.user_id = ['123']
             try {
-                assert.ifError(CreateDeviceValidator.validate(device))
+                CreateDeviceValidator.validate(device)
             } catch (err) {
                 assert.propertyVal(err, 'message', 'Some ID provided does not have a valid format!')
-                assert.equal(err.description, 'A 24-byte hex ID similar to this: 507f191e810c19729de860ea is expected.')
+                assert.propertyVal(err, 'description',
+                    'A 24-byte hex ID similar to this: 507f191e810c19729de860ea is expected.')
             }
         })
     })

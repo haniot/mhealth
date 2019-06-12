@@ -57,16 +57,18 @@ describe('Services: DeviceService', () => {
             it('should reject an error for invalid parameters', () => {
                 return service.getAll(new Query().fromJSON({ filters: { user_id: '123' } }))
                     .catch(err => {
-                        assert.equal(err.message, 'Some ID provided does not have a valid format!')
-                        assert.equal(err.description, 'A 24-byte hex ID similar to this: 507f191e810c19729de860ea is expected.')
+                        assert.propertyVal(err, 'message', 'Some ID provided does not have a valid format!')
+                        assert.propertyVal(err, 'description',
+                            'A 24-byte hex ID similar to this: 507f191e810c19729de860ea is expected.')
                     })
             })
 
             it('should reject an error for empty parameters', () => {
                 return service.getAll(new Query().fromJSON({ filters: { user_id: '' } }))
                     .catch(err => {
-                        assert.equal(err.message, 'Some ID provided does not have a valid format!')
-                        assert.equal(err.description, 'A 24-byte hex ID similar to this: 507f191e810c19729de860ea is expected.')
+                        assert.propertyVal(err, 'message', 'Some ID provided does not have a valid format!')
+                        assert.propertyVal(err, 'description',
+                            'A 24-byte hex ID similar to this: 507f191e810c19729de860ea is expected.')
                     })
             })
         })
@@ -90,16 +92,18 @@ describe('Services: DeviceService', () => {
             it('should reject an error for invalid parameters', () => {
                 return service.getById('321', new Query().fromJSON({ filters: { user_id: '123' } }))
                     .catch(err => {
-                        assert.equal(err.message, 'Some ID provided does not have a valid format!')
-                        assert.equal(err.description, 'A 24-byte hex ID similar to this: 507f191e810c19729de860ea is expected.')
+                        assert.propertyVal(err, 'message', 'Some ID provided does not have a valid format!')
+                        assert.propertyVal(err, 'description',
+                            'A 24-byte hex ID similar to this: 507f191e810c19729de860ea is expected.')
                     })
             })
 
             it('should reject an error for empty parameters', () => {
                 return service.getById('', new Query())
                     .catch(err => {
-                        assert.equal(err.message, 'Some ID provided does not have a valid format!')
-                        assert.equal(err.description, 'A 24-byte hex ID similar to this: 507f191e810c19729de860ea is expected.')
+                        assert.propertyVal(err, 'message', 'Some ID provided does not have a valid format!')
+                        assert.propertyVal(err, 'description',
+                            'A 24-byte hex ID similar to this: 507f191e810c19729de860ea is expected.')
                     })
             })
         })
@@ -124,8 +128,9 @@ describe('Services: DeviceService', () => {
                 device.id = '123'
                 return service.update(device)
                     .catch(err => {
-                        assert.equal(err.message, 'Some ID provided does not have a valid format!')
-                        assert.equal(err.description, 'A 24-byte hex ID similar to this: 507f191e810c19729de860ea is expected.')
+                        assert.propertyVal(err, 'message', 'Some ID provided does not have a valid format!')
+                        assert.propertyVal(err, 'description',
+                            'A 24-byte hex ID similar to this: 507f191e810c19729de860ea is expected.')
                         device.id = DefaultEntityMock.DEVICE.id
                     })
             })
@@ -134,8 +139,8 @@ describe('Services: DeviceService', () => {
                 device.user_id = DefaultEntityMock.DEVICE.user_id
                 return service.update(device)
                     .catch(err => {
-                        assert.equal(err.message, Strings.ERROR_MESSAGE.PARAMETER_COULD_NOT_BE_UPDATED)
-                        assert.equal(err.description,
+                        assert.propertyVal(err, 'message', Strings.ERROR_MESSAGE.PARAMETER_COULD_NOT_BE_UPDATED)
+                        assert.propertyVal(err, 'description',
                             Strings.ERROR_MESSAGE.PARAMETER_COULD_NOT_BE_UPDATED_DESC.concat('user_id'))
                     })
             })
@@ -159,16 +164,18 @@ describe('Services: DeviceService', () => {
             it('should reject an error for invalid parameters', () => {
                 return service.removeDevice('123', '321')
                     .catch(err => {
-                        assert.equal(err.message, 'Some ID provided does not have a valid format!')
-                        assert.equal(err.description, 'A 24-byte hex ID similar to this: 507f191e810c19729de860ea is expected.')
+                        assert.propertyVal(err, 'message', 'Some ID provided does not have a valid format!')
+                        assert.propertyVal(err, 'description',
+                            'A 24-byte hex ID similar to this: 507f191e810c19729de860ea is expected.')
                     })
             })
 
             it('should reject an error for empty parameters', () => {
                 return service.removeDevice('', '')
                     .catch(err => {
-                        assert.equal(err.message, 'Some ID provided does not have a valid format!')
-                        assert.equal(err.description, 'A 24-byte hex ID similar to this: 507f191e810c19729de860ea is expected.')
+                        assert.propertyVal(err, 'message', 'Some ID provided does not have a valid format!')
+                        assert.propertyVal(err, 'description',
+                            'A 24-byte hex ID similar to this: 507f191e810c19729de860ea is expected.')
                     })
             })
         })
