@@ -56,7 +56,7 @@ describe('Repositories: DeviceRepository', () => {
                     })
             })
         })
-
+        
         context('when a database error occurs', () => {
             it('should reject a error', () => {
                 sinon

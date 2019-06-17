@@ -11,9 +11,12 @@ import { Query } from '../../../src/infrastructure/repository/query/query'
 import { Strings } from '../../../src/utils/strings'
 import { Fat } from '../../../src/application/domain/model/fat'
 import { StatusError } from '../../../src/application/domain/model/status.error'
+import {Measurement} from '../../../src/application/domain/model/measurement'
 
 describe('Services: MeasurementService', () => {
     const measurement: GenericMeasurementMock = new GenericMeasurementMock().fromJSON(DefaultEntityMock.GENERIC_MEASUREMENT_MOCK)
+    const multMeasurement: Array<GenericMeasurementMock> = new Array<GenericMeasurementMock>()
+    multMeasurement.push(measurement)
     measurement.id = DefaultEntityMock.GENERIC_MEASUREMENT_MOCK.id
     measurement.type = MeasurementTypes.BLOOD_GLUCOSE
     measurement.fat = new Fat().fromJSON({
@@ -33,6 +36,16 @@ describe('Services: MeasurementService', () => {
                     .then(result => {
                         assert.deepEqual(result, measurement)
                     })
+            })
+
+            context('when add multiples measurement', () => {
+                it('should return the measurement', () => {
+                    return service
+                        .addMeasurement(multMeasurement)
+                        .then(result => {
+                            assert.notDeepEqual(result, measurement)
+                        })
+                })
             })
         })
 
@@ -82,6 +95,44 @@ describe('Services: MeasurementService', () => {
         })
 
     })
+
+    describe('add()', () => {
+        context('when add a new device', () => {
+            it('should return the saved device', () => {
+                return service.add(measurement)
+                    .then(result => {
+                        assert.propertyVal(result, 'unit', measurement.unit)
+                        assert.propertyVal(result, 'type', measurement.type)
+                        assert.propertyVal(result, 'device_id', measurement.device_id)
+                        assert.propertyVal(result, 'user_id', measurement.user_id)
+                    })
+            })
+        })
+
+        context('when there are validation errors', () => {
+            it('should reject an error for invalid parameters', () => {
+                return service.add(new Measurement())
+                    .catch(err => {
+                        assert.propertyVal(err, 'message', 'Value not mapped for type: undefined')
+                        assert.propertyVal(err, 'description', 'The mapped values are: weight, blood_glucose, ' +
+                            'heart_rate, blood_pressure, height, waist_circumference, body_temperature, fat.')
+                    })
+            })
+
+            it('should reject an error for invalid type', () => {
+                const measurementTest: GenericMeasurementMock =
+                    new GenericMeasurementMock().fromJSON(DefaultEntityMock.GENERIC_MEASUREMENT_MOCK)
+                measurementTest.type = '123'
+                return service.add(measurementTest)
+                    .catch(err => {
+                        assert.propertyVal(err, 'message', 'Measurement already registered!')
+                        assert.propertyVal(err, 'description', 'A 123 measurement from 5a62be07d6f33400146c9b61 ' +
+                            'collected by device 5ca77314bc08ec205689a736 at 2018-11-19T14:40:00Z already exists.')
+                    })
+            })
+        })
+    })
+
 
     describe('getAll()', () => {
         context('when get all measurements from user', () => {

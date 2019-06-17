@@ -37,6 +37,39 @@ describe('Services: DeviceService', () => {
         })
     })
 
+    describe('addDevice()', () => {
+        context('when add a new device', () => {
+            it('should return the saved device', () => {
+                return service.addDevice(device, device.user_id![0])
+                    .then(result => {
+                        assert.propertyVal(result, 'name', device.name)
+                        assert.propertyVal(result, 'type', device.type)
+                        assert.propertyVal(result, 'model_number', device.model_number)
+                        assert.propertyVal(result, 'manufacturer', device.manufacturer)
+                    })
+            })
+            context('when there are validation errors', () => {
+                it('should reject an error for invalid parameters', () => {
+                    return service.addDevice(new Device(), '123')
+                        .catch(err => {
+                            assert.propertyVal(err, 'message', 'Some ID provided does not have a valid format!')
+                            assert.propertyVal(err, 'description', 'A 24-byte hex ID similar to this: ' +
+                                '507f191e810c19729de860ea is expected.')
+                        })
+                })
+
+                it('should reject an error for empty parameters', () => {
+                    return service.addDevice(new Device(), '')
+                        .catch(err => {
+                            assert.propertyVal(err, 'message', 'Some ID provided does not have a valid format!')
+                            assert.propertyVal(err, 'description',
+                                'A 24-byte hex ID similar to this: 507f191e810c19729de860ea is expected.')
+                        })
+                })
+            })
+        })
+    })
+
     describe('getAll', () => {
         context('when get all devices from user', () => {
             it('should return a list of devices', () => {
