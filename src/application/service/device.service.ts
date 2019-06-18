@@ -28,12 +28,15 @@ export class DeviceService implements IDeviceService {
     public async addDevice(item: Device, userId: string): Promise<Device> {
         try {
             ObjectIdValidator.validate(userId)
+           // console.log('addrs', item.address)
             const exists = await this._repository.checkExists(item.address!)
+           // console.log(exists)
             if (exists) {
                 const device: Device = await this._repository.findOne(new Query().fromJSON({ address: item.address }))
                 if (device) device.addUser(userId)
                 return this._repository.update(device)
             }
+            // console.log(userId)
             item.addUser(userId)
         } catch (err) {
             return Promise.reject(err)
@@ -73,7 +76,7 @@ export class DeviceService implements IDeviceService {
         const device: Device = await this.getById(deviceId, new Query())
         if (device) {
             device.user_id = device.user_id!.filter(id => id !== userId)
-            if (device.user_id!.length) {
+            if ( device.user_id!.length) {
                 const updatedDevice = await this._repository.update(device)
                 return Promise.resolve(!!updatedDevice)
             }
@@ -100,6 +103,7 @@ export class DeviceService implements IDeviceService {
         } catch (err) {
             return Promise.reject(err)
         }
+        console.log(item)
         return this.update(item)
     }
 }
