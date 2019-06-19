@@ -31,6 +31,9 @@ export class DeviceRepositoryMock implements IDeviceRepository {
     }
 
     public checkExists(id: string): Promise<boolean> {
+        if (id === 'D4:36:39:91:75:72')
+            return Promise.resolve(false)
+
         return Promise.resolve(true)
     }
 }

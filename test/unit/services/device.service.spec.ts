@@ -148,9 +148,21 @@ describe('Services: DeviceService', () => {
     })
 
     describe('addDevice()', () => {
-        context('when add a new device', () => {
+        context('when add a new device with existing address', () => {
             it('should return the saved device', () => {
+                return service.addDevice(device, device.user_id![0])
+                    .then(result => {
+                        assert.propertyVal(result, 'name', device.name)
+                        assert.propertyVal(result, 'type', device.type)
+                        assert.propertyVal(result, 'model_number', device.model_number)
+                        assert.propertyVal(result, 'manufacturer', device.manufacturer)
+                    })
+            })
+        })
 
+        context('when add a new device with do not existing address', () => {
+            it('should return the saved device', () => {
+                device.address = 'D4:36:39:91:75:72'
                 return service.addDevice(device, device.user_id![0])
                     .then(result => {
                         assert.propertyVal(result, 'name', device.name)
@@ -172,6 +184,41 @@ describe('Services: DeviceService', () => {
 
             it('should reject an error for empty parameters', () => {
                 return service.addDevice(new Device(), '')
+                    .catch(err => {
+                        assert.propertyVal(err, 'message', 'Some ID provided does not have a valid format!')
+                        assert.propertyVal(err, 'description',
+                            'A 24-byte hex ID similar to this: 507f191e810c19729de860ea is expected.')
+                    })
+            })
+        })
+
+    })
+    describe('updateDevice()', () => {
+        context('when add a new device', () => {
+            it('should return the saved device', () => {
+                device.user_id = undefined
+                return service.updateDevice(device, '5a62be07d6f33400146c9b62')
+                    .then(result => {
+                        assert.propertyVal(result, 'name', device.name)
+                        assert.propertyVal(result, 'type', device.type)
+                        assert.propertyVal(result, 'model_number', device.model_number)
+                        assert.propertyVal(result, 'manufacturer', device.manufacturer)
+                    })
+            })
+
+        })
+        context('when there are validation errors', () => {
+            it('should reject an error for invalid parameters', () => {
+                return service.updateDevice(new Device(), '123')
+                    .catch(err => {
+                        assert.propertyVal(err, 'message', 'Some ID provided does not have a valid format!')
+                        assert.propertyVal(err, 'description', 'A 24-byte hex ID similar to this: ' +
+                            '507f191e810c19729de860ea is expected.')
+                    })
+            })
+
+            it('should reject an error for empty parameters', () => {
+                return service.updateDevice(new Device(), '')
                     .catch(err => {
                         assert.propertyVal(err, 'message', 'Some ID provided does not have a valid format!')
                         assert.propertyVal(err, 'description',

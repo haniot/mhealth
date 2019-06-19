@@ -37,16 +37,6 @@ describe('Services: MeasurementService', () => {
                         assert.deepEqual(result, measurement)
                     })
             })
-
-            context('when add multiples measurement', () => {
-                it('should return the measurement', () => {
-                    return service
-                        .addMeasurement(multMeasurement)
-                        .then(result => {
-                            assert.notDeepEqual(result, measurement)
-                        })
-                })
-            })
         })
 
         context('when add a list of measurements', () => {
@@ -128,6 +118,31 @@ describe('Services: MeasurementService', () => {
                         assert.propertyVal(err, 'message', 'Measurement already registered!')
                         assert.propertyVal(err, 'description', 'A 123 measurement from 5a62be07d6f33400146c9b61 ' +
                             'collected by device 5ca77314bc08ec205689a736 at 2018-11-19T14:40:00Z already exists.')
+                    })
+            })
+
+            it('should reject an error for invalid Weight', () => {
+                const measurementTest: GenericMeasurementMock =
+                    new GenericMeasurementMock().fromJSON(DefaultEntityMock.GENERIC_MEASUREMENT_MOCK)
+
+                measurementTest.type = MeasurementTypes.WEIGHT
+                return service.add(measurementTest)
+                    .catch(err => {
+                        assert.propertyVal(err, 'message', 'Measurement already registered!')
+                        assert.propertyVal(err, 'description', 'A 123 measurement from 5a62be07d6f33400146c9b61 ' +
+                            'collected by device 5ca77314bc08ec205689a736 at 2018-11-19T14:40:00Z already exists.')
+                    })
+            })
+
+            it('should reject an error for invalid device_id', () => {
+                const measurementTest: GenericMeasurementMock =
+                    new GenericMeasurementMock().fromJSON(DefaultEntityMock.GENERIC_MEASUREMENT_MOCK)
+                measurementTest.device_id = 'invalid'
+                return service.add(measurementTest)
+                    .catch(err => {
+                        assert.propertyVal(err, 'message', 'Device not found!')
+                        assert.propertyVal(err, 'description', 'Device not found or already removed.' +
+                            ' A new operation for the same resource is required.')
                     })
             })
         })
