@@ -129,7 +129,7 @@ describe('Services: MeasurementService', () => {
                 return service.add(measurementTest)
                     .catch(err => {
                         assert.propertyVal(err, 'message', 'Measurement already registered!')
-                        assert.propertyVal(err, 'description', 'A 123 measurement from 5a62be07d6f33400146c9b61 ' +
+                        assert.propertyVal(err, 'description', 'A weight measurement from 5a62be07d6f33400146c9b61 ' +
                             'collected by device 5ca77314bc08ec205689a736 at 2018-11-19T14:40:00Z already exists.')
                     })
             })
