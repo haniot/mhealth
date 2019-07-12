@@ -31,34 +31,33 @@ describe('Models: HeartRate', () => {
         context('when pass a empty string json', () => {
             it('should return a model with undefined parameters', () => {
                 const result = new HeartRate().fromJSON('')
-                assert.propertyVal(result, 'dataset', undefined)
                 assert.propertyVal(result, 'type', DefaultEntityMock.HEART_RATE.type)
-                assert.propertyVal(result, 'unit', undefined)
-                assert.propertyVal(result, 'unit', undefined)
-                assert.propertyVal(result, 'device_id', undefined)
-                assert.propertyVal(result, 'user_id', undefined)
+                assert.isUndefined(result.unit, 'no unit defined')
+                assert.isUndefined(result.device_id, 'no device_id defined')
+                assert.isUndefined(result.user_id, 'no user_id defined')
+                assert.isUndefined(result.dataset, 'no dataset defined')
             })
         })
 
         context('when pass a invalid string json', () => {
             it('should return a model with undefined parameters', () => {
                 const result = new HeartRate().fromJSON('invalid')
-                assert.propertyVal(result, 'dataset', undefined)
                 assert.propertyVal(result, 'type', DefaultEntityMock.HEART_RATE.type)
-                assert.propertyVal(result, 'unit', undefined)
-                assert.propertyVal(result, 'device_id', undefined)
-                assert.propertyVal(result, 'user_id', undefined)
+                assert.isUndefined(result.unit, 'no unit defined')
+                assert.isUndefined(result.device_id, 'no device_id defined')
+                assert.isUndefined(result.user_id, 'no user_id defined')
+                assert.isUndefined(result.dataset, 'no dataset defined')
             })
         })
 
         context('when pass a undefined json', () => {
             it('should return a model with undefined parameters', () => {
                 const result = new HeartRate().fromJSON(undefined)
-                assert.propertyVal(result, 'dataset', undefined)
                 assert.propertyVal(result, 'type', DefaultEntityMock.HEART_RATE.type)
-                assert.propertyVal(result, 'unit', undefined)
-                assert.propertyVal(result, 'device_id', undefined)
-                assert.propertyVal(result, 'user_id', undefined)
+                assert.isUndefined(result.unit, 'no unit defined')
+                assert.isUndefined(result.device_id, 'no device_id defined')
+                assert.isUndefined(result.user_id, 'no user_id defined')
+                assert.isUndefined(result.dataset, 'no dataset defined')
             })
         })
 
@@ -66,9 +65,10 @@ describe('Models: HeartRate', () => {
             it('should return a model with undefined parameters', () => {
                 const result = new HeartRate().fromJSON({})
                 assert.propertyVal(result, 'type', DefaultEntityMock.HEART_RATE.type)
-                assert.propertyVal(result, 'unit', undefined)
-                assert.propertyVal(result, 'device_id', undefined)
-                assert.propertyVal(result, 'user_id', undefined)
+                assert.isUndefined(result.unit, 'no unit defined')
+                assert.isUndefined(result.device_id, 'no device_id defined')
+                assert.isUndefined(result.user_id, 'no user_id defined')
+                assert.isUndefined(result.dataset, 'no dataset defined')
             })
         })
     })
@@ -91,12 +91,12 @@ describe('Models: HeartRate', () => {
         context('when the model does not have defined parameters', () => {
             it('should return json with undefined parameters', () => {
                 const result = new HeartRate().toJSON()
-                assert.propertyVal(result, 'id', undefined)
-                assert.deepPropertyVal(result, 'dataset', [])
                 assert.propertyVal(result, 'type', DefaultEntityMock.HEART_RATE.type)
-                assert.propertyVal(result, 'unit', undefined)
-                assert.propertyVal(result, 'device_id', undefined)
-                assert.propertyVal(result, 'user_id', undefined)
+                assert.isUndefined(result.unit, 'no unit defined')
+                assert.isUndefined(result.device_id, 'no device_id defined')
+                assert.isUndefined(result.user_id, 'no user_id defined')
+                assert.isUndefined(result.id, 'no id defined')
+                assert.isEmpty(result.dataset)
             })
         })
     })

@@ -18,6 +18,7 @@ const request = require('supertest')(app.getExpress())
 describe('Routes: UserDevice', () => {
 
     const device: Device = new Device().fromJSON(DefaultEntityMock.DEVICE)
+    const user_id: string = DefaultEntityMock.DEVICE.user_id[0]
 
     before(async () => {
             try {
@@ -42,38 +43,18 @@ describe('Routes: UserDevice', () => {
         context('when save a device from user', () => {
             it('should return status code 201 and the created device', () => {
                 return request
-                    .post(`/users/${device.user_id}/devices`)
+                    .post(`/users/${user_id}/devices`)
                     .send(device.toJSON())
                     .set('Content-Type', 'application/json')
                     .expect(201)
                     .then(res => {
                         expect(res.body).to.have.property('id')
-                        expect(res.body).to.have.property('name')
-                        expect(res.body.name).to.eql(device.name)
-                        expect(res.body).to.have.property('address')
-                        expect(res.body.address).to.eql(device.address)
-                        expect(res.body).to.have.property('type')
-                        expect(res.body.type).to.eql(device.type)
-                        expect(res.body).to.have.property('model_number')
-                        expect(res.body.model_number).to.eql(device.model_number)
-                        expect(res.body).to.have.property('manufacturer')
-                        expect(res.body.manufacturer).to.eql(device.manufacturer)
-                        expect(res.body).to.have.property('user_id')
+                        expect(res.body).to.have.property('name', device.name)
+                        expect(res.body).to.have.property('address', device.address)
+                        expect(res.body).to.have.property('type', device.type)
+                        expect(res.body).to.have.property('model_number', device.model_number)
+                        expect(res.body).to.have.property('manufacturer', device.manufacturer)
                         device.id = res.body.id
-                    })
-            })
-        })
-
-        context('when there are a device with same unique parameters', () => {
-            it('should return status code 409 and message from duplicate items', () => {
-                return request
-                    .post(`/users/${device.user_id}/devices`)
-                    .send(device.toJSON())
-                    .set('Content-Type', 'application/json')
-                    .expect(409)
-                    .then(res => {
-                        expect(res.body).to.have.property('message')
-                        expect(res.body.message).to.eql('A registration with the same unique data already exists!')
                     })
             })
         })
@@ -86,10 +67,8 @@ describe('Routes: UserDevice', () => {
                     .set('Content-Type', 'application/json')
                     .expect(400)
                     .then(res => {
-                        expect(res.body).to.have.property('message')
-                        expect(res.body.message).to.eql(Strings.ERROR_MESSAGE.UUID_NOT_VALID_FORMAT)
-                        expect(res.body).to.have.property('description')
-                        expect(res.body.description).to.eql(Strings.ERROR_MESSAGE.UUID_NOT_VALID_FORMAT_DESC)
+                        expect(res.body).to.have.property('message', Strings.ERROR_MESSAGE.UUID_NOT_VALID_FORMAT)
+                        expect(res.body).to.have.property('description', Strings.ERROR_MESSAGE.UUID_NOT_VALID_FORMAT_DESC)
                     })
             })
         })
@@ -99,23 +78,16 @@ describe('Routes: UserDevice', () => {
         context('when get a unique device from user', () => {
             it('should return status code 200 and a device', () => {
                 return request
-                    .get(`/users/${device.user_id}/devices/${device.id}`)
+                    .get(`/users/${user_id}/devices/${device.id}`)
                     .set('Content-Type', 'application/json')
                     .expect(200)
                     .then(res => {
-                        expect(res.body).to.have.property('id')
-                        expect(res.body.id).to.eql(device.id)
-                        expect(res.body).to.have.property('name')
-                        expect(res.body.name).to.eql(device.name)
-                        expect(res.body).to.have.property('address')
-                        expect(res.body.address).to.eql(device.address)
-                        expect(res.body).to.have.property('type')
-                        expect(res.body.type).to.eql(device.type)
-                        expect(res.body).to.have.property('model_number')
-                        expect(res.body.model_number).to.eql(device.model_number)
-                        expect(res.body).to.have.property('manufacturer')
-                        expect(res.body.manufacturer).to.eql(device.manufacturer)
-                        expect(res.body).to.have.property('user_id')
+                        expect(res.body).to.have.property('id', device.id)
+                        expect(res.body).to.have.property('name', device.name)
+                        expect(res.body).to.have.property('address', device.address)
+                        expect(res.body).to.have.property('type', device.type)
+                        expect(res.body).to.have.property('model_number', device.model_number)
+                        expect(res.body).to.have.property('manufacturer', device.manufacturer)
                     })
             })
         })
@@ -123,14 +95,12 @@ describe('Routes: UserDevice', () => {
         context('when device is not founded', () => {
             it('should return status code 404 and message from device not found', () => {
                 return request
-                    .get(`/users/${device.user_id}/devices/${new ObjectID()}`)
+                    .get(`/users/${user_id}/devices/${new ObjectID()}`)
                     .set('Content-Type', 'application/json')
                     .expect(404)
                     .then(res => {
-                        expect(res.body).to.have.property('message')
-                        expect(res.body.message).to.eql(Strings.DEVICE.NOT_FOUND)
-                        expect(res.body).to.have.property('description')
-                        expect(res.body.description).to.eql(Strings.DEVICE.NOT_FOUND_DESC)
+                        expect(res.body).to.have.property('message', Strings.DEVICE.NOT_FOUND)
+                        expect(res.body).to.have.property('description', Strings.DEVICE.NOT_FOUND_DESC)
                     })
             })
         })
@@ -142,10 +112,8 @@ describe('Routes: UserDevice', () => {
                     .set('Content-Type', 'application/json')
                     .expect(400)
                     .then(res => {
-                        expect(res.body).to.have.property('message')
-                        expect(res.body.message).to.eql(Strings.ERROR_MESSAGE.UUID_NOT_VALID_FORMAT)
-                        expect(res.body).to.have.property('description')
-                        expect(res.body.description).to.eql(Strings.ERROR_MESSAGE.UUID_NOT_VALID_FORMAT_DESC)
+                        expect(res.body).to.have.property('message', Strings.ERROR_MESSAGE.UUID_NOT_VALID_FORMAT)
+                        expect(res.body).to.have.property('description', Strings.ERROR_MESSAGE.UUID_NOT_VALID_FORMAT_DESC)
                     })
             })
         })
@@ -155,24 +123,17 @@ describe('Routes: UserDevice', () => {
         context('when update a device from user', () => {
             it('should return the updated device', () => {
                 return request
-                    .patch(`/users/${device.user_id}/devices/${device.id}`)
+                    .patch(`/users/${user_id}/devices/${device.id}`)
                     .set('Content-Type', 'application/json')
                     .send(device.toJSON())
                     .expect(200)
                     .then(res => {
-                        expect(res.body).to.have.property('id')
-                        expect(res.body.id).to.eql(device.id)
-                        expect(res.body).to.have.property('name')
-                        expect(res.body.name).to.eql(device.name)
-                        expect(res.body).to.have.property('address')
-                        expect(res.body.address).to.eql(device.address)
-                        expect(res.body).to.have.property('type')
-                        expect(res.body.type).to.eql(device.type)
-                        expect(res.body).to.have.property('model_number')
-                        expect(res.body.model_number).to.eql(device.model_number)
-                        expect(res.body).to.have.property('manufacturer')
-                        expect(res.body.manufacturer).to.eql(device.manufacturer)
-                        expect(res.body).to.have.property('user_id')
+                        expect(res.body).to.have.property('id', device.id)
+                        expect(res.body).to.have.property('name', device.name)
+                        expect(res.body).to.have.property('address', device.address)
+                        expect(res.body).to.have.property('type', device.type)
+                        expect(res.body).to.have.property('model_number', device.model_number)
+                        expect(res.body).to.have.property('manufacturer', device.manufacturer)
                     })
             })
         })
@@ -185,10 +146,8 @@ describe('Routes: UserDevice', () => {
                     .send(device.toJSON())
                     .expect(404)
                     .then(res => {
-                        expect(res.body).to.have.property('message')
-                        expect(res.body.message).to.eql(Strings.DEVICE.NOT_FOUND)
-                        expect(res.body).to.have.property('description')
-                        expect(res.body.description).to.eql(Strings.DEVICE.NOT_FOUND_DESC)
+                        expect(res.body).to.have.property('message', Strings.DEVICE.NOT_FOUND)
+                        expect(res.body).to.have.property('description', Strings.DEVICE.NOT_FOUND_DESC)
                     })
             })
         })
@@ -201,10 +160,8 @@ describe('Routes: UserDevice', () => {
                     .send(device.toJSON())
                     .expect(400)
                     .then(res => {
-                        expect(res.body).to.have.property('message')
-                        expect(res.body.message).to.eql(Strings.ERROR_MESSAGE.UUID_NOT_VALID_FORMAT)
-                        expect(res.body).to.have.property('description')
-                        expect(res.body.description).to.eql(Strings.ERROR_MESSAGE.UUID_NOT_VALID_FORMAT_DESC)
+                        expect(res.body).to.have.property('message', Strings.ERROR_MESSAGE.UUID_NOT_VALID_FORMAT)
+                        expect(res.body).to.have.property('description', Strings.ERROR_MESSAGE.UUID_NOT_VALID_FORMAT_DESC)
                     })
             })
         })
@@ -214,24 +171,18 @@ describe('Routes: UserDevice', () => {
         context('when get all devices from user', () => {
             it('should return status code 200 and a list of devices', () => {
                 return request
-                    .get(`/users/${device.user_id}/devices`)
+                    .get(`/users/${user_id}/devices`)
                     .set('Content-Type', 'application/json')
                     .expect(200)
                     .then(res => {
                         expect(res.body).is.an.instanceOf(Array)
                         expect(res.body.length).to.eql(1)
                         expect(res.body[0]).to.have.property('id')
-                        expect(res.body[0]).to.have.property('name')
-                        expect(res.body[0].name).to.eql(device.name)
-                        expect(res.body[0]).to.have.property('address')
-                        expect(res.body[0].address).to.eql(device.address)
-                        expect(res.body[0]).to.have.property('type')
-                        expect(res.body[0].type).to.eql(device.type)
-                        expect(res.body[0]).to.have.property('model_number')
-                        expect(res.body[0].model_number).to.eql(device.model_number)
-                        expect(res.body[0]).to.have.property('manufacturer')
-                        expect(res.body[0].manufacturer).to.eql(device.manufacturer)
-                        expect(res.body[0]).to.have.property('user_id')
+                        expect(res.body[0]).to.have.property('name', device.name)
+                        expect(res.body[0]).to.have.property('address', device.address)
+                        expect(res.body[0]).to.have.property('type', device.type)
+                        expect(res.body[0]).to.have.property('model_number', device.model_number)
+                        expect(res.body[0]).to.have.property('manufacturer', device.manufacturer)
                     })
             })
         })
@@ -244,10 +195,8 @@ describe('Routes: UserDevice', () => {
                     .set('Content-Type', 'application/json')
                     .expect(400)
                     .then(res => {
-                        expect(res.body).to.have.property('message')
-                        expect(res.body.message).to.eql(Strings.ERROR_MESSAGE.UUID_NOT_VALID_FORMAT)
-                        expect(res.body).to.have.property('description')
-                        expect(res.body.description).to.eql(Strings.ERROR_MESSAGE.UUID_NOT_VALID_FORMAT_DESC)
+                        expect(res.body).to.have.property('message', Strings.ERROR_MESSAGE.UUID_NOT_VALID_FORMAT)
+                        expect(res.body).to.have.property('description', Strings.ERROR_MESSAGE.UUID_NOT_VALID_FORMAT_DESC)
                     })
             })
         })
@@ -257,7 +206,7 @@ describe('Routes: UserDevice', () => {
         context('when delete a device from user', () => {
             it('should return status code 204 and no content', () => {
                 return request
-                    .delete(`/users/${device.user_id}/devices/${device.id}`)
+                    .delete(`/users/${user_id}/devices/${device.id}`)
                     .set('Content-Type', 'application/json')
                     .expect(204)
                     .then(res => {
@@ -273,10 +222,8 @@ describe('Routes: UserDevice', () => {
                     .set('Content-Type', 'application/json')
                     .expect(400)
                     .then(res => {
-                        expect(res.body).to.have.property('message')
-                        expect(res.body.message).to.eql(Strings.ERROR_MESSAGE.UUID_NOT_VALID_FORMAT)
-                        expect(res.body).to.have.property('description')
-                        expect(res.body.description).to.eql(Strings.ERROR_MESSAGE.UUID_NOT_VALID_FORMAT_DESC)
+                        expect(res.body).to.have.property('message', Strings.ERROR_MESSAGE.UUID_NOT_VALID_FORMAT)
+                        expect(res.body).to.have.property('description', Strings.ERROR_MESSAGE.UUID_NOT_VALID_FORMAT_DESC)
                     })
             })
         })

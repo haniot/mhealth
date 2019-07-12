@@ -70,8 +70,7 @@ export class UserDeviceController {
         try {
             const device: Device = new Device().fromJSON(req.body)
             device.id = req.params.device_id
-            device.user_id = req.params.user_id
-            const result: Device = await this._service.update(device)
+            const result: Device = await this._service.updateDevice(device, req.params.user_id)
             if (!result) return res.status(HttpStatus.NOT_FOUND).send(this.getMessageDeviceNotFound())
             return res.status(HttpStatus.OK).send(this.toJSONView(result))
         } catch (err) {

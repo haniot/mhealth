@@ -10,7 +10,7 @@ describe('Validators: CreateWaistCircumferenceValidator', () => {
 
     it('should return undefined when the validation was successful', () => {
         const result = CreateWaistCircumferenceValidator.validate(measurement)
-        assert.equal(result, undefined)
+        assert.isUndefined(result)
     })
 
     context('when there are validation errors', () => {

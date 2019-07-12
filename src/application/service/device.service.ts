@@ -73,7 +73,7 @@ export class DeviceService implements IDeviceService {
         const device: Device = await this.getById(deviceId, new Query())
         if (device) {
             device.user_id = device.user_id!.filter(id => id !== userId)
-            if (device.user_id!.length) {
+            if ( device.user_id!.length) {
                 const updatedDevice = await this._repository.update(device)
                 return Promise.resolve(!!updatedDevice)
             }
@@ -92,5 +92,14 @@ export class DeviceService implements IDeviceService {
             return Promise.reject(err)
         }
         return this._repository.update(item)
+    }
+
+    public async updateDevice(item: Device, userId: string): Promise<Device> {
+        try {
+            ObjectIdValidator.validate(userId)
+        } catch (err) {
+            return Promise.reject(err)
+        }
+        return this.update(item)
     }
 }

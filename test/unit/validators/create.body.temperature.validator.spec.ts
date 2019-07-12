@@ -10,7 +10,7 @@ describe('Validators: CreateBodyTemperatureValidator', () => {
 
     it('should return undefined when the validation was successful', () => {
         const result = CreateBodyTemperatureValidator.validate(measurement)
-        assert.equal(result, undefined)
+        assert.isUndefined(result)
     })
 
     context('when there are validation errors', () => {

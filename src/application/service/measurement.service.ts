@@ -79,6 +79,7 @@ export class MeasurementService implements IMeasurementService {
 
     public async add(item: any): Promise<any> {
         try {
+
             if (item.device_id) {
                 const result = await this._deviceRepository.checkExists(item.device_id)
                 if (!result) {

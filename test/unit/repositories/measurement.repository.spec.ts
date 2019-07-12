@@ -390,7 +390,7 @@ describe('Repositories: MeasurementRepository', () => {
 
                 return repo.create(bloodGlucose)
                     .then(result => {
-                        assert.equal(result, undefined)
+                        assert.isUndefined(result, 'no result defined')
                     })
             })
         })

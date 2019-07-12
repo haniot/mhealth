@@ -10,14 +10,14 @@ describe('Validators: CreateFatValidator', () => {
 
     it('should return undefined when the validation was successful', () => {
         const result = CreateFatValidator.validate(measurement)
-        assert.equal(result, undefined)
+        assert.isUndefined(result)
     })
 
     context('when there are validation errors', () => {
         it('should throw an error for does not pass value', () => {
             measurement.value = undefined
             try {
-                CreateFatValidator.validate(measurement)
+              CreateFatValidator.validate(measurement)
             } catch (err) {
                 assert.propertyVal(err, 'message', 'Required fields were not provided...')
                 assert.propertyVal(err, 'description', 'Fat validation: value required!')

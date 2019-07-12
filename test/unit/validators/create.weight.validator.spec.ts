@@ -18,7 +18,7 @@ describe('Validators: CreateWeightValidator', () => {
 
     it('should return undefined when the validation was successful', () => {
         const result = CreateWeightValidator.validate(measurement)
-        assert.equal(result, undefined)
+        assert.isUndefined(result)
     })
 
     context('when there are validation errors', () => {

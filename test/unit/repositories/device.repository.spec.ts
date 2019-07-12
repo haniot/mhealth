@@ -1,12 +1,12 @@
-import { DefaultEntityMock } from '../../mocks/models/default.entity.mock'
-import { Device } from '../../../src/application/domain/model/device'
+import {DefaultEntityMock} from '../../mocks/models/default.entity.mock'
+import {Device} from '../../../src/application/domain/model/device'
 import sinon from 'sinon'
-import { DeviceRepository } from '../../../src/infrastructure/repository/device.repository'
-import { DeviceRepoModel } from '../../../src/infrastructure/database/schema/device.schema'
-import { EntityMapperMock } from '../../mocks/models/entity.mapper.mock'
-import { CustomLoggerMock } from '../../mocks/custom.logger.mock'
-import { assert } from 'chai'
-import { Query } from '../../../src/infrastructure/repository/query/query'
+import {DeviceRepository} from '../../../src/infrastructure/repository/device.repository'
+import {DeviceRepoModel} from '../../../src/infrastructure/database/schema/device.schema'
+import {EntityMapperMock} from '../../mocks/models/entity.mapper.mock'
+import {CustomLoggerMock} from '../../mocks/custom.logger.mock'
+import {assert} from 'chai'
+import {Query} from '../../../src/infrastructure/repository/query/query'
 
 require('sinon-mongoose')
 
@@ -36,7 +36,7 @@ describe('Repositories: DeviceRepository', () => {
                         assert.propertyVal(result, 'type', device.type)
                         assert.propertyVal(result, 'model_number', device.model_number)
                         assert.propertyVal(result, 'manufacturer', device.manufacturer)
-                        assert.propertyVal(result, 'user_id', device.user_id)
+                        assert.deepPropertyVal(result, 'user_id', device.user_id)
                     })
             })
         })
@@ -52,9 +52,10 @@ describe('Repositories: DeviceRepository', () => {
 
                 return repo.create(device)
                     .then(result => {
-                        assert.equal(result, undefined)
+                        assert.isUndefined(result, 'no result defined')
                     })
             })
+
         })
 
         context('when a database error occurs', () => {
@@ -64,12 +65,72 @@ describe('Repositories: DeviceRepository', () => {
                     .expects('create')
                     .withArgs(device)
                     .chain('exec')
-                    .rejects({ message: 'An internal error has occurred in the database!' })
+                    .rejects({message: 'An internal error has occurred in the database!'})
 
                 return repo.create(device)
                     .catch(err => {
                         assert.propertyVal(err, 'name', 'Error')
                         assert.propertyVal(err, 'message', 'An internal error has occurred in the database!')
+                    })
+            })
+
+            it('should reject a error in validation', () => {
+                sinon
+                    .mock(modelFake)
+                    .expects('create')
+                    .withArgs(device)
+                    .chain('exec')
+                    .rejects({name: 'ValidationError'})
+
+                return repo.create(device)
+                    .catch(err => {
+                        assert.propertyVal(err, 'name', 'Error')
+                        assert.propertyVal(err, 'message', 'Required fields were not provided!')
+                    })
+            })
+
+            it('should reject a error in cast', () => {
+                sinon
+                    .mock(modelFake)
+                    .expects('create')
+                    .withArgs(device)
+                    .chain('exec')
+                    .rejects({name: 'CastError'})
+
+                return repo.create(device)
+                    .catch(err => {
+                        assert.propertyVal(err, 'name', 'Error')
+                        assert.propertyVal(err, 'message', 'The given ID is in invalid format.')
+                    })
+            })
+
+            it('should reject a error in mongo', () => {
+                sinon
+                    .mock(modelFake)
+                    .expects('create')
+                    .withArgs(device)
+                    .chain('exec')
+                    .rejects({name: 'MongoError', code: 11000})
+
+                return repo.create(device)
+                    .catch(err => {
+                        assert.propertyVal(err, 'name', 'Error')
+                        assert.propertyVal(err, 'message', 'A registration with the same unique data already exists!')
+                    })
+            })
+
+            it('should reject a error in parameter', () => {
+                sinon
+                    .mock(modelFake)
+                    .expects('create')
+                    .withArgs(device)
+                    .chain('exec')
+                    .rejects({name: 'ObjectParameterError'})
+
+                return repo.create(device)
+                    .catch(err => {
+                        assert.propertyVal(err, 'name', 'Error')
+                        assert.propertyVal(err, 'message', 'Invalid query parameters!')
                     })
             })
         })
@@ -96,7 +157,7 @@ describe('Repositories: DeviceRepository', () => {
                         assert.propertyVal(result[0], 'type', device.type)
                         assert.propertyVal(result[0], 'model_number', device.model_number)
                         assert.propertyVal(result[0], 'manufacturer', device.manufacturer)
-                        assert.propertyVal(result[0], 'user_id', device.user_id)
+                        assert.deepPropertyVal(result[0], 'user_id', device.user_id)
                     })
             })
         })
@@ -131,7 +192,7 @@ describe('Repositories: DeviceRepository', () => {
                     .chain('skip')
                     .chain('limit')
                     .chain('exec')
-                    .rejects({ message: 'An internal error has occurred in the database!' })
+                    .rejects({message: 'An internal error has occurred in the database!'})
 
                 return repo.find(new Query())
                     .catch(err => {
@@ -139,19 +200,90 @@ describe('Repositories: DeviceRepository', () => {
                         assert.propertyVal(err, 'message', 'An internal error has occurred in the database!')
                     })
             })
+
+            it('should reject a error in validation', () => {
+                sinon
+                    .mock(modelFake)
+                    .expects('find')
+                    .chain('select')
+                    .chain('sort')
+                    .chain('skip')
+                    .chain('limit')
+                    .chain('exec')
+                    .rejects({name: 'ValidationError'})
+
+                return repo.find(new Query())
+                    .catch(err => {
+                        assert.propertyVal(err, 'name', 'Error')
+                        assert.propertyVal(err, 'message', 'Required fields were not provided!')
+                    })
+            })
+
+            it('should reject a error in cast', () => {
+                sinon
+                    .mock(modelFake)
+                    .expects('find')
+                    .chain('select')
+                    .chain('sort')
+                    .chain('skip')
+                    .chain('limit')
+                    .chain('exec')
+                    .rejects({name: 'CastError'})
+
+                return repo.find(new Query())
+                    .catch(err => {
+                        assert.propertyVal(err, 'name', 'Error')
+                        assert.propertyVal(err, 'message', 'The given ID is in invalid format.')
+                    })
+            })
+
+            it('should reject a error in mongo', () => {
+                sinon
+                    .mock(modelFake)
+                    .expects('find')
+                    .chain('select')
+                    .chain('sort')
+                    .chain('skip')
+                    .chain('limit')
+                    .chain('exec')
+                    .rejects({name: 'MongoError', code: 11000})
+
+                return repo.find(new Query())
+                    .catch(err => {
+                        assert.propertyVal(err, 'name', 'Error')
+                        assert.propertyVal(err, 'message', 'A registration with the same unique data already exists!')
+                    })
+            })
+
+            it('should reject a error in parameter', () => {
+                sinon
+                    .mock(modelFake)
+                    .expects('find')
+                    .chain('select')
+                    .chain('sort')
+                    .chain('skip')
+                    .chain('limit')
+                    .chain('exec')
+                    .rejects({name: 'ObjectParameterError'})
+
+                return repo.find(new Query())
+                    .catch(err => {
+                        assert.propertyVal(err, 'name', 'Error')
+                        assert.propertyVal(err, 'message', 'Invalid query parameters!')
+                    })
+            })
         })
     })
-
     describe('findOne()', () => {
         context('when get a unique device', () => {
             it('should return a device', () => {
                 const query = new Query()
-                query.addFilter({ _id: device.id })
+                query.addFilter({_id: device.id})
 
                 sinon
                     .mock(modelFake)
                     .expects('findOne')
-                    .withArgs({ _id: device.id })
+                    .withArgs({_id: device.id})
                     .chain('select')
                     .chain('exec')
                     .resolves(device)
@@ -162,7 +294,7 @@ describe('Repositories: DeviceRepository', () => {
                         assert.propertyVal(result, 'type', device.type)
                         assert.propertyVal(result, 'model_number', device.model_number)
                         assert.propertyVal(result, 'manufacturer', device.manufacturer)
-                        assert.propertyVal(result, 'user_id', device.user_id)
+                        assert.deepPropertyVal(result, 'user_id', device.user_id)
                     })
             })
         })
@@ -170,40 +302,103 @@ describe('Repositories: DeviceRepository', () => {
         context('when the device is not found', () => {
             it('should return undefined', () => {
                 const query = new Query()
-                query.addFilter({ _id: device.id })
+                query.addFilter({_id: device.id})
 
                 sinon
                     .mock(modelFake)
                     .expects('findOne')
-                    .withArgs({ _id: device.id })
+                    .withArgs({_id: device.id})
                     .chain('select')
                     .chain('exec')
                     .resolves(undefined)
 
                 return repo.findOne(query)
                     .then(result => {
-                        assert.equal(result, undefined)
+                        assert.isUndefined(result, 'no result defined')
                     })
             })
         })
 
         context('when a database error occurs', () => {
-            it('should reject a error', () => {
-                const query = new Query()
-                query.addFilter({ _id: device.id })
+            const query = new Query()
+            query.addFilter({_id: device.id})
 
+            it('should reject a error', () => {
                 sinon
                     .mock(modelFake)
                     .expects('findOne')
-                    .withArgs({ _id: device.id })
+                    .withArgs({_id: device.id})
                     .chain('select')
                     .chain('exec')
-                    .rejects({ message: 'An internal error has occurred in the database!' })
+                    .rejects({message: 'An internal error has occurred in the database!'})
 
                 return repo.findOne(query)
                     .catch(err => {
                         assert.propertyVal(err, 'name', 'Error')
                         assert.propertyVal(err, 'message', 'An internal error has occurred in the database!')
+                    })
+            })
+            it('should reject a error in validation', () => {
+                sinon
+                    .mock(modelFake)
+                    .expects('findOne')
+                    .withArgs({_id: device.id})
+                    .chain('select')
+                    .chain('exec')
+                    .rejects({name: 'ValidationError'})
+
+                return repo.findOne(query)
+                    .catch(err => {
+                        assert.propertyVal(err, 'name', 'Error')
+                        assert.propertyVal(err, 'message', 'Required fields were not provided!')
+                    })
+            })
+
+            it('should reject a error in cast', () => {
+                sinon
+                    .mock(modelFake)
+                    .expects('findOne')
+                    .withArgs({_id: device.id})
+                    .chain('select')
+                    .chain('exec')
+                    .rejects({name: 'CastError'})
+
+                return repo.findOne(query)
+                    .catch(err => {
+                        assert.propertyVal(err, 'name', 'Error')
+                        assert.propertyVal(err, 'message', 'The given ID is in invalid format.')
+                    })
+            })
+
+            it('should reject a error in mongo', () => {
+                sinon
+                    .mock(modelFake)
+                    .expects('findOne')
+                    .withArgs({_id: device.id})
+                    .chain('select')
+                    .chain('exec')
+                    .rejects({name: 'MongoError', code: 11000})
+
+                return repo.findOne(query)
+                    .catch(err => {
+                        assert.propertyVal(err, 'name', 'Error')
+                        assert.propertyVal(err, 'message', 'A registration with the same unique data already exists!')
+                    })
+            })
+
+            it('should reject a error in parameter', () => {
+                sinon
+                    .mock(modelFake)
+                    .expects('findOne')
+                    .withArgs({_id: device.id})
+                    .chain('select')
+                    .chain('exec')
+                    .rejects({name: 'ObjectParameterError'})
+
+                return repo.findOne(query)
+                    .catch(err => {
+                        assert.propertyVal(err, 'name', 'Error')
+                        assert.propertyVal(err, 'message', 'Invalid query parameters!')
                     })
             })
         })
@@ -216,7 +411,7 @@ describe('Repositories: DeviceRepository', () => {
                 sinon
                     .mock(modelFake)
                     .expects('findOneAndUpdate')
-                    .withArgs({ _id: device.id }, device, { new: true })
+                    .withArgs({_id: device.id}, device, {new: true})
                     .chain('exec')
                     .resolves(device)
 
@@ -226,7 +421,7 @@ describe('Repositories: DeviceRepository', () => {
                         assert.propertyVal(result, 'type', device.type)
                         assert.propertyVal(result, 'model_number', device.model_number)
                         assert.propertyVal(result, 'manufacturer', device.manufacturer)
-                        assert.propertyVal(result, 'user_id', device.user_id)
+                        assert.deepPropertyVal(result, 'user_id', device.user_id)
                     })
             })
         })
@@ -236,13 +431,13 @@ describe('Repositories: DeviceRepository', () => {
                 sinon
                     .mock(modelFake)
                     .expects('findOneAndUpdate')
-                    .withArgs({ _id: device.id }, device, { new: true })
+                    .withArgs({_id: device.id}, device, {new: true})
                     .chain('exec')
                     .resolves(undefined)
 
                 return repo.update(device)
                     .then(result => {
-                        assert.equal(result, undefined)
+                        assert.isUndefined(result, 'no result defined')
                     })
             })
         })
@@ -252,14 +447,73 @@ describe('Repositories: DeviceRepository', () => {
                 sinon
                     .mock(modelFake)
                     .expects('findOneAndUpdate')
-                    .withArgs({ _id: device.id }, device, { new: true })
+                    .withArgs({_id: device.id}, device, {new: true})
                     .chain('exec')
-                    .rejects({ message: 'An internal error has occurred in the database!' })
+                    .rejects({message: 'An internal error has occurred in the database!'})
 
                 return repo.update(device)
                     .catch(err => {
                         assert.propertyVal(err, 'name', 'Error')
                         assert.propertyVal(err, 'message', 'An internal error has occurred in the database!')
+                    })
+            })
+            it('should reject a error in validation', () => {
+                sinon
+                    .mock(modelFake)
+                    .expects('findOneAndUpdate')
+                    .withArgs({_id: device.id}, device, {new: true})
+                    .chain('exec')
+                    .rejects({name: 'ValidationError'})
+
+                return repo.update(device)
+                    .catch(err => {
+                        assert.propertyVal(err, 'name', 'Error')
+                        assert.propertyVal(err, 'message', 'Required fields were not provided!')
+                    })
+            })
+
+            it('should reject a error in cast', () => {
+                sinon
+                    .mock(modelFake)
+                    .expects('findOneAndUpdate')
+                    .withArgs({_id: device.id}, device, {new: true})
+                    .chain('exec')
+                    .rejects({name: 'CastError'})
+
+                return repo.update(device)
+                    .catch(err => {
+                        assert.propertyVal(err, 'name', 'Error')
+                        assert.propertyVal(err, 'message', 'The given ID is in invalid format.')
+                    })
+            })
+
+            it('should reject a error in mongo', () => {
+                sinon
+                    .mock(modelFake)
+                    .expects('findOneAndUpdate')
+                    .withArgs({_id: device.id}, device, {new: true})
+                    .chain('exec')
+                    .rejects({name: 'MongoError', code: 11000})
+
+                return repo.update(device)
+                    .catch(err => {
+                        assert.propertyVal(err, 'name', 'Error')
+                        assert.propertyVal(err, 'message', 'A registration with the same unique data already exists!')
+                    })
+            })
+
+            it('should reject a error in parameter', () => {
+                sinon
+                    .mock(modelFake)
+                    .expects('findOneAndUpdate')
+                    .withArgs({_id: device.id}, device, {new: true})
+                    .chain('exec')
+                    .rejects({name: 'ObjectParameterError'})
+
+                return repo.update(device)
+                    .catch(err => {
+                        assert.propertyVal(err, 'name', 'Error')
+                        assert.propertyVal(err, 'message', 'Invalid query parameters!')
                     })
             })
         })
@@ -271,7 +525,7 @@ describe('Repositories: DeviceRepository', () => {
                 sinon
                     .mock(modelFake)
                     .expects('findOneAndDelete')
-                    .withArgs({ _id: device.id })
+                    .withArgs({_id: device.id})
                     .chain('exec')
                     .resolves(true)
 
@@ -288,7 +542,7 @@ describe('Repositories: DeviceRepository', () => {
                 sinon
                     .mock(modelFake)
                     .expects('findOneAndDelete')
-                    .withArgs({ _id: device.id })
+                    .withArgs({_id: device.id})
                     .chain('exec')
                     .resolves(false)
 
@@ -305,14 +559,73 @@ describe('Repositories: DeviceRepository', () => {
                 sinon
                     .mock(modelFake)
                     .expects('findOneAndDelete')
-                    .withArgs({ _id: device.id })
+                    .withArgs({_id: device.id})
                     .chain('exec')
-                    .rejects({ message: 'An internal error has occurred in the database!' })
+                    .rejects({message: 'An internal error has occurred in the database!'})
 
                 return repo.delete(device.id!)
                     .catch(err => {
                         assert.propertyVal(err, 'name', 'Error')
                         assert.propertyVal(err, 'message', 'An internal error has occurred in the database!')
+                    })
+            })
+            it('should reject a error in validation', () => {
+                sinon
+                    .mock(modelFake)
+                    .expects('findOneAndDelete')
+                    .withArgs({_id: device.id})
+                    .chain('exec')
+                    .rejects({name: 'ValidationError'})
+
+                return repo.delete(device.id!)
+                    .catch(err => {
+                        assert.propertyVal(err, 'name', 'Error')
+                        assert.propertyVal(err, 'message', 'Required fields were not provided!')
+                    })
+            })
+
+            it('should reject a error in cast', () => {
+                sinon
+                    .mock(modelFake)
+                    .expects('findOneAndDelete')
+                    .withArgs({_id: device.id})
+                    .chain('exec')
+                    .rejects({name: 'CastError'})
+
+                return repo.delete(device.id!)
+                    .catch(err => {
+                        assert.propertyVal(err, 'name', 'Error')
+                        assert.propertyVal(err, 'message', 'The given ID is in invalid format.')
+                    })
+            })
+
+            it('should reject a error in mongo', () => {
+                sinon
+                    .mock(modelFake)
+                    .expects('findOneAndDelete')
+                    .withArgs({_id: device.id})
+                    .chain('exec')
+                    .rejects({name: 'MongoError', code: 11000})
+
+                return repo.delete(device.id!)
+                    .catch(err => {
+                        assert.propertyVal(err, 'name', 'Error')
+                        assert.propertyVal(err, 'message', 'A registration with the same unique data already exists!')
+                    })
+            })
+
+            it('should reject a error in parameter', () => {
+                sinon
+                    .mock(modelFake)
+                    .expects('findOneAndDelete')
+                    .withArgs({_id: device.id})
+                    .chain('exec')
+                    .rejects({name: 'ObjectParameterError'})
+
+                return repo.delete(device.id!)
+                    .catch(err => {
+                        assert.propertyVal(err, 'name', 'Error')
+                        assert.propertyVal(err, 'message', 'Invalid query parameters!')
                     })
             })
         })
@@ -343,12 +656,71 @@ describe('Repositories: DeviceRepository', () => {
                     .expects('countDocuments')
                     .withArgs({})
                     .chain('exec')
-                    .rejects({ message: 'An internal error has occurred in the database!' })
+                    .rejects({message: 'An internal error has occurred in the database!'})
 
                 return repo.count(new Query())
                     .catch(err => {
                         assert.propertyVal(err, 'name', 'Error')
                         assert.propertyVal(err, 'message', 'An internal error has occurred in the database!')
+                    })
+            })
+            it('should reject a error in validation', () => {
+                sinon
+                    .mock(modelFake)
+                    .expects('countDocuments')
+                    .withArgs({})
+                    .chain('exec')
+                    .rejects({name: 'ValidationError'})
+
+                return repo.count(new Query())
+                    .catch(err => {
+                        assert.propertyVal(err, 'name', 'Error')
+                        assert.propertyVal(err, 'message', 'Required fields were not provided!')
+                    })
+            })
+
+            it('should reject a error in cast', () => {
+                sinon
+                    .mock(modelFake)
+                    .expects('countDocuments')
+                    .withArgs({})
+                    .chain('exec')
+                    .rejects({name: 'CastError'})
+
+                return repo.count(new Query())
+                    .catch(err => {
+                        assert.propertyVal(err, 'name', 'Error')
+                        assert.propertyVal(err, 'message', 'The given ID is in invalid format.')
+                    })
+            })
+
+            it('should reject a error in mongo', () => {
+                sinon
+                    .mock(modelFake)
+                    .expects('countDocuments')
+                    .withArgs({})
+                    .chain('exec')
+                    .rejects({name: 'MongoError', code: 11000})
+
+                return repo.count(new Query())
+                    .catch(err => {
+                        assert.propertyVal(err, 'name', 'Error')
+                        assert.propertyVal(err, 'message', 'A registration with the same unique data already exists!')
+                    })
+            })
+
+            it('should reject a error in parameter', () => {
+                sinon
+                    .mock(modelFake)
+                    .expects('countDocuments')
+                    .withArgs({})
+                    .chain('exec')
+                    .rejects({name: 'ObjectParameterError'})
+
+                return repo.count(new Query())
+                    .catch(err => {
+                        assert.propertyVal(err, 'name', 'Error')
+                        assert.propertyVal(err, 'message', 'Invalid query parameters!')
                     })
             })
         })
@@ -360,12 +732,12 @@ describe('Repositories: DeviceRepository', () => {
                 sinon
                     .mock(modelFake)
                     .expects('findOne')
-                    .withArgs({ _id: device.id })
+                    .withArgs({address: device.address})
                     .chain('select')
                     .chain('exec')
                     .resolves(device)
 
-                return repo.checkExists(device.id!)
+                return repo.checkExists(device.address!)
                     .then(result => {
                         assert.isBoolean(result)
                         assert.isTrue(result)
@@ -378,12 +750,12 @@ describe('Repositories: DeviceRepository', () => {
                 sinon
                     .mock(modelFake)
                     .expects('findOne')
-                    .withArgs({ _id: device.id })
+                    .withArgs({address: device.address})
                     .chain('select')
                     .chain('exec')
                     .resolves(undefined)
 
-                return repo.checkExists(device.id!)
+                return repo.checkExists(device.address!)
                     .then(result => {
                         assert.isBoolean(result)
                         assert.isFalse(result)
@@ -396,12 +768,12 @@ describe('Repositories: DeviceRepository', () => {
                 sinon
                     .mock(modelFake)
                     .expects('findOne')
-                    .withArgs({ _id: device.id })
+                    .withArgs({address: device.address})
                     .chain('select')
                     .chain('exec')
-                    .rejects({ message: 'An internal error has occurred in the database!' })
+                    .rejects({message: 'An internal error has occurred in the database!'})
 
-                return repo.checkExists(device.id!)
+                return repo.checkExists(device.address!)
                     .catch(err => {
                         assert.propertyVal(err, 'name', 'Error')
                         assert.propertyVal(err, 'message', 'An internal error has occurred in the database!')

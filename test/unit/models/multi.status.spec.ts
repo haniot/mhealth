@@ -44,32 +44,32 @@ describe('Models: MultiStatus', () => {
         context('when pass a empty string json', () => {
             it('should return a model with undefined parameters', () => {
                 const result = new MultiStatus().fromJSON('')
-                assert.deepPropertyVal(result, 'success', undefined)
-                assert.deepPropertyVal(result, 'error', undefined)
+                assert.isUndefined(result.success, 'no success defined')
+                assert.isUndefined(result.error, 'no error defined')
             })
         })
 
         context('when pass a invalid string json', () => {
             it('should return a model with undefined parameters', () => {
                 const result = new MultiStatus().fromJSON('invalid')
-                assert.deepPropertyVal(result, 'success', undefined)
-                assert.deepPropertyVal(result, 'error', undefined)
+                assert.isUndefined(result.success, 'no success defined')
+                assert.isUndefined(result.error, 'no error defined')
             })
         })
 
         context('when pass a undefined json', () => {
             it('should return a model with undefined parameters', () => {
                 const result = new MultiStatus().fromJSON(undefined)
-                assert.deepPropertyVal(result, 'success', undefined)
-                assert.deepPropertyVal(result, 'error', undefined)
+                assert.isUndefined(result.success, 'no success defined')
+                assert.isUndefined(result.error, 'no error defined')
             })
         })
 
         context('when pass a empty json', () => {
             it('should return a model with undefined parameters', () => {
                 const result = new MultiStatus().fromJSON({})
-                assert.deepPropertyVal(result, 'success', undefined)
-                assert.deepPropertyVal(result, 'error', undefined)
+                assert.isUndefined(result.success, 'no success defined')
+                assert.isUndefined(result.error, 'no error defined')
             })
         })
     })
@@ -91,8 +91,8 @@ describe('Models: MultiStatus', () => {
         context('when the model does not have defined parameters', () => {
             it('should return json with undefined parameters', () => {
                 const result = new MultiStatus().toJSON()
-                assert.deepPropertyVal(result, 'success', undefined)
-                assert.deepPropertyVal(result, 'error', undefined)
+                assert.isUndefined(result.success, 'no success defined')
+                assert.isUndefined(result.error, 'no error defined')
             })
         })
     })
