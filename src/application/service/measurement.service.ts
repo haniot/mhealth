@@ -24,13 +24,6 @@ import { Query } from '../../infrastructure/repository/query/query'
 import { CreateBodyFatValidator } from '../domain/validator/create.body.fat.validator'
 import { Device } from '../domain/model/device'
 import { LastMeasurements } from '../domain/model/last.measurements'
-import { BloodGlucose } from '../domain/model/blood.glucose'
-import { BloodPressure } from '../domain/model/blood.pressure'
-import { BodyFat } from '../domain/model/body.fat'
-import { BodyTemperature } from '../domain/model/body.temperature'
-import { Height } from '../domain/model/height'
-import { WaistCircumference } from '../domain/model/waist.circumference'
-import { Weight } from '../domain/model/weight'
 
 @injectable()
 export class MeasurementService implements IMeasurementService {
@@ -144,40 +137,19 @@ export class MeasurementService implements IMeasurementService {
     public async getLastMeasurements(patientId: string): Promise<LastMeasurements> {
         const result: LastMeasurements = new LastMeasurements()
         try {
-            const bloodGlucoseList: Array<BloodGlucose> =
-                await this._repository.find(this.generateLastMeasurementQuery(patientId, MeasurementTypes.BLOOD_GLUCOSE))
-            result.blood_glucose = bloodGlucoseList[0]
-            const bloodPressureList: Array<BloodPressure> =
-                await this._repository.find(this.generateLastMeasurementQuery(patientId, MeasurementTypes.BLOOD_PRESSURE))
-            result.blood_pressure = bloodPressureList[0]
-            const bodyFatList: Array<BodyFat> =
-                await this._repository.find(this.generateLastMeasurementQuery(patientId, MeasurementTypes.BODY_FAT))
-            result.body_fat = bodyFatList[0]
-            const bodyTemperatureList: Array<BodyTemperature> =
-                await this._repository
-                    .find(this.generateLastMeasurementQuery(patientId, MeasurementTypes.BODY_TEMPERATURE))
-            result.body_temperature = bodyTemperatureList[0]
-            const heightList: Array<Height> =
-                await this._repository.find(this.generateLastMeasurementQuery(patientId, MeasurementTypes.HEIGHT))
-            result.height = heightList[0]
-            const waistCircumferenceList: Array<WaistCircumference> =
-                await this._repository
-                    .find(this.generateLastMeasurementQuery(patientId, MeasurementTypes.WAIST_CIRCUMFERENCE))
-            result.waist_circumference = waistCircumferenceList[0]
-            const weightList: Array<Weight> =
-                await this._repository.find(this.generateLastMeasurementQuery(patientId, MeasurementTypes.WEIGHT))
-            result.weight = weightList[0]
+            result.blood_glucose = await this._repository.getLastMeasurement(patientId, MeasurementTypes.BLOOD_GLUCOSE)
+            result.blood_pressure = await this._repository.getLastMeasurement(patientId, MeasurementTypes.BLOOD_PRESSURE)
+            result.body_fat = await this._repository.getLastMeasurement(patientId, MeasurementTypes.BODY_FAT)
+            result.body_temperature =
+                await this._repository.getLastMeasurement(patientId, MeasurementTypes.BODY_TEMPERATURE)
+            result.height = await this._repository.getLastMeasurement(patientId, MeasurementTypes.HEIGHT)
+            result.waist_circumference =
+                await this._repository.getLastMeasurement(patientId, MeasurementTypes.WAIST_CIRCUMFERENCE)
+            result.weight = await this._repository.getLastMeasurement(patientId, MeasurementTypes.WEIGHT)
         } catch (err) {
             return Promise.reject(err)
         }
         return Promise.resolve(result)
-    }
-
-    private generateLastMeasurementQuery(patientId: string, _type: string): Query {
-        const query: Query = new Query()
-        query.addFilter({ patient_id: patientId, type: _type })
-        query.addOrdination('timestamp', 'desc')
-        return query
     }
 
     private async addMultipleMeasurements(measurements: Array<any>): Promise<MultiStatus<any>> {

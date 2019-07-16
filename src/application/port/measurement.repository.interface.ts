@@ -1,9 +1,15 @@
 import { IRepository } from './repository.interface'
 import { Measurement } from '../domain/model/measurement'
-import { Query } from '../../infrastructure/repository/query/query'
+import { IQuery } from './query.interface'
 
 export interface IMeasurementRepository extends IRepository<Measurement> {
     checkExists(item: any): Promise<boolean>
 
-    find(query: Query): Promise<Array<any>>
+    create(item: any): Promise<any>
+
+    find(query: IQuery): Promise<Array<any>>
+
+    findOne(query: IQuery): Promise<any>
+
+    getLastMeasurement(patientId: string, measurementType: string): Promise<any>
 }

@@ -39,4 +39,8 @@ export class MeasurementRepositoryMock implements IMeasurementRepository {
     public checkExists(item: any): Promise<boolean> {
         return Promise.resolve(item.id !== measurement.id)
     }
+
+    public getLastMeasurement(patientId: string, measurementType: string): Promise<any> {
+        return Promise.resolve(measurement)
+    }
 }

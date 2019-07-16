@@ -103,6 +103,18 @@ export class MeasurementRepository extends BaseRepository<Measurement, Measureme
         })
     }
 
+    public async getLastMeasurement(patientId: string, measurementType: string): Promise<any> {
+        return new Promise<any>((resolve, reject) => {
+            const query: Query = new Query()
+            query.addFilter({ patient_id: patientId, type: measurementType })
+            query.addOrdination('timestamp', 'desc')
+            return this.find(query)
+                .then(result => resolve(result[0]))
+                .catch(err => reject(this.mongoDBErrorListener(err)))
+
+        })
+    }
+
     private transform(item: any) {
         switch (item.type) {
             case(MeasurementTypes.BLOOD_GLUCOSE):
