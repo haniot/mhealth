@@ -18,7 +18,7 @@
 // describe('Routes: UserDevice', () => {
 //
 //     const device: Device = new Device().fromJSON(DefaultEntityMock.DEVICE)
-//     const user_id: string = DefaultEntityMock.DEVICE.user_id[0]
+//     const patient_id: string = DefaultEntityMock.DEVICE.patient_id[0]
 //
 //     before(async () => {
 //             try {
@@ -39,11 +39,11 @@
 //         }
 //     })
 //
-//     describe('POST /users/:user_id/devices', () => {
-//         context('when save a device from user', () => {
+//     describe('POST /v1/patients/:patient_id/devices', () => {
+//         context('when save a device from patient', () => {
 //             it('should return status code 201 and the created device', () => {
 //                 return request
-//                     .post(`/users/${user_id}/devices`)
+//                     .post(`/v1/patients/${patient_id}/devices`)
 //                     .send(device.toJSON())
 //                     .set('Content-Type', 'application/json')
 //                     .expect(201)
@@ -62,7 +62,7 @@
 //         context('when there are validation errors', () => {
 //             it('should return status code 400 and message from invalid parameters', () => {
 //                 return request
-//                     .post('/users/123/devices')
+//                     .post('/v1/patients/123/devices')
 //                     .send(device.toJSON())
 //                     .set('Content-Type', 'application/json')
 //                     .expect(400)
@@ -74,11 +74,11 @@
 //         })
 //     })
 //
-//     describe('GET /users/:user_id/devices/:device_id', () => {
-//         context('when get a unique device from user', () => {
+//     describe('GET /v1/patients/:patient_id/devices/:device_id', () => {
+//         context('when get a unique device from patient', () => {
 //             it('should return status code 200 and a device', () => {
 //                 return request
-//                     .get(`/users/${user_id}/devices/${device.id}`)
+//                     .get(`/v1/patients/${patient_id}/devices/${device.id}`)
 //                     .set('Content-Type', 'application/json')
 //                     .expect(200)
 //                     .then(res => {
@@ -95,7 +95,7 @@
 //         context('when device is not founded', () => {
 //             it('should return status code 404 and message from device not found', () => {
 //                 return request
-//                     .get(`/users/${user_id}/devices/${new ObjectID()}`)
+//                     .get(`/v1/patients/${patient_id}/devices/${new ObjectID()}`)
 //                     .set('Content-Type', 'application/json')
 //                     .expect(404)
 //                     .then(res => {
@@ -108,7 +108,7 @@
 //         context('when there are validation errors', () => {
 //             it('should return status code 400 and message from invalid parameters', () => {
 //                 return request
-//                     .get('/users/123/devices/321')
+//                     .get('/v1/patients/123/devices/321')
 //                     .set('Content-Type', 'application/json')
 //                     .expect(400)
 //                     .then(res => {
@@ -119,11 +119,11 @@
 //         })
 //     })
 //
-//     describe('PATCH /users/:user_id/devices/:device_id', () => {
-//         context('when update a device from user', () => {
+//     describe('PATCH /v1/patients/:patient_id/devices/:device_id', () => {
+//         context('when update a device from patient', () => {
 //             it('should return the updated device', () => {
 //                 return request
-//                     .patch(`/users/${user_id}/devices/${device.id}`)
+//                     .patch(`/v1/patients/${patient_id}/devices/${device.id}`)
 //                     .set('Content-Type', 'application/json')
 //                     .send(device.toJSON())
 //                     .expect(200)
@@ -141,7 +141,7 @@
 //         context('when device is not founded', () => {
 //             it('should return status code 404 and message from device not found', () => {
 //                 return request
-//                     .patch(`/users/${new ObjectID()}/devices/${new ObjectID()}`)
+//                     .patch(`/v1/patients/${new ObjectID()}/devices/${new ObjectID()}`)
 //                     .set('Content-Type', 'application/json')
 //                     .send(device.toJSON())
 //                     .expect(404)
@@ -155,7 +155,7 @@
 //         context('when there are validation errors', () => {
 //             it('should return status code 400 and message from invalid parameters', () => {
 //                 return request
-//                     .patch('/users/123/devices/321')
+//                     .patch('/v1/patients/123/devices/321')
 //                     .set('Content-Type', 'application/json')
 //                     .send(device.toJSON())
 //                     .expect(400)
@@ -167,11 +167,11 @@
 //         })
 //     })
 //
-//     describe('GET /users/:user_id/devices', () => {
-//         context('when get all devices from user', () => {
+//     describe('GET /v1/patients/:patient_id/devices', () => {
+//         context('when get all devices from patient', () => {
 //             it('should return status code 200 and a list of devices', () => {
 //                 return request
-//                     .get(`/users/${user_id}/devices`)
+//                     .get(`/v1/patients/${patient_id}/devices`)
 //                     .set('Content-Type', 'application/json')
 //                     .expect(200)
 //                     .then(res => {
@@ -190,7 +190,7 @@
 //         context('when there are validation errors', () => {
 //             it('should return status code 400 and message from invalid parameters', () => {
 //                 return request
-//                     .get('/users/123/devices')
+//                     .get('/v1/patients/123/devices')
 //                     .send(device.toJSON())
 //                     .set('Content-Type', 'application/json')
 //                     .expect(400)
@@ -202,11 +202,11 @@
 //         })
 //     })
 //
-//     describe('DELETE /users/:user_id/devices/:device_id', () => {
-//         context('when delete a device from user', () => {
+//     describe('DELETE /v1/patients/:patient_id/devices/:device_id', () => {
+//         context('when delete a device from patient', () => {
 //             it('should return status code 204 and no content', () => {
 //                 return request
-//                     .delete(`/users/${user_id}/devices/${device.id}`)
+//                     .delete(`/v1/patients/${patient_id}/devices/${device.id}`)
 //                     .set('Content-Type', 'application/json')
 //                     .expect(204)
 //                     .then(res => {
@@ -218,7 +218,7 @@
 //         context('when there are validation errors', () => {
 //             it('should return status code 400 and message from invalid parameters', () => {
 //                 return request
-//                     .delete('/users/123/devices/321')
+//                     .delete('/v1/patients/123/devices/321')
 //                     .set('Content-Type', 'application/json')
 //                     .expect(400)
 //                     .then(res => {

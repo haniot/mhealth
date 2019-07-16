@@ -5,7 +5,7 @@ import { ObjectIdValidator } from './object.id.validator'
 
 export class UpdateDeviceValidator {
     public static validate(item: Device): void | ValidationException {
-        if (item.id) ObjectIdValidator.validate(item.id)
+        ObjectIdValidator.validate(item.id!)
         if (item.patient_id) {
             throw new ValidationException(
                 Strings.ERROR_MESSAGE.PARAMETER_COULD_NOT_BE_UPDATED,
