@@ -18,7 +18,7 @@ export class MeasurementEntityMapper implements IEntityMapper<Measurement, Measu
         if (json.unit !== undefined) result.unit = json.unit
         if (json.type !== undefined) result.type = json.type
         if (json.device_id !== undefined) result.device_id = json.device_id
-        if (json.user_id !== undefined) result.user_id = json.user_id
+        if (json.patient_id !== undefined) result.patient_id = json.patient_id
         return result
     }
 
@@ -33,7 +33,7 @@ export class MeasurementEntityMapper implements IEntityMapper<Measurement, Measu
         if (item.unit !== undefined) result.unit = item.unit
         if (item.type !== undefined) result.type = item.type
         if (item.device_id !== undefined) result.device_id = item.device_id
-        if (item.user_id !== undefined) result.user_id = item.user_id
+        if (item.patient_id !== undefined) result.patient_id = item.patient_id
         return result
     }
 }

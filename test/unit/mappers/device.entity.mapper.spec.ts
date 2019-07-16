@@ -17,7 +17,7 @@ describe('Mappers: DeviceEntityMapper', () => {
                 assert.propertyVal(result, 'type', device.type)
                 assert.propertyVal(result, 'model_number', device.model_number)
                 assert.propertyVal(result, 'manufacturer', device.manufacturer)
-                assert.deepPropertyVal(result, 'user_id', device.user_id)
+                assert.deepPropertyVal(result, 'patient_id', device.patient_id)
             })
 
             it('should return model without parameters for empty json', () => {
@@ -27,7 +27,7 @@ describe('Mappers: DeviceEntityMapper', () => {
                 assert.isUndefined(result.type, 'no name type')
                 assert.isUndefined(result.model_number, 'no model_number defined')
                 assert.isUndefined(result.manufacturer, 'no manufacturer defined')
-                assert.isUndefined(result.user_id, 'no user_id defined')
+                assert.isUndefined(result.patient_id, 'no patient_id defined')
             })
 
             it('should return model without parameter for undefined json', () => {
@@ -37,7 +37,7 @@ describe('Mappers: DeviceEntityMapper', () => {
                 assert.isUndefined(result.type, 'no name type')
                 assert.isUndefined(result.model_number, 'no model_number defined')
                 assert.isUndefined(result.manufacturer, 'no manufacturer defined')
-                assert.isUndefined(result.user_id, 'no user_id defined')
+                assert.isUndefined(result.patient_id, 'no patient_id defined')
             })
 
         })
@@ -49,7 +49,7 @@ describe('Mappers: DeviceEntityMapper', () => {
                 assert.propertyVal(result, 'type', device.type)
                 assert.propertyVal(result, 'model_number', device.model_number)
                 assert.propertyVal(result, 'manufacturer', device.manufacturer)
-                assert.deepPropertyVal(result, 'user_id', device.user_id)
+                assert.deepPropertyVal(result, 'patient_id', device.patient_id)
             })
 
             it('should return a model entity with basic parameters for empty model', () => {

@@ -6,7 +6,7 @@ import { UpdateDeviceValidator } from '../../../src/application/domain/validator
 
 describe('Validators: UpdateDeviceValidator', () => {
     const device: Device = new Device().fromJSON(DefaultEntityMock.DEVICE)
-    device.user_id = undefined
+    device.patient_id = undefined
 
     it('should return undefined when the validation was successful', () => {
         const result = UpdateDeviceValidator.validate(device)
@@ -25,14 +25,14 @@ describe('Validators: UpdateDeviceValidator', () => {
             }
         })
 
-        it('should throw an error for does pass user_id', () => {
-            device.user_id = DefaultEntityMock.DEVICE.user_id
+        it('should throw an error for does pass patient_id', () => {
+            device.patient_id = DefaultEntityMock.DEVICE.patient_id
             try {
                 UpdateDeviceValidator.validate(device)
             } catch (err) {
                 assert.propertyVal(err, 'message', Strings.ERROR_MESSAGE.PARAMETER_COULD_NOT_BE_UPDATED)
                 assert.propertyVal(err, 'description',
-                    Strings.ERROR_MESSAGE.PARAMETER_COULD_NOT_BE_UPDATED_DESC.concat('user_id'))
+                    Strings.ERROR_MESSAGE.PARAMETER_COULD_NOT_BE_UPDATED_DESC.concat('patient_id'))
             }
         })
     })

@@ -2,7 +2,6 @@ import { injectable } from 'inversify'
 import { IEntityMapper } from '../../port/entity.mapper.interface'
 import { WeightEntity } from '../weight.entity'
 import { Weight } from '../../../application/domain/model/weight'
-import { Fat } from '../../../application/domain/model/fat'
 
 @injectable()
 export class WeightEntityMapper implements IEntityMapper<Weight, WeightEntity> {
@@ -16,8 +15,8 @@ export class WeightEntityMapper implements IEntityMapper<Weight, WeightEntity> {
         if (json.type !== undefined) result.type = json.type
         if (json.timestamp !== undefined) result.timestamp = json.timestamp
         if (json.device_id !== undefined) result.device_id = json.device_id
-        if (json.fat !== undefined) result.fat = new Fat().fromJSON(json.fat)
-        if (json.user_id !== undefined) result.user_id = json.user_id
+        if (json.body_fat !== undefined) result.body_fat = json.body_fat
+        if (json.patient_id !== undefined) result.patient_id = json.patient_id
         return result
     }
 
@@ -33,8 +32,8 @@ export class WeightEntityMapper implements IEntityMapper<Weight, WeightEntity> {
         if (item.type !== undefined) result.type = item.type
         if (item.timestamp !== undefined) result.timestamp = item.timestamp
         if (item.device_id !== undefined) result.device_id = item.device_id
-        if (item.fat !== undefined) result.fat = item.fat.id
-        if (item.user_id !== undefined) result.user_id = item.user_id
+        if (item.body_fat !== undefined) result.body_fat = item.body_fat
+        if (item.patient_id !== undefined) result.patient_id = item.patient_id
         return result
     }
 

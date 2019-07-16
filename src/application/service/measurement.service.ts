@@ -17,12 +17,20 @@ import { MeasurementTypes } from '../domain/utils/measurement.types'
 import { CreateBloodGlucoseValidator } from '../domain/validator/create.blood.glucose.validator'
 import { CreateBloodPressureValidator } from '../domain/validator/create.blood.pressure.validator'
 import { CreateBodyTemperatureValidator } from '../domain/validator/create.body.temperature.validator'
-import { CreateHeartRateValidator } from '../domain/validator/create.heart.rate.validator'
 import { CreateHeightValidator } from '../domain/validator/create.height.validator'
 import { CreateWaistCircumferenceValidator } from '../domain/validator/create.waist.circumference.validator'
 import { CreateWeightValidator } from '../domain/validator/create.weight.validator'
 import { Query } from '../../infrastructure/repository/query/query'
-import { CreateFatValidator } from '../domain/validator/create.fat.validator'
+import { CreateBodyFatValidator } from '../domain/validator/create.body.fat.validator'
+import { Device } from '../domain/model/device'
+import { LastMeasurements } from '../domain/model/last.measurements'
+import { BloodGlucose } from '../domain/model/blood.glucose'
+import { BloodPressure } from '../domain/model/blood.pressure'
+import { BodyFat } from '../domain/model/body.fat'
+import { BodyTemperature } from '../domain/model/body.temperature'
+import { Height } from '../domain/model/height'
+import { WaistCircumference } from '../domain/model/waist.circumference'
+import { Weight } from '../domain/model/weight'
 
 @injectable()
 export class MeasurementService implements IMeasurementService {
@@ -39,8 +47,8 @@ export class MeasurementService implements IMeasurementService {
 
     public async getAll(query: Query): Promise<Array<any>> {
         try {
-            const user_id = query.toJSON().filters.user_id
-            if (user_id) ObjectIdValidator.validate(user_id)
+            const patient_id = query.toJSON().filters.patient_id
+            if (patient_id) ObjectIdValidator.validate(patient_id)
         } catch (err) {
             return Promise.reject(err)
         }
@@ -50,8 +58,8 @@ export class MeasurementService implements IMeasurementService {
     public async getById(id: string, query: IQuery): Promise<any> {
         try {
             ObjectIdValidator.validate(id)
-            const user_id = query.toJSON().filters.user_id
-            if (user_id) ObjectIdValidator.validate(user_id)
+            const patient_id = query.toJSON().filters.patient_id
+            if (patient_id) ObjectIdValidator.validate(patient_id)
         } catch (err) {
             return Promise.reject(err)
         }
@@ -81,18 +89,18 @@ export class MeasurementService implements IMeasurementService {
         try {
 
             if (item.device_id) {
-                const result = await this._deviceRepository.checkExists(item.device_id)
-                if (!result) {
-                    throw new ValidationException(Strings.DEVICE.NOT_FOUND, Strings.DEVICE.NOT_FOUND_DESC)
-                }
-            }
-            if (item.user_id && item.device_id && item.timestamp) {
-                const measurementExists = await this._repository.checkExists(item)
-                if (measurementExists) {
-                    throw new ConflictException(
-                        'Measurement already registered!',
-                        `A ${item.type} measurement from ${item.user_id} collected by device ${item.device_id} ` +
-                        `at ${item.timestamp} already exists.`)
+                const device: Device = new Device().fromJSON({ id: item.device_id })
+                const result = await this._deviceRepository.checkExists(device)
+                if (!result) throw new ValidationException(Strings.DEVICE.NOT_FOUND, Strings.DEVICE.NOT_FOUND_DESC)
+                if (item.patient_id && item.timestamp) {
+                    const measurementExists = await this._repository.checkExists(item)
+                    if (measurementExists) {
+                        throw new ConflictException(
+                            'Measurement already registered!',
+                            `A ${item.type} measurement with value ${item.value}${item.unit} from ` +
+                            ` ${item.patient_id} collected by device ${item.device_id} at ${item.timestamp} already ` +
+                            `exists.`)
+                    }
                 }
             }
             switch (item.type) {
@@ -105,9 +113,6 @@ export class MeasurementService implements IMeasurementService {
                 case(MeasurementTypes.BODY_TEMPERATURE):
                     CreateBodyTemperatureValidator.validate(item)
                     break
-                case(MeasurementTypes.HEART_RATE):
-                    CreateHeartRateValidator.validate(item)
-                    break
                 case(MeasurementTypes.HEIGHT):
                     CreateHeightValidator.validate(item)
                     break
@@ -116,20 +121,9 @@ export class MeasurementService implements IMeasurementService {
                     break
                 case(MeasurementTypes.WEIGHT):
                     CreateWeightValidator.validate(item)
-                    if (item.fat) {
-                        const measurementExists = await this._repository.checkExists(item.fat)
-                        if (measurementExists) {
-                            throw new ConflictException(
-                                'Measurement already registered!',
-                                `A ${item.fat.type} measurement from ${item.fat.user_id} ` +
-                                `collected by device ${item.fat.device_id} at ${item.fat.timestamp} already exists.`)
-                        }
-                        const result = await this._repository.create(item.fat)
-                        if (result) item.fat.id = result.id
-                    }
                     break
-                case(MeasurementTypes.FAT):
-                    CreateFatValidator.validate(item)
+                case(MeasurementTypes.BODY_FAT):
+                    CreateBodyFatValidator.validate(item)
                     break
                 default:
                     throw new ValidationException(
@@ -141,6 +135,49 @@ export class MeasurementService implements IMeasurementService {
         } catch (err) {
             return Promise.reject(err)
         }
+    }
+
+    public count(query: IQuery): Promise<number> {
+        return this._repository.count(query)
+    }
+
+    public async getLastMeasurements(patientId: string): Promise<LastMeasurements> {
+        const result: LastMeasurements = new LastMeasurements()
+        try {
+            const bloodGlucoseList: Array<BloodGlucose> =
+                await this._repository.find(this.generateLastMeasurementQuery(patientId, MeasurementTypes.BLOOD_GLUCOSE))
+            result.blood_glucose = bloodGlucoseList[0]
+            const bloodPressureList: Array<BloodPressure> =
+                await this._repository.find(this.generateLastMeasurementQuery(patientId, MeasurementTypes.BLOOD_PRESSURE))
+            result.blood_pressure = bloodPressureList[0]
+            const bodyFatList: Array<BodyFat> =
+                await this._repository.find(this.generateLastMeasurementQuery(patientId, MeasurementTypes.BODY_FAT))
+            result.body_fat = bodyFatList[0]
+            const bodyTemperatureList: Array<BodyTemperature> =
+                await this._repository
+                    .find(this.generateLastMeasurementQuery(patientId, MeasurementTypes.BODY_TEMPERATURE))
+            result.body_temperature = bodyTemperatureList[0]
+            const heightList: Array<Height> =
+                await this._repository.find(this.generateLastMeasurementQuery(patientId, MeasurementTypes.HEIGHT))
+            result.height = heightList[0]
+            const waistCircumferenceList: Array<WaistCircumference> =
+                await this._repository
+                    .find(this.generateLastMeasurementQuery(patientId, MeasurementTypes.WAIST_CIRCUMFERENCE))
+            result.waist_circumference = waistCircumferenceList[0]
+            const weightList: Array<Weight> =
+                await this._repository.find(this.generateLastMeasurementQuery(patientId, MeasurementTypes.WEIGHT))
+            result.weight = weightList[0]
+        } catch (err) {
+            return Promise.reject(err)
+        }
+        return Promise.resolve(result)
+    }
+
+    private generateLastMeasurementQuery(patientId: string, _type: string): Query {
+        const query: Query = new Query()
+        query.addFilter({ patient_id: patientId, type: _type })
+        query.addOrdination('timestamp', 'desc')
+        return query
     }
 
     private async addMultipleMeasurements(measurements: Array<any>): Promise<MultiStatus<any>> {

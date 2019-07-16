@@ -14,8 +14,8 @@ export class CreateWaistCircumferenceValidator {
         else MeasurementTypesValidator.validate(item.type)
         if (!item.timestamp) fields.push('timestamp')
         else DatetimeValidator.validate(item.timestamp)
-        if (!item.user_id) fields.push('user_id')
-        else ObjectIdValidator.validate(item.user_id)
+        if (!item.patient_id) fields.push('patient_id')
+        else ObjectIdValidator.validate(item.patient_id)
         if (item.device_id) ObjectIdValidator.validate(item.device_id)
 
         if (fields.length) {

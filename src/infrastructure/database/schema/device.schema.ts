@@ -24,7 +24,7 @@ const deviceSchema = new Mongoose.Schema({
             type: String,
             required: 'Manufacturer of device is required!'
         },
-        user_id: [{
+        patient_id: [{
             type: Schema.Types.ObjectId
         }]
     },

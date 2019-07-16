@@ -18,13 +18,14 @@ export class DeviceRepository extends BaseRepository<Device, DeviceEntity> imple
         super(_model, _entityMapper, _logger)
     }
 
-    public checkExists(mac: string): Promise<boolean> {
+    public checkExists(device: Device): Promise<boolean> {
         return new Promise<boolean>((resolve, reject) => {
-            super.findOne(new Query().fromJSON({ filters: { address: mac } }))
-                .then(result => {
-                    if (!result) return resolve(false)
-                    return resolve(true)
-                }).catch(err => reject(this.mongoDBErrorListener(err)))
+            const query: Query = new Query()
+            if (device.id) query.addFilter({ _id: device.id })
+            if (device.address) query.addFilter({ address: device.address })
+            super.findOne(query)
+                .then(result => resolve(!!result))
+                .catch(err => reject(this.mongoDBErrorListener(err)))
         })
     }
 }

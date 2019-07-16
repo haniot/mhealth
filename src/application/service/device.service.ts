@@ -28,7 +28,7 @@ export class DeviceService implements IDeviceService {
     public async addDevice(item: Device, userId: string): Promise<Device> {
         try {
             ObjectIdValidator.validate(userId)
-            const exists = await this._repository.checkExists(item.address!)
+            const exists = await this._repository.checkExists(item)
             if (exists) {
                 const device: Device = await this._repository.findOne(new Query().fromJSON({ address: item.address }))
                 if (device) device.addUser(userId)
@@ -43,8 +43,8 @@ export class DeviceService implements IDeviceService {
 
     public async getAll(query: IQuery): Promise<Array<Device>> {
         try {
-            const user_id = query.toJSON().filters.user_id
-            if (user_id) ObjectIdValidator.validate(user_id)
+            const patient_id = query.toJSON().filters.patient_id
+            if (patient_id) ObjectIdValidator.validate(patient_id)
         } catch (err) {
             return Promise.reject(err)
         }
@@ -54,8 +54,8 @@ export class DeviceService implements IDeviceService {
     public async getById(id: string, query: IQuery): Promise<Device> {
         try {
             ObjectIdValidator.validate(id)
-            const user_id = query.toJSON().filters.user_id
-            if (user_id) ObjectIdValidator.validate(user_id)
+            const patient_id = query.toJSON().filters.patient_id
+            if (patient_id) ObjectIdValidator.validate(patient_id)
         } catch (err) {
             return Promise.reject(err)
         }
@@ -72,8 +72,8 @@ export class DeviceService implements IDeviceService {
         }
         const device: Device = await this.getById(deviceId, new Query())
         if (device) {
-            device.user_id = device.user_id!.filter(id => id !== userId)
-            if ( device.user_id!.length) {
+            device.patient_id = device.patient_id!.filter(id => id !== userId)
+            if (device.patient_id!.length) {
                 const updatedDevice = await this._repository.update(device)
                 return Promise.resolve(!!updatedDevice)
             }
@@ -101,5 +101,9 @@ export class DeviceService implements IDeviceService {
             return Promise.reject(err)
         }
         return this.update(item)
+    }
+
+    public count(query: IQuery): Promise<number> {
+        return this._repository.count(query)
     }
 }

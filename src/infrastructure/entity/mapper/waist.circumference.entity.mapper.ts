@@ -15,7 +15,7 @@ export class WaistCircumferenceEntityMapper implements IEntityMapper<WaistCircum
         if (json.type !== undefined) result.type = json.type
         if (json.timestamp !== undefined) result.timestamp = json.timestamp
         if (json.device_id !== undefined) result.device_id = json.device_id
-        if (json.user_id !== undefined) result.user_id = json.user_id
+        if (json.patient_id !== undefined) result.patient_id = json.patient_id
         return result
     }
 
@@ -32,7 +32,7 @@ export class WaistCircumferenceEntityMapper implements IEntityMapper<WaistCircum
         if (item.type !== undefined) result.type = item.type
         if (item.timestamp !== undefined) result.timestamp = item.timestamp
         if (item.device_id !== undefined) result.device_id = item.device_id
-        if (item.user_id !== undefined) result.user_id = item.user_id
+        if (item.patient_id !== undefined) result.patient_id = item.patient_id
         return result
     }
 

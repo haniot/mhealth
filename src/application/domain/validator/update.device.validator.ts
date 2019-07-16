@@ -6,10 +6,10 @@ import { ObjectIdValidator } from './object.id.validator'
 export class UpdateDeviceValidator {
     public static validate(item: Device): void | ValidationException {
         if (item.id) ObjectIdValidator.validate(item.id)
-        if (item.user_id) {
+        if (item.patient_id) {
             throw new ValidationException(
                 Strings.ERROR_MESSAGE.PARAMETER_COULD_NOT_BE_UPDATED,
-                Strings.ERROR_MESSAGE.PARAMETER_COULD_NOT_BE_UPDATED_DESC.concat('user_id'))
+                Strings.ERROR_MESSAGE.PARAMETER_COULD_NOT_BE_UPDATED_DESC.concat('patient_id'))
         }
     }
 }

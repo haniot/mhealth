@@ -1,10 +1,8 @@
 import { DefaultEntityMock } from '../../mocks/models/default.entity.mock'
 import { assert } from 'chai'
 import { Weight } from '../../../src/application/domain/model/weight'
-import { Fat } from '../../../src/application/domain/model/fat'
 
 describe('Models: Weight', () => {
-    const fat = new Fat().fromJSON(DefaultEntityMock.WEIGHT.fat)
     describe('fromJSON()', () => {
         context('when convert json to model', () => {
             it('should return a model with json parameters', () => {
@@ -12,10 +10,10 @@ describe('Models: Weight', () => {
                 assert.propertyVal(result, 'type', DefaultEntityMock.WEIGHT.type)
                 assert.propertyVal(result, 'unit', DefaultEntityMock.WEIGHT.unit)
                 assert.propertyVal(result, 'device_id', DefaultEntityMock.WEIGHT.device_id)
-                assert.propertyVal(result, 'user_id', DefaultEntityMock.WEIGHT.user_id)
+                assert.propertyVal(result, 'patient_id', DefaultEntityMock.WEIGHT.patient_id)
                 assert.propertyVal(result, 'value', DefaultEntityMock.WEIGHT.value)
                 assert.propertyVal(result, 'timestamp', DefaultEntityMock.WEIGHT.timestamp)
-                assert.deepPropertyVal(result, 'fat', fat)
+                assert.deepPropertyVal(result, 'body_fat', DefaultEntityMock.WEIGHT.body_fat)
             })
         })
 
@@ -25,10 +23,10 @@ describe('Models: Weight', () => {
                 assert.propertyVal(result, 'type', DefaultEntityMock.WEIGHT.type)
                 assert.propertyVal(result, 'unit', DefaultEntityMock.WEIGHT.unit)
                 assert.propertyVal(result, 'device_id', DefaultEntityMock.WEIGHT.device_id)
-                assert.propertyVal(result, 'user_id', DefaultEntityMock.WEIGHT.user_id)
+                assert.propertyVal(result, 'patient_id', DefaultEntityMock.WEIGHT.patient_id)
                 assert.propertyVal(result, 'value', DefaultEntityMock.WEIGHT.value)
                 assert.propertyVal(result, 'timestamp', DefaultEntityMock.WEIGHT.timestamp)
-                assert.deepPropertyVal(result, 'fat', fat)
+                assert.deepPropertyVal(result, 'body_fat', DefaultEntityMock.WEIGHT.body_fat)
             })
         })
 
@@ -38,10 +36,10 @@ describe('Models: Weight', () => {
                 assert.propertyVal(result, 'type', DefaultEntityMock.WEIGHT.type)
                 assert.isUndefined(result.unit, 'no unit defined')
                 assert.isUndefined(result.device_id, 'no device_id defined')
-                assert.isUndefined(result.user_id, 'no user_id defined')
+                assert.isUndefined(result.patient_id, 'no patient_id defined')
                 assert.isUndefined(result.value, 'no value defined')
                 assert.isUndefined(result.timestamp, 'no timestamp defined')
-                assert.isUndefined(result.fat, 'no fat defined')
+                assert.isUndefined(result.body_fat, 'no body_fat defined')
 
             })
         })
@@ -52,10 +50,10 @@ describe('Models: Weight', () => {
                 assert.propertyVal(result, 'type', DefaultEntityMock.WEIGHT.type)
                 assert.isUndefined(result.unit, 'no unit defined')
                 assert.isUndefined(result.device_id, 'no device_id defined')
-                assert.isUndefined(result.user_id, 'no user_id defined')
+                assert.isUndefined(result.patient_id, 'no patient_id defined')
                 assert.isUndefined(result.value, 'no value defined')
                 assert.isUndefined(result.timestamp, 'no timestamp defined')
-                assert.isUndefined(result.fat, 'no fat defined')
+                assert.isUndefined(result.body_fat, 'no body_fat defined')
             })
         })
 
@@ -65,10 +63,10 @@ describe('Models: Weight', () => {
                 assert.propertyVal(result, 'type', DefaultEntityMock.WEIGHT.type)
                 assert.isUndefined(result.unit, 'no unit defined')
                 assert.isUndefined(result.device_id, 'no device_id defined')
-                assert.isUndefined(result.user_id, 'no user_id defined')
+                assert.isUndefined(result.patient_id, 'no patient_id defined')
                 assert.isUndefined(result.value, 'no value defined')
                 assert.isUndefined(result.timestamp, 'no timestamp defined')
-                assert.isUndefined(result.fat, 'no fat defined')
+                assert.isUndefined(result.body_fat, 'no body_fat defined')
             })
         })
 
@@ -78,10 +76,10 @@ describe('Models: Weight', () => {
                 assert.propertyVal(result, 'type', DefaultEntityMock.WEIGHT.type)
                 assert.isUndefined(result.unit, 'no unit defined')
                 assert.isUndefined(result.device_id, 'no device_id defined')
-                assert.isUndefined(result.user_id, 'no user_id defined')
+                assert.isUndefined(result.patient_id, 'no patient_id defined')
                 assert.isUndefined(result.value, 'no value defined')
                 assert.isUndefined(result.timestamp, 'no timestamp defined')
-                assert.isUndefined(result.fat, 'no fat defined')
+                assert.isUndefined(result.body_fat, 'no fat defined')
             })
         })
     })
@@ -96,10 +94,10 @@ describe('Models: Weight', () => {
                 assert.propertyVal(result, 'type', DefaultEntityMock.WEIGHT.type)
                 assert.propertyVal(result, 'unit', DefaultEntityMock.WEIGHT.unit)
                 assert.propertyVal(result, 'device_id', DefaultEntityMock.WEIGHT.device_id)
-                assert.propertyVal(result, 'user_id', DefaultEntityMock.WEIGHT.user_id)
+                assert.propertyVal(result, 'patient_id', DefaultEntityMock.WEIGHT.patient_id)
                 assert.propertyVal(result, 'value', DefaultEntityMock.WEIGHT.value)
                 assert.propertyVal(result, 'timestamp', DefaultEntityMock.WEIGHT.timestamp)
-                assert.deepPropertyVal(result, 'fat', DefaultEntityMock.WEIGHT.fat)
+                assert.deepPropertyVal(result, 'body_fat', DefaultEntityMock.WEIGHT.body_fat)
             })
         })
 
@@ -109,10 +107,10 @@ describe('Models: Weight', () => {
                 assert.propertyVal(result, 'type', DefaultEntityMock.WEIGHT.type)
                 assert.isUndefined(result.unit, 'no unit defined')
                 assert.isUndefined(result.device_id, 'no device_id defined')
-                assert.isUndefined(result.user_id, 'no user_id defined')
+                assert.isUndefined(result.patient_id, 'no patient_id defined')
                 assert.isUndefined(result.value, 'no value defined')
                 assert.isUndefined(result.timestamp, 'no timestamp defined')
-                assert.isUndefined(result.fat, 'no fat defined')
+                assert.isUndefined(result.body_fat, 'no body_fat defined')
                 assert.isUndefined(result.id, 'no id defined')
             })
         })

@@ -11,34 +11,26 @@ import { IMeasurementService } from '../../application/port/measurement.service.
 import { Measurement } from '../../application/domain/model/measurement'
 import { MeasurementTypes } from '../../application/domain/utils/measurement.types'
 import { Height } from '../../application/domain/model/height'
-import { HeartRate } from '../../application/domain/model/heart.rate'
 import { BloodPressure } from '../../application/domain/model/blood.pressure'
 import { Weight } from '../../application/domain/model/weight'
 import { BloodGlucose } from '../../application/domain/model/blood.glucose'
 import { BodyTemperature } from '../../application/domain/model/body.temperature'
 import { WaistCircumference } from '../../application/domain/model/waist.circumference'
-import { Fat } from '../../application/domain/model/fat'
+import { BodyFat } from '../../application/domain/model/body.fat'
+import { MeasurementUnits } from '../../application/domain/utils/measurement.units'
+import { LastMeasurements } from '../../application/domain/model/last.measurements'
 
-@controller('/users/:user_id/measurements')
-export class UserMeasurementController {
+@controller('/v1/patients/:patient_id/measurements')
+export class PatientsMeasurementsController {
     constructor(
         @inject(Identifier.MEASUREMENT_SERVICE) private readonly _service: IMeasurementService
     ) {
     }
 
     @httpPost('/')
-    public async addMeasurementFromUser(@request() req: Request, @response() res: Response): Promise<Response> {
+    public async addMeasurementFromPatient(@request() req: Request, @response() res: Response): Promise<Response> {
         try {
-            let result: any
-            if (req.body instanceof Array) {
-                result = await this._service.addMeasurement(req.body.map(item => {
-                    item.user_id = req.params.user_id
-                    return this.jsonToModel(item)
-                }))
-            } else {
-                req.body.user_id = req.params.user_id
-                result = await this._service.addMeasurement(this.jsonToModel(req.body))
-            }
+            const result = await this._service.addMeasurement(this.transform(req.body, req.params.patient_id))
             if (result.success && result.error) return res.status(HttpStatus.MULTI_STATUS).send(this.toJSONView(result))
             return res.status(HttpStatus.CREATED).send(this.toJSONView(result))
         } catch (err) {
@@ -51,11 +43,14 @@ export class UserMeasurementController {
     }
 
     @httpGet('/')
-    public async getAllMeasurementsFromUser(@request() req: Request, @response() res: Response): Promise<Response> {
+    public async getAllMeasurementsFromPatient(@request() req: Request, @response() res: Response): Promise<Response> {
         try {
             const query: Query = new Query().fromJSON(req.query)
-            query.addFilter({ user_id: req.params.user_id })
+            query.addFilter({ patient_id: req.params.patient_id })
             const result: Array<Measurement> = await this._service.getAll(query)
+            const count: number = await this._service.count(
+                new Query().fromJSON({ filters: { patient_id: req.params.patient_id } }))
+            res.setHeader('X-Total-Count', count)
             return res.status(HttpStatus.OK).send(this.toJSONView(result))
         } catch (err) {
             const handlerError = ApiExceptionManager.build(err)
@@ -66,11 +61,23 @@ export class UserMeasurementController {
         }
     }
 
+    @httpGet('/last')
+    public async getLastMeasurementsFromPatient(@request() req: Request, @response() res: Response): Promise<Response> {
+        try {
+            const result: LastMeasurements = await this._service.getLastMeasurements(req.params.patient_id)
+            return res.status(HttpStatus.OK).send(result.toJSON())
+        } catch (err) {
+            const handlerError = ApiExceptionManager.build(err)
+            return res.status(handlerError.code)
+                .send(handlerError.toJson())
+        }
+    }
+
     @httpGet('/:measurement_id')
-    public async getMeasurementFromUser(@request() req: Request, @response() res: Response): Promise<Response> {
+    public async getMeasurementFromPatient(@request() req: Request, @response() res: Response): Promise<Response> {
         try {
             const query: Query = new Query().fromJSON(req.query)
-            query.addFilter({ user_id: req.params.user_id })
+            query.addFilter({ patient_id: req.params.patient_id })
             const result: Measurement = await this._service.getById(req.params.measurement_id, query)
             if (!result) return res.status(HttpStatus.NOT_FOUND).send(this.getMessageMeasurementNotFound())
             return res.status(HttpStatus.OK).send(this.toJSONView(result))
@@ -84,9 +91,9 @@ export class UserMeasurementController {
     }
 
     @httpDelete('/:measurement_id')
-    public async deleteMeasurementFromUser(@request() req: Request, @response() res: Response): Promise<Response> {
+    public async deleteMeasurementFromPatient(@request() req: Request, @response() res: Response): Promise<Response> {
         try {
-            await this._service.removeMeasurement(req.params.measurement_id, req.params.user_id)
+            await this._service.removeMeasurement(req.params.measurement_id, req.params.patient_id)
             return res.status(HttpStatus.NO_CONTENT).send()
         } catch (err) {
             const handlerError = ApiExceptionManager.build(err)
@@ -96,11 +103,8 @@ export class UserMeasurementController {
     }
 
     private toJSONView(item: any | Array<any>): object {
-        if (item instanceof Array) return item.map(measurement => {
-            measurement.user_id = undefined
-            return measurement.toJSON()
-        })
-        item.user_id = undefined
+        if (item instanceof Array) return item.map(measurement => this.toJSONView(measurement))
+        item.patient_id = undefined
         return item.toJSON()
     }
 
@@ -112,26 +116,45 @@ export class UserMeasurementController {
         ).toJson()
     }
 
+    public transform(item: any | Array<any>, patientId: string): any | Array<any> {
+        if (item instanceof Array) return this.jsonListToModel(item, patientId)
+        else if (item.type === MeasurementTypes.WEIGHT && item.body_fat) return this.jsonListToModel([item], patientId)
+        return this.jsonToModel({ ...item, patient_id: patientId })
+    }
+
+    private jsonListToModel(items: Array<any>, patientId: string): Array<any> {
+        let result: Array<any> = []
+        items.forEach(item => {
+            item.patient_id = patientId
+            if (item.type === MeasurementTypes.WEIGHT) result = result.concat(this.verifyWeightBodyFat(item))
+            else result.push(this.jsonToModel(item))
+        })
+        return result
+    }
+
+    private verifyWeightBodyFat(item: any): any | Array<any> {
+        const result: Array<any> = [this.jsonToModel(item)]
+        if (item.body_fat) {
+            result.push(this.jsonToModel({
+                value: item.body_fat,
+                unit: MeasurementUnits.PERCENTUAL,
+                type: MeasurementTypes.BODY_FAT,
+                timestamp: item.timestamp,
+                device_id: item.device_id,
+                patient_id: item.patient_id
+            }))
+        }
+        return result
+    }
+
     private jsonToModel(item: any): any {
         if (item.type) {
             switch (item.type) {
                 case MeasurementTypes.HEIGHT:
                     return new Height().fromJSON(item)
-                case MeasurementTypes.HEART_RATE:
-                    return new HeartRate().fromJSON(item)
                 case MeasurementTypes.BLOOD_PRESSURE:
                     return new BloodPressure().fromJSON(item)
                 case MeasurementTypes.WEIGHT:
-                    if (item.fat !== undefined) {
-                        item.fat = {
-                            ...item.fat,
-                            ...{
-                                device_id: item.device_id,
-                                timestamp: item.timestamp,
-                                user_id: item.user_id
-                            }
-                        }
-                    }
                     return new Weight().fromJSON(item)
                 case MeasurementTypes.BLOOD_GLUCOSE:
                     return new BloodGlucose().fromJSON(item)
@@ -139,10 +162,10 @@ export class UserMeasurementController {
                     return new BodyTemperature().fromJSON(item)
                 case MeasurementTypes.WAIST_CIRCUMFERENCE:
                     return new WaistCircumference().fromJSON(item)
-                case MeasurementTypes.FAT:
-                    return new Fat().fromJSON(item)
+                case MeasurementTypes.BODY_FAT:
+                    return new BodyFat().fromJSON(item)
                 default:
-                    return item
+                    return new Measurement().fromJSON(item)
             }
         }
         return undefined

@@ -1,7 +1,6 @@
 import { IJSONSerializable } from '../../../src/application/domain/utils/json.serializable.interface'
 import { IJSONDeserializable } from '../../../src/application/domain/utils/json.deserializable.interface'
-import { DataSetItem } from '../../../src/application/domain/model/data.set.item'
-import { Fat } from '../../../src/application/domain/model/fat'
+import { BodyFat } from '../../../src/application/domain/model/body.fat'
 import { JsonUtils } from '../../../src/application/domain/utils/json.utils'
 import { Measurement } from '../../../src/application/domain/model/measurement'
 
@@ -12,8 +11,7 @@ export class GenericMeasurementMock extends Measurement implements IJSONSerializ
     private _systolic?: number
     private _diastolic?: number
     private _pulse?: number
-    private _dataset?: Array<DataSetItem>
-    private _fat?: Fat
+    private _body_fat?: BodyFat
 
     constructor() {
         super()
@@ -67,20 +65,12 @@ export class GenericMeasurementMock extends Measurement implements IJSONSerializ
         this._pulse = value
     }
 
-    get dataset(): Array<DataSetItem> | undefined {
-        return this._dataset
+    get body_fat(): BodyFat | undefined {
+        return this._body_fat
     }
 
-    set dataset(value: Array<DataSetItem> | undefined) {
-        this._dataset = value
-    }
-
-    get fat(): Fat | undefined {
-        return this._fat
-    }
-
-    set fat(value: Fat | undefined) {
-        this._fat = value
+    set body_fat(value: BodyFat | undefined) {
+        this._body_fat = value
     }
 
     public fromJSON(json: any): GenericMeasurementMock {
@@ -95,10 +85,7 @@ export class GenericMeasurementMock extends Measurement implements IJSONSerializ
         if (json.pulse !== undefined) this.pulse = json.pulse
         if (json.meal !== undefined) this.meal = json.meal
         if (json.timestamp !== undefined) this.timestamp = json.timestamp
-        if (json.dataset !== undefined && json.dataset.length) {
-            this.dataset = json.dataset.map(item => new DataSetItem().fromJSON(item))
-        }
-        if (json.fat !== undefined) this.fat = new Fat().fromJSON(json.fat)
+        if (json.body_fat !== undefined) this.body_fat = new BodyFat().fromJSON(json.body_fat)
         return this
     }
 
@@ -111,8 +98,7 @@ export class GenericMeasurementMock extends Measurement implements IJSONSerializ
             pulse: this.pulse,
             meal: this.meal,
             timestamp: this.timestamp,
-            dataset: this.dataset && this.dataset.length ? this.dataset.map(item => item.toJSON()) : [],
-            fat: this.fat ? { value: this.fat.value, unit: this.fat.unit } : undefined
+            body_fat: this.body_fat
         }
     }
 

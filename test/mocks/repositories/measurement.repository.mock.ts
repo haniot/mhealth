@@ -2,17 +2,11 @@ import { IMeasurementRepository } from '../../../src/application/port/measuremen
 import { IQuery } from '../../../src/application/port/query.interface'
 import { GenericMeasurementMock } from '../models/generic.measurement.mock'
 import { DefaultEntityMock } from '../models/default.entity.mock'
-import { Fat } from '../../../src/application/domain/model/fat'
 
-const measurement: GenericMeasurementMock = new GenericMeasurementMock().fromJSON(DefaultEntityMock.GENERIC_MEASUREMENT_MOCK)
+const measurement: GenericMeasurementMock =
+    new GenericMeasurementMock().fromJSON(DefaultEntityMock.GENERIC_MEASUREMENT_MOCK)
 measurement.id = DefaultEntityMock.GENERIC_MEASUREMENT_MOCK.id
-measurement.fat = new Fat().fromJSON({
-    ...DefaultEntityMock.WEIGHT.fat,
-    type: DefaultEntityMock.FAT.type,
-    timestamp: DefaultEntityMock.WEIGHT.timestamp,
-    user_id: DefaultEntityMock.WEIGHT.device_id,
-    device_id: DefaultEntityMock.WEIGHT.device_id
-})
+measurement.body_fat = DefaultEntityMock.GENERIC_MEASUREMENT_MOCK.body_fat
 
 export class MeasurementRepositoryMock implements IMeasurementRepository {
     public count(query: IQuery): Promise<number> {

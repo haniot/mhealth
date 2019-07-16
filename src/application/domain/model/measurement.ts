@@ -7,7 +7,7 @@ export class Measurement extends Entity implements IJSONSerializable, IJSONDeser
     private _unit?: string
     private _type?: string
     private _device_id?: string
-    private _user_id?: string
+    private _patient_id?: string
 
     public constructor() {
         super()
@@ -37,12 +37,12 @@ export class Measurement extends Entity implements IJSONSerializable, IJSONDeser
         this._device_id = value
     }
 
-    get user_id(): string | undefined {
-        return this._user_id
+    get patient_id(): string | undefined {
+        return this._patient_id
     }
 
-    set user_id(value: string | undefined) {
-        this._user_id = value
+    set patient_id(value: string | undefined) {
+        this._patient_id = value
     }
 
     public fromJSON(json: any): Measurement {
@@ -51,9 +51,10 @@ export class Measurement extends Entity implements IJSONSerializable, IJSONDeser
             json = JSON.parse(json)
         }
 
+        if (json.id !== undefined) super.id = json.id
         if (json.unit !== undefined) this.unit = json.unit
         if (json.device_id !== undefined) this.device_id = json.device_id
-        if (json.user_id !== undefined) this.user_id = json.user_id
+        if (json.patient_id !== undefined) this.patient_id = json.patient_id
 
         return this
     }
@@ -64,7 +65,7 @@ export class Measurement extends Entity implements IJSONSerializable, IJSONDeser
             unit: this.unit,
             type: this.type,
             device_id: this.device_id,
-            user_id: this.user_id
+            patient_id: this.patient_id
         }
     }
 }

@@ -14,7 +14,7 @@ export abstract class Default {
     public static readonly PORT_HTTP: number = 4000
     public static readonly PORT_HTTPS: number = 4001
     public static readonly SWAGGER_PATH: string = './src/ui/swagger/api.yaml'
-    public static readonly SWAGGER_URI: string = 'https://api.swaggerhub.com/apis/haniot/haniot-mhealth-service/2.0.0/' +
+    public static readonly SWAGGER_URI: string = 'https://api.swaggerhub.com/apis/haniot/mhealth-service/v1/' +
         'swagger.json'
     public static readonly LOGO_URI: string = 'http://nutes.uepb.edu.br/wp-content/uploads/2014/01/icon.fw_.png'
 
