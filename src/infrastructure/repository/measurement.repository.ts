@@ -108,7 +108,8 @@ export class MeasurementRepository extends BaseRepository<Measurement, Measureme
             const query: Query = new Query()
             query.addFilter({ patient_id: patientId, type: measurementType })
             query.addOrdination('timestamp', 'desc')
-            return this.find(query)
+            return this
+                .find(query)
                 .then(result => resolve(result[0]))
                 .catch(err => reject(this.mongoDBErrorListener(err)))
 

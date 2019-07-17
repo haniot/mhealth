@@ -91,7 +91,7 @@ export class MeasurementService implements IMeasurementService {
                         throw new ConflictException(
                             'Measurement already registered!',
                             `A ${item.type} measurement with value ${item.value}${item.unit} from ` +
-                            ` ${item.patient_id} collected by device ${item.device_id} at ${item.timestamp} already ` +
+                            `${item.patient_id} collected by device ${item.device_id} at ${item.timestamp} already ` +
                             `exists.`)
                     }
                 }
@@ -137,6 +137,7 @@ export class MeasurementService implements IMeasurementService {
     public async getLastMeasurements(patientId: string): Promise<LastMeasurements> {
         const result: LastMeasurements = new LastMeasurements()
         try {
+            ObjectIdValidator.validate(patientId)
             result.blood_glucose = await this._repository.getLastMeasurement(patientId, MeasurementTypes.BLOOD_GLUCOSE)
             result.blood_pressure = await this._repository.getLastMeasurement(patientId, MeasurementTypes.BLOOD_PRESSURE)
             result.body_fat = await this._repository.getLastMeasurement(patientId, MeasurementTypes.BODY_FAT)

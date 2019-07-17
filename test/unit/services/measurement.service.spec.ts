@@ -1,401 +1,290 @@
-// import { assert } from 'chai'
-// import { IMeasurementService } from '../../../src/application/port/measurement.service.interface'
-// import { MeasurementService } from '../../../src/application/service/measurement.service'
-// import { MeasurementRepositoryMock } from '../../mocks/repositories/measurement.repository.mock'
-// import { DeviceRepositoryMock } from '../../mocks/repositories/device.repository.mock'
-// import { GenericMeasurementMock } from '../../mocks/models/generic.measurement.mock'
-// import { DefaultEntityMock } from '../../mocks/models/default.entity.mock'
-// import { MeasurementTypes } from '../../../src/application/domain/utils/measurement.types'
-// import { StatusSuccess } from '../../../src/application/domain/model/status.success'
-// import { Query } from '../../../src/infrastructure/repository/query/query'
-// import { Strings } from '../../../src/utils/strings'
-// import { BodyFat } from '../../../src/application/domain/model/body.fat'
-// import { StatusError } from '../../../src/application/domain/model/status.error'
-// import {Measurement} from '../../../src/application/domain/model/measurement'
-//
-// describe('Services: MeasurementService', () => {
-//     const measurement: GenericMeasurementMock = new GenericMeasurementMock().fromJSON(DefaultEntityMock.GENERIC_MEASUREMENT_MOCK)
-//     const multMeasurement: Array<GenericMeasurementMock> = new Array<GenericMeasurementMock>()
-//     multMeasurement.push(measurement)
-//     measurement.id = DefaultEntityMock.GENERIC_MEASUREMENT_MOCK.id
-//     measurement.type = MeasurementTypes.BLOOD_GLUCOSE
-//     measurement.fat = new BodyFat().fromJSON({
-//         ...DefaultEntityMock.WEIGHT.fat,
-//         type: DefaultEntityMock.BODY_FAT.type,
-//         timestamp: DefaultEntityMock.WEIGHT.timestamp,
-//         user_id: DefaultEntityMock.WEIGHT.device_id,
-//         device_id: DefaultEntityMock.WEIGHT.device_id
-//     })
-//     const service: IMeasurementService = new MeasurementService(new MeasurementRepositoryMock(), new DeviceRepositoryMock())
-//
-//     describe('addMeasurement()', () => {
-//         context('when add a measurement', () => {
-//             it('should return the measurement', () => {
-//                 return service
-//                     .addMeasurement(measurement)
-//                     .then(result => {
-//                         assert.deepEqual(result, measurement)
-//                     })
-//             })
-//         })
-//
-//         context('when add a list of measurements', () => {
-//             it('should return a multi status object', () => {
-//                 return service
-//                     .addMeasurement([measurement])
-//                     .then(result => {
-//                         assert.deepPropertyVal(result, 'success', [new StatusSuccess(201, measurement)])
-//                         assert.deepPropertyVal(result, 'error', [])
-//                     })
-//             })
-//             context('when there are errors', () => {
-//                 it('should return a multi status object with conflict exception', () => {
-//                     measurement.id = DefaultEntityMock.MEASUREMENT.id
-//                     return service
-//                         .addMeasurement([measurement])
-//                         .then(result => {
-//                             assert.deepPropertyVal(result, 'success', [])
-//                             assert.deepPropertyVal(result, 'error',
-//                                 [new StatusError(
-//                                     409,
-//                                     'Measurement already registered!',
-//                                     `A ${measurement.type} measurement from ${measurement.user_id} ` +
-//                                     `collected by device ${measurement.device_id} at ${measurement.timestamp} already exists.`,
-//                                     measurement)])
-//                             measurement.id = DefaultEntityMock.GENERIC_MEASUREMENT_MOCK.id
-//                         })
-//                 })
-//
-//                 it('should return a multi status object with conflict exception', () => {
-//                     measurement.user_id = '123'
-//                     return service
-//                         .addMeasurement([measurement])
-//                         .then(result => {
-//                             assert.deepPropertyVal(result, 'success', [])
-//                             assert.deepPropertyVal(result, 'error',
-//                                 [new StatusError(
-//                                     400,
-//                                     Strings.ERROR_MESSAGE.UUID_NOT_VALID_FORMAT,
-//                                     Strings.ERROR_MESSAGE.UUID_NOT_VALID_FORMAT_DESC,
-//                                     measurement)])
-//                             measurement.user_id = DefaultEntityMock.GENERIC_MEASUREMENT_MOCK.user_id
-//                         })
-//                 })
-//             })
-//         })
-//
-//     })
-//
-//
-//     describe('getAll()', () => {
-//         context('when get all measurements from user', () => {
-//             it('should return a list of measurements from user', () => {
-//                 return service
-//                     .getAll(new Query().fromJSON({
-//                         filters: {
-//                             user_id: measurement.user_id,
-//                             type: MeasurementTypes.BLOOD_GLUCOSE
-//                         }
-//                     }))
-//                     .then(result => {
-//                         assert.deepEqual(result, [measurement])
-//                     })
-//             })
-//             it('should return a list of measurements', () => {
-//                 return service
-//                     .getAll(new Query().fromJSON({ filters: { type: MeasurementTypes.BLOOD_GLUCOSE } }))
-//                     .then(result => {
-//                         assert.deepEqual(result, [measurement])
-//                     })
-//             })
-//         })
-//
-//         context('when there are validation errors', () => {
-//             it('should return an error', () => {
-//                 return service
-//                     .getAll(new Query().fromJSON({
-//                         filters: {
-//                             user_id: '123',
-//                             type: MeasurementTypes.BLOOD_GLUCOSE
-//                         }
-//                     }))
-//                     .catch(err => {
-//                         assert.propertyVal(err, 'message', Strings.ERROR_MESSAGE.UUID_NOT_VALID_FORMAT)
-//                         assert.propertyVal(err, 'description', Strings.ERROR_MESSAGE.UUID_NOT_VALID_FORMAT_DESC)
-//                     })
-//             })
-//         })
-//     })
-//
-//     describe('getById()', () => {
-//         context('when get a unique measurement', () => {
-//             it('should return a measurement from user', () => {
-//                 return service
-//                     .getById(
-//                         measurement.id!,
-//                         new Query().fromJSON({
-//                             filters: {
-//                                 user_id: measurement.user_id,
-//                                 type: MeasurementTypes.BLOOD_GLUCOSE
-//                             }
-//                         }))
-//                     .then(result => {
-//                         assert.deepEqual(result, measurement)
-//                     })
-//             })
-//
-//             it('should return a measurement', () => {
-//                 return service
-//                     .getById(measurement.id!, new Query().fromJSON({ filters: { type: MeasurementTypes.BLOOD_GLUCOSE } }))
-//                     .then(result => {
-//                         assert.deepEqual(result, measurement)
-//                     })
-//             })
-//         })
-//
-//         context('when there are validation errors', () => {
-//             it('should return an error', () => {
-//                 return service
-//                     .getById(
-//                         '123',
-//                         new Query().fromJSON({
-//                             filters: {
-//                                 user_id: measurement.user_id,
-//                                 type: MeasurementTypes.BLOOD_GLUCOSE
-//                             }
-//                         })
-//                     )
-//                     .catch(err => {
-//                         assert.propertyVal(err, 'message', Strings.ERROR_MESSAGE.UUID_NOT_VALID_FORMAT)
-//                         assert.propertyVal(err, 'description', Strings.ERROR_MESSAGE.UUID_NOT_VALID_FORMAT_DESC)
-//                     })
-//             })
-//         })
-//     })
-//
-//     describe('removeMeasurement()', () => {
-//         context('when delete a measurement', () => {
-//             it('should return true', () => {
-//                 return service
-//                     .removeMeasurement(measurement.id!, measurement.user_id!)
-//                     .then(result => {
-//                         assert.isBoolean(result)
-//                         assert.isTrue(result)
-//                     })
-//             })
-//         })
-//
-//         context('when there are validation errors', () => {
-//             it('should return an error', () => {
-//                 return service
-//                     .removeMeasurement('123', '321')
-//                     .catch(err => {
-//                         assert.propertyVal(err, 'message', Strings.ERROR_MESSAGE.UUID_NOT_VALID_FORMAT)
-//                         assert.propertyVal(err, 'description', Strings.ERROR_MESSAGE.UUID_NOT_VALID_FORMAT_DESC)
-//                     })
-//             })
-//         })
-//     })
-//
-//     describe('add()', () => {
-//         context('when add a new device', () => {
-//             it('should return the saved device', () => {
-//                 return service.add(measurement)
-//                     .then(result => {
-//                         assert.propertyVal(result, 'unit', measurement.unit)
-//                         assert.propertyVal(result, 'type', measurement.type)
-//                         assert.propertyVal(result, 'device_id', measurement.device_id)
-//                         assert.propertyVal(result, 'user_id', measurement.user_id)
-//                     })
-//             })
-//         })
-//
-//         context('when there are validation errors', () => {
-//             it('should reject an error for invalid parameters', () => {
-//                 return service.add(new Measurement())
-//                     .catch(err => {
-//                         assert.propertyVal(err, 'message', 'Value not mapped for type: undefined')
-//                         assert.propertyVal(err, 'description', 'The mapped values are: weight, blood_glucose, ' +
-//                             'heart_rate, blood_pressure, height, waist_circumference, body_temperature, fat.')
-//                     })
-//             })
-//
-//             it('should reject an error for invalid type', () => {
-//                 const measurementTest: GenericMeasurementMock =
-//                     new GenericMeasurementMock().fromJSON(DefaultEntityMock.GENERIC_MEASUREMENT_MOCK)
-//                 measurementTest.type = '123'
-//                 return service.add(measurementTest)
-//                     .catch(err => {
-//                         assert.propertyVal(err, 'message', 'Measurement already registered!')
-//                         assert.propertyVal(err, 'description', 'A 123 measurement from 5a62be07d6f33400146c9b61 ' +
-//                             'collected by device 5ca77314bc08ec205689a736 at 2018-11-19T14:40:00Z already exists.')
-//                     })
-//             })
-//
-//             it('should reject an error for invalid Weight', () => {
-//                 const measurementTest: GenericMeasurementMock =
-//                     new GenericMeasurementMock().fromJSON(DefaultEntityMock.GENERIC_MEASUREMENT_MOCK)
-//
-//                 measurementTest.type = MeasurementTypes.WEIGHT
-//                 return service.add(measurementTest)
-//                     .catch(err => {
-//                         assert.propertyVal(err, 'message', 'Measurement already registered!')
-//                         assert.propertyVal(err, 'description', 'A weight measurement from 5a62be07d6f33400146c9b61 ' +
-//                             'collected by device 5ca77314bc08ec205689a736 at 2018-11-19T14:40:00Z already exists.')
-//                     })
-//             })
-//
-//             it('should reject an error for invalid device_id', () => {
-//                 const measurementTest: GenericMeasurementMock =
-//                     new GenericMeasurementMock().fromJSON(DefaultEntityMock.GENERIC_MEASUREMENT_MOCK)
-//                 measurementTest.device_id = 'invalid'
-//                 return service.add(measurementTest)
-//                     .catch(err => {
-//                         assert.propertyVal(err, 'message', 'Device not found!')
-//                         assert.propertyVal(err, 'description', 'Device not found or already removed.' +
-//                             ' A new operation for the same resource is required.')
-//                     })
-//             })
-//
-//             it('should reject an error for measurement exists in weight', () => {
-//                 const measurementTest: GenericMeasurementMock =
-//                     new GenericMeasurementMock().fromJSON(DefaultEntityMock.GENERIC_MEASUREMENT_MOCK)
-//                 measurementTest.id = '5cb488278cf5f9e6760c14ee'
-//                 measurementTest.type = MeasurementTypes.WEIGHT
-//                 measurementTest.fat = new BodyFat().fromJSON({
-//                     ...DefaultEntityMock.WEIGHT.fat,
-//                     type: DefaultEntityMock.BODY_FAT.type,
-//                     timestamp: DefaultEntityMock.WEIGHT.timestamp,
-//                     user_id: DefaultEntityMock.WEIGHT.device_id,
-//                     device_id: DefaultEntityMock.WEIGHT.device_id
-//                 })
-//                 measurementTest.fat!.id = 'invalid'
-//
-//
-//                 return service.add(measurementTest)
-//                     .catch(err => {
-//                         assert.propertyVal(err, 'message', 'Measurement already registered!')
-//                         assert.propertyVal(err, 'description', 'A fat measurement from 5ca77314bc08ec205689a736 ' +
-//                             'collected by device 5ca77314bc08ec205689a736 at 2018-11-19T14:40:00Z already exists.')
-//                     })
-//             })
-//         })
-//
-//
-//         context('when add a measurement', () => {
-//             it('should return a blood glucose measurement', () => {
-//                 return service
-//                     .add(measurement)
-//                     .then(result => {
-//                         assert.deepEqual(result, measurement)
-//                     })
-//             })
-//             it('should return a blood pressure measurement', () => {
-//                 measurement.type = MeasurementTypes.BLOOD_PRESSURE
-//                 return service
-//                     .add(measurement)
-//                     .then(result => {
-//                         assert.deepEqual(result, measurement)
-//                     })
-//             })
-//             it('should return a body temperature measurement', () => {
-//                 measurement.type = MeasurementTypes.BODY_TEMPERATURE
-//                 return service
-//                     .add(measurement)
-//                     .then(result => {
-//                         assert.deepEqual(result, measurement)
-//                     })
-//             })
-//             it('should return a heart rate measurement', () => {
-//                 measurement.type = MeasurementTypes.HEART_RATE
-//                 return service
-//                     .add(measurement)
-//                     .then(result => {
-//                         assert.deepEqual(result, measurement)
-//                     })
-//             })
-//             it('should return a height measurement', () => {
-//                 measurement.type = MeasurementTypes.HEIGHT
-//                 return service
-//                     .add(measurement)
-//                     .then(result => {
-//                         assert.deepEqual(result, measurement)
-//                     })
-//             })
-//             it('should return a waist circumference measurement', () => {
-//                 measurement.type = MeasurementTypes.WAIST_CIRCUMFERENCE
-//                 return service
-//                     .add(measurement)
-//                     .then(result => {
-//                         assert.deepEqual(result, measurement)
-//                     })
-//             })
-//             it('should return a weight measurement', () => {
-//                 measurement.type = MeasurementTypes.WEIGHT
-//                 measurement.fat!.id = measurement.id
-//                 return service
-//                     .add(measurement)
-//                     .then(result => {
-//                         assert.deepEqual(result, measurement)
-//                     })
-//             })
-//             it('should return a fat measurement', () => {
-//                 measurement.type = MeasurementTypes.BODY_FAT
-//                 return service
-//                     .add(measurement)
-//                     .then(result => {
-//                         assert.deepEqual(result, measurement)
-//                     })
-//             })
-//         })
-//
-//         context('when the measurement already exists', () => {
-//             it('should return a error', () => {
-//                 measurement.id = DefaultEntityMock.BODY_FAT.id
-//                 return service
-//                     .add(measurement)
-//                     .catch(err => {
-//                         assert.propertyVal(err, 'message', 'Measurement already registered!')
-//                         assert.propertyVal(err, 'description', `A ${measurement.type} measurement from ${measurement.user_id} ` +
-//                             `collected by device ${measurement.device_id} at ${measurement.timestamp} already exists.`)
-//                     })
-//             })
-//         })
-//
-//         context('when type is not mapped', () => {
-//             it('should return a error', () => {
-//                 measurement.id = DefaultEntityMock.GENERIC_MEASUREMENT_MOCK.id
-//                 measurement.type = 'invalid'
-//                 return service
-//                     .add(measurement)
-//                     .catch(err => {
-//                         assert.propertyVal(err, 'message', Strings.ENUM_VALIDATOR.NOT_MAPPED.concat(`type: ${measurement.type}`))
-//                         assert.propertyVal(err, 'description', Strings.ENUM_VALIDATOR.NOT_MAPPED_DESC
-//                             .concat(Object.values(MeasurementTypes).join(', ').concat('.')))
-//                     })
-//             })
-//         })
-//
-//
-//     })
-//
-//     describe('remove()', () => {
-//         it('should throw an error for does not implemented', () => {
-//             return service
-//                 .remove(measurement.id!)
-//                 .catch(err => {
-//                     assert.propertyVal(err, 'message', 'Not implemented!')
-//                 })
-//         })
-//     })
-//
-//     describe('update()', () => {
-//         it('should throw an error for does not implemented', () => {
-//             return service
-//                 .update(measurement)
-//                 .catch(err => {
-//                     assert.propertyVal(err, 'message', 'Not implemented!')
-//                 })
-//         })
-//     })
-// })
+import { DefaultEntityMock } from '../../mocks/models/default.entity.mock'
+import { Height } from '../../../src/application/domain/model/height'
+import { Weight } from '../../../src/application/domain/model/weight'
+import { WaistCircumference } from '../../../src/application/domain/model/waist.circumference'
+import { BodyFat } from '../../../src/application/domain/model/body.fat'
+import { BloodPressure } from '../../../src/application/domain/model/blood.pressure'
+import { BloodGlucose } from '../../../src/application/domain/model/blood.glucose'
+import { BodyTemperature } from '../../../src/application/domain/model/body.temperature'
+import { MeasurementService } from '../../../src/application/service/measurement.service'
+import { MeasurementRepositoryMock } from '../../mocks/repositories/measurement.repository.mock'
+import { DeviceRepositoryMock } from '../../mocks/repositories/device.repository.mock'
+import { Query } from '../../../src/infrastructure/repository/query/query'
+import { assert } from 'chai'
+import { Strings } from '../../../src/utils/strings'
+import { LastMeasurements } from '../../../src/application/domain/model/last.measurements'
+import { ObjectID } from 'bson'
+import { MeasurementTypes } from '../../../src/application/domain/utils/measurement.types'
+
+describe('Services: MeasurementService', () => {
+    const height: Height = new Height().fromJSON(DefaultEntityMock.HEIGHT)
+    const weight: Weight = new Weight().fromJSON(DefaultEntityMock.WEIGHT)
+    const waist: WaistCircumference = new WaistCircumference().fromJSON(DefaultEntityMock.WAIST_CIRCUMFERENCE)
+    const bodyFat: BodyFat = new BodyFat().fromJSON(DefaultEntityMock.BODY_FAT)
+    const bloodPressure: BloodPressure = new BloodPressure().fromJSON(DefaultEntityMock.BLOOD_PRESSURE)
+    const bloodGlucose: BloodGlucose = new BloodGlucose().fromJSON(DefaultEntityMock.BLOOD_GLUCOSE)
+    const bodyTemperature: BodyTemperature = new BodyTemperature().fromJSON(DefaultEntityMock.BODY_TEMPERATURE)
+    const listMeasurements = [height, weight, waist, bodyFat, bloodPressure, bloodGlucose, bodyTemperature]
+    const lastMeasurements: LastMeasurements = new LastMeasurements().fromJSON({
+        height: DefaultEntityMock.HEIGHT,
+        weight: DefaultEntityMock.WEIGHT,
+        waist_circumference: DefaultEntityMock.WAIST_CIRCUMFERENCE,
+        body_fat: DefaultEntityMock.BODY_FAT,
+        blood_pressure: DefaultEntityMock.BLOOD_PRESSURE,
+        blood_glucose: DefaultEntityMock.BLOOD_GLUCOSE,
+        body_temperature: DefaultEntityMock.BODY_TEMPERATURE
+    })
+    const service = new MeasurementService(new MeasurementRepositoryMock(), new DeviceRepositoryMock())
+
+    describe('getAll()', () => {
+        context('when get all measurements from patient', () => {
+            it('should return a list of measurements from patient', () => {
+                return service.getAll(new Query().fromJSON({ filters: { patient_id: height.patient_id } }))
+                    .then(res => {
+                        assert.isArray(res)
+                        assert.lengthOf(res, 7)
+                        assert.deepEqual(res, listMeasurements)
+                    })
+            })
+        })
+
+        context('when does not pass a patient_id', () => {
+            it('should return a list of measurements', () => {
+                return service.getAll(new Query())
+                    .then(res => {
+                        assert.isArray(res)
+                        assert.lengthOf(res, 7)
+                        assert.deepEqual(res, listMeasurements)
+                    })
+            })
+        })
+
+        context('when there are validation errors', () => {
+            it('should reject an error', () => {
+                return service.getAll(new Query().fromJSON({ filters: { patient_id: '1a2b3c' } }))
+                    .catch(err => {
+                        assert.propertyVal(err, 'message', Strings.ERROR_MESSAGE.UUID_NOT_VALID_FORMAT)
+                        assert.propertyVal(err, 'description', Strings.ERROR_MESSAGE.UUID_NOT_VALID_FORMAT_DESC)
+                    })
+            })
+        })
+    })
+
+    describe('getById()', () => {
+        context('when get a measurement by id', () => {
+            it('should return a measurement', () => {
+                return service.getById(height.id!, new Query())
+                    .then(res => {
+                        assert.deepEqual(res, height)
+                    })
+            })
+        })
+
+        context('when get a measurement by id and patient_id', () => {
+            it('should return a measurement', () => {
+                return service
+                    .getById(height.id!, new Query().fromJSON({ filters: { patient_id: height.patient_id } }))
+                    .then(res => {
+                        assert.deepEqual(res, height)
+                    })
+            })
+        })
+
+        context('when there are validation errors', () => {
+            it('should reject an error', () => {
+                return service
+                    .getById('1a2b3c', new Query().fromJSON({ filters: { patient_id: height.patient_id } }))
+                    .catch(err => {
+                        assert.propertyVal(err, 'message', Strings.ERROR_MESSAGE.UUID_NOT_VALID_FORMAT)
+                        assert.propertyVal(err, 'description', Strings.ERROR_MESSAGE.UUID_NOT_VALID_FORMAT_DESC)
+                    })
+            })
+        })
+    })
+
+    describe('removeMeasurement()', () => {
+        context('when remove a measurement from patient', () => {
+            return service.removeMeasurement(height.id!, height.patient_id!)
+                .then(res => {
+                    assert.isBoolean(res)
+                    assert.isTrue(res)
+                })
+        })
+
+        context('when there are validation errors', () => {
+            it('should reject an error', () => {
+                return service.removeMeasurement('1a2b3c', '1bd2c3')
+                    .catch(err => {
+                        assert.propertyVal(err, 'message', Strings.ERROR_MESSAGE.UUID_NOT_VALID_FORMAT)
+                        assert.propertyVal(err, 'description', Strings.ERROR_MESSAGE.UUID_NOT_VALID_FORMAT_DESC)
+                    })
+            })
+        })
+    })
+
+    describe('remove()', () => {
+        context('when call this function', () => {
+            it('should reject error for not implemented', () => {
+                return service.remove(height.id!)
+                    .catch(err => {
+                        assert.propertyVal(err, 'message', 'Not implemented!')
+                    })
+            })
+        })
+    })
+
+    describe('update()', () => {
+        context('when call this function', () => {
+            it('should reject error for not implemented', () => {
+                return service.update(height)
+                    .catch(err => {
+                        assert.propertyVal(err, 'message', 'Not implemented!')
+                    })
+            })
+        })
+    })
+
+    describe('count()', () => {
+        context('when count the total of measurements', () => {
+            it('should return a number', () => {
+                return service.count(new Query())
+                    .then(res => {
+                        assert.isNumber(res)
+                        assert.equal(res, 7)
+                    })
+            })
+        })
+    })
+
+    describe('getLastMeasurements()', () => {
+        context('when get a list of last measurements', () => {
+            return service.getLastMeasurements(height.patient_id!)
+                .then(res => {
+                    assert.deepEqual(res, lastMeasurements)
+                })
+        })
+
+        context('when there are validation errors', () => {
+            it('should reject an error ()', () => {
+                return service.getLastMeasurements('1a2b23c')
+                    .catch(err => {
+                        assert.propertyVal(err, 'message', Strings.ERROR_MESSAGE.UUID_NOT_VALID_FORMAT)
+                        assert.propertyVal(err, 'description', Strings.ERROR_MESSAGE.UUID_NOT_VALID_FORMAT_DESC)
+                    })
+            })
+        })
+    })
+
+    describe('addMeasurement()', () => {
+        describe('when save a unique measurement', () => {
+            context('when save a blood glucose measurement', () => {
+                it('should return the saved measurement', () => {
+                    return service.addMeasurement(bloodGlucose)
+                        .then(res => {
+                            assert.deepEqual(res, bloodGlucose)
+                        })
+                })
+            })
+
+            context('when does not pass a device_id', () => {
+                it('should return the saved measurement without device_id', () => {
+                    bloodGlucose.device_id = undefined
+                    return service.addMeasurement(bloodGlucose)
+                        .then(res => {
+                            assert.deepEqual(res, bloodGlucose)
+                        })
+                })
+            })
+
+            context('when device is not found', () => {
+                it('should reject error for device does not exists', () => {
+                    bloodGlucose.device_id = `${new ObjectID()}`
+                    return service.addMeasurement(bloodGlucose)
+                        .catch(err => {
+                            assert.propertyVal(err, 'message', Strings.DEVICE.NOT_FOUND)
+                            assert.propertyVal(err, 'description', Strings.DEVICE.NOT_FOUND_DESC)
+                            bloodGlucose.device_id = DefaultEntityMock.BLOOD_GLUCOSE.device_id
+                        })
+                })
+            })
+
+            context('when does not pass a patient_id', () => {
+                it('should reject an error for missing parameters', () => {
+                    bloodGlucose.patient_id = undefined
+                    bloodGlucose.timestamp = undefined
+                    return service.addMeasurement(bloodGlucose)
+                        .catch(err => {
+                            assert.propertyVal(err, 'message', 'Required fields were not provided...')
+                            assert.propertyVal(err, 'description', 'BloodGlucose validation: timestamp, patient_id required!')
+                            bloodGlucose.patient_id = DefaultEntityMock.BLOOD_GLUCOSE.patient_id
+                            bloodGlucose.timestamp = DefaultEntityMock.BLOOD_GLUCOSE.timestamp
+                        })
+                })
+            })
+
+            context('when measurement already exists', () => {
+                it('should reject an error for existent measurement', () => {
+                    bloodGlucose.type = 'exists'
+                    return service.addMeasurement(bloodGlucose)
+                        .catch(err => {
+                            assert.propertyVal(err, 'message', 'Measurement already registered!')
+                            assert.propertyVal(err, 'description', `A ${bloodGlucose.type} measurement with value ` +
+                                `${bloodGlucose.value}${bloodGlucose.unit} from ${bloodGlucose.patient_id} collected by ` +
+                                `device ${bloodGlucose.device_id} at ${bloodGlucose.timestamp} already exists.`)
+                        })
+                })
+            })
+
+            context('when measurement type is not mapped', () => {
+                it('should reject an error for invalid type', () => {
+                    bloodGlucose.type = 'inexistent'
+                    return service.addMeasurement(bloodGlucose)
+                        .catch(err => {
+                            assert.propertyVal(err, 'message',
+                                Strings.ENUM_VALIDATOR.NOT_MAPPED.concat(`type: ${bloodGlucose.type}`))
+                            assert.propertyVal(err, 'description', Strings.ENUM_VALIDATOR.NOT_MAPPED_DESC
+                                .concat(Object.values(MeasurementTypes).join(', ').concat('.')))
+                            bloodGlucose.type = DefaultEntityMock.BLOOD_GLUCOSE.type
+                        })
+                })
+            })
+        })
+
+        describe('when save a list of measurements', () => {
+            context('when save a collection of measurements', () => {
+                it('should return a multi status with a list of success saves', () => {
+                    return service.addMeasurement(listMeasurements)
+                        .then(res => {
+                            assert.lengthOf(res.success, 7)
+                            assert.lengthOf(res.error, 0)
+                        })
+                })
+            })
+
+            context('when a validation error occours', () => {
+                it('should return a multi status with a list of error', () => {
+                    bloodGlucose.patient_id = undefined
+                    return service.addMeasurement([bloodGlucose])
+                        .then(res => {
+                            assert.lengthOf(res.success, 0)
+                            assert.lengthOf(res.error, 1)
+                            bloodGlucose.patient_id = DefaultEntityMock.BLOOD_GLUCOSE.patient_id
+                        })
+                })
+            })
+
+            context('when a conflict error occours', () => {
+                it('should return a multi status with a list of error', () => {
+                    bloodGlucose.type = 'exists'
+                    return service.addMeasurement([bloodGlucose])
+                        .then(res => {
+                            assert.lengthOf(res.success, 0)
+                            assert.lengthOf(res.error, 1)
+                            bloodGlucose.type = DefaultEntityMock.BLOOD_GLUCOSE.type
+                        })
+                })
+            })
+        })
+    })
+
+})

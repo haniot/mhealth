@@ -31,7 +31,7 @@ export class DeviceRepositoryMock implements IDeviceRepository {
     }
 
     public checkExists(item: Device): Promise<boolean> {
-        if (item.address === 'D4:36:39:91:75:72' || item.address === 'invalid')
+        if (item.address === 'D4:36:39:91:75:72' || item.address === 'invalid' || item.id !== DefaultEntityMock.DEVICE.id)
             return Promise.resolve(false)
         return Promise.resolve(true)
     }

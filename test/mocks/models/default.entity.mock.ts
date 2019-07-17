@@ -60,7 +60,7 @@ export abstract class DefaultEntityMock {
         type: MeasurementTypes.BLOOD_PRESSURE,
         timestamp: '2018-11-19T14:40:00Z',
         patient_id: '5a62be07d6f33400146c9b61',
-        device_id: '5ca790f77aefffa37a17b605'
+        device_id: '5ca77314bc08ec205689a736'
     }
 
     public static BODY_TEMPERATURE: any = {
@@ -70,7 +70,7 @@ export abstract class DefaultEntityMock {
         type: MeasurementTypes.BODY_TEMPERATURE,
         timestamp: '2018-11-19T14:40:00Z',
         patient_id: '5a62be07d6f33400146c9b61',
-        device_id: '5ca790f77aefffa37a17b605'
+        device_id: '5ca77314bc08ec205689a736'
     }
 
     public static BODY_FAT: any = {
@@ -80,7 +80,7 @@ export abstract class DefaultEntityMock {
         type: MeasurementTypes.BODY_FAT,
         timestamp: '2018-11-17T14:40:00Z',
         patient_id: '5a62be07d6f33400146c9b61',
-        device_id: '5ca790f77aefffa37a17b605'
+        device_id: '5ca77314bc08ec205689a736'
     }
 
     public static HEIGHT: any = {
@@ -90,7 +90,7 @@ export abstract class DefaultEntityMock {
         type: MeasurementTypes.HEIGHT,
         timestamp: '2018-11-19T14:40:00Z',
         patient_id: '5a62be07d6f33400146c9b61',
-        device_id: '5ca790f77aefffa37a17b605'
+        device_id: '5ca77314bc08ec205689a736'
     }
 
     public static MEASUREMENT: any = {
@@ -130,7 +130,7 @@ export abstract class DefaultEntityMock {
         type: MeasurementTypes.WAIST_CIRCUMFERENCE,
         timestamp: '2018-11-19T14:40:00Z',
         patient_id: '5a62be07d6f33400146c9b61',
-        device_id: '5ca790f77aefffa37a17b605'
+        device_id: '5ca77314bc08ec205689a736'
     }
 
     public static WEIGHT: any = {
