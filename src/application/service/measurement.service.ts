@@ -82,10 +82,12 @@ export class MeasurementService implements IMeasurementService {
         try {
 
             if (item.device_id) {
+                ObjectIdValidator.validate(item.device_id)
                 const device: Device = new Device().fromJSON({ id: item.device_id })
                 const result = await this._deviceRepository.checkExists(device)
                 if (!result) throw new ValidationException(Strings.DEVICE.NOT_FOUND, Strings.DEVICE.NOT_FOUND_DESC)
                 if (item.patient_id && item.timestamp) {
+                    ObjectIdValidator.validate(item.patient_id)
                     const measurementExists = await this._repository.checkExists(item)
                     if (measurementExists) {
                         throw new ConflictException(
