@@ -25,15 +25,7 @@ describe('Services: MeasurementService', () => {
     const bloodGlucose: BloodGlucose = new BloodGlucose().fromJSON(DefaultEntityMock.BLOOD_GLUCOSE)
     const bodyTemperature: BodyTemperature = new BodyTemperature().fromJSON(DefaultEntityMock.BODY_TEMPERATURE)
     const listMeasurements = [height, weight, waist, bodyFat, bloodPressure, bloodGlucose, bodyTemperature]
-    const lastMeasurements: LastMeasurements = new LastMeasurements().fromJSON({
-        height: DefaultEntityMock.HEIGHT,
-        weight: DefaultEntityMock.WEIGHT,
-        waist_circumference: DefaultEntityMock.WAIST_CIRCUMFERENCE,
-        body_fat: DefaultEntityMock.BODY_FAT,
-        blood_pressure: DefaultEntityMock.BLOOD_PRESSURE,
-        blood_glucose: DefaultEntityMock.BLOOD_GLUCOSE,
-        body_temperature: DefaultEntityMock.BODY_TEMPERATURE
-    })
+    const lastMeasurements: LastMeasurements = new LastMeasurements().fromJSON(DefaultEntityMock.LAST_MEASUREMENTS)
     const service = new MeasurementService(new MeasurementRepositoryMock(), new DeviceRepositoryMock())
 
     describe('getAll()', () => {

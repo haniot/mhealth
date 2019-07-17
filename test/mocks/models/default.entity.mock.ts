@@ -3,43 +3,6 @@ import { MealTypes } from '../../../src/application/domain/utils/meal.types'
 import { MeasurementUnits } from '../../../src/application/domain/utils/measurement.units'
 
 export abstract class DefaultEntityMock {
-
-    public static GENERIC_MEASUREMENT_MOCK: any = {
-        id: '5cb488278cf5f9e6760c14ee',
-        value: 99,
-        systolic: 120,
-        diastolic: 80,
-        pulse: 80,
-        dataset: [
-            {
-                value: 90,
-                timestamp: '2018-11-19T14:40:00Z'
-            },
-            {
-                value: 87,
-                timestamp: '2018-11-19T14:41:00Z'
-            },
-            {
-                value: 89,
-                timestamp: '2018-11-19T14:42:00Z'
-            },
-            {
-                value: 90,
-                timestamp: '2018-11-19T14:43:00Z'
-            },
-            {
-                value: 91,
-                timestamp: '2018-11-19T14:44:00Z'
-            }
-        ],
-        meal: MealTypes.PREPRANDIAL,
-        body_fat: 30,
-        unit: 'generic',
-        timestamp: '2018-11-19T14:40:00Z',
-        patient_id: '5a62be07d6f33400146c9b61',
-        device_id: '5ca77314bc08ec205689a736'
-    }
-
     public static BLOOD_GLUCOSE: any = {
         id: '5cb488278cf5f9e6760c14ed',
         value: 99,
@@ -152,5 +115,15 @@ export abstract class DefaultEntityMock {
         model_number: '502C8',
         manufacturer: 'XIAOMI',
         patient_id: ['5a62be07d6f33400146c9b61']
+    }
+
+    public static LAST_MEASUREMENTS: any = {
+        height: DefaultEntityMock.HEIGHT,
+        weight: DefaultEntityMock.WEIGHT,
+        waist_circumference: DefaultEntityMock.WAIST_CIRCUMFERENCE,
+        body_fat: DefaultEntityMock.BODY_FAT,
+        blood_pressure: DefaultEntityMock.BLOOD_PRESSURE,
+        blood_glucose: DefaultEntityMock.BLOOD_GLUCOSE,
+        body_temperature: DefaultEntityMock.BODY_TEMPERATURE
     }
 }
