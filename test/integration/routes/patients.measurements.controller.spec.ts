@@ -23,7 +23,7 @@ const dbConnection: IConnectionDB = container.get(Identifier.MONGODB_CONNECTION)
 const app: App = container.get(Identifier.APP)
 const request = require('supertest')(app.getExpress())
 
-describe('Routes: UserMeasurement', () => {
+describe('Routes: PatientMeasurement', () => {
 
     const bloodGlucose: BloodGlucose = new BloodGlucose().fromJSON(DefaultEntityMock.BLOOD_GLUCOSE)
     const bloodPressure: BloodPressure = new BloodPressure().fromJSON(DefaultEntityMock.BLOOD_PRESSURE)
@@ -49,7 +49,7 @@ describe('Routes: UserMeasurement', () => {
                 weight.device_id = result._id.toString()
                 measurement.device_id = result._id.toString()
             } catch (err) {
-                throw new Error('Failure on UserMeasurement test: ' + err.message)
+                throw new Error('Failure on PatientMeasurement test: ' + err.message)
             }
         }
     )
@@ -60,7 +60,7 @@ describe('Routes: UserMeasurement', () => {
             await deleteAllMeasurements()
             await dbConnection.dispose()
         } catch (err) {
-            throw new Error('Failure on UserMeasurement test: ' + err.message)
+            throw new Error('Failure on PatientMeasurement test: ' + err.message)
         }
     })
 

@@ -148,26 +148,24 @@ export class PatientsMeasurementsController {
     }
 
     private jsonToModel(item: any): any {
-        if (item.type) {
-            switch (item.type) {
-                case MeasurementTypes.HEIGHT:
-                    return new Height().fromJSON(item)
-                case MeasurementTypes.BLOOD_PRESSURE:
-                    return new BloodPressure().fromJSON(item)
-                case MeasurementTypes.WEIGHT:
-                    return new Weight().fromJSON(item)
-                case MeasurementTypes.BLOOD_GLUCOSE:
-                    return new BloodGlucose().fromJSON(item)
-                case MeasurementTypes.BODY_TEMPERATURE:
-                    return new BodyTemperature().fromJSON(item)
-                case MeasurementTypes.WAIST_CIRCUMFERENCE:
-                    return new WaistCircumference().fromJSON(item)
-                case MeasurementTypes.BODY_FAT:
-                    return new BodyFat().fromJSON(item)
-                default:
-                    return new Measurement().fromJSON(item)
-            }
+        if (!item.type) return undefined
+        switch (item.type) {
+            case MeasurementTypes.HEIGHT:
+                return new Height().fromJSON(item)
+            case MeasurementTypes.BLOOD_PRESSURE:
+                return new BloodPressure().fromJSON(item)
+            case MeasurementTypes.WEIGHT:
+                return new Weight().fromJSON(item)
+            case MeasurementTypes.BLOOD_GLUCOSE:
+                return new BloodGlucose().fromJSON(item)
+            case MeasurementTypes.BODY_TEMPERATURE:
+                return new BodyTemperature().fromJSON(item)
+            case MeasurementTypes.WAIST_CIRCUMFERENCE:
+                return new WaistCircumference().fromJSON(item)
+            case MeasurementTypes.BODY_FAT:
+                return new BodyFat().fromJSON(item)
+            default:
+                return new Measurement().fromJSON(item)
         }
-        return undefined
     }
 }

@@ -15,7 +15,7 @@ const dbConnection: IConnectionDB = container.get(Identifier.MONGODB_CONNECTION)
 const app: App = container.get(Identifier.APP)
 const request = require('supertest')(app.getExpress())
 
-describe('Routes: UserDevice', () => {
+describe('Routes: PatientDevice', () => {
 
     const device: Device = new Device().fromJSON(DefaultEntityMock.DEVICE)
     const patient_id: string = DefaultEntityMock.DEVICE.patient_id[0]
@@ -25,7 +25,7 @@ describe('Routes: UserDevice', () => {
                 await dbConnection.tryConnect(0, 500)
                 await deleteAllDevices()
             } catch (err) {
-                throw new Error('Failure on UserDevice test: ' + err.message)
+                throw new Error('Failure on PatientDevice test: ' + err.message)
             }
         }
     )
@@ -35,7 +35,7 @@ describe('Routes: UserDevice', () => {
             await deleteAllDevices()
             await dbConnection.dispose()
         } catch (err) {
-            throw new Error('Failure on UserDevice test: ' + err.message)
+            throw new Error('Failure on PatientDevice test: ' + err.message)
         }
     })
 
