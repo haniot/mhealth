@@ -50,6 +50,7 @@ import { WeightEntityMapper } from '../infrastructure/entity/mapper/weight.entit
 import { BodyFatEntity } from '../infrastructure/entity/body.fat.entity'
 import { BodyFat } from '../application/domain/model/body.fat'
 import { BodyFatEntityMapper } from '../infrastructure/entity/mapper/body.fat.entity.mapper'
+import { MeasurementsTypesController } from '../ui/controllers/measurements.types.controller'
 
 export class DI {
     private static instance: DI
@@ -99,6 +100,8 @@ export class DI {
             .to(HomeController).inSingletonScope()
         this.container.bind<MeasurementController>(Identifier.MEASUREMENTS_CONTROLLER)
             .to(MeasurementController).inSingletonScope()
+        this.container.bind<MeasurementsTypesController>(Identifier.MEASUREMENTS_TYPES_CONTROLLER)
+            .to(MeasurementsTypesController).inSingletonScope()
         this.container.bind<PatientsDevicesController>(Identifier.PATIENTS_DEVICES_CONTROLLER)
             .to(PatientsDevicesController).inSingletonScope()
         this.container.bind<PatientsMeasurementsController>(Identifier.PATIENTS_MEASUREMENTS_CONTROLLER)
