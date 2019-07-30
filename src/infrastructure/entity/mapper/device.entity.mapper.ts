@@ -21,7 +21,7 @@ export class DeviceEntityMapper implements IEntityMapper<Device, DeviceEntity> {
         if (json.type !== undefined) result.type = json.type
         if (json.model_number !== undefined) result.model_number = json.model_number
         if (json.manufacturer !== undefined) result.manufacturer = json.manufacturer
-        if (json.patient_id !== undefined && json.patient_id.length) result.patient_id = json.patient_id.map(String)
+        if (json.patient_id !== undefined) result.patient_id = json.patient_id
         return result
     }
 
@@ -38,7 +38,7 @@ export class DeviceEntityMapper implements IEntityMapper<Device, DeviceEntity> {
         if (item.type !== undefined) result.type = item.type
         if (item.model_number !== undefined) result.model_number = item.model_number
         if (item.manufacturer !== undefined) result.manufacturer = item.manufacturer
-        if (item.patient_id !== undefined && item.patient_id.length) result.patient_id = item.patient_id
+        if (item.patient_id !== undefined) result.patient_id = item.patient_id
         return result
     }
 }

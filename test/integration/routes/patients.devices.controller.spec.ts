@@ -18,7 +18,7 @@ const request = require('supertest')(app.getExpress())
 describe('Routes: PatientDevice', () => {
 
     const device: Device = new Device().fromJSON(DefaultEntityMock.DEVICE)
-    const patient_id: string = DefaultEntityMock.DEVICE.patient_id[0]
+    const patient_id: string = DefaultEntityMock.DEVICE.patient_id
 
     before(async () => {
             try {

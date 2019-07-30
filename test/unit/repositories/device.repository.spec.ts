@@ -723,7 +723,7 @@ describe('Repositories: DeviceRepository', () => {
                     .chain('exec')
                     .resolves(device)
 
-                return repo.checkExists(device)
+                return repo.checkExists(new Device().fromJSON({ id: device.id }))
                     .then(result => {
                         assert.isBoolean(result)
                         assert.isTrue(result)
@@ -734,7 +734,6 @@ describe('Repositories: DeviceRepository', () => {
 
         context('when the device exists', () => {
             it('should return true for pass address', () => {
-                device.id = undefined
                 sinon
                     .mock(modelFake)
                     .expects('findOne')
@@ -742,11 +741,10 @@ describe('Repositories: DeviceRepository', () => {
                     .chain('exec')
                     .resolves(device)
 
-                return repo.checkExists(device)
+                return repo.checkExists(new Device().fromJSON({ address: device.address }))
                     .then(result => {
                         assert.isBoolean(result)
                         assert.isTrue(result)
-                        device.id = DefaultEntityMock.DEVICE.id
                     })
             })
         })
@@ -756,11 +754,11 @@ describe('Repositories: DeviceRepository', () => {
                 sinon
                     .mock(modelFake)
                     .expects('findOne')
-                    .withArgs({ _id: device.id, address: device.address })
+                    .withArgs({ _id: device.id })
                     .chain('exec')
                     .resolves(undefined)
 
-                return repo.checkExists(device)
+                return repo.checkExists(new Device().fromJSON({ id: device.id }))
                     .then(result => {
                         assert.isBoolean(result)
                         assert.isFalse(result)

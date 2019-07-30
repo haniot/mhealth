@@ -17,7 +17,6 @@ import { BloodGlucose } from '../../application/domain/model/blood.glucose'
 import { BodyTemperature } from '../../application/domain/model/body.temperature'
 import { WaistCircumference } from '../../application/domain/model/waist.circumference'
 import { BodyFat } from '../../application/domain/model/body.fat'
-import { MeasurementUnits } from '../../application/domain/utils/measurement.units'
 import { LastMeasurements } from '../../application/domain/model/last.measurements'
 
 @controller('/v1/patients/:patient_id/measurements')
@@ -118,32 +117,15 @@ export class PatientsMeasurementsController {
 
     public transform(item: any | Array<any>, patientId: string): any | Array<any> {
         if (item instanceof Array) return this.jsonListToModel(item, patientId)
-        else if (item.type === MeasurementTypes.WEIGHT && item.body_fat) return this.jsonListToModel([item], patientId)
         return this.jsonToModel({ ...item, patient_id: patientId })
     }
 
     private jsonListToModel(items: Array<any>, patientId: string): Array<any> {
-        let result: Array<any> = []
+        const result: Array<any> = []
         items.forEach(item => {
             item.patient_id = patientId
-            if (item.type === MeasurementTypes.WEIGHT) result = result.concat(this.verifyWeightBodyFat(item))
-            else result.push(this.jsonToModel(item))
+            result.push(this.jsonToModel(item))
         })
-        return result
-    }
-
-    private verifyWeightBodyFat(item: any): any | Array<any> {
-        const result: Array<any> = [this.jsonToModel(item)]
-        if (item.body_fat) {
-            result.push(this.jsonToModel({
-                value: item.body_fat,
-                unit: MeasurementUnits.PERCENTUAL,
-                type: MeasurementTypes.BODY_FAT,
-                timestamp: item.timestamp,
-                device_id: item.device_id,
-                patient_id: item.patient_id
-            }))
-        }
         return result
     }
 

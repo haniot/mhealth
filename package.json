@@ -55,6 +55,7 @@
     "helmet": "^3.18.0",
     "inversify": "^5.0.1",
     "inversify-express-utils": "^6.3.2",
+    "ip-allowed": "^1.1.0",
     "mongoose": "^5.5.12",
     "morgan": "^1.9.1",
     "query-strings-parser": "^2.0.0",

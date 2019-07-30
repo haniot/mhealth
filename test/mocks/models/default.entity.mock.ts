@@ -114,7 +114,7 @@ export abstract class DefaultEntityMock {
         type: 'thermometer',
         model_number: '502C8',
         manufacturer: 'XIAOMI',
-        patient_id: ['5a62be07d6f33400146c9b61']
+        patient_id: '5a62be07d6f33400146c9b61'
     }
 
     public static LAST_MEASUREMENTS: any = {

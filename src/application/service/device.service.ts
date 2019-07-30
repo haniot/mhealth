@@ -7,7 +7,7 @@ import { Device } from '../domain/model/device'
 import { CreateDeviceValidator } from '../domain/validator/create.device.validator'
 import { ObjectIdValidator } from '../domain/validator/object.id.validator'
 import { UpdateDeviceValidator } from '../domain/validator/update.device.validator'
-import { Query } from '../../infrastructure/repository/query/query'
+import { ConflictException } from '../domain/exception/conflict.exception'
 
 @injectable()
 export class DeviceService implements IDeviceService {
@@ -28,13 +28,9 @@ export class DeviceService implements IDeviceService {
     public async addDevice(item: Device, userId: string): Promise<Device> {
         try {
             ObjectIdValidator.validate(userId)
+            item.patient_id = userId
             const exists = await this._repository.checkExists(item)
-            if (exists) {
-                const device: Device = await this._repository.findOne(new Query().fromJSON({ address: item.address }))
-                if (device) device.addUser(userId)
-                return this._repository.update(device)
-            }
-            item.addUser(userId)
+            if (exists) throw new ConflictException('The user already has association with this device.')
         } catch (err) {
             return Promise.reject(err)
         }
@@ -70,19 +66,11 @@ export class DeviceService implements IDeviceService {
         } catch (err) {
             return Promise.reject(err)
         }
-        const device: Device = await this.getById(deviceId, new Query())
-        if (device) {
-            device.patient_id = device.patient_id!.filter(id => id !== userId)
-            if (device.patient_id!.length) {
-                const updatedDevice = await this._repository.update(device)
-                return Promise.resolve(!!updatedDevice)
-            }
-        }
-        return this._repository.delete(deviceId)
+        return this.remove(deviceId)
     }
 
     public async remove(id: string): Promise<boolean> {
-        throw Error('Not implemented!')
+        return this._repository.delete(id)
     }
 
     public async update(item: Device): Promise<Device> {
@@ -97,10 +85,11 @@ export class DeviceService implements IDeviceService {
     public async updateDevice(item: Device, userId: string): Promise<Device> {
         try {
             ObjectIdValidator.validate(userId)
+            UpdateDeviceValidator.validate(item)
         } catch (err) {
             return Promise.reject(err)
         }
-        return this.update(item)
+        return this._repository.update(item)
     }
 
     public count(query: IQuery): Promise<number> {

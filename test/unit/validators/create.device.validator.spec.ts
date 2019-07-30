@@ -80,7 +80,7 @@ describe('Validators: CreateDeviceValidator', () => {
         })
 
         it('should throw an error for does pass invalid patient_id', () => {
-            device.patient_id = ['123']
+            device.patient_id = '123'
             try {
                 CreateDeviceValidator.validate(device)
             } catch (err) {

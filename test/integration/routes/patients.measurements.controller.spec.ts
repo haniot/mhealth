@@ -129,7 +129,7 @@ describe('Routes: PatientMeasurement', () => {
                         .set('Content-Type', 'application/json')
                         .expect(207)
                         .then(res => {
-                            expect(res.body.success).to.have.lengthOf(7)
+                            expect(res.body.success).to.have.lengthOf(6)
                             expect(res.body.error).to.have.lengthOf(0)
                         })
                 })

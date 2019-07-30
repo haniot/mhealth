@@ -23,6 +23,7 @@ export class DeviceRepository extends BaseRepository<Device, DeviceEntity> imple
             const query: Query = new Query()
             if (device.id) query.addFilter({ _id: device.id })
             if (device.address) query.addFilter({ address: device.address })
+            if (device.patient_id) query.addFilter({ patient_id: device.patient_id })
             super.findOne(query)
                 .then(result => resolve(!!result))
                 .catch(err => reject(this.mongoDBErrorListener(err)))

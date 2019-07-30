@@ -3,22 +3,6 @@ import { assert } from 'chai'
 import { DefaultEntityMock } from '../../mocks/models/default.entity.mock'
 
 describe('Models: Device', () => {
-    describe('addUser()', () => {
-        context('when the patient is added successfully', () => {
-            it('should return a new list of patient ids', () => {
-                const device: Device = new Device()
-                device.addUser(DefaultEntityMock.MEASUREMENT.patient_id)
-                assert.lengthOf(device.patient_id!, 1)
-            })
-
-            it('should return a list of patient ids', () => {
-                const device: Device = new Device().fromJSON(
-                    { patient_id: [DefaultEntityMock.MEASUREMENT.patient_id] })
-                device.addUser(DefaultEntityMock.MEASUREMENT.patient_id)
-                assert.lengthOf(device.patient_id!, 1)
-            })
-        })
-    })
     describe('fromJSON()', () => {
         context('when convert json to model', () => {
             it('should return a model with json parameters', () => {

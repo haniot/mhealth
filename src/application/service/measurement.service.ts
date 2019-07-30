@@ -24,6 +24,7 @@ import { Query } from '../../infrastructure/repository/query/query'
 import { CreateBodyFatValidator } from '../domain/validator/create.body.fat.validator'
 import { Device } from '../domain/model/device'
 import { LastMeasurements } from '../domain/model/last.measurements'
+import { BodyFat } from '../domain/model/body.fat'
 
 @injectable()
 export class MeasurementService implements IMeasurementService {
@@ -80,7 +81,6 @@ export class MeasurementService implements IMeasurementService {
 
     public async add(item: any): Promise<any> {
         try {
-
             if (item.device_id) {
                 ObjectIdValidator.validate(item.device_id)
                 const device: Device = new Device().fromJSON({ id: item.device_id })
@@ -125,6 +125,9 @@ export class MeasurementService implements IMeasurementService {
                         Strings.ENUM_VALIDATOR.NOT_MAPPED.concat(`type: ${item.type}`),
                         Strings.ENUM_VALIDATOR.NOT_MAPPED_DESC
                             .concat(Object.values(MeasurementTypes).join(', ').concat('.')))
+            }
+            if (item.type === MeasurementTypes.WEIGHT && item.body_fat) {
+                await this.add(new BodyFat().fromJSON({ ...item.toJSON(), value: item.body_fat, unit: '%' }))
             }
             return await this._repository.create(item)
         } catch (err) {

@@ -39,7 +39,7 @@ describe('Services: DeviceService', () => {
     describe('getAll', () => {
         context('when get all devices from patient', () => {
             it('should return a list of devices', () => {
-                return service.getAll(new Query().fromJSON({ filters: { patient_id: device.patient_id![0] } }))
+                return service.getAll(new Query().fromJSON({ filters: { patient_id: device.patient_id } }))
                     .then(result => {
                         assert.isArray(result)
                         assert.lengthOf(result, 1)
@@ -148,13 +148,10 @@ describe('Services: DeviceService', () => {
 
     describe('addDevice()', () => {
         context('when add a new device with existing address', () => {
-            it('should return the saved device', () => {
-                return service.addDevice(device, device.patient_id![0])
-                    .then(result => {
-                        assert.propertyVal(result, 'name', device.name)
-                        assert.propertyVal(result, 'type', device.type)
-                        assert.propertyVal(result, 'model_number', device.model_number)
-                        assert.propertyVal(result, 'manufacturer', device.manufacturer)
+            it('should throw an error for already have association', () => {
+                return service.addDevice(device, device.patient_id!)
+                    .catch(err => {
+                        assert.propertyVal(err, 'message', 'The user already has association with this device.')
                     })
             })
         })
@@ -162,7 +159,7 @@ describe('Services: DeviceService', () => {
         context('when add a new device with do not existing address', () => {
             it('should return the saved device', () => {
                 device.address = 'D4:36:39:91:75:72'
-                return service.addDevice(device, device.patient_id![0])
+                return service.addDevice(device, device.patient_id!)
                     .then(result => {
                         assert.propertyVal(result, 'name', device.name)
                         assert.propertyVal(result, 'type', device.type)
@@ -230,20 +227,10 @@ describe('Services: DeviceService', () => {
 
     describe('removeDevice()', () => {
         context('when remove a device', () => {
-            it('should return true for patient_id more than 0', () => {
-                device.id = DefaultEntityMock.DEVICE.id
-                device.patient_id = ['5a62be07d6f33400146c9b62']
-                return service.removeDevice(device.id!, device.patient_id![0])
-                    .then(result => {
-                        assert.isBoolean(result)
-                        assert.isTrue(result)
-                    })
-            })
-
-            it('should return true for patient_id less or equal than 0', () => {
+            it('should return true', () => {
                 device.id = DefaultEntityMock.DEVICE.id
                 device.patient_id = DefaultEntityMock.DEVICE.patient_id
-                return service.removeDevice(device.id!, device.patient_id![0])
+                return service.removeDevice(device.id!, device.patient_id!)
                     .then(result => {
                         assert.isBoolean(result)
                         assert.isTrue(result)
