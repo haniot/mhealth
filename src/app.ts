@@ -14,7 +14,7 @@ import { DI } from './di/di'
 import { Identifier } from './di/identifiers'
 import { ILogger } from './utils/custom.logger'
 import { Strings } from './utils/strings'
-import whitelist from 'ip-allowed'
+import ipAllowed = require('ip-allowed')
 
 /**
  * Implementation of class App.
@@ -79,9 +79,12 @@ export class App {
      * @return Promise<void>
      */
     private async setupHostWhitelist(): Promise<void> {
-        this.express.use(whitelist(process.env.HOST_WHITELIST || Default.IP_WHITELIST))
+        this.express.use(ipAllowed(process.env.HOST_WHITELIST || Default.HOST_WHITELIST, {
+            log: (clientIp, accessDenied) => {
+                if (accessDenied) this._logger.warn(`Client with IP address ${clientIp} is not allowed!`)
+            }
+        }))
     }
-
     /**
      * Setup Inversify.
      * Responsible for injecting routes defined through annotations in controllers.
@@ -143,7 +146,7 @@ export class App {
                 customfavIcon: Default.LOGO_URI,
                 customSiteTitle: `API Reference | ${Strings.APP.TITLE}`
             }
-            this.express.use('/reference', swaggerUi.serve, swaggerUi.setup(null, options))
+            this.express.use('/v1/reference', swaggerUi.serve, swaggerUi.setup(null, options))
         }
     }
 
