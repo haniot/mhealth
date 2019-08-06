@@ -38,11 +38,11 @@ describe('Routes: Measurement', () => {
         }
     })
 
-    describe('GET /measurements', () => {
+    describe('GET /v1/measurements', () => {
         context('when get all measurements', () => {
             it('should return status code 200 and a list of measurements', () => {
                 return request
-                    .get('/measurements')
+                    .get('/v1/measurements')
                     .set('Content-Type', 'application/json')
                     .expect(200)
                     .then(res => {
@@ -50,11 +50,25 @@ describe('Routes: Measurement', () => {
                         expect(res.body.length).to.eql(1)
                         expect(res.body[0]).to.have.property('id', measurement.id)
                         expect(res.body[0]).to.have.property('value', measurement.value)
-                        expect(res.body[0]).to.have.property('unit', measurement.unit )
+                        expect(res.body[0]).to.have.property('unit', measurement.unit)
                         expect(res.body[0]).to.have.property('type', measurement.type)
                         expect(res.body[0]).to.have.property('device_id', measurement.device_id)
-                        expect(res.body[0]).to.have.property('user_id', measurement.user_id)
+                        expect(res.body[0]).to.have.property('patient_id', measurement.patient_id)
                         expect(res.body[0]).to.have.property('meal', measurement.meal)
+                    })
+            })
+        })
+
+        context('when there are no measurements', () => {
+            it('should return status code 200 and a empty list', async () => {
+                await deleteAllMeasurements().then()
+                return request
+                    .get('/v1/measurements')
+                    .set('Content-Type', 'application/json')
+                    .expect(200)
+                    .then(res => {
+                        expect(res.body).is.an.instanceOf(Array)
+                        expect(res.body.length).to.eql(0)
                     })
             })
         })

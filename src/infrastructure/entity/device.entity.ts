@@ -5,5 +5,5 @@ export class DeviceEntity {
     public type?: string
     public model_number?: string
     public manufacturer?: string
-    public user_id?: Array<string>
+    public patient_id?: string
 }

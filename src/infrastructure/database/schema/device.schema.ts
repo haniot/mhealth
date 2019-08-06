@@ -10,8 +10,7 @@ const deviceSchema = new Mongoose.Schema({
         },
         address: {
             type: String,
-            required: 'Address of device is required!',
-            index: { unique: true }
+            required: 'Address of device is required!'
         },
         type: {
             type: String,
@@ -24,9 +23,7 @@ const deviceSchema = new Mongoose.Schema({
             type: String,
             required: 'Manufacturer of device is required!'
         },
-        user_id: [{
-            type: Schema.Types.ObjectId
-        }]
+        patient_id: { type: Schema.Types.ObjectId }
     },
     {
         timestamps: { createdAt: 'created_at', updatedAt: false },
@@ -40,5 +37,7 @@ const deviceSchema = new Mongoose.Schema({
         }
     }
 )
+
+deviceSchema.index({ address: 1, patient_id: 1 }, { unique: true })
 
 export const DeviceRepoModel = Mongoose.model<IDevice>('Device', deviceSchema)

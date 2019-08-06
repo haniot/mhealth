@@ -1,21 +1,12 @@
 import { DefaultEntityMock } from '../../mocks/models/default.entity.mock'
 import { CreateWeightValidator } from '../../../src/application/domain/validator/create.weight.validator'
 import { Weight } from '../../../src/application/domain/model/weight'
-import { Fat } from '../../../src/application/domain/model/fat'
 import { assert } from 'chai'
 import { MeasurementTypes } from '../../../src/application/domain/utils/measurement.types'
 import { Strings } from '../../../src/utils/strings'
 
 describe('Validators: CreateWeightValidator', () => {
     const measurement: Weight = new Weight().fromJSON(DefaultEntityMock.WEIGHT)
-    measurement.fat = new Fat().fromJSON({
-        ...DefaultEntityMock.WEIGHT.fat,
-        type: DefaultEntityMock.FAT.type,
-        timestamp: DefaultEntityMock.WEIGHT.timestamp,
-        user_id: DefaultEntityMock.WEIGHT.device_id,
-        device_id: DefaultEntityMock.WEIGHT.device_id
-    })
-
     it('should return undefined when the validation was successful', () => {
         const result = CreateWeightValidator.validate(measurement)
         assert.isUndefined(result)
@@ -85,42 +76,33 @@ describe('Validators: CreateWeightValidator', () => {
                 measurement.timestamp = DefaultEntityMock.WEIGHT.timestamp
             }
         })
-        it('should throw an error for does not pass user_id', () => {
-            measurement.user_id = undefined
+        it('should throw an error for does not pass patient_id', () => {
+            measurement.patient_id = undefined
             try {
                 CreateWeightValidator.validate(measurement)
             } catch (err) {
                 assert.propertyVal(err, 'message', 'Required fields were not provided...')
-                assert.propertyVal(err, 'description', 'Weight validation: user_id required!')
+                assert.propertyVal(err, 'description', 'Weight validation: patient_id required!')
             }
         })
-        it('should throw an error for does pass invalid user_id', () => {
-            measurement.user_id = '123'
+        it('should throw an error for does pass invalid patient_id', () => {
+            measurement.patient_id = '123'
             try {
                 CreateWeightValidator.validate(measurement)
             } catch (err) {
                 assert.propertyVal(err, 'message', Strings.ERROR_MESSAGE.UUID_NOT_VALID_FORMAT)
                 assert.propertyVal(err, 'description', Strings.ERROR_MESSAGE.UUID_NOT_VALID_FORMAT_DESC)
             } finally {
-                measurement.user_id = DefaultEntityMock.WEIGHT.user_id
+                measurement.patient_id = DefaultEntityMock.WEIGHT.patient_id
             }
         })
         it('should throw an error for does not pass device_id', () => {
             measurement.device_id = undefined
-            measurement.fat = undefined
             try {
                 CreateWeightValidator.validate(measurement)
             } catch (err) {
                 assert.propertyVal(err, 'message', 'Required fields were not provided...')
                 assert.propertyVal(err, 'description', 'Weight validation: device_id required!')
-            } finally {
-                measurement.fat = new Fat().fromJSON({
-                    ...DefaultEntityMock.WEIGHT.fat,
-                    type: DefaultEntityMock.FAT.type,
-                    timestamp: DefaultEntityMock.WEIGHT.timestamp,
-                    user_id: DefaultEntityMock.WEIGHT.device_id,
-                    device_id: DefaultEntityMock.WEIGHT.device_id
-                })
             }
         })
         it('should throw an error for does pass invalid device_id', () => {
@@ -132,15 +114,6 @@ describe('Validators: CreateWeightValidator', () => {
                 assert.propertyVal(err, 'description', Strings.ERROR_MESSAGE.UUID_NOT_VALID_FORMAT_DESC)
             } finally {
                 measurement.device_id = DefaultEntityMock.WEIGHT.device_id
-            }
-        })
-        it('should throw an error for does pass invalid fat', () => {
-            measurement.fat = new Fat()
-            try {
-                CreateWeightValidator.validate(measurement)
-            } catch (err) {
-                assert.propertyVal(err, 'message', 'Required fields were not provided...')
-                assert.propertyVal(err, 'description', 'Fat validation: value, unit, timestamp, user_id required!')
             }
         })
     })

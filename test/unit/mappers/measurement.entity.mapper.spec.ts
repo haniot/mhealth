@@ -17,7 +17,7 @@ describe('Mappers: MeasurementEntityMapper', () => {
                 assert.propertyVal(result, 'type', DefaultEntityMock.MEASUREMENT.type)
                 assert.propertyVal(result, 'unit', DefaultEntityMock.MEASUREMENT.unit)
                 assert.propertyVal(result, 'device_id', DefaultEntityMock.MEASUREMENT.device_id)
-                assert.propertyVal(result, 'user_id', DefaultEntityMock.MEASUREMENT.user_id)
+                assert.propertyVal(result, 'patient_id', DefaultEntityMock.MEASUREMENT.patient_id)
             })
 
             it('should return model without parameters for empty json', () => {
@@ -25,7 +25,7 @@ describe('Mappers: MeasurementEntityMapper', () => {
                 assert.isUndefined(result.id, 'no id defined')
                 assert.isUndefined(result.unit, 'no unit defined')
                 assert.isUndefined(result.device_id, 'no device_id defined')
-                assert.isUndefined(result.user_id, 'no user_id defined')
+                assert.isUndefined(result.patient_id, 'no patient_id defined')
                 assert.isUndefined(result.type, 'no type defined')
             })
 
@@ -34,7 +34,7 @@ describe('Mappers: MeasurementEntityMapper', () => {
                 assert.isUndefined(result.id, 'no id defined')
                 assert.isUndefined(result.unit, 'no unit defined')
                 assert.isUndefined(result.device_id, 'no device_id defined')
-                assert.isUndefined(result.user_id, 'no user_id defined')
+                assert.isUndefined(result.patient_id, 'no patient_id defined')
                 assert.isUndefined(result.type, 'no type defined')
             })
 
@@ -46,7 +46,7 @@ describe('Mappers: MeasurementEntityMapper', () => {
                 assert.propertyVal(result, 'id', DefaultEntityMock.MEASUREMENT.id)
                 assert.propertyVal(result, 'unit', DefaultEntityMock.MEASUREMENT.unit)
                 assert.propertyVal(result, 'device_id', DefaultEntityMock.MEASUREMENT.device_id)
-                assert.propertyVal(result, 'user_id', DefaultEntityMock.MEASUREMENT.user_id)
+                assert.propertyVal(result, 'patient_id', DefaultEntityMock.MEASUREMENT.patient_id)
             })
 
             it('should return a model entity with basic parameters for empty model', () => {

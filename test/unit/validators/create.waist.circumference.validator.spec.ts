@@ -77,24 +77,24 @@ describe('Validators: CreateWaistCircumferenceValidator', () => {
                 measurement.timestamp = DefaultEntityMock.WAIST_CIRCUMFERENCE.timestamp
             }
         })
-        it('should throw an error for does not pass user_id', () => {
-            measurement.user_id = undefined
+        it('should throw an error for does not pass patient_id', () => {
+            measurement.patient_id = undefined
             try {
                 CreateWaistCircumferenceValidator.validate(measurement)
             } catch (err) {
                 assert.propertyVal(err, 'message', 'Required fields were not provided...')
-                assert.propertyVal(err, 'description', 'WaistCircumference validation: user_id required!')
+                assert.propertyVal(err, 'description', 'WaistCircumference validation: patient_id required!')
             }
         })
-        it('should throw an error for does pass invalid user_id', () => {
-            measurement.user_id = '123'
+        it('should throw an error for does pass invalid patient_id', () => {
+            measurement.patient_id = '123'
             try {
                 CreateWaistCircumferenceValidator.validate(measurement)
             } catch (err) {
                 assert.propertyVal(err, 'message', Strings.ERROR_MESSAGE.UUID_NOT_VALID_FORMAT)
                 assert.propertyVal(err, 'description', Strings.ERROR_MESSAGE.UUID_NOT_VALID_FORMAT_DESC)
             } finally {
-                measurement.user_id = DefaultEntityMock.WAIST_CIRCUMFERENCE.user_id
+                measurement.patient_id = DefaultEntityMock.WAIST_CIRCUMFERENCE.patient_id
             }
         })
         it('should throw an error for does not pass device_id', () => {

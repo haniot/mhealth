@@ -19,7 +19,7 @@ describe('Mappers: BloodPressureEntityMapper', () => {
                 assert.propertyVal(result, 'timestamp', DefaultEntityMock.BLOOD_PRESSURE.timestamp)
                 assert.propertyVal(result, 'unit', DefaultEntityMock.BLOOD_PRESSURE.unit)
                 assert.propertyVal(result, 'device_id', DefaultEntityMock.BLOOD_PRESSURE.device_id)
-                assert.propertyVal(result, 'user_id', DefaultEntityMock.BLOOD_PRESSURE.user_id)
+                assert.propertyVal(result, 'patient_id', DefaultEntityMock.BLOOD_PRESSURE.patient_id)
                 assert.propertyVal(result, 'type', DefaultEntityMock.BLOOD_PRESSURE.type)
             })
 
@@ -32,7 +32,7 @@ describe('Mappers: BloodPressureEntityMapper', () => {
                 assert.isUndefined(result.timestamp, 'no timestamp defined')
                 assert.isUndefined(result.unit, 'no unit defined')
                 assert.isUndefined(result.device_id, 'no device_id defined')
-                assert.isUndefined(result.user_id, 'no user_id defined')
+                assert.isUndefined(result.patient_id, 'no patient_id defined')
                 assert.isUndefined(result.id, 'no id defined')
             })
 
@@ -45,7 +45,7 @@ describe('Mappers: BloodPressureEntityMapper', () => {
                 assert.isUndefined(result.timestamp, 'no timestamp defined')
                 assert.isUndefined(result.unit, 'no unit defined')
                 assert.isUndefined(result.device_id, 'no device_id defined')
-                assert.isUndefined(result.user_id, 'no user_id defined')
+                assert.isUndefined(result.patient_id, 'no patient_id defined')
                 assert.isUndefined(result.id, 'no id defined')
             })
 
@@ -60,7 +60,7 @@ describe('Mappers: BloodPressureEntityMapper', () => {
                 assert.propertyVal(result, 'timestamp', DefaultEntityMock.BLOOD_PRESSURE.timestamp)
                 assert.propertyVal(result, 'unit', DefaultEntityMock.BLOOD_PRESSURE.unit)
                 assert.propertyVal(result, 'device_id', DefaultEntityMock.BLOOD_PRESSURE.device_id)
-                assert.propertyVal(result, 'user_id', DefaultEntityMock.BLOOD_PRESSURE.user_id)
+                assert.propertyVal(result, 'patient_id', DefaultEntityMock.BLOOD_PRESSURE.patient_id)
                 assert.propertyVal(result, 'type', DefaultEntityMock.BLOOD_PRESSURE.type)
             })
 

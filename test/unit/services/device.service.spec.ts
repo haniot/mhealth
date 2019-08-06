@@ -1,14 +1,13 @@
-import {DeviceService} from '../../../src/application/service/device.service'
-import {DeviceRepositoryMock} from '../../mocks/repositories/device.repository.mock'
-import {Device} from '../../../src/application/domain/model/device'
-import {DefaultEntityMock} from '../../mocks/models/default.entity.mock'
-import {assert} from 'chai'
-import {Query} from '../../../src/infrastructure/repository/query/query'
-import {Strings} from '../../../src/utils/strings'
+import { DeviceService } from '../../../src/application/service/device.service'
+import { DeviceRepositoryMock } from '../../mocks/repositories/device.repository.mock'
+import { Device } from '../../../src/application/domain/model/device'
+import { DefaultEntityMock } from '../../mocks/models/default.entity.mock'
+import { assert } from 'chai'
+import { Query } from '../../../src/infrastructure/repository/query/query'
+import { Strings } from '../../../src/utils/strings'
 
 describe('Services: DeviceService', () => {
     const device: Device = new Device().fromJSON(DefaultEntityMock.DEVICE)
-    device.id = DefaultEntityMock.DEVICE.id
     const service = new DeviceService(new DeviceRepositoryMock())
 
     describe('add()', () => {
@@ -20,7 +19,7 @@ describe('Services: DeviceService', () => {
                         assert.propertyVal(result, 'type', device.type)
                         assert.propertyVal(result, 'model_number', device.model_number)
                         assert.propertyVal(result, 'manufacturer', device.manufacturer)
-                        assert.propertyVal(result, 'user_id', device.user_id)
+                        assert.propertyVal(result, 'patient_id', device.patient_id)
                     })
             })
         })
@@ -31,16 +30,16 @@ describe('Services: DeviceService', () => {
                     .catch(err => {
                         assert.propertyVal(err, 'message', 'Required fields were not provided...')
                         assert.propertyVal(err, 'description', 'Device validation: name, address, ' +
-                            'type, manufacturer, user_id required!')
+                            'type, manufacturer, patient_id required!')
                     })
             })
         })
     })
 
     describe('getAll', () => {
-        context('when get all devices from user', () => {
+        context('when get all devices from patient', () => {
             it('should return a list of devices', () => {
-                return service.getAll(new Query().fromJSON({filters: {user_id: device.user_id![0]}}))
+                return service.getAll(new Query().fromJSON({ filters: { patient_id: device.patient_id } }))
                     .then(result => {
                         assert.isArray(result)
                         assert.lengthOf(result, 1)
@@ -48,14 +47,14 @@ describe('Services: DeviceService', () => {
                         assert.propertyVal(result[0], 'type', device.type)
                         assert.propertyVal(result[0], 'model_number', device.model_number)
                         assert.propertyVal(result[0], 'manufacturer', device.manufacturer)
-                        assert.propertyVal(result[0], 'user_id', device.user_id)
+                        assert.propertyVal(result[0], 'patient_id', device.patient_id)
                     })
             })
         })
 
         context('when there are validation errors', () => {
             it('should reject an error for invalid parameters', () => {
-                return service.getAll(new Query().fromJSON({filters: {user_id: '123'}}))
+                return service.getAll(new Query().fromJSON({ filters: { patient_id: '123' } }))
                     .catch(err => {
                         assert.propertyVal(err, 'message', 'Some ID provided does not have a valid format!')
                         assert.propertyVal(err, 'description',
@@ -64,7 +63,7 @@ describe('Services: DeviceService', () => {
             })
 
             it('should reject an error for empty parameters', () => {
-                return service.getAll(new Query().fromJSON({filters: {user_id: ''}}))
+                return service.getAll(new Query().fromJSON({ filters: { patient_id: '' } }))
                     .catch(err => {
                         assert.propertyVal(err, 'message', 'Some ID provided does not have a valid format!')
                         assert.propertyVal(err, 'description',
@@ -77,20 +76,20 @@ describe('Services: DeviceService', () => {
     describe('getById()', () => {
         context('when get a unique device', () => {
             it('should return a device', () => {
-                return service.getById(device.id!, new Query().fromJSON({filters: {user_id: device.user_id}}))
+                return service.getById(device.id!, new Query().fromJSON({ filters: { patient_id: device.patient_id } }))
                     .then(result => {
                         assert.propertyVal(result, 'name', device.name)
                         assert.propertyVal(result, 'type', device.type)
                         assert.propertyVal(result, 'model_number', device.model_number)
                         assert.propertyVal(result, 'manufacturer', device.manufacturer)
-                        assert.propertyVal(result, 'user_id', device.user_id)
+                        assert.propertyVal(result, 'patient_id', device.patient_id)
                     })
             })
         })
 
         context('when there are validation errors', () => {
             it('should reject an error for invalid parameters', () => {
-                return service.getById('321', new Query().fromJSON({filters: {user_id: '123'}}))
+                return service.getById('321', new Query().fromJSON({ filters: { patient_id: '123' } }))
                     .catch(err => {
                         assert.propertyVal(err, 'message', 'Some ID provided does not have a valid format!')
                         assert.propertyVal(err, 'description',
@@ -112,7 +111,7 @@ describe('Services: DeviceService', () => {
     describe('update()', () => {
         context('when update a device', () => {
             it('should return the updated device', () => {
-                device.user_id = undefined
+                device.patient_id = undefined
                 return service.update(device)
                     .then(result => {
                         assert.propertyVal(result, 'name', device.name)
@@ -136,12 +135,12 @@ describe('Services: DeviceService', () => {
             })
 
             it('should reject an error for parameters that can not be updated', () => {
-                device.user_id = DefaultEntityMock.DEVICE.user_id
+                device.patient_id = DefaultEntityMock.DEVICE.patient_id
                 return service.update(device)
                     .catch(err => {
                         assert.propertyVal(err, 'message', Strings.ERROR_MESSAGE.PARAMETER_COULD_NOT_BE_UPDATED)
                         assert.propertyVal(err, 'description',
-                            Strings.ERROR_MESSAGE.PARAMETER_COULD_NOT_BE_UPDATED_DESC.concat('user_id'))
+                            Strings.ERROR_MESSAGE.PARAMETER_COULD_NOT_BE_UPDATED_DESC.concat('patient_id'))
                     })
             })
         })
@@ -149,13 +148,10 @@ describe('Services: DeviceService', () => {
 
     describe('addDevice()', () => {
         context('when add a new device with existing address', () => {
-            it('should return the saved device', () => {
-                return service.addDevice(device, device.user_id![0])
-                    .then(result => {
-                        assert.propertyVal(result, 'name', device.name)
-                        assert.propertyVal(result, 'type', device.type)
-                        assert.propertyVal(result, 'model_number', device.model_number)
-                        assert.propertyVal(result, 'manufacturer', device.manufacturer)
+            it('should throw an error for already have association', () => {
+                return service.addDevice(device, device.patient_id!)
+                    .catch(err => {
+                        assert.propertyVal(err, 'message', 'The user already has association with this device.')
                     })
             })
         })
@@ -163,7 +159,7 @@ describe('Services: DeviceService', () => {
         context('when add a new device with do not existing address', () => {
             it('should return the saved device', () => {
                 device.address = 'D4:36:39:91:75:72'
-                return service.addDevice(device, device.user_id![0])
+                return service.addDevice(device, device.patient_id!)
                     .then(result => {
                         assert.propertyVal(result, 'name', device.name)
                         assert.propertyVal(result, 'type', device.type)
@@ -196,7 +192,7 @@ describe('Services: DeviceService', () => {
     describe('updateDevice()', () => {
         context('when add a new device', () => {
             it('should return the saved device', () => {
-                device.user_id = undefined
+                device.patient_id = undefined
                 return service.updateDevice(device, '5a62be07d6f33400146c9b62')
                     .then(result => {
                         assert.propertyVal(result, 'name', device.name)
@@ -231,20 +227,10 @@ describe('Services: DeviceService', () => {
 
     describe('removeDevice()', () => {
         context('when remove a device', () => {
-            it('should return true for user_id more than 0', () => {
+            it('should return true', () => {
                 device.id = DefaultEntityMock.DEVICE.id
-                device.user_id = ['5a62be07d6f33400146c9b62']
-                return service.removeDevice(device.id!, device.user_id![0])
-                    .then(result => {
-                        assert.isBoolean(result)
-                        assert.isTrue(result)
-                    })
-            })
-
-            it('should return true for user_id less or equal than 0', () => {
-                device.id = DefaultEntityMock.DEVICE.id
-                device.user_id = DefaultEntityMock.DEVICE.user_id
-                return service.removeDevice(device.id!, device.user_id![0])
+                device.patient_id = DefaultEntityMock.DEVICE.patient_id
+                return service.removeDevice(device.id!, device.patient_id!)
                     .then(result => {
                         assert.isBoolean(result)
                         assert.isTrue(result)
@@ -280,6 +266,18 @@ describe('Services: DeviceService', () => {
                 .catch(err => {
                     assert.propertyVal(err, 'message', 'Not implemented!')
                 })
+        })
+    })
+
+    describe('count()', () => {
+        context('when want count users', () => {
+            it('should return a number of users', () => {
+                return service.count(new Query())
+                    .then(res => {
+                        assert.isNumber(res)
+                        assert.equal(res, 1)
+                    })
+            })
         })
     })
 })

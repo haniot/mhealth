@@ -88,24 +88,24 @@ describe('Validators: CreateBloodPressureValidator', () => {
                 measurement.timestamp = DefaultEntityMock.BLOOD_PRESSURE.timestamp
             }
         })
-        it('should throw an error for does not pass user_id', () => {
-            measurement.user_id = undefined
+        it('should throw an error for does not pass patient_id', () => {
+            measurement.patient_id = undefined
             try {
                 CreateBloodPressureValidator.validate(measurement)
             } catch (err) {
                 assert.propertyVal(err, 'message', 'Required fields were not provided...')
-                assert.propertyVal(err, 'description', 'BloodPressure validation: user_id required!')
+                assert.propertyVal(err, 'description', 'BloodPressure validation: patient_id required!')
             }
         })
-        it('should throw an error for does pass invalid user_id', () => {
-            measurement.user_id = '123'
+        it('should throw an error for does pass invalid patient_id', () => {
+            measurement.patient_id = '123'
             try {
                 CreateBloodPressureValidator.validate(measurement)
             } catch (err) {
                 assert.propertyVal(err, 'message', Strings.ERROR_MESSAGE.UUID_NOT_VALID_FORMAT)
                 assert.propertyVal(err, 'description', Strings.ERROR_MESSAGE.UUID_NOT_VALID_FORMAT_DESC)
             } finally {
-                measurement.user_id = DefaultEntityMock.BLOOD_PRESSURE.user_id
+                measurement.patient_id = DefaultEntityMock.BLOOD_PRESSURE.patient_id
             }
         })
         it('should throw an error for does not pass device_id', () => {

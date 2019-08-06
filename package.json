@@ -12,7 +12,8 @@
     "test": "nyc --clean --all --reporter=text mocha --opts test/mocha.opts test/**/*.spec.ts",
     "test:integration": "mocha --opts test/mocha.opts test/integration/**/*.spec.ts",
     "test:unit": "mocha --opts test/mocha.opts test/unit/**/*.spec.ts",
-    "test:cov": "nyc --clean --all --reporter=html --reporter=text mocha --opts test/mocha.opts test/**/*.spec.ts"
+    "test:cov": "nyc --clean --all --reporter=html --reporter=text mocha --opts test/mocha.opts test/**/*.spec.ts",
+    "test:single": "mocha --opts test/mocha.opts"
   },
   "repository": {
     "type": "git",
@@ -54,6 +55,7 @@
     "helmet": "^3.18.0",
     "inversify": "^5.0.1",
     "inversify-express-utils": "^6.3.2",
+    "ip-allowed": "^1.1.0",
     "mongoose": "^5.5.12",
     "morgan": "^1.9.1",
     "query-strings-parser": "^2.0.0",

@@ -69,18 +69,18 @@ describe('Validators: CreateDeviceValidator', () => {
             }
         })
 
-        it('should throw an error for does not pass user_id', () => {
-            device.user_id = undefined
+        it('should throw an error for does not pass patient_id', () => {
+            device.patient_id = undefined
             try {
                 CreateDeviceValidator.validate(device)
             } catch (err) {
                 assert.propertyVal(err, 'message', 'Required fields were not provided...')
-                assert.propertyVal(err, 'description', 'Device validation: user_id required!')
+                assert.propertyVal(err, 'description', 'Device validation: patient_id required!')
             }
         })
 
-        it('should throw an error for does pass invalid user_id', () => {
-            device.user_id = ['123']
+        it('should throw an error for does pass invalid patient_id', () => {
+            device.patient_id = '123'
             try {
                 CreateDeviceValidator.validate(device)
             } catch (err) {

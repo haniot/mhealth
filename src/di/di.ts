@@ -27,8 +27,8 @@ import { DeviceService } from '../application/service/device.service'
 import { IMeasurementService } from '../application/port/measurement.service.interface'
 import { MeasurementService } from '../application/service/measurement.service'
 import { MeasurementController } from '../ui/controllers/measurement.controller'
-import { UserDeviceController } from '../ui/controllers/user.device.controller'
-import { UserMeasurementController } from '../ui/controllers/user.measurement.controller'
+import { PatientsDevicesController } from '../ui/controllers/patients.devices.controller'
+import { PatientsMeasurementsController } from '../ui/controllers/patients.measurements.controller'
 import { BloodGlucose } from '../application/domain/model/blood.glucose'
 import { BloodGlucoseEntityMapper } from '../infrastructure/entity/mapper/blood.glucose.entity.mapper'
 import { BloodGlucoseEntity } from '../infrastructure/entity/blood.glucose.entity'
@@ -38,9 +38,6 @@ import { BloodPressureEntityMapper } from '../infrastructure/entity/mapper/blood
 import { BodyTemperature } from '../application/domain/model/body.temperature'
 import { BodyTemperatureEntity } from '../infrastructure/entity/body.temperature.entity'
 import { BodyTemperatureEntityMapper } from '../infrastructure/entity/mapper/body.temperature.entity.mapper'
-import { HeartRate } from '../application/domain/model/heart.rate'
-import { HeartRateEntity } from '../infrastructure/entity/heart.rate.entity'
-import { HeartRateEntityMapper } from '../infrastructure/entity/mapper/heart.rate.entity.mapper'
 import { Height } from '../application/domain/model/height'
 import { HeightEntity } from '../infrastructure/entity/height.entity'
 import { HeightEntityMapper } from '../infrastructure/entity/mapper/height.entity.mapper'
@@ -50,9 +47,10 @@ import { WaistCircumferenceEntityMapper } from '../infrastructure/entity/mapper/
 import { Weight } from '../application/domain/model/weight'
 import { WeightEntity } from '../infrastructure/entity/weight.entity'
 import { WeightEntityMapper } from '../infrastructure/entity/mapper/weight.entity.mapper'
-import { FatEntity } from '../infrastructure/entity/fat.entity'
-import { Fat } from '../application/domain/model/fat'
-import { FatEntityMapper } from '../infrastructure/entity/mapper/fat.entity.mapper'
+import { BodyFatEntity } from '../infrastructure/entity/body.fat.entity'
+import { BodyFat } from '../application/domain/model/body.fat'
+import { BodyFatEntityMapper } from '../infrastructure/entity/mapper/body.fat.entity.mapper'
+import { MeasurementsTypesController } from '../ui/controllers/measurements.types.controller'
 
 export class DI {
     private static instance: DI
@@ -100,12 +98,14 @@ export class DI {
         // Controllers
         this.container.bind<HomeController>(Identifier.HOME_CONTROLLER)
             .to(HomeController).inSingletonScope()
-        this.container.bind<MeasurementController>(Identifier.MEASUREMENT_CONTROLLER)
+        this.container.bind<MeasurementController>(Identifier.MEASUREMENTS_CONTROLLER)
             .to(MeasurementController).inSingletonScope()
-        this.container.bind<UserDeviceController>(Identifier.USER_DEVICE_CONTROLLER)
-            .to(UserDeviceController).inSingletonScope()
-        this.container.bind<UserMeasurementController>(Identifier.USER_MEASUREMENT_CONTROLLER)
-            .to(UserMeasurementController).inSingletonScope()
+        this.container.bind<MeasurementsTypesController>(Identifier.MEASUREMENTS_TYPES_CONTROLLER)
+            .to(MeasurementsTypesController).inSingletonScope()
+        this.container.bind<PatientsDevicesController>(Identifier.PATIENTS_DEVICES_CONTROLLER)
+            .to(PatientsDevicesController).inSingletonScope()
+        this.container.bind<PatientsMeasurementsController>(Identifier.PATIENTS_MEASUREMENTS_CONTROLLER)
+            .to(PatientsMeasurementsController).inSingletonScope()
 
         // Services
         this.container.bind<IDeviceService>(Identifier.DEVICE_SERVICE).to(DeviceService).inSingletonScope()
@@ -138,9 +138,6 @@ export class DI {
             .bind<IEntityMapper<BodyTemperature, BodyTemperatureEntity>>(Identifier.BODY_TEMPERATURE_ENTITY_MAPPER)
             .to(BodyTemperatureEntityMapper).inSingletonScope()
         this.container
-            .bind<IEntityMapper<HeartRate, HeartRateEntity>>(Identifier.HEART_RATE_ENTITY_MAPPER)
-            .to(HeartRateEntityMapper).inSingletonScope()
-        this.container
             .bind<IEntityMapper<Height, HeightEntity>>(Identifier.HEIGHT_ENTITY_MAPPER)
             .to(HeightEntityMapper).inSingletonScope()
         this.container
@@ -150,8 +147,8 @@ export class DI {
             .bind<IEntityMapper<Weight, WeightEntity>>(Identifier.WEIGHT_ENTITY_MAPPER)
             .to(WeightEntityMapper).inSingletonScope()
         this.container
-            .bind<IEntityMapper<Fat, FatEntity>>(Identifier.FAT_ENTITY_MAPPER)
-            .to(FatEntityMapper).inSingletonScope()
+            .bind<IEntityMapper<BodyFat, BodyFatEntity>>(Identifier.BODY_FAT_ENTITY_MAPPER)
+            .to(BodyFatEntityMapper).inSingletonScope()
 
         // Background Services
         this.container
