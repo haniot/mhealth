@@ -1,18 +1,16 @@
 import { App } from '../../../src/app'
 import { Identifier } from '../../../src/di/identifiers'
-import { DI } from '../../../src/di/di'
 import { IConnectionDB } from '../../../src/infrastructure/port/connection.db.interface'
-import { Container } from 'inversify'
 import { DeviceRepoModel } from '../../../src/infrastructure/database/schema/device.schema'
 import { Device } from '../../../src/application/domain/model/device'
 import { DefaultEntityMock } from '../../mocks/models/default.entity.mock'
 import { expect } from 'chai'
 import { ObjectID } from 'bson'
 import { Strings } from '../../../src/utils/strings'
+import { DIContainer } from '../../../src/di/di'
 
-const container: Container = DI.getInstance().getContainer()
-const dbConnection: IConnectionDB = container.get(Identifier.MONGODB_CONNECTION)
-const app: App = container.get(Identifier.APP)
+const dbConnection: IConnectionDB = DIContainer.get(Identifier.MONGODB_CONNECTION)
+const app: App = DIContainer.get(Identifier.APP)
 const request = require('supertest')(app.getExpress())
 
 describe('Routes: PatientDevice', () => {

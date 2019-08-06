@@ -51,30 +51,29 @@ import { BodyFatEntity } from '../infrastructure/entity/body.fat.entity'
 import { BodyFat } from '../application/domain/model/body.fat'
 import { BodyFatEntityMapper } from '../infrastructure/entity/mapper/body.fat.entity.mapper'
 import { MeasurementsTypesController } from '../ui/controllers/measurements.types.controller'
+import { PublishEventBusTask } from '../background/task/publish.event.bus.task'
+import { IIntegrationEventRepository } from '../application/port/integration.event.repository.interface'
+import { ConnectionFactoryRabbitMQ } from '../infrastructure/eventbus/rabbitmq/connection.factory.rabbitmq'
+import { IBackgroundTask } from '../application/port/background.task.interface'
+import { SubscribeEventBusTask } from '../background/task/subscribe.event.bus.task'
+import { EventBusRabbitMQ } from '../infrastructure/eventbus/rabbitmq/eventbus.rabbitmq'
+import { IntegrationEventRepoModel } from '../infrastructure/database/schema/integration.event.schema'
+import { IntegrationEventRepository } from '../infrastructure/repository/integration.event.repository'
+import { IConnectionEventBus } from '../infrastructure/port/connection.event.bus.interface'
+import { ConnectionRabbitMQ } from '../infrastructure/eventbus/rabbitmq/connection.rabbitmq'
+import { IEventBus } from '../infrastructure/port/event.bus.interface'
 
-export class DI {
-    private static instance: DI
-    private readonly container: Container
+export class IoC {
+    private readonly _container: Container
 
     /**
      * Creates an instance of DI.
      *
      * @private
      */
-    private constructor() {
-        this.container = new Container()
+    constructor() {
+        this._container = new Container()
         this.initDependencies()
-    }
-
-    /**
-     * Recover single instance of class.
-     *
-     * @static
-     * @return {App}
-     */
-    public static getInstance(): DI {
-        if (!this.instance) this.instance = new DI()
-        return this.instance
     }
 
     /**
@@ -82,8 +81,8 @@ export class DI {
      *
      * @returns {Container}
      */
-    public getContainer(): Container {
-        return this.container
+    get container(): Container {
+        return this._container
     }
 
     /**
@@ -93,77 +92,97 @@ export class DI {
      * @return void
      */
     private initDependencies(): void {
-        this.container.bind(Identifier.APP).to(App).inSingletonScope()
+        this._container.bind(Identifier.APP).to(App).inSingletonScope()
 
         // Controllers
-        this.container.bind<HomeController>(Identifier.HOME_CONTROLLER)
+        this._container.bind<HomeController>(Identifier.HOME_CONTROLLER)
             .to(HomeController).inSingletonScope()
-        this.container.bind<MeasurementController>(Identifier.MEASUREMENTS_CONTROLLER)
+        this._container.bind<MeasurementController>(Identifier.MEASUREMENTS_CONTROLLER)
             .to(MeasurementController).inSingletonScope()
-        this.container.bind<MeasurementsTypesController>(Identifier.MEASUREMENTS_TYPES_CONTROLLER)
+        this._container.bind<MeasurementsTypesController>(Identifier.MEASUREMENTS_TYPES_CONTROLLER)
             .to(MeasurementsTypesController).inSingletonScope()
-        this.container.bind<PatientsDevicesController>(Identifier.PATIENTS_DEVICES_CONTROLLER)
+        this._container.bind<PatientsDevicesController>(Identifier.PATIENTS_DEVICES_CONTROLLER)
             .to(PatientsDevicesController).inSingletonScope()
-        this.container.bind<PatientsMeasurementsController>(Identifier.PATIENTS_MEASUREMENTS_CONTROLLER)
+        this._container.bind<PatientsMeasurementsController>(Identifier.PATIENTS_MEASUREMENTS_CONTROLLER)
             .to(PatientsMeasurementsController).inSingletonScope()
 
         // Services
-        this.container.bind<IDeviceService>(Identifier.DEVICE_SERVICE).to(DeviceService).inSingletonScope()
-        this.container.bind<IMeasurementService>(Identifier.MEASUREMENT_SERVICE).to(MeasurementService).inSingletonScope()
+        this._container.bind<IDeviceService>(Identifier.DEVICE_SERVICE).to(DeviceService).inSingletonScope()
+        this._container.bind<IMeasurementService>(Identifier.MEASUREMENT_SERVICE).to(MeasurementService).inSingletonScope()
 
         // Repositories
-        this.container.bind<IDeviceRepository>(Identifier.DEVICE_REPOSITORY)
+        this._container.bind<IDeviceRepository>(Identifier.DEVICE_REPOSITORY)
             .to(DeviceRepository).inSingletonScope()
-        this.container.bind<IMeasurementRepository>(Identifier.MEASUREMENT_REPOSITORY)
+        this._container.bind<IMeasurementRepository>(Identifier.MEASUREMENT_REPOSITORY)
             .to(MeasurementRepository).inSingletonScope()
+        this._container
+            .bind<IIntegrationEventRepository>(Identifier.INTEGRATION_EVENT_REPOSITORY)
+            .to(IntegrationEventRepository).inSingletonScope()
 
         // Models
-        this.container.bind(Identifier.DEVICE_REPO_MODEL).toConstantValue(DeviceRepoModel)
-        this.container.bind(Identifier.MEASUREMENT_REPO_MODEL).toConstantValue(MeasurementRepoModel)
+        this._container.bind(Identifier.DEVICE_REPO_MODEL).toConstantValue(DeviceRepoModel)
+        this._container.bind(Identifier.MEASUREMENT_REPO_MODEL).toConstantValue(MeasurementRepoModel)
+        this._container.bind(Identifier.INTEGRATION_EVENT_REPO_MODEL).toConstantValue(IntegrationEventRepoModel)
 
         // Mappers
-        this.container
+        this._container
             .bind<IEntityMapper<Device, DeviceEntity>>(Identifier.DEVICE_ENTITY_MAPPER)
             .to(DeviceEntityMapper).inSingletonScope()
-        this.container
+        this._container
             .bind<IEntityMapper<Measurement, MeasurementEntity>>(Identifier.MEASUREMENT_ENTITY_MAPPER)
             .to(MeasurementEntityMapper).inSingletonScope()
-        this.container
+        this._container
             .bind<IEntityMapper<BloodGlucose, BloodGlucoseEntity>>(Identifier.BLOOD_GLUCOSE_ENTITY_MAPPER)
             .to(BloodGlucoseEntityMapper).inSingletonScope()
-        this.container
+        this._container
             .bind<IEntityMapper<BloodPressure, BloodPressureEntity>>(Identifier.BLOOD_PRESSURE_ENTITY_MAPPER)
             .to(BloodPressureEntityMapper).inSingletonScope()
-        this.container
+        this._container
             .bind<IEntityMapper<BodyTemperature, BodyTemperatureEntity>>(Identifier.BODY_TEMPERATURE_ENTITY_MAPPER)
             .to(BodyTemperatureEntityMapper).inSingletonScope()
-        this.container
+        this._container
             .bind<IEntityMapper<Height, HeightEntity>>(Identifier.HEIGHT_ENTITY_MAPPER)
             .to(HeightEntityMapper).inSingletonScope()
-        this.container
+        this._container
             .bind<IEntityMapper<WaistCircumference, WaistCircumferenceEntity>>(Identifier.WAIST_CIRCUMFERENCE_ENTITY_MAPPER)
             .to(WaistCircumferenceEntityMapper).inSingletonScope()
-        this.container
+        this._container
             .bind<IEntityMapper<Weight, WeightEntity>>(Identifier.WEIGHT_ENTITY_MAPPER)
             .to(WeightEntityMapper).inSingletonScope()
-        this.container
+        this._container
             .bind<IEntityMapper<BodyFat, BodyFatEntity>>(Identifier.BODY_FAT_ENTITY_MAPPER)
             .to(BodyFatEntityMapper).inSingletonScope()
 
         // Background Services
-        this.container
+        this._container
             .bind<IConnectionFactory>(Identifier.MONGODB_CONNECTION_FACTORY)
             .to(ConnectionFactoryMongodb).inSingletonScope()
-        this.container
+        this._container
             .bind<IConnectionDB>(Identifier.MONGODB_CONNECTION)
             .to(ConnectionMongodb).inSingletonScope()
-        this.container
+        this._container
+            .bind<IConnectionFactory>(Identifier.RABBITMQ_CONNECTION_FACTORY)
+            .to(ConnectionFactoryRabbitMQ).inSingletonScope()
+        this._container
+            .bind<IConnectionEventBus>(Identifier.RABBITMQ_CONNECTION)
+            .to(ConnectionRabbitMQ)
+        this._container
+            .bind<IEventBus>(Identifier.RABBITMQ_EVENT_BUS)
+            .to(EventBusRabbitMQ).inSingletonScope()
+        this._container
             .bind(Identifier.BACKGROUND_SERVICE)
             .to(BackgroundService).inSingletonScope()
-
+        this._container
+            .bind<IBackgroundTask>(Identifier.PUBLISH_EVENT_BUS_TASK)
+            .to(PublishEventBusTask).inSingletonScope()
+        this._container
+            .bind<IBackgroundTask>(Identifier.SUBSCRIBE_EVENT_BUS_TASK)
+            .to(SubscribeEventBusTask).inSingletonScope()
         // Tasks
 
         // Log
-        this.container.bind<ILogger>(Identifier.LOGGER).to(CustomLogger).inSingletonScope()
+        this._container.bind<ILogger>(Identifier.LOGGER).to(CustomLogger).inSingletonScope()
     }
 }
+
+export const DIContainer = new IoC().container

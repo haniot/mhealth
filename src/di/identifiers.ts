@@ -20,10 +20,12 @@ export abstract class Identifier {
     // Repositories
     public static readonly DEVICE_REPOSITORY: any = Symbol.for('DeviceRepository')
     public static readonly MEASUREMENT_REPOSITORY: any = Symbol.for('MeasurementRepository')
+    public static readonly INTEGRATION_EVENT_REPOSITORY: any = Symbol.for('IntegrationEventRepository')
 
     // Models
     public static readonly DEVICE_REPO_MODEL: any = Symbol.for('DeviceRepoModel')
     public static readonly MEASUREMENT_REPO_MODEL: any = Symbol.for('MeasurementRepoModel')
+    public static readonly INTEGRATION_EVENT_REPO_MODEL: any = Symbol.for('IntegrationEventRepoModel')
 
     // Mappers
     public static readonly DEVICE_ENTITY_MAPPER: any = Symbol.for('DeviceEntityMapper')
@@ -39,7 +41,12 @@ export abstract class Identifier {
     // Background Services
     public static readonly MONGODB_CONNECTION_FACTORY: any = Symbol.for('ConnectionFactoryMongodb')
     public static readonly MONGODB_CONNECTION: any = Symbol.for('ConnectionMongodb')
+    public static readonly RABBITMQ_CONNECTION_FACTORY: any = Symbol.for('ConnectionFactoryRabbitMQ')
+    public static readonly RABBITMQ_CONNECTION: any = Symbol.for('ConnectionRabbitMQ')
+    public static readonly RABBITMQ_EVENT_BUS: any = Symbol.for('EventBusRabbitMQ')
     public static readonly BACKGROUND_SERVICE: any = Symbol.for('BackgroundService')
+    public static readonly PUBLISH_EVENT_BUS_TASK: any = Symbol.for('PublishEventBusTask')
+    public static readonly SUBSCRIBE_EVENT_BUS_TASK: any = Symbol.for('SubscribeEventBusTask')
 
     // Tasks
 

@@ -1,11 +1,9 @@
-import { Container } from 'inversify'
-import { DI } from '../../../src/di/di'
 import { Identifier } from '../../../src/di/identifiers'
 import { App } from '../../../src/app'
 import { expect } from 'chai'
+import { DIContainer } from '../../../src/di/di'
 
-const container: Container = DI.getInstance().getContainer()
-const app: App = container.get(Identifier.APP)
+const app: App = DIContainer.get(Identifier.APP)
 const request = require('supertest')(app.getExpress())
 
 describe('Routes: Home', () => {
