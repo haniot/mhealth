@@ -10,9 +10,9 @@ import { EventBusException } from '../../../application/domain/exception/eventbu
 
 @injectable()
 export class EventBusRabbitMQ implements IEventBus, IDisposable {
-    private readonly RABBITMQ_QUEUE_NAME: string = 'notification'
-    private readonly RABBITMQ_RPC_QUEUE_NAME: string = 'notification.rpc'
-    private readonly RABBITMQ_RPC_EXCHANGE_NAME: string = 'notification.service'
+    private readonly RABBITMQ_QUEUE_NAME: string = 'mhealth'
+    private readonly RABBITMQ_RPC_QUEUE_NAME: string = 'mhealth.rpc'
+    private readonly RABBITMQ_RPC_EXCHANGE_NAME: string = 'mhealth.rpc'
     private _receiveFromYourself: boolean
     private _event_handlers: Map<string, IIntegrationEventHandler<IntegrationEvent<any>>>
     private _rpcServer!: any
@@ -70,7 +70,6 @@ export class EventBusRabbitMQ implements IEventBus, IDisposable {
         return new Promise<boolean>(async (resolve, reject) => {
             if (!this.connectionSub.isOpen) return resolve(false)
             if (this._event_handlers.has(event.event_name)) return resolve(true)
-
             this.connectionSub
                 .subscribe(this.RABBITMQ_QUEUE_NAME, event.type, routingKey, (message) => {
                     message.ack()

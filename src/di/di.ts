@@ -51,7 +51,6 @@ import { BodyFatEntity } from '../infrastructure/entity/body.fat.entity'
 import { BodyFat } from '../application/domain/model/body.fat'
 import { BodyFatEntityMapper } from '../infrastructure/entity/mapper/body.fat.entity.mapper'
 import { MeasurementsTypesController } from '../ui/controllers/measurements.types.controller'
-import { PublishEventBusTask } from '../background/task/publish.event.bus.task'
 import { IIntegrationEventRepository } from '../application/port/integration.event.repository.interface'
 import { ConnectionFactoryRabbitMQ } from '../infrastructure/eventbus/rabbitmq/connection.factory.rabbitmq'
 import { IBackgroundTask } from '../application/port/background.task.interface'
@@ -62,6 +61,7 @@ import { IntegrationEventRepository } from '../infrastructure/repository/integra
 import { IConnectionEventBus } from '../infrastructure/port/connection.event.bus.interface'
 import { ConnectionRabbitMQ } from '../infrastructure/eventbus/rabbitmq/connection.rabbitmq'
 import { IEventBus } from '../infrastructure/port/event.bus.interface'
+import { RpcServerEventBusTask } from '../background/task/rpc.server.event.bus.task'
 
 export class IoC {
     private readonly _container: Container
@@ -172,13 +172,14 @@ export class IoC {
         this._container
             .bind(Identifier.BACKGROUND_SERVICE)
             .to(BackgroundService).inSingletonScope()
-        this._container
-            .bind<IBackgroundTask>(Identifier.PUBLISH_EVENT_BUS_TASK)
-            .to(PublishEventBusTask).inSingletonScope()
+
+        // Tasks
         this._container
             .bind<IBackgroundTask>(Identifier.SUBSCRIBE_EVENT_BUS_TASK)
             .to(SubscribeEventBusTask).inSingletonScope()
-        // Tasks
+        this._container
+            .bind<IBackgroundTask>(Identifier.RPC_SERVER_EVENT_BUST_TASK)
+            .to(RpcServerEventBusTask).inSingletonScope()
 
         // Log
         this._container.bind<ILogger>(Identifier.LOGGER).to(CustomLogger).inSingletonScope()

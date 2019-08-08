@@ -116,6 +116,14 @@ export class MeasurementRepository extends BaseRepository<Measurement, Measureme
         })
     }
 
+    public removeMeasurementsFromUser(id: string): Promise<boolean> {
+        return new Promise<boolean>((resolve, reject) => {
+            this.Model.deleteMany({ patient_id: id })
+                .then((result) => resolve(!!result))
+                .catch(err => reject(this.mongoDBErrorListener(err)))
+        })
+    }
+
     private transform(item: any) {
         switch (item.type) {
             case(MeasurementTypes.BLOOD_GLUCOSE):

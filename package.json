@@ -59,7 +59,7 @@
     "ip-allowed": "^1.1.0",
     "mongoose": "^5.5.12",
     "morgan": "^1.9.1",
-    "query-strings-parser": "^2.0.0",
+    "query-strings-parser": "^2.1.1",
     "reflect-metadata": "^0.1.13",
     "swagger-ui-express": "^4.0.5",
     "winston": "^3.2.1",
@@ -86,7 +86,7 @@
     "supertest": "^4.0.2",
     "ts-node": "^8.2.0",
     "tslint": "^5.17.0",
-    "typedoc": "^0.14.2",
+    "typedoc": "^0.15.0",
     "typescript": "^3.5.1"
   }
 }
