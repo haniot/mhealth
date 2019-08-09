@@ -123,7 +123,7 @@ export class EventBusRabbitMQ implements IEventBus, IDisposable {
 
         return this.connectionRpcClient
             .rpcClient(
-                this.RABBITMQ_RPC_EXCHANGE_NAME,
+                serviceName,
                 resourceName,
                 [queryString],
                 {
