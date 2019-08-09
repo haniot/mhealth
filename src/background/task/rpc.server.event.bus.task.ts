@@ -41,9 +41,10 @@ export class RpcServerEventBusTask implements IBackgroundTask {
 
     private initializeServer(): void {
         this._eventBus
-            .provideResource('measurements.find', (_query?: string) => {
+            .provideResource('measurements.find', async (_query?: string) => {
                 const query: Query = new Query().fromJSON({ ...qs.parser(_query) })
-                return this._measurementRepo.find(query)
+                const result: Array<any> = await this._measurementRepo.find(query)
+                return result.map(item => item.toJSON())
             })
             .then(() => this._logger.info('Resource measurements.find successful registered'))
             .catch((err) => this._logger.error(`Error at register resource measurements.find: ${err.message}`))
