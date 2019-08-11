@@ -18,6 +18,7 @@ export class UserDeleteEventHandler implements IIntegrationEventHandler<UserDele
         try {
             const user: User = new User().fromJSON(event.user)
             UserValidator.validate(user)
+            this._logger.info(`Prepare to delete measurements from user: ${user.id}...`)
             await this._measurementRepo.removeMeasurementsFromUser(user.id!)
             this._logger.info(`Action for event ${event.event_name} successfully performed!`)
         } catch (err) {
