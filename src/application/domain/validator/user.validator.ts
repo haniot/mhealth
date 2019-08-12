@@ -10,7 +10,7 @@ export class UserValidator {
 
         if (fields.length) {
             throw new ValidationException('Required fields were not provided...',
-                'BloodGlucose validation: '.concat(fields.join(', ')).concat(' required!'))
+                'User validation: '.concat(fields.join(', ')).concat(' required!'))
         }
     }
 }
