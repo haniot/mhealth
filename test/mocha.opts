@@ -4,5 +4,5 @@
 --require reflect-metadata/Reflect
 --recursive
 --slow 5000
---timeout 5000
+--timeout 10000
 --exit

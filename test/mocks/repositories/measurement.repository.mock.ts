@@ -20,6 +20,10 @@ const bodyTemperature: BodyTemperature = new BodyTemperature().fromJSON(DefaultE
 const listMeasurements = [height, weight, waist, bodyFat, bloodPressure, bloodGlucose, bodyTemperature]
 
 export class MeasurementRepositoryMock implements IMeasurementRepository {
+    public removeMeasurementsFromUser(id: string): Promise<boolean> {
+        return Promise.resolve(true)
+    }
+
     public count(query: IQuery): Promise<number> {
         return Promise.resolve(7)
     }
