@@ -21,9 +21,6 @@ export abstract class Default {
     // RabbitMQ
     public static readonly RABBITMQ_URI: string = 'amqp://guest:guest@127.0.0.1:5672'
 
-    // RabbitMQ
-    public static readonly RABBITMQ_PORT: number = 5672
-
     // MongoDB
     public static readonly MONGODB_URI: string = 'mongodb://127.0.0.1:27017/mhealth-service'
     public static readonly MONGODB_URI_TEST: string = 'mongodb://127.0.0.1:27017/mhealth-service-test'
