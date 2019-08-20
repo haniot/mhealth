@@ -1,7 +1,7 @@
 {
   "name": "mhealth-service",
   "version": "2.0.0",
-  "description": "Microservice responsible for manage user measurements.",
+  "description": "Microservice responsible for managing health measurements such as temperature, weight, blood pressure, blood glucose and more.",
   "main": "dist/server.js",
   "scripts": {
     "build": "gulp build",
@@ -9,16 +9,20 @@
     "start": "node dist/server.js",
     "start:dev": "gulp dev",
     "tslint": "tslint -c tslint.json -p tsconfig.json",
-    "test": "nyc --clean --all --reporter=text mocha --opts test/mocha.opts test/**/*.spec.ts",
-    "test:integration": "mocha --opts test/mocha.opts test/integration/**/*.spec.ts",
-    "test:unit": "mocha --opts test/mocha.opts test/unit/**/*.spec.ts",
-    "test:cov": "nyc --clean --all --reporter=html --reporter=text mocha --opts test/mocha.opts test/**/*.spec.ts",
-    "test:single": "mocha --opts test/mocha.opts"
+    "test": "nyc --clean --reporter=text-summary mocha --opts test/mocha.opts test/**/*.spec.ts",
+    "test:unit": "nyc --clean --all --reporter=text-summary mocha --opts test/mocha.opts test/unit/**/*.spec.ts",
+    "test:integration": "nyc --clean --all --reporter=text-summary mocha --opts test/mocha.opts test/integration/**/*.spec.ts",
+    "test:single": "mocha --opts test/mocha.opts",
+    "test:cov": "nyc --clean --all --reporter=html --reporter=text mocha --opts test/mocha.opts test/**/*.spec.ts"
   },
   "repository": {
     "type": "git",
-    "url": "https://github.com/nutes-uepb/haniot-mhealth-service.git"
+    "url": "https://github.com/haniot/mhealth.git"
   },
+  "bugs": {
+    "url": "https://github.com/haniot/mhealth/issues"
+  },
+  "homepage": "https://github.com/haniot/mhealth#readme",
   "keywords": [
     "microservice",
     "nodejs",
@@ -26,7 +30,7 @@
     "express"
   ],
   "author": "NUTES/UEPB",
-  "license": "MIT",
+  "license": "Apache-2.0",
   "nyc": {
     "include": [
       "**/*.tsx",
@@ -68,7 +72,7 @@
     "@types/body-parser": "^1.17.0",
     "@types/chai": "^4.1.7",
     "@types/express": "^4.16.1",
-    "@types/helmet": "^0.0.43",
+    "@types/helmet": "^0.0.44",
     "@types/mocha": "^5.2.6",
     "@types/mongoose": "^5.5.0",
     "@types/morgan": "^1.7.35",

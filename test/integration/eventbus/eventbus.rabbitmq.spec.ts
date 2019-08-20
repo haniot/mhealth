@@ -148,16 +148,16 @@ describe('EVENT BUS', () => {
         it('should return a requested resource.', async () => {
             try {
                 await eventBus.connectionRpcClient.open(1, 500)
-
                 await eventBus.provideResource('resource.test.get', (query: string) => {
                     return { content: '123', original_query: query }
                 })
 
-                return eventBus.executeResource('notification.service',
-                    'resource.test.get', '?test=321')
+                return eventBus.executeResource('mhealth.rpc',
+                    'resource.test.get',
+                    '?test=321')
                     .then(res => {
-                        expect(res.content).to.have.property('content', '123')
-                        expect(res.content).to.have.property('original_query', '?test=321')
+                        expect(res).to.have.property('content', '123')
+                        expect(res).to.have.property('original_query', '?test=321')
                     })
             } catch (err) {
                 throw new Error('Failure on EventBus test: ' + err.message)

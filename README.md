@@ -1,88 +1,158 @@
-# HANIoT M-Health Service
-[![license](https://img.shields.io/github/license/mashape/apistatus.svg)](https://github.com/LIBE-NUTES/template-base-ts/blob/master/LICENSE) [![node](https://img.shields.io/badge/node-v11.1.0-red.svg)](https://nodejs.org/) [![npm](https://img.shields.io/badge/npm-v6.4.1-red.svg)](https://nodejs.org/) [![Swagger](https://img.shields.io/badge/swagger-v3.0-green.svg?longCache=true&style=flat)](https://swagger.io/) [![TypeScript](https://badges.frapsoft.com/typescript/love/typescript.png?v=101)](https://www.typescriptlang.org/)
---
-Service used to store and manage health measurements, such as temperature, heart rate, weight, blood pressure, and blood glucose.
+# HANIoT MHealth Service
+[![License][license-image]][license-url] [![Node][node-image]][node-url] [![Travis][travis-image]][travis-url] [![Coverage][coverage-image]][coverage-url] [![Dependencies][dependencies-image]][dependencies-url] [![DependenciesDev][dependencies-dev-image]][dependencies-dev-url] [![Vulnerabilities][known-vulnerabilities-image]][known-vulnerabilities-url] [![Commit][last-commit-image]][last-commit-url] [![Releases][releases-image]][releases-url] [![Contributors][contributors-image]][contributors-url]  [![Swagger][swagger-image]][swagger-url] 
 
-This project follows with an implementation example containing integration with Swagger for API design and MongoDB for data storage.
+----
 
-#### Top Libraries Used
-- [**Chai.js**](https://www.chaijs.com/) - Assertion library that has several interfaces that allow the developer to choose the style that makes it more comfortable (BDD/TDD). It can be easily combined with any test framework for javascript code.
-- [**Express.js**](https://expressjs.com) - Framework for Node.js. Minimalist, flexible and contains a robust set of features to develop web applications.
-- [**Greenlock Express.js**](https://github.com/Daplie/greenlock-express) - Automates the generation of HTTPS certificates issued by Let's Encrypt v2 via ACME.
-- [**Gulp.js**](https://gulpjs.com/) - Toolkit to automate tasks. As for example, do the transpiler of the TypeScript code for ECMA.
-- [**InversifyJS**](http://inversify.io/) - Control inversion library (IoC) for TypeScript and JavaScript applications. An IoC container uses a class constructor to identify and inject its dependencies. It has a friendly API and encourages the use of OOP and IoC best practices.
-- [**inversify-express-utils**](https://github.com/inversify/inversify-express-utils) - Provides utilities for developing applications on express.js with InversifyJS. For example, by annotating a class as controller (defining routes). Likewise, decorate class methods to serve as HTTP request handlers (GET, POST...).
-- [**Mocha**](https://mochajs.org/) - Resource-rich JavaScript test framework, making asynchronous testing simple and fun. Responsible for running the tests.
-- [**Mongoose**](https://mongoosejs.com/) - Provides a straightforward, schema-based solution to model your application's data (MongoDB). It includes built-in type conversion, validation, query creation, business logic hooks and more.
-- [**nyc**](https://github.com/istanbuljs/nyc) - Command Line Interface for [Istanbul](https://istanbul.js.org/) (Code Coverage), with support for: applications that generate subprocesses, ES6/ES2015 using babel-plugin-istanbul. collection of reporters, providing terminal output and HTML.
-- [**query-strings-parser**](https://www.npmjs.com/package/query-strings-parser) - Middleware for query string handling. Performs the transformation of the query string into a format that is compatible with the MongoDB database.
-- [**Sinon.JS**](https://sinonjs.org/) - Library for creating spies, stubs and independent test simulations for JavaScript. Works with any unit test framework.
-- [**sinon-mongoose**](https://www.npmjs.com/package/sinon-mongoose) - Extends the Sinon stubs to Mongoose methods, so you can easily test chained methods.
-- [**SuperTest**](https://github.com/visionmedia/supertest) - Provides high-level abstraction for HTTP tests, while still allowing you to descend to the lower-level API provided by the [SuperAgent](https://github.com/visionmedia/superagent) (HTTP Request Library).
-- [**Swagger UI Express**](https://www.npmjs.com/package/swagger-ui-express) - Application middleware in express.js to route the Swagger user interface to your Swagger document (.yaml or .json). This acts as a documentation of your hosted API in your application.
-- [**TSLint**](https://palantir.github.io/tslint/) - Extensible static analysis tool that checks the TypeScript code for readability, maintainability and functionality errors. It is widely supported by modern editors and building systems and can be customized with its own rules, settings and formatters.
-- [**TSNode**](https://github.com/TypeStrong/ts-node) - Execution of TypeScript and REPL for node.js
-- [**TypeDoc**](https://typedoc.org/) - Documentation generator for TypeScript projects.
-- [**TypeScript**](https://www.typescriptlang.org/) - JavaScript superset developed by Microsoft that adds typing, OO features and many other language.
-- [**winston**](https://github.com/winstonjs/winston) - Simple and universal log library with support for various transports. A transport is essentially a storage device for your logs. Each instance of a winston logger can have multiple transports configured at different levels. For example, you might want error logs to be stored in a persistent remote location (such as a database), but all logs are sent to the console or to a local file.
+Microservice responsible for managing health measurements such as temperature, weight, blood pressure, blood glucose and more.
 
-## Installation and Development server
-Requires [Node.js](https://nodejs.org/) v6+ and [MongoDB](https://www.mongodb.com) to run.
-Install the dependencies, start the local MongoDB, and start the server.
+
+**Main features:**
+- Health measurements management;
+- Health Device Management;
+- Message Bus Integration (RabbitMQ).
+ 
+ See the [documentation](https://github.com/haniot/mhealth/wiki) for more information.
+
+## Prerequisites
+- [Node 8.0.0+](https://nodejs.org/en/download/)
+- [MongoDB Server 3.0.0+](https://www.mongodb.com/download-center/community)
+- [RabbitMQ 3.7.0+](https://www.rabbitmq.com/download.html)
+
+---
+
+## Set the environment variables
+Application settings are defined by environment variables.. To define the settings, make a copy of the `.env.example` file, naming for `.env`. After that, open and edit the settings as needed. The following environments variables are available:
+
+| VARIABLE | DESCRIPTION  | DEFAULT |
+|-----|-----|-----|
+| `NODE_ENV` | Defines the environment in which the application runs. You can set: `test` _(in this environment, the database defined in `MONGODB_URI_TEST` is used and the logs are disabled for better visualization of the test output)_, `development` _(in this environment, all log levels are enabled)_ and `production` _(in this environment, only the warning and error logs are enabled)_. | `development` |
+| `PORT_HTTP` | Port used to listen for HTTP requests. Any request received on this port is redirected to the HTTPS port. | `4000` |
+| `PORT_HTTPS` | Port used to listen for HTTPS requests. Do not forget to provide the private key and the SSL/TLS certificate. See the topic [generate certificates](#generate-certificates). | `4001` |
+| `HOST_WHITELIST` | Access control based on IP addresses. Only allow IP requests in the unlock list. You can define IP or host, for example: `[127.0.0.1, api.haniot.com]`. To accept requests from any customer, use the character `*`. | `[*]` |
+| `SSL_KEY_PATH` | SSL/TLS certificate private key. | `.certs/server.key` |
+| `SSL_CERT_PATH` | SSL/TLS certificate. | `.certs/server.crt` |
+| `RABBITMQ_URI` | URI containing the parameters for connection to the message channel RabbitMQ. The [URI specifications ](https://www.rabbitmq.com/uri-spec.html) defined by RabbitMQ are accepted. For example: `amqp://user:pass@host:port/vhost`. | `amqp://guest:guest`<br/>`@127.0.0.1:5672/haniot` |
+| `MONGODB_URI` | Database connection URI used if the application is running in development or production environment. The [URI specifications ](https://docs.mongodb.com/manual/reference/connection-string) defined by MongoDB are accepted. For example: `mongodb://user:pass@host:port/database?options`. | `mongodb://127.0.0.1:27017`<br/>`/haniot-mhealth` |
+| `MONGODB_URI_TEST` | Database connection URI used if the application is running in test environment. The [URI specifications ](https://docs.mongodb.com/manual/reference/connection-string) defined by MongoDB are accepted. For example: `mongodb://user:pass@host:port/database?options`. | `mongodb://127.0.0.1:27017`<br/>`/haniot-mhealth-test` |
+
+## Generate Certificates
+For development and testing environments the easiest and fastest way is to generate your own self-signed certificates. These certificates can be used to encrypt data as well as certificates signed by a CA, but users will receive a warning that the certificate is not trusted for their computer or browser. Therefore, self-signed certificates should only be used in non-production environments, that is, development and testing environments. To do this, run the `create-self-signed-certs.sh` script in the root of the repository.
+
 ```sh
-$ npm install
-$ mongod
-$ npm run start:dev
+chmod +x ./create-self-signed-certs.sh
 ```
-Navigate to `http://localhost`.
 
-## Build
-- Run `npm run build` to build the project. The build artifacts will be stored in the `dist/` directory.
+```sh
+./create-self-signed-certs.sh
+```
+The following files will be created: `ca.crt`, `jwt.key`, `jwt.key.pub`, `server.crt` and `server.key`.
 
-## Run Server
-- Run `npm start` to run the project in production mode.
-- Run `npm run start:dev` to run the project in development mode.
+In production environments its highly recommended to always use valid certificates and provided by a certificate authority (CA). A good option is [Let's Encrypt](https://letsencrypt.org)  which is a CA that provides  free certificates. The service is provided by the Internet Security Research Group (ISRG). The process to obtain the certificate is extremely simple, as it is only required to provide a valid domain and prove control over it. With Let's Encrypt, you do this by using [software](https://certbot.eff.org/) that uses the ACME protocol, which typically runs on your host. If you prefer, you can use the service provided by the [SSL For Free](https://www.sslforfree.com/)  website and follow the walkthrough. The service is free because the certificates are provided by Let's Encrypt, and it makes the process of obtaining the certificates less painful.
 
 
-## Running unit tests
-- Run `npm run test:unit` to run unit tests by [Mocha](https://mochajs.org/).
+## Installation and Execution
+#### 1. Install dependencies  
+```sh  
+npm install    
+```
+ 
+#### 2. Build  
+Build the project. The build artifacts will be stored in the `dist/` directory.  
+```sh  
+npm run build    
+```
 
-## Running integration tests
-- Run `mongod`
-- Run `npm run test:integration` to run integration tests by [Mocha](https://mochajs.org/).
+#### 3. Run Server  
+```sh  
+npm start
+```
+Build the project and initialize the microservice. **Useful for production/deployment.**  
+```sh  
+npm run build && npm start
+```
+## Running the tests
 
-## Running test coverage
-- Run `npm run test:cov` to run code coverage tests by [Instanbul](https://istanbul.js.org/).
+#### All tests  
+Run unit testing, integration and coverage by [Mocha](https://mochajs.org/) and [Instanbul](https://istanbul.js.org/).  
+```sh  
+npm test
+```
 
-## Running all tests
-- Run `mongod`
-- Run `npm run test` to run unit testing, integration and coverage by [Mocha](https://mochajs.org/) and [Instanbul](https://istanbul.js.org/).
+#### Unit test
+```sh  
+npm run test:unit
+```
+  
+#### Integration test
+```sh  
+npm run test:integration
+```
 
-## Generating code documentation
-- Run `npm run build:doc` the html documentation will be generated in the /docs directory by [typedoc](https://typedoc.org/).
+#### Coverage  test
+```sh  
+npm run test:cov
+```
+Navigate to the `coverage` directory and open the `index.html` file in the browser to see the result. Some statistics are also displayed in the terminal.
 
-# Docker
+### Generating code documentation
+```sh  
+npm run build:doc
+```
+The html documentation will be generated in the /docs directory by [typedoc](https://typedoc.org/).
 
-##  How to install
+## Using Docker 
+In the Docker Hub, you can find the image of the most recent version of this repository. With this image it is easy to create your own containers.
+```sh
+docker run haniot/mhealth-service
+```
+This command will download the latest image and create a container with the default settings.
 
-Follow all the steps present in the [official documentation](https://docs.docker.com/install/linux/docker-ce/ubuntu/#install-docker-ce) starting from the **Install Docker CE** chapter
+You can also create the container by passing the settings that are desired by the environment variables. The supported settings are the same as those defined in ["Set the environment variables"](#set-the-environment-variables). See the following example:
+```sh
+docker run --rm \
+  -e PORT_HTTP=8080 \
+  -e PORT_HTTPS=8081 \
+  -e HOST_WHITELIST="[localhost]" \
+  -e SSL_KEY_PATH=.certs/server.key \
+  -e SSL_CERT_PATH=.certs/server.crt \
+  -e RABBITMQ_URI="amqp://guest:guest@192.168.0.1:5672/haniot" \
+  -e MONGODB_URI="mongodb://192.168.0.2:27017/haniot-mhealth" \
+  -e DASHBOARD_HOST="https://localhost" \
+  haniot/mhealth-service
+```
+If the MongoDB or RabbitMQ instance is in the host local, add the `--net=host` statement when creating the container, this will cause the docker container to communicate with its local host.
+```sh
+docker run --rm \
+  --net=host \
+  -e RABBITMQ_URI="amqp://guest:guest@localhost:5672/haniot" \
+  -e MONGODB_URI="mongodb://localhost:27017/haniot-mhealth" \
+  haniot/mhealth-service
+```
+To generate your own docker image, run the following command:
+```sh
+docker build -t image_name:tag .
+```
 
-## Building the project container image
-
-``docker build -t IMAGE_NAME:IMAGE_VERSION DOCKERFILE_PATH``
-
-Example:
-
-``docker build -t haniot-mhealth-service:v0.1 .``
-
-## Executing the project container image
-
-``docker run -p HOST_PORT:CONTAINER_PORT -it IMAGE_NAME:IMAGE_VERSION``
-
-Example:
-
-``docker run -p 80:80 -it haniot-mhealth-service:v0.1``
-
-## Access API
-
-``http://localhost``
+[//]: # (These are reference links used in the body of this note.)
+[license-image]: https://img.shields.io/badge/license-Apache%202-blue.svg
+[license-url]: https://github.com/haniot/mhealth/blob/master/LICENSE
+[node-image]: https://img.shields.io/badge/node-%3E%3D%208.0.0-brightgreen.svg
+[node-url]: https://nodejs.org
+[travis-image]: https://travis-ci.org/haniot/mhealth.svg?branch=master
+[travis-url]: https://travis-ci.org/haniot/mhealth
+[coverage-image]: https://coveralls.io/repos/github/haniot/mhealth/badge.svg
+[coverage-url]: https://coveralls.io/github/haniot/mhealth?branch=master
+[known-vulnerabilities-image]: https://snyk.io/test/github/haniot/mhealth/badge.svg
+[known-vulnerabilities-url]: https://snyk.io/test/github/haniot/mhealth
+[dependencies-image]: https://david-dm.org/haniot/mhealth.svg
+[dependencies-url]: https://david-dm.org/haniot/mhealth
+[dependencies-dev-image]: https://david-dm.org/haniot/mhealth/dev-status.svg
+[dependencies-dev-url]: https://david-dm.org/haniot/mhealth?type=dev
+[swagger-image]: https://img.shields.io/badge/swagger-v1-brightgreen.svg
+[swagger-url]: https://app.swaggerhub.com/apis-docs/haniot/mhealth-service/v1
+[last-commit-image]: https://img.shields.io/github/last-commit/haniot/mhealth.svg
+[last-commit-url]: https://github.com/haniot/mhealth/commits
+[releases-image]: https://img.shields.io/github/release-date/haniot/mhealth.svg
+[releases-url]: https://github.com/haniot/mhealth/releases
+[contributors-image]: https://img.shields.io/github/contributors/haniot/mhealth.svg
+[contributors-url]: https://github.com/haniot/mhealth/graphs/contributors
