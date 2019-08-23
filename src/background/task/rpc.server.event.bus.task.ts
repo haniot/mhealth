@@ -6,6 +6,8 @@ import { IBackgroundTask } from '../../application/port/background.task.interfac
 import { Query } from '../../infrastructure/repository/query/query'
 import qs from 'query-strings-parser'
 import { IMeasurementRepository } from '../../application/port/measurement.repository.interface'
+import { ObjectIdValidator } from '../../application/domain/validator/object.id.validator'
+import { MeasurementTypes } from '../../application/domain/utils/measurement.types'
 
 @injectable()
 export class RpcServerEventBusTask implements IBackgroundTask {
@@ -48,5 +50,34 @@ export class RpcServerEventBusTask implements IBackgroundTask {
             })
             .then(() => this._logger.info('Resource measurements.find successful registered'))
             .catch((err) => this._logger.error(`Error at register resource measurements.find: ${err.message}`))
+
+        this._eventBus
+            .provideResource('measurements.find.last', async (patientId: string) => {
+                try {
+                    const result: any = {}
+                    ObjectIdValidator.validate(patientId)
+
+                    result.blood_glucose =
+                        await this._measurementRepo.getLastMeasurement(patientId, MeasurementTypes.BLOOD_GLUCOSE)
+                    result.blood_pressure =
+                        await this._measurementRepo.getLastMeasurement(patientId, MeasurementTypes.BLOOD_PRESSURE)
+                    result.body_fat =
+                        await this._measurementRepo.getLastMeasurement(patientId, MeasurementTypes.BODY_FAT)
+                    result.body_temperature =
+                        await this._measurementRepo.getLastMeasurement(patientId, MeasurementTypes.BODY_TEMPERATURE)
+                    result.height = await this._measurementRepo.getLastMeasurement(patientId, MeasurementTypes.HEIGHT)
+                    result.waist_circumference =
+                        await this._measurementRepo.getLastMeasurement(patientId, MeasurementTypes.WAIST_CIRCUMFERENCE)
+                    result.weight = await this._measurementRepo.getLastMeasurement(patientId, MeasurementTypes.WEIGHT)
+
+                    return result
+                } catch (err) {
+                    return err
+                }
+            })
+            .then(() => this._logger.info('Resource measurements.find.last successful registered'))
+            .catch((err) => {
+                this._logger.error(`Error at register resource measurements.find.last: ${err.message}`)
+            })
     }
 }
