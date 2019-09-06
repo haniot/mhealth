@@ -3,7 +3,7 @@ import { Strings } from '../../../utils/strings'
 import { MeasurementTypes } from '../utils/measurement.types'
 
 export class MeasurementTypesValidator {
-    public static validate(value: string): void | ValidationException {
+    public static validate(value: MeasurementTypes): void | ValidationException {
         if (!Object.values(MeasurementTypes).includes(value)) {
             throw new ValidationException(
                 Strings.ENUM_VALIDATOR.NOT_MAPPED.concat(`type: ${value}`),

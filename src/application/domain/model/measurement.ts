@@ -2,10 +2,11 @@ import { Entity } from './entity'
 import { IJSONSerializable } from '../utils/json.serializable.interface'
 import { IJSONDeserializable } from '../utils/json.deserializable.interface'
 import { JsonUtils } from '../utils/json.utils'
+import { MeasurementTypes } from '../utils/measurement.types'
 
 export class Measurement extends Entity implements IJSONSerializable, IJSONDeserializable<Measurement> {
     private _unit?: string
-    private _type?: string
+    private _type?: MeasurementTypes
     private _device_id?: string
     private _patient_id?: string
 
@@ -21,11 +22,11 @@ export class Measurement extends Entity implements IJSONSerializable, IJSONDeser
         this._unit = value
     }
 
-    get type(): string | undefined {
+    get type(): MeasurementTypes | undefined {
         return this._type
     }
 
-    set type(value: string | undefined) {
+    set type(value: MeasurementTypes | undefined) {
         this._type = value
     }
 
@@ -53,6 +54,7 @@ export class Measurement extends Entity implements IJSONSerializable, IJSONDeser
 
         if (json.id !== undefined) super.id = json.id
         if (json.unit !== undefined) this.unit = json.unit
+        if (json.type !== undefined) this.type = json.type
         if (json.device_id !== undefined) this.device_id = json.device_id
         if (json.patient_id !== undefined) this.patient_id = json.patient_id
 
