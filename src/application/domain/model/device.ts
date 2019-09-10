@@ -2,11 +2,12 @@ import { Entity } from './entity'
 import { IJSONSerializable } from '../utils/json.serializable.interface'
 import { IJSONDeserializable } from '../utils/json.deserializable.interface'
 import { JsonUtils } from '../utils/json.utils'
+import { DeviceTypes } from '../utils/device.types'
 
 export class Device extends Entity implements IJSONSerializable, IJSONDeserializable<Device> {
     private _name?: string
     private _address?: string
-    private _type?: string
+    private _type?: DeviceTypes
     private _model_number?: string
     private _manufacturer?: string
     private _patient_id?: string
@@ -31,11 +32,11 @@ export class Device extends Entity implements IJSONSerializable, IJSONDeserializ
         this._address = value
     }
 
-    get type(): string | undefined {
+    get type(): DeviceTypes | undefined {
         return this._type
     }
 
-    set type(value: string | undefined) {
+    set type(value: DeviceTypes | undefined) {
         this._type = value
     }
 
@@ -59,7 +60,7 @@ export class Device extends Entity implements IJSONSerializable, IJSONDeserializ
         return this._patient_id
     }
 
-    set patient_id(value: string| undefined) {
+    set patient_id(value: string | undefined) {
         this._patient_id = value
     }
 

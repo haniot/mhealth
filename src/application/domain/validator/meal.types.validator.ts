@@ -3,7 +3,7 @@ import { Strings } from '../../../utils/strings'
 import { MealTypes } from '../utils/meal.types'
 
 export class MealTypesValidator {
-    public static validate(value: string): void | ValidationException {
+    public static validate(value: MealTypes): void | ValidationException {
         if (!Object.values(MealTypes).includes(value)) {
             throw new ValidationException(
                 Strings.ENUM_VALIDATOR.NOT_MAPPED.concat(`meal: ${value}`),

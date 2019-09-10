@@ -3,11 +3,12 @@ import { IJSONSerializable } from '../utils/json.serializable.interface'
 import { IJSONDeserializable } from '../utils/json.deserializable.interface'
 import { JsonUtils } from '../utils/json.utils'
 import { MeasurementTypes } from '../utils/measurement.types'
+import { MealTypes } from '../utils/meal.types'
 
 export class BloodGlucose extends Measurement implements IJSONSerializable, IJSONDeserializable<BloodGlucose> {
     private _value?: number
     private _timestamp?: string
-    private _meal?: string
+    private _meal?: MealTypes
 
     constructor() {
         super()
@@ -30,11 +31,11 @@ export class BloodGlucose extends Measurement implements IJSONSerializable, IJSO
         this._value = value
     }
 
-    get meal(): string | undefined {
+    get meal(): MealTypes | undefined {
         return this._meal
     }
 
-    set meal(value: string | undefined) {
+    set meal(value: MealTypes | undefined) {
         this._meal = value
     }
 
