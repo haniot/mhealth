@@ -1,6 +1,6 @@
 {
   "name": "mhealth-service",
-  "version": "2.0.0",
+  "version": "2.1.1",
   "description": "Microservice responsible for managing health measurements such as temperature, weight, blood pressure, blood glucose and more.",
   "main": "dist/server.js",
   "scripts": {
