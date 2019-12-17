@@ -7,6 +7,8 @@ import { Strings } from '../../../src/utils/strings'
 
 describe('Validators: CreateWeightValidator', () => {
     const measurement: Weight = new Weight().fromJSON(DefaultEntityMock.WEIGHT)
+    measurement.patient_id = DefaultEntityMock.WEIGHT.patient_id
+
     it('should return undefined when the validation was successful', () => {
         const result = CreateWeightValidator.validate(measurement)
         assert.isUndefined(result)

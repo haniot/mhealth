@@ -12,7 +12,6 @@ describe('Models: Device', () => {
                 assert.propertyVal(result, 'type', DefaultEntityMock.DEVICE.type)
                 assert.propertyVal(result, 'model_number', DefaultEntityMock.DEVICE.model_number)
                 assert.propertyVal(result, 'manufacturer', DefaultEntityMock.DEVICE.manufacturer)
-                assert.deepPropertyVal(result, 'patient_id', DefaultEntityMock.DEVICE.patient_id)
             })
         })
 
@@ -24,7 +23,6 @@ describe('Models: Device', () => {
                 assert.propertyVal(result, 'type', DefaultEntityMock.DEVICE.type)
                 assert.propertyVal(result, 'model_number', DefaultEntityMock.DEVICE.model_number)
                 assert.propertyVal(result, 'manufacturer', DefaultEntityMock.DEVICE.manufacturer)
-                assert.deepPropertyVal(result, 'patient_id', DefaultEntityMock.DEVICE.patient_id)
             })
         })
 

@@ -26,7 +26,6 @@ import { IDeviceService } from '../application/port/device.service.interface'
 import { DeviceService } from '../application/service/device.service'
 import { IMeasurementService } from '../application/port/measurement.service.interface'
 import { MeasurementService } from '../application/service/measurement.service'
-import { MeasurementController } from '../ui/controllers/measurement.controller'
 import { PatientsDevicesController } from '../ui/controllers/patients.devices.controller'
 import { PatientsMeasurementsController } from '../ui/controllers/patients.measurements.controller'
 import { BloodGlucose } from '../application/domain/model/blood.glucose'
@@ -97,8 +96,6 @@ export class IoC {
         // Controllers
         this._container.bind<HomeController>(Identifier.HOME_CONTROLLER)
             .to(HomeController).inSingletonScope()
-        this._container.bind<MeasurementController>(Identifier.MEASUREMENTS_CONTROLLER)
-            .to(MeasurementController).inSingletonScope()
         this._container.bind<MeasurementsTypesController>(Identifier.MEASUREMENTS_TYPES_CONTROLLER)
             .to(MeasurementsTypesController).inSingletonScope()
         this._container.bind<PatientsDevicesController>(Identifier.PATIENTS_DEVICES_CONTROLLER)

@@ -10,6 +10,7 @@ export class CreateBloodPressureValidator {
 
         if (!item.systolic) fields.push('systolic')
         if (!item.diastolic) fields.push('diastolic')
+        if (!item.pulse) fields.push('pulse')
         if (!item.unit) fields.push('unit')
         if (!item.type) fields.push('type')
         else MeasurementTypesValidator.validate(item.type)

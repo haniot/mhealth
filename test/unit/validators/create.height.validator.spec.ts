@@ -7,6 +7,7 @@ import { Height } from '../../../src/application/domain/model/height'
 
 describe('Validators: CreateHeightValidator', () => {
     const measurement: Height = new Height().fromJSON(DefaultEntityMock.HEIGHT)
+    measurement.patient_id = DefaultEntityMock.HEIGHT.patient_id
 
     it('should return undefined when the validation was successful', () => {
         const result = CreateHeightValidator.validate(measurement)

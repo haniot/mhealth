@@ -7,6 +7,7 @@ import { CreateBodyTemperatureValidator } from '../../../src/application/domain/
 
 describe('Validators: CreateBodyTemperatureValidator', () => {
     const measurement: BodyTemperature = new BodyTemperature().fromJSON(DefaultEntityMock.BODY_TEMPERATURE)
+    measurement.patient_id = DefaultEntityMock.BODY_TEMPERATURE.patient_id
 
     it('should return undefined when the validation was successful', () => {
         const result = CreateBodyTemperatureValidator.validate(measurement)

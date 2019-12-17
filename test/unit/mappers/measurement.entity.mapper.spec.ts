@@ -46,7 +46,6 @@ describe('Mappers: MeasurementEntityMapper', () => {
                 assert.propertyVal(result, 'id', DefaultEntityMock.MEASUREMENT.id)
                 assert.propertyVal(result, 'unit', DefaultEntityMock.MEASUREMENT.unit)
                 assert.propertyVal(result, 'device_id', DefaultEntityMock.MEASUREMENT.device_id)
-                assert.propertyVal(result, 'patient_id', DefaultEntityMock.MEASUREMENT.patient_id)
             })
 
             it('should return a model entity with basic parameters for empty model', () => {

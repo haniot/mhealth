@@ -133,21 +133,37 @@ export class PatientsMeasurementsController {
         if (!item.type) return undefined
         switch (item.type) {
             case MeasurementTypes.HEIGHT:
-                return new Height().fromJSON(item)
+                const height = new Height().fromJSON(item)
+                height.patient_id = item.patient_id
+                return height
             case MeasurementTypes.BLOOD_PRESSURE:
-                return new BloodPressure().fromJSON(item)
+                const bloodPressure = new BloodPressure().fromJSON(item)
+                bloodPressure.patient_id = item.patient_id
+                return bloodPressure
             case MeasurementTypes.WEIGHT:
-                return new Weight().fromJSON(item)
+                const weight = new Weight().fromJSON(item)
+                weight.patient_id = item.patient_id
+                return weight
             case MeasurementTypes.BLOOD_GLUCOSE:
-                return new BloodGlucose().fromJSON(item)
+                const bloodGlucose = new BloodGlucose().fromJSON(item)
+                bloodGlucose.patient_id = item.patient_id
+                return bloodGlucose
             case MeasurementTypes.BODY_TEMPERATURE:
-                return new BodyTemperature().fromJSON(item)
+                const bodyTemperature = new BodyTemperature().fromJSON(item)
+                bodyTemperature.patient_id = item.patient_id
+                return bodyTemperature
             case MeasurementTypes.WAIST_CIRCUMFERENCE:
-                return new WaistCircumference().fromJSON(item)
+                const waistCircumference = new WaistCircumference().fromJSON(item)
+                waistCircumference.patient_id = item.patient_id
+                return waistCircumference
             case MeasurementTypes.BODY_FAT:
-                return new BodyFat().fromJSON(item)
+                const bodyFat = new BodyFat().fromJSON(item)
+                bodyFat.patient_id = item.patient_id
+                return bodyFat
             default:
-                return new Measurement().fromJSON(item)
+                const measurement = new Measurement().fromJSON(item)
+                measurement.patient_id = item.patient_id
+                return measurement
         }
     }
 }

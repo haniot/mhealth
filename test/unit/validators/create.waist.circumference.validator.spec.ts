@@ -7,6 +7,7 @@ import { CreateWaistCircumferenceValidator } from '../../../src/application/doma
 
 describe('Validators: CreateWaistCircumferenceValidator', () => {
     const measurement: WaistCircumference = new WaistCircumference().fromJSON(DefaultEntityMock.WAIST_CIRCUMFERENCE)
+    measurement.patient_id = DefaultEntityMock.WAIST_CIRCUMFERENCE.patient_id
 
     it('should return undefined when the validation was successful', () => {
         const result = CreateWaistCircumferenceValidator.validate(measurement)

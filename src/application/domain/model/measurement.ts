@@ -2,16 +2,25 @@ import { Entity } from './entity'
 import { IJSONSerializable } from '../utils/json.serializable.interface'
 import { IJSONDeserializable } from '../utils/json.deserializable.interface'
 import { JsonUtils } from '../utils/json.utils'
-import { MeasurementTypes } from '../utils/measurement.types'
 
 export class Measurement extends Entity implements IJSONSerializable, IJSONDeserializable<Measurement> {
+    private _value?: number
     private _unit?: string
-    private _type?: MeasurementTypes
+    private _timestamp?: string
+    private _type?: string
     private _device_id?: string
     private _patient_id?: string
 
     public constructor() {
         super()
+    }
+
+    get value(): number | undefined {
+        return this._value
+    }
+
+    set value(value: number | undefined) {
+        this._value = value
     }
 
     get unit(): string | undefined {
@@ -22,11 +31,19 @@ export class Measurement extends Entity implements IJSONSerializable, IJSONDeser
         this._unit = value
     }
 
-    get type(): MeasurementTypes | undefined {
+    get timestamp(): string | undefined {
+        return this._timestamp
+    }
+
+    set timestamp(value: string | undefined) {
+        this._timestamp = value
+    }
+
+    get type(): string | undefined {
         return this._type
     }
 
-    set type(value: MeasurementTypes | undefined) {
+    set type(value: string | undefined) {
         this._type = value
     }
 
@@ -53,10 +70,11 @@ export class Measurement extends Entity implements IJSONSerializable, IJSONDeser
         }
 
         if (json.id !== undefined) super.id = json.id
+        if (json.value !== undefined) this.value = json.value
         if (json.unit !== undefined) this.unit = json.unit
+        if (json.timestamp !== undefined) this.timestamp = json.timestamp
         if (json.type !== undefined) this.type = json.type
         if (json.device_id !== undefined) this.device_id = json.device_id
-        if (json.patient_id !== undefined) this.patient_id = json.patient_id
 
         return this
     }
@@ -64,10 +82,11 @@ export class Measurement extends Entity implements IJSONSerializable, IJSONDeser
     public toJSON(): any {
         return {
             id: super.id,
+            value: this.value,
             unit: this.unit,
+            timestamp: this.timestamp,
             type: this.type,
-            device_id: this.device_id,
-            patient_id: this.patient_id
+            device_id: this.device_id
         }
     }
 }

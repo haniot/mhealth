@@ -13,7 +13,6 @@ describe('Models: BloodPressure', () => {
                 assert.propertyVal(result, 'timestamp', DefaultEntityMock.BLOOD_PRESSURE.timestamp)
                 assert.propertyVal(result, 'unit', DefaultEntityMock.BLOOD_PRESSURE.unit)
                 assert.propertyVal(result, 'device_id', DefaultEntityMock.BLOOD_PRESSURE.device_id)
-                assert.propertyVal(result, 'patient_id', DefaultEntityMock.BLOOD_PRESSURE.patient_id)
                 assert.propertyVal(result, 'type', DefaultEntityMock.BLOOD_PRESSURE.type)
             })
         })
@@ -27,7 +26,6 @@ describe('Models: BloodPressure', () => {
                 assert.propertyVal(result, 'timestamp', DefaultEntityMock.BLOOD_PRESSURE.timestamp)
                 assert.propertyVal(result, 'unit', DefaultEntityMock.BLOOD_PRESSURE.unit)
                 assert.propertyVal(result, 'device_id', DefaultEntityMock.BLOOD_PRESSURE.device_id)
-                assert.propertyVal(result, 'patient_id', DefaultEntityMock.BLOOD_PRESSURE.patient_id)
                 assert.propertyVal(result, 'type', DefaultEntityMock.BLOOD_PRESSURE.type)
             })
         })
@@ -90,7 +88,7 @@ describe('Models: BloodPressure', () => {
     })
 
     describe('toJSON()', () => {
-        context('when covert model to json', () => {
+        context('when convert model to json', () => {
             it('should return a json with model parameters', () => {
                 const measurement = new BloodPressure().fromJSON(DefaultEntityMock.BLOOD_PRESSURE)
                 measurement.id = DefaultEntityMock.BLOOD_PRESSURE.id
@@ -103,7 +101,6 @@ describe('Models: BloodPressure', () => {
                 assert.propertyVal(result, 'type', DefaultEntityMock.BLOOD_PRESSURE.type)
                 assert.propertyVal(result, 'unit', DefaultEntityMock.BLOOD_PRESSURE.unit)
                 assert.propertyVal(result, 'device_id', DefaultEntityMock.BLOOD_PRESSURE.device_id)
-                assert.propertyVal(result, 'patient_id', DefaultEntityMock.BLOOD_PRESSURE.patient_id)
             })
         })
 

@@ -127,7 +127,10 @@ export class MeasurementService implements IMeasurementService {
                             .concat(Object.values(MeasurementTypes).join(', ').concat('.')))
             }
             if (item.type === MeasurementTypes.WEIGHT && item.body_fat) {
-                await this.add(new BodyFat().fromJSON({ ...item.toJSON(), value: item.body_fat, unit: '%' }))
+                const bodyFat = new BodyFat().fromJSON({ ...item.toJSON(), type: MeasurementTypes.BODY_FAT,
+                    value: item.body_fat, unit: '%' })
+                bodyFat.patient_id = item.patient_id
+                await this.add(bodyFat)
             }
             return await this._repository.create(item)
         } catch (err) {

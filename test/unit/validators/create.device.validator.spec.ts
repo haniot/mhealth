@@ -7,6 +7,7 @@ import { DeviceTypes } from '../../../src/application/domain/utils/device.types'
 
 describe('Validators: CreateDeviceValidator', () => {
     const device: Device = new Device().fromJSON(DefaultEntityMock.DEVICE)
+    device.patient_id = DefaultEntityMock.DEVICE.patient_id
 
     it('should return undefined when the validation was successful', () => {
         const result = CreateDeviceValidator.validate(device)

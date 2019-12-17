@@ -7,6 +7,7 @@ import { CreateBloodPressureValidator } from '../../../src/application/domain/va
 
 describe('Validators: CreateBloodPressureValidator', () => {
     const measurement: BloodPressure = new BloodPressure().fromJSON(DefaultEntityMock.BLOOD_PRESSURE)
+    measurement.patient_id = DefaultEntityMock.BLOOD_PRESSURE.patient_id
 
     it('should return undefined when the validation was successful', () => {
         const result = CreateBloodPressureValidator.validate(measurement)

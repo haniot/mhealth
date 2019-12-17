@@ -11,12 +11,19 @@ import { BodyTemperature } from '../../../src/application/domain/model/body.temp
 import { MeasurementTypes } from '../../../src/application/domain/utils/measurement.types'
 
 const height: Height = new Height().fromJSON(DefaultEntityMock.HEIGHT)
+height.patient_id = DefaultEntityMock.HEIGHT.patient_id
 const weight: Weight = new Weight().fromJSON(DefaultEntityMock.WEIGHT)
+weight.patient_id = DefaultEntityMock.WEIGHT.patient_id
 const waist: WaistCircumference = new WaistCircumference().fromJSON(DefaultEntityMock.WAIST_CIRCUMFERENCE)
+waist.patient_id = DefaultEntityMock.WAIST_CIRCUMFERENCE.patient_id
 const bodyFat: BodyFat = new BodyFat().fromJSON(DefaultEntityMock.BODY_FAT)
+bodyFat.patient_id = DefaultEntityMock.BODY_FAT.patient_id
 const bloodPressure: BloodPressure = new BloodPressure().fromJSON(DefaultEntityMock.BLOOD_PRESSURE)
+bloodPressure.patient_id = DefaultEntityMock.BLOOD_PRESSURE.patient_id
 const bloodGlucose: BloodGlucose = new BloodGlucose().fromJSON(DefaultEntityMock.BLOOD_GLUCOSE)
+bloodGlucose.patient_id = DefaultEntityMock.BLOOD_GLUCOSE.patient_id
 const bodyTemperature: BodyTemperature = new BodyTemperature().fromJSON(DefaultEntityMock.BODY_TEMPERATURE)
+bodyTemperature.patient_id = DefaultEntityMock.BODY_TEMPERATURE.patient_id
 const listMeasurements = [height, weight, waist, bodyFat, bloodPressure, bloodGlucose, bodyTemperature]
 
 export class MeasurementRepositoryMock implements IMeasurementRepository {

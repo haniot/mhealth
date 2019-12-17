@@ -56,7 +56,6 @@ describe('Mappers: WeightEntityMapper', () => {
                 assert.propertyVal(result, 'type', DefaultEntityMock.WEIGHT.type)
                 assert.propertyVal(result, 'unit', DefaultEntityMock.WEIGHT.unit)
                 assert.propertyVal(result, 'device_id', DefaultEntityMock.WEIGHT.device_id)
-                assert.propertyVal(result, 'patient_id', DefaultEntityMock.WEIGHT.patient_id)
                 assert.propertyVal(result, 'value', DefaultEntityMock.WEIGHT.value)
                 assert.propertyVal(result, 'timestamp', DefaultEntityMock.WEIGHT.timestamp)
                 assert.propertyVal(result, 'body_fat', DefaultEntityMock.WEIGHT.body_fat)

@@ -8,6 +8,7 @@ import { MeasurementTypes } from '../../../src/application/domain/utils/measurem
 
 describe('Validators: CreateBloodGlucoseValidator', () => {
     const measurement: BloodGlucose = new BloodGlucose().fromJSON(DefaultEntityMock.BLOOD_GLUCOSE)
+    measurement.patient_id = DefaultEntityMock.BLOOD_GLUCOSE.patient_id
 
     it('should return undefined when the validation was successful', () => {
         const result = CreateBloodGlucoseValidator.validate(measurement)

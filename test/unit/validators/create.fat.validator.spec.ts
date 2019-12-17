@@ -7,6 +7,7 @@ import { BodyFat } from '../../../src/application/domain/model/body.fat'
 
 describe('Validators: CreateBodyFatValidator', () => {
     const measurement: BodyFat = new BodyFat().fromJSON(DefaultEntityMock.BODY_FAT)
+    measurement.patient_id = DefaultEntityMock.BODY_FAT.patient_id
 
     it('should return undefined when the validation was successful', () => {
         const result = CreateBodyFatValidator.validate(measurement)

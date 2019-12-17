@@ -52,7 +52,6 @@ describe('Mappers: BodyFatEntityMapper', () => {
                 assert.propertyVal(result, 'type', DefaultEntityMock.BODY_FAT.type)
                 assert.propertyVal(result, 'unit', DefaultEntityMock.BODY_FAT.unit)
                 assert.propertyVal(result, 'device_id', DefaultEntityMock.BODY_FAT.device_id)
-                assert.propertyVal(result, 'patient_id', DefaultEntityMock.BODY_FAT.patient_id)
                 assert.propertyVal(result, 'value', DefaultEntityMock.BODY_FAT.value)
                 assert.propertyVal(result, 'timestamp', DefaultEntityMock.BODY_FAT.timestamp)
             })

@@ -60,7 +60,6 @@ describe('Mappers: BloodPressureEntityMapper', () => {
                 assert.propertyVal(result, 'timestamp', DefaultEntityMock.BLOOD_PRESSURE.timestamp)
                 assert.propertyVal(result, 'unit', DefaultEntityMock.BLOOD_PRESSURE.unit)
                 assert.propertyVal(result, 'device_id', DefaultEntityMock.BLOOD_PRESSURE.device_id)
-                assert.propertyVal(result, 'patient_id', DefaultEntityMock.BLOOD_PRESSURE.patient_id)
                 assert.propertyVal(result, 'type', DefaultEntityMock.BLOOD_PRESSURE.type)
             })
 

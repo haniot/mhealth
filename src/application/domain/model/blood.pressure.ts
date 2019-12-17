@@ -8,7 +8,6 @@ export class BloodPressure extends Measurement implements IJSONSerializable, IJS
     private _systolic?: number
     private _diastolic?: number
     private _pulse?: number
-    private _timestamp?: string
 
     constructor() {
         super()
@@ -39,24 +38,18 @@ export class BloodPressure extends Measurement implements IJSONSerializable, IJS
         this._pulse = value
     }
 
-    get timestamp(): string | undefined {
-        return this._timestamp
-    }
-
-    set timestamp(value: string | undefined) {
-        this._timestamp = value
-    }
-
     public fromJSON(json: any): BloodPressure {
         if (!json) return this
         if (typeof json === 'string' && JsonUtils.isJsonString(json)) {
             json = JSON.parse(json)
         }
+
         super.fromJSON(json)
+        if (this.value) this.value = undefined
         if (json.systolic !== undefined) this.systolic = json.systolic
         if (json.diastolic !== undefined) this.diastolic = json.diastolic
         if (json.pulse !== undefined) this.pulse = json.pulse
-        if (json.timestamp !== undefined) this.timestamp = json.timestamp
+
         return this
     }
 
@@ -67,7 +60,6 @@ export class BloodPressure extends Measurement implements IJSONSerializable, IJS
                 systolic: this.systolic,
                 diastolic: this.diastolic,
                 pulse: this.pulse,
-                timestamp: this.timestamp
             }
         }
     }
