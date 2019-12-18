@@ -37,4 +37,8 @@ export abstract class Strings {
         UNIT_ERROR: 'The unit value is not valid for ',
         UNIT_ERROR_DESC: 'According with the SI, the correct unit value is: '
     }
+
+    public static readonly PATIENT: any = {
+        PARAM_ID_NOT_VALID_FORMAT: 'Parameter {patient_id} is not in valid format!'
+    }
 }

@@ -6,6 +6,11 @@ import { IBackgroundTask } from '../../application/port/background.task.interfac
 import { UserDeleteEvent } from '../../application/integration-event/event/user.delete.event'
 import { UserDeleteEventHandler } from '../../application/integration-event/handler/user.delete.event.handler'
 import { DIContainer } from '../../di/di'
+import { Default } from '../../utils/default'
+import fs from 'fs'
+import { WeightSyncEvent } from '../../application/integration-event/event/weight.sync.event'
+import { IMeasurementRepository } from '../../application/port/measurement.repository.interface'
+import { WeightSyncEventHandler } from '../../application/integration-event/handler/weight.sync.event.handler'
 
 @injectable()
 export class SubscribeEventBusTask implements IBackgroundTask {
@@ -16,13 +21,19 @@ export class SubscribeEventBusTask implements IBackgroundTask {
     }
 
     public run(): void {
+        // To use SSL/TLS, simply mount the uri with the amqps protocol and pass the CA.
+        const rabbitUri = process.env.RABBITMQ_URI || Default.RABBITMQ_URI
+        const rabbitOptions: any = { sslOptions: { ca: [] } }
+        if (rabbitUri.indexOf('amqps') === 0) {
+            rabbitOptions.sslOptions.ca = [fs.readFileSync(process.env.RABBITMQ_CA_PATH || Default.RABBITMQ_CA_PATH)]
+        }
         // Before performing the subscribe is trying to connect to the bus.
         // If there is no connection, infinite attempts will be made until
         // the connection is established successfully. Once you have the
         // connection, event registration is performed.
         this._eventBus
             .connectionSub
-            .open(0, 1000)
+            .open(rabbitUri, rabbitOptions)
             .then(() => {
                 this._logger.info('Subscribe connection initialized successfully')
                 this.initializeSubscribe()
@@ -45,12 +56,38 @@ export class SubscribeEventBusTask implements IBackgroundTask {
      */
     private async initializeSubscribe(): Promise<void> {
         try {
-            await this._eventBus.subscribe(
-                new UserDeleteEvent (new Date()),
-                new UserDeleteEventHandler(DIContainer.get(Identifier.MEASUREMENT_REPOSITORY), this._logger),
-                'users.delete'
-            )
-            this._logger.info('Subscribe in UserDeleteEvent successful!')
+            /**
+             * Subscribe in UserDeleteEvent
+             */
+            this._eventBus
+                .subscribe(
+                    new UserDeleteEvent(new Date()),
+                    new UserDeleteEventHandler(DIContainer.get(Identifier.MEASUREMENT_REPOSITORY), this._logger),
+                    UserDeleteEvent.ROUTING_KEY
+                )
+                .then((result: boolean) => {
+                    if (result) this._logger.info('Subscribe in UserDeleteEvent successful!')
+                })
+                .catch(err => {
+                    this._logger.error(`Error in Subscribe UserDeleteEvent! ${err.message}`)
+                })
+
+            /**
+             * Subscribe in WeightSyncEvent
+             */
+            this._eventBus
+                .subscribe(
+                    new WeightSyncEvent(),
+                    new WeightSyncEventHandler(
+                        DIContainer.get<IMeasurementRepository>(Identifier.MEASUREMENT_REPOSITORY),
+                        this._logger),
+                    WeightSyncEvent.ROUTING_KEY)
+                .then((result: boolean) => {
+                    if (result) this._logger.info('Subscribe in WeightSyncEvent successful!')
+                })
+                .catch(err => {
+                    this._logger.error(`Error in Subscribe WeightSyncEvent! ${err.message}`)
+                })
         } catch (err) {
             this._logger.error(`An error occurred while subscribing to events. ${err.message}`)
         }

@@ -124,6 +124,19 @@ export class MeasurementRepository extends BaseRepository<Measurement, Measureme
         })
     }
 
+    public updateMeasurement(item: any): Promise<any> {
+        const itemUp: any = this.transform(item)
+        return new Promise<any>((resolve, reject) => {
+            this.Model.findOneAndUpdate({ _id: itemUp.id }, itemUp, { new: true, upsert: true })
+                .exec()
+                .then((result) => {
+                    if (!result) return resolve(undefined)
+                    return resolve(this.transform(result))
+                })
+                .catch(err => reject(this.mongoDBErrorListener(err)))
+        })
+    }
+
     private transform(item: any) {
         switch (item.type) {
             case(MeasurementTypes.BLOOD_GLUCOSE):

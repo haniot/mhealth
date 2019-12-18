@@ -8,6 +8,9 @@ import qs from 'query-strings-parser'
 import { IMeasurementRepository } from '../../application/port/measurement.repository.interface'
 import { ObjectIdValidator } from '../../application/domain/validator/object.id.validator'
 import { MeasurementTypes } from '../../application/domain/utils/measurement.types'
+import { IQuery } from '../../application/port/query.interface'
+import fs from 'fs'
+import { Default } from '../../utils/default'
 
 @injectable()
 export class RpcServerEventBusTask implements IBackgroundTask {
@@ -19,11 +22,17 @@ export class RpcServerEventBusTask implements IBackgroundTask {
     }
 
     public run(): void {
+        // To use SSL/TLS, simply mount the uri with the amqps protocol and pass the CA.
+        const rabbitUri = process.env.RABBITMQ_URI || Default.RABBITMQ_URI
+        const rabbitOptions: any = { sslOptions: { ca: [] } }
+        if (rabbitUri.indexOf('amqps') === 0) {
+            rabbitOptions.sslOptions.ca = [fs.readFileSync(process.env.RABBITMQ_CA_PATH || Default.RABBITMQ_CA_PATH)]
+        }
         // It RPC Server events, that for some reason could not
         // e sent and were saved for later submission.
         this._eventBus
             .connectionRpcServer
-            .open(0, 2000)
+            .open(rabbitUri, rabbitOptions)
             .then(() => {
                 this._logger.info('Connection with RPC Server opened successful!')
                 this.initializeServer()
@@ -44,7 +53,7 @@ export class RpcServerEventBusTask implements IBackgroundTask {
     private initializeServer(): void {
         this._eventBus
             .provideResource('measurements.find', async (_query?: string) => {
-                const query: Query = new Query().fromJSON({ ...qs.parser(_query) })
+                const query: IQuery = this.buildQS(_query, 'timestamp')
                 const result: Array<any> = await this._measurementRepo.find(query)
                 return result.map(item => item.toJSON())
             })
@@ -79,5 +88,18 @@ export class RpcServerEventBusTask implements IBackgroundTask {
             .catch((err) => {
                 this._logger.error(`Error at register resource measurements.find.last: ${err.message}`)
             })
+    }
+
+    /**
+     * Prepare query string based on defaults parameters and values.
+     *
+     * @param query
+     * @param dateField
+     */
+    private buildQS(query?: any, dateField?: string): IQuery {
+        return new Query().fromJSON(
+            qs.parser(query ? query : {}, { pagination: { limit: Number.MAX_SAFE_INTEGER } },
+                { use_page: true, date_fields: { start_at: dateField, end_at: dateField } })
+        )
     }
 }

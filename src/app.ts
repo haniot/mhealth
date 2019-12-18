@@ -13,7 +13,6 @@ import { Default } from './utils/default'
 import { Identifier } from './di/identifiers'
 import { ILogger } from './utils/custom.logger'
 import { Strings } from './utils/strings'
-import ipAllowed = require('ip-allowed')
 import { DIContainer } from './di/di'
 
 /**
@@ -60,7 +59,6 @@ export class App {
      */
     private async initMiddleware(): Promise<void> {
         try {
-            await this.setupHostWhitelist()
             await this.setupInversifyExpress()
             this.setupSwaggerUI()
             this.setupErrorsHandler()
@@ -69,20 +67,6 @@ export class App {
         }
     }
 
-    /**
-     * Access control based on host addresses.
-     * Only allow requests from the hosts that are on the permissions list.
-     *
-     * @private
-     * @return Promise<void>
-     */
-    private async setupHostWhitelist(): Promise<void> {
-        this.express.use(ipAllowed(process.env.HOST_WHITELIST || Default.HOST_WHITELIST, {
-            log: (clientIp, accessDenied) => {
-                if (accessDenied) this._logger.warn(`Client with IP address ${clientIp} is not allowed!`)
-            }
-        }))
-    }
     /**
      * Setup Inversify.
      * Responsible for injecting routes defined through annotations in controllers.
@@ -144,7 +128,7 @@ export class App {
                 customfavIcon: Default.LOGO_URI,
                 customSiteTitle: `API Reference | ${Strings.APP.TITLE}`
             }
-            this.express.use('/v1/reference', swaggerUi.serve, swaggerUi.setup(null, options))
+            this.express.use('/v1/reference', swaggerUi.serve, swaggerUi.setup({}, options))
         }
     }
 

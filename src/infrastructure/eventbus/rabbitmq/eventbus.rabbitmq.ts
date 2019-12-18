@@ -1,7 +1,6 @@
 import { amqpClient } from 'amqp-client-node'
 import { inject, injectable } from 'inversify'
 import { IEventBus } from '../../port/event.bus.interface'
-import { IDisposable } from '../../port/disposable.interface'
 import { IIntegrationEventHandler } from '../../../application/integration-event/handler/integration.event.handler.interface'
 import { IntegrationEvent } from '../../../application/integration-event/event/integration.event'
 import { Identifier } from '../../../di/identifiers'
@@ -9,7 +8,7 @@ import { IConnectionEventBus } from '../../port/connection.event.bus.interface'
 import { EventBusException } from '../../../application/domain/exception/eventbus.exception'
 
 @injectable()
-export class EventBusRabbitMQ implements IEventBus, IDisposable {
+export class EventBusRabbitMQ implements IEventBus {
     private readonly RABBITMQ_QUEUE_NAME: string = 'mhealth'
     private readonly RABBITMQ_RPC_QUEUE_NAME: string = 'mhealth.rpc'
     private readonly RABBITMQ_RPC_EXCHANGE_NAME: string = 'mhealth.rpc'

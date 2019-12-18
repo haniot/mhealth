@@ -31,6 +31,10 @@ export class MeasurementRepositoryMock implements IMeasurementRepository {
         return Promise.resolve(true)
     }
 
+    public updateMeasurement(item: any): Promise<any> {
+        return Promise.resolve(item)
+    }
+
     public count(query: IQuery): Promise<number> {
         return Promise.resolve(7)
     }
