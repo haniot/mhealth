@@ -72,7 +72,7 @@ describe('Validators: CreateHeightValidator', () => {
             try {
                 CreateHeightValidator.validate(measurement)
             } catch (err) {
-                assert.propertyVal(err, 'message', 'Datetime: 12-04-2012 is not in valid ISO 8601 format.')
+                assert.propertyVal(err, 'message', 'Datetime: 12-04-2012'.concat(Strings.ERROR_MESSAGE.INVALID_DATE))
                 assert.propertyVal(err, 'description', 'Date must be in the format: yyyy-MM-dd\'T\'HH:mm:ssZ')
             } finally {
                 measurement.timestamp = DefaultEntityMock.HEIGHT.timestamp

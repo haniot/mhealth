@@ -15,5 +15,5 @@ export interface IMeasurementRepository extends IRepository<Measurement> {
 
     removeMeasurementsFromUser(id: string): Promise<boolean>
 
-    updateMeasurement(item: any): Promise<any>
+    updateOrCreate(item: any): Promise<any>
 }

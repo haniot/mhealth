@@ -61,6 +61,24 @@ import { IConnectionEventBus } from '../infrastructure/port/connection.event.bus
 import { ConnectionRabbitMQ } from '../infrastructure/eventbus/rabbitmq/connection.rabbitmq'
 import { IEventBus } from '../infrastructure/port/event.bus.interface'
 import { RpcServerEventBusTask } from '../background/task/rpc.server.event.bus.task'
+import { IPhysicalActivityService } from '../application/port/physical.activity.service.interface'
+import { PhysicalActivityService } from '../application/service/physical.activity.service'
+import { ISleepService } from '../application/port/sleep.service.interface'
+import { SleepService } from '../application/service/sleep.service'
+import { IPhysicalActivityRepository } from '../application/port/physical.activity.repository.interface'
+import { ISleepRepository } from '../application/port/sleep.repository.interface'
+import { PhysicalActivity } from '../application/domain/model/physical.activity'
+import { Sleep } from '../application/domain/model/sleep'
+import { ActivityRepoModel } from '../infrastructure/database/schema/activity.schema'
+import { SleepRepoModel } from '../infrastructure/database/schema/sleep.schema'
+import { ActivityEntity } from '../infrastructure/entity/activity.entity'
+import { PhysicalActivityEntityMapper } from '../infrastructure/entity/mapper/physical.activity.entity.mapper'
+import { SleepEntity } from '../infrastructure/entity/sleep.entity'
+import { SleepEntityMapper } from '../infrastructure/entity/mapper/sleep.entity.mapper'
+import { PhysicalActivityRepository } from '../infrastructure/repository/physical.activity.repository'
+import { SleepRepository } from '../infrastructure/repository/sleep.repository'
+import { PatientsActivityController } from '../ui/controllers/patients.activity.controller'
+import { PatientsSleepController } from '../ui/controllers/patients.sleep.controller'
 
 export class IoC {
     private readonly _container: Container
@@ -102,24 +120,35 @@ export class IoC {
             .to(PatientsDevicesController).inSingletonScope()
         this._container.bind<PatientsMeasurementsController>(Identifier.PATIENTS_MEASUREMENTS_CONTROLLER)
             .to(PatientsMeasurementsController).inSingletonScope()
+        this._container.bind<PatientsActivityController>(Identifier.PATIENTS_ACTIVITY_CONTROLLER)
+            .to(PatientsActivityController).inSingletonScope()
+        this._container.bind<PatientsSleepController>(Identifier.PATIENTS_SLEEP_CONTROLLER)
+            .to(PatientsSleepController).inSingletonScope()
 
         // Services
         this._container.bind<IDeviceService>(Identifier.DEVICE_SERVICE).to(DeviceService).inSingletonScope()
         this._container.bind<IMeasurementService>(Identifier.MEASUREMENT_SERVICE).to(MeasurementService).inSingletonScope()
+        this._container.bind<IPhysicalActivityService>(Identifier.ACTIVITY_SERVICE).to(PhysicalActivityService).inSingletonScope()
+        this._container.bind<ISleepService>(Identifier.SLEEP_SERVICE).to(SleepService).inSingletonScope()
 
         // Repositories
         this._container.bind<IDeviceRepository>(Identifier.DEVICE_REPOSITORY)
             .to(DeviceRepository).inSingletonScope()
         this._container.bind<IMeasurementRepository>(Identifier.MEASUREMENT_REPOSITORY)
             .to(MeasurementRepository).inSingletonScope()
-        this._container
-            .bind<IIntegrationEventRepository>(Identifier.INTEGRATION_EVENT_REPOSITORY)
+        this._container.bind<IIntegrationEventRepository>(Identifier.INTEGRATION_EVENT_REPOSITORY)
             .to(IntegrationEventRepository).inSingletonScope()
+        this._container.bind<IPhysicalActivityRepository>(Identifier.ACTIVITY_REPOSITORY)
+            .to(PhysicalActivityRepository).inSingletonScope()
+        this._container.bind<ISleepRepository>(Identifier.SLEEP_REPOSITORY)
+            .to(SleepRepository).inSingletonScope()
 
         // Models
         this._container.bind(Identifier.DEVICE_REPO_MODEL).toConstantValue(DeviceRepoModel)
         this._container.bind(Identifier.MEASUREMENT_REPO_MODEL).toConstantValue(MeasurementRepoModel)
         this._container.bind(Identifier.INTEGRATION_EVENT_REPO_MODEL).toConstantValue(IntegrationEventRepoModel)
+        this._container.bind(Identifier.ACTIVITY_REPO_MODEL).toConstantValue(ActivityRepoModel)
+        this._container.bind(Identifier.SLEEP_REPO_MODEL).toConstantValue(SleepRepoModel)
 
         // Mappers
         this._container
@@ -149,6 +178,12 @@ export class IoC {
         this._container
             .bind<IEntityMapper<BodyFat, BodyFatEntity>>(Identifier.BODY_FAT_ENTITY_MAPPER)
             .to(BodyFatEntityMapper).inSingletonScope()
+        this._container
+            .bind<IEntityMapper<PhysicalActivity, ActivityEntity>>(Identifier.ACTIVITY_ENTITY_MAPPER)
+            .to(PhysicalActivityEntityMapper).inSingletonScope()
+        this.container
+            .bind<IEntityMapper<Sleep, SleepEntity>>(Identifier.SLEEP_ENTITY_MAPPER)
+            .to(SleepEntityMapper).inSingletonScope()
 
         // Background Services
         this._container

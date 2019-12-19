@@ -31,7 +31,7 @@ export class MeasurementRepositoryMock implements IMeasurementRepository {
         return Promise.resolve(true)
     }
 
-    public updateMeasurement(item: any): Promise<any> {
+    public updateOrCreate(item: any): Promise<any> {
         return Promise.resolve(item)
     }
 

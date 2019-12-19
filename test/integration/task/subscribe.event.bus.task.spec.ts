@@ -14,6 +14,7 @@ import { WeightSyncEvent } from '../../../src/application/integration-event/even
 import { MeasurementTypes } from '../../../src/application/domain/utils/measurement.types'
 import { expect } from 'chai'
 import { MeasurementUnits } from '../../../src/application/domain/utils/measurement.units'
+import { BodyFat } from '../../../src/application/domain/model/body.fat'
 
 const dbConnection: IConnectionDB = DIContainer.get(Identifier.MONGODB_CONNECTION)
 const rabbitmq: EventBusRabbitMQ = DIContainer.get(Identifier.RABBITMQ_EVENT_BUS)
@@ -89,20 +90,29 @@ describe('SUBSCRIBE EVENT BUS TASK', () => {
                     // Wait for 2000 milliseconds for the task to be executed
                     await timeout(2000)
 
-                    const query: IQuery = new Query()
-                    query.addFilter({ _id: weightCreate.id, type: MeasurementTypes.WEIGHT })
+                    // BodyFat tests
+                    const bodyFatQuery: IQuery = new Query()
+                    bodyFatQuery.addFilter({ patient_id: weightCreate.patient_id, type: MeasurementTypes.BODY_FAT })
 
-                    const result = await measurementRepository.findOne(query)
+                    const bodyFatResult = await measurementRepository.findOne(bodyFatQuery)
 
-                    expect(result.value).to.eql(newWeight.value)
-                    expect(result.body_fat).to.eql(newWeight.body_fat)
+                    expect(bodyFatResult.value).to.eql(newWeight.body_fat)
+
+                    // Weight tests
+                    const weightQuery: IQuery = new Query()
+                    weightQuery.addFilter({ _id: weightCreate.id, type: MeasurementTypes.WEIGHT })
+
+                    const weightResult = await measurementRepository.findOne(weightQuery)
+
+                    expect(weightResult.value).to.eql(newWeight.value)
+                    expect(weightResult.body_fat).to.eql(newWeight.body_fat)
 
                     done()
                 })
                 .catch(done)
         })
 
-        it('should return a new weight if there is no resource registered with this information yet', async () => {
+        it('should return a new weight if there is no resource registered with this information yet', (done) => {
             const weight: Weight = new Weight().fromJSON({
                 value: 55,
                 unit: MeasurementUnits.WEIGHT,
@@ -114,26 +124,43 @@ describe('SUBSCRIBE EVENT BUS TASK', () => {
             })
             weight.patient_id = DefaultEntityMock.WEIGHT.patient_id
 
-            await timeout(2000)
+            const bodyFat: BodyFat = new BodyFat().fromJSON(DefaultEntityMock.BODY_FAT)
+            bodyFat.patient_id = DefaultEntityMock.BODY_FAT.patient_id
 
-            const weightSyncEvent: WeightSyncEvent = new WeightSyncEvent(new Date(), weight)
-            await rabbitmq.publish(weightSyncEvent, WeightSyncEvent.ROUTING_KEY)
+            measurementRepository.create(bodyFat)
+                .then(async () => {
+                    await timeout(2000)
 
-            // Wait for 2000 milliseconds for the task to be executed
-            await timeout(2000)
+                    const weightSyncEvent: WeightSyncEvent = new WeightSyncEvent(new Date(), weight)
+                    await rabbitmq.publish(weightSyncEvent, WeightSyncEvent.ROUTING_KEY)
 
-            const query: IQuery = new Query()
-            query.addFilter({ patient_id: weight.patient_id, type: MeasurementTypes.WEIGHT })
+                    // Wait for 2000 milliseconds for the task to be executed
+                    await timeout(2000)
 
-            const result = await measurementRepository.findOne(query)
+                    // BodyFat tests
+                    const bodyFatQuery: IQuery = new Query()
+                    bodyFatQuery.addFilter({ patient_id: bodyFat.patient_id, type: MeasurementTypes.BODY_FAT })
 
-            expect(result.type).to.eql(weight.type)
-            expect(result.value).to.eql(weight.value)
-            expect(result.unit).to.eql(weight.unit)
-            expect(result.timestamp).to.eql(new Date(weight.timestamp!))
-            expect(result.device_id.toString()).to.eql(weight.device_id)
-            expect(result.body_fat).to.eql(weight.body_fat)
-            expect(result.patient_id.toString()).to.eql(weight.patient_id)
+                    const bodyFatResult = await measurementRepository.findOne(bodyFatQuery)
+
+                    expect(bodyFatResult.value).to.eql(weight.body_fat)
+
+                    const weightQuery: IQuery = new Query()
+                    weightQuery.addFilter({ patient_id: weight.patient_id, type: MeasurementTypes.WEIGHT })
+
+                    const weightResult = await measurementRepository.findOne(weightQuery)
+
+                    expect(weightResult.type).to.eql(weight.type)
+                    expect(weightResult.value).to.eql(weight.value)
+                    expect(weightResult.unit).to.eql(weight.unit)
+                    expect(weightResult.timestamp).to.eql(new Date(weight.timestamp!))
+                    expect(weightResult.device_id.toString()).to.eql(weight.device_id)
+                    expect(weightResult.body_fat).to.eql(weight.body_fat)
+                    expect(weightResult.patient_id.toString()).to.eql(weight.patient_id)
+
+                    done()
+                })
+                .catch(done)
         })
     })
 
