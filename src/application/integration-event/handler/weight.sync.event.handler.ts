@@ -17,8 +17,28 @@ export class WeightSyncEventHandler implements IIntegrationEventHandler<WeightSy
     public async handle(event: WeightSyncEvent): Promise<void> {
         try {
             if (!event.weight) return
-            // TODO
-            // if (event.weight instanceof Array) {}
+            if (event.weight instanceof Array) {
+                for (const item of event.weight) {
+                    const weight: Weight = new Weight().fromJSON(item)
+                    let patientId: string = ''
+                    if (item.patient_id) {
+                        patientId = item.patient_id
+                        weight.patient_id = patientId
+                    }
+
+                    // 1. Validate Weight object
+                    CreateWeightValidator.validate(weight)
+
+                    this._logger.info(
+                        `Prepare to update (or create if doesn't exist) weight measurement from user: ${patientId}...`)
+
+                    // 2. Update (or create if doesn't exist) a Weight Measurement
+                    await this._measurementRepo.updateMeasurement(weight)
+
+                    this._logger.info(
+                        `Action for event ${event.event_name} associated with patient with ID: ${patientId} successfully performed!`)
+                }
+            }
             else {
                 const weight: Weight = new Weight().fromJSON(event.weight)
                 let patientId: string = ''
@@ -33,6 +53,7 @@ export class WeightSyncEventHandler implements IIntegrationEventHandler<WeightSy
                 this._logger.info(
                     `Prepare to update (or create if doesn't exist) weight measurement from user: ${patientId}...`)
 
+                // 2. Update (or create if doesn't exist) a Weight Measurement
                 await this._measurementRepo.updateMeasurement(weight)
 
                 this._logger.info(
