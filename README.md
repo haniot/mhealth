@@ -3,11 +3,20 @@
 
 ----
 
-Microservice responsible for managing health measurements such as temperature, weight, blood pressure, blood glucose and more.
+RESTFul microservice API responsible for managing health measurements, physical activity and sleep.
 
 
 **Main features:**
-- Health measurements management;
+- Health measurements:
+  - Blood Glucose
+  - Blood Pressure
+  - Body Temperature
+  - Weight
+  - Body Fat
+  - Height
+  - Waist Circumference
+- Physical Activity
+- Sleep 
 - Health Device Management;
 - Message Bus Integration (RabbitMQ).
  
@@ -30,7 +39,8 @@ Application settings are defined by environment variables.. To define the settin
 | `PORT_HTTPS` | Port used to listen for HTTPS requests. Do not forget to provide the private key and the SSL/TLS certificate. See the topic [generate certificates](#generate-certificates). | `4001` |
 | `SSL_KEY_PATH` | SSL/TLS certificate private key. | `.certs/server.key` |
 | `SSL_CERT_PATH` | SSL/TLS certificate. | `.certs/server.crt` |
-| `RABBITMQ_URI` | URI containing the parameters for connection to the message channel RabbitMQ. The [URI specifications ](https://www.rabbitmq.com/uri-spec.html) defined by RabbitMQ are accepted. For example: `amqp://user:pass@host:port/vhost`. | `amqp://guest:guest`<br/>`@127.0.0.1:5672/haniot` |
+| `RABBITMQ_URI` | URI containing the parameters for connection to the message channel RabbitMQ. The [URI specifications ](https://www.rabbitmq.com/uri-spec.html) defined by RabbitMQ are accepted. For example: `amqp://user:pass@host:port/vhost`. | `amqp://guest:guest`<br/>`@127.0.0.1:5672` |
+| `RABBITMQ_CA_PATH` | RabbitMQ CA file location. Must always be provided when using `amqps` protocol. | `.certs/ca.crt` |
 | `MONGODB_URI` | Database connection URI used if the application is running in development or production environment. The [URI specifications ](https://docs.mongodb.com/manual/reference/connection-string) defined by MongoDB are accepted. For example: `mongodb://user:pass@host:port/database?options`. | `mongodb://127.0.0.1:27017`<br/>`/haniot-mhealth` |
 | `MONGODB_URI_TEST` | Database connection URI used if the application is running in test environment. The [URI specifications ](https://docs.mongodb.com/manual/reference/connection-string) defined by MongoDB are accepted. For example: `mongodb://user:pass@host:port/database?options`. | `mongodb://127.0.0.1:27017`<br/>`/haniot-mhealth-test` |
 
@@ -115,7 +125,6 @@ docker run --rm \
   -e SSL_CERT_PATH=.certs/server.crt \
   -e RABBITMQ_URI="amqp://guest:guest@192.168.0.1:5672/haniot" \
   -e MONGODB_URI="mongodb://192.168.0.2:27017/haniot-mhealth" \
-  -e DASHBOARD_HOST="https://localhost" \
   haniot/mhealth-service
 ```
 If the MongoDB or RabbitMQ instance is in the host local, add the `--net=host` statement when creating the container, this will cause the docker container to communicate with its local host.
