@@ -16,6 +16,7 @@ import { expect } from 'chai'
 import { Strings } from '../../../src/utils/strings'
 import { ObjectID } from 'bson'
 import { DIContainer } from '../../../src/di/di'
+import { Default } from '../../../src/utils/default'
 
 const dbConnection: IConnectionDB = DIContainer.get(Identifier.MONGODB_CONNECTION)
 const app: App = DIContainer.get(Identifier.APP)
@@ -42,7 +43,7 @@ describe('Routes: PatientMeasurement', () => {
 
     before(async () => {
             try {
-                await dbConnection.tryConnect(0, 500)
+                await dbConnection.tryConnect(process.env.MONGODB_URI_TEST || Default.MONGODB_URI_TEST)
                 await deleteAllDevices()
                 await deleteAllMeasurements()
                 const result = await createDevice()

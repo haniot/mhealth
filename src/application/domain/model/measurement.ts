@@ -86,7 +86,8 @@ export class Measurement extends Entity implements IJSONSerializable, IJSONDeser
             unit: this.unit,
             timestamp: this.timestamp,
             type: this.type,
-            device_id: this.device_id
+            device_id: this.device_id,
+            patient_id: this.patient_id
         }
     }
 }

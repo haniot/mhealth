@@ -1,6 +1,6 @@
 import { Connection } from 'mongoose'
 import { inject, injectable } from 'inversify'
-import { IConnectionFactory } from '../port/connection.factory.interface'
+import { IConnectionFactory, IDBOptions } from '../port/connection.factory.interface'
 import { Identifier } from '../../di/identifiers'
 import { IConnectionDB } from '../port/connection.db.interface'
 import { ILogger } from '../../utils/custom.logger'
@@ -42,11 +42,14 @@ export class ConnectionMongodb implements IConnectionDB {
      * a new attempt will be made every 2 seconds. After the successful
      * connection, reconnection will be automatically managed by the MongoDB driver.
      *
+     * @param uri This specification defines an URI scheme.
+     * For more details see: {@link https://docs.mongodb.com/manual/reference/connection-string/}
+     * @param options {IDBOptions} Connection setup Options.
      * @return {Promise<void>}
      */
-    public async tryConnect(retries: number, interval: number): Promise<void> {
+    public async tryConnect(uri: string, options?: IDBOptions): Promise<void> {
         const _this = this
-        await this._connectionFactory.createConnection(retries, interval)
+        await this._connectionFactory.createConnection(uri, options)
             .then((connection: Connection) => {
                 this._connection = connection
                 this.connectionStatusListener(this._connection)
@@ -58,7 +61,7 @@ export class ConnectionMongodb implements IConnectionDB {
                 this._eventConnection.emit('disconnected')
                 this._logger.warn(`Error trying to connect for the first time with mongoDB: ${err.message}`)
                 setTimeout(async () => {
-                    _this.tryConnect(retries, interval).then()
+                    _this.tryConnect(uri, options).then()
                 }, 2000)
             })
     }

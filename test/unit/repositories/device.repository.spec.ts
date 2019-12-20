@@ -94,12 +94,12 @@ describe('Repositories: DeviceRepository', () => {
                     .expects('create')
                     .withArgs(device)
                     .chain('exec')
-                    .rejects({ name: 'CastError' })
+                    .rejects({ name: 'CastError', value: '123', path: 'id' })
 
                 return repo.create(device)
                     .catch(err => {
                         assert.propertyVal(err, 'name', 'Error')
-                        assert.propertyVal(err, 'message', 'The given ID is in invalid format.')
+                        assert.propertyVal(err, 'message', 'The value \'123\' of id field is invalid.')
                     })
             })
 
@@ -222,12 +222,12 @@ describe('Repositories: DeviceRepository', () => {
                     .chain('skip')
                     .chain('limit')
                     .chain('exec')
-                    .rejects({ name: 'CastError' })
+                    .rejects({ name: 'CastError', value: '123', path: 'id' })
 
                 return repo.find(new Query())
                     .catch(err => {
                         assert.propertyVal(err, 'name', 'Error')
-                        assert.propertyVal(err, 'message', 'The given ID is in invalid format.')
+                        assert.propertyVal(err, 'message', 'The value \'123\' of id field is invalid.')
                     })
             })
 
@@ -349,12 +349,12 @@ describe('Repositories: DeviceRepository', () => {
                     .expects('findOne')
                     .withArgs({ _id: device.id })
                     .chain('exec')
-                    .rejects({ name: 'CastError' })
+                    .rejects({ name: 'CastError', value: '123', path: 'id' })
 
                 return repo.findOne(query)
                     .catch(err => {
                         assert.propertyVal(err, 'name', 'Error')
-                        assert.propertyVal(err, 'message', 'The given ID is in invalid format.')
+                        assert.propertyVal(err, 'message', 'The value \'123\' of id field is invalid.')
                     })
             })
 
@@ -464,12 +464,12 @@ describe('Repositories: DeviceRepository', () => {
                     .expects('findOneAndUpdate')
                     .withArgs({ _id: device.id }, device, { new: true })
                     .chain('exec')
-                    .rejects({ name: 'CastError' })
+                    .rejects({ name: 'CastError', value: '123', path: 'id' })
 
                 return repo.update(device)
                     .catch(err => {
                         assert.propertyVal(err, 'name', 'Error')
-                        assert.propertyVal(err, 'message', 'The given ID is in invalid format.')
+                        assert.propertyVal(err, 'message', 'The value \'123\' of id field is invalid.')
                     })
             })
 
@@ -576,12 +576,12 @@ describe('Repositories: DeviceRepository', () => {
                     .expects('findOneAndDelete')
                     .withArgs({ _id: device.id })
                     .chain('exec')
-                    .rejects({ name: 'CastError' })
+                    .rejects({ name: 'CastError', value: '123', path: 'id' })
 
                 return repo.delete(device.id!)
                     .catch(err => {
                         assert.propertyVal(err, 'name', 'Error')
-                        assert.propertyVal(err, 'message', 'The given ID is in invalid format.')
+                        assert.propertyVal(err, 'message', 'The value \'123\' of id field is invalid.')
                     })
             })
 
@@ -671,12 +671,12 @@ describe('Repositories: DeviceRepository', () => {
                     .expects('countDocuments')
                     .withArgs({})
                     .chain('exec')
-                    .rejects({ name: 'CastError' })
+                    .rejects({ name: 'CastError', value: '123', path: 'id' })
 
                 return repo.count(new Query())
                     .catch(err => {
                         assert.propertyVal(err, 'name', 'Error')
-                        assert.propertyVal(err, 'message', 'The given ID is in invalid format.')
+                        assert.propertyVal(err, 'message', 'The value \'123\' of id field is invalid.')
                     })
             })
 
