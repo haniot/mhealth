@@ -11,6 +11,12 @@ import fs from 'fs'
 import { WeightSyncEvent } from '../../application/integration-event/event/weight.sync.event'
 import { IMeasurementRepository } from '../../application/port/measurement.repository.interface'
 import { WeightSyncEventHandler } from '../../application/integration-event/handler/weight.sync.event.handler'
+import { PhysicalActivitySyncEvent } from '../../application/integration-event/event/physical.activity.sync.event'
+import { PhysicalActivitySyncEventHandler } from '../../application/integration-event/handler/physical.activity.sync.event.handler'
+import { IPhysicalActivityRepository } from '../../application/port/physical.activity.repository.interface'
+import { SleepSyncEvent } from '../../application/integration-event/event/sleep.sync.event'
+import { SleepSyncEventHandler } from '../../application/integration-event/handler/sleep.sync.event.handler'
+import { ISleepRepository } from '../../application/port/sleep.repository.interface'
 
 @injectable()
 export class SubscribeEventBusTask implements IBackgroundTask {
@@ -61,8 +67,12 @@ export class SubscribeEventBusTask implements IBackgroundTask {
              */
             this._eventBus
                 .subscribe(
-                    new UserDeleteEvent(new Date()),
-                    new UserDeleteEventHandler(DIContainer.get(Identifier.MEASUREMENT_REPOSITORY), this._logger),
+                    new UserDeleteEvent(),
+                    new UserDeleteEventHandler(
+                        DIContainer.get(Identifier.MEASUREMENT_REPOSITORY),
+                        DIContainer.get(Identifier.ACTIVITY_REPOSITORY),
+                        DIContainer.get(Identifier.SLEEP_REPOSITORY),
+                        this._logger),
                     UserDeleteEvent.ROUTING_KEY
                 )
                 .then((result: boolean) => {
@@ -87,6 +97,40 @@ export class SubscribeEventBusTask implements IBackgroundTask {
                 })
                 .catch(err => {
                     this._logger.error(`Error in Subscribe WeightSyncEvent! ${err.message}`)
+                })
+
+            /**
+             * Subscribe in PhysicalActivitySyncEvent
+             */
+            this._eventBus
+                .subscribe(
+                    new PhysicalActivitySyncEvent(),
+                    new PhysicalActivitySyncEventHandler(
+                        DIContainer.get<IPhysicalActivityRepository>(Identifier.ACTIVITY_REPOSITORY),
+                        this._logger),
+                    PhysicalActivitySyncEvent.ROUTING_KEY)
+                .then((result: boolean) => {
+                    if (result) this._logger.info('Subscribe in PhysicalActivitySyncEvent successful!')
+                })
+                .catch(err => {
+                    this._logger.error(`Error in Subscribe PhysicalActivitySyncEvent! ${err.message}`)
+                })
+
+            /**
+             * Subscribe in SleepSyncEvent
+             */
+            this._eventBus
+                .subscribe(
+                    new SleepSyncEvent(),
+                    new SleepSyncEventHandler(
+                        DIContainer.get<ISleepRepository>(Identifier.SLEEP_REPOSITORY),
+                        this._logger),
+                    SleepSyncEvent.ROUTING_KEY)
+                .then((result: boolean) => {
+                    if (result) this._logger.info('Subscribe in SleepSyncEvent successful!')
+                })
+                .catch(err => {
+                    this._logger.error(`Error in Subscribe SleepSyncEvent! ${err.message}`)
                 })
         } catch (err) {
             this._logger.error(`An error occurred while subscribing to events. ${err.message}`)

@@ -46,4 +46,13 @@ export interface IPhysicalActivityRepository extends IRepository<PhysicalActivit
      * @throws {RepositoryException}
      */
     countByPatient(patientId: string): Promise<number>
+
+    /**
+     * Updates or creates a Physical Activity.
+     *
+     * @param item Physical Activity to be updated or created.
+     * @return {Promise<any>}
+     * @throws {RepositoryException}
+     */
+    updateOrCreate(item: any): Promise<any>
 }

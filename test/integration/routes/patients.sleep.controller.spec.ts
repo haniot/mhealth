@@ -160,7 +160,7 @@ describe('Routes: patients.sleep', () => {
      * POST route with only one Sleep in the body
      */
     describe('POST /v1/patients/:patient_id/sleep with only one Sleep in the body', () => {
-        context('when posting a new Sleep with success (there is no connection to RabbitMQ)', () => {
+        context('when posting a new Sleep with success', () => {
             before(async () => {
                 try {
                     await deleteAllSleep()
@@ -1224,7 +1224,7 @@ describe('Routes: patients.sleep', () => {
      * DELETE route
      */
     describe('DELETE /v1/patients/:patient_id/sleep/:sleep_id', () => {
-        context('when the sleep was deleted successfully (there is no connection to RabbitMQ)', () => {
+        context('when the sleep was deleted successfully', () => {
             let result
 
             before(async () => {

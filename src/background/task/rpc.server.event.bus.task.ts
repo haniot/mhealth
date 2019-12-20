@@ -11,12 +11,18 @@ import { MeasurementTypes } from '../../application/domain/utils/measurement.typ
 import { IQuery } from '../../application/port/query.interface'
 import fs from 'fs'
 import { Default } from '../../utils/default'
+import { IPhysicalActivityRepository } from '../../application/port/physical.activity.repository.interface'
+import { ISleepRepository } from '../../application/port/sleep.repository.interface'
+import { PhysicalActivity } from '../../application/domain/model/physical.activity'
+import { Sleep } from '../../application/domain/model/sleep'
 
 @injectable()
 export class RpcServerEventBusTask implements IBackgroundTask {
     constructor(
         @inject(Identifier.RABBITMQ_EVENT_BUS) private readonly _eventBus: IEventBus,
         @inject(Identifier.MEASUREMENT_REPOSITORY) private readonly _measurementRepo: IMeasurementRepository,
+        @inject(Identifier.ACTIVITY_REPOSITORY) private readonly _activityRepo: IPhysicalActivityRepository,
+        @inject(Identifier.SLEEP_REPOSITORY) private readonly _sleepRepo: ISleepRepository,
         @inject(Identifier.LOGGER) private readonly _logger: ILogger
     ) {
     }
@@ -53,9 +59,13 @@ export class RpcServerEventBusTask implements IBackgroundTask {
     private initializeServer(): void {
         this._eventBus
             .provideResource('measurements.find', async (_query?: string) => {
-                const query: IQuery = this.buildQS(_query, 'timestamp')
-                const result: Array<any> = await this._measurementRepo.find(query)
-                return result.map(item => item.toJSON())
+                try {
+                    const query: IQuery = this.buildQS(_query, 'timestamp')
+                    const result: Array<any> = await this._measurementRepo.find(query)
+                    return result.map(item => item.toJSON())
+                } catch (err) {
+                    return err
+                }
             })
             .then(() => this._logger.info('Resource measurements.find successful registered'))
             .catch((err) => this._logger.error(`Error at register resource measurements.find: ${err.message}`))
@@ -88,6 +98,32 @@ export class RpcServerEventBusTask implements IBackgroundTask {
             .catch((err) => {
                 this._logger.error(`Error at register resource measurements.find.last: ${err.message}`)
             })
+
+        this._eventBus
+            .provideResource('physicalactivities.find', async (_query?: string) => {
+                try {
+                    const query: IQuery = this.buildQS(_query, 'start_time')
+                    const result: Array<PhysicalActivity> = await this._activityRepo.find(query)
+                    return result.map(item => item.toJSON())
+                } catch (err) {
+                    return err
+                }
+            })
+            .then(() => this._logger.info('Resource physicalactivities.find successful registered'))
+            .catch((err) => this._logger.error(`Error at register resource physicalactivities.find: ${err.message}`))
+
+        this._eventBus
+            .provideResource('sleep.find', async (_query?: string) => {
+                try {
+                    const query: IQuery = this.buildQS(_query, 'start_time')
+                    const result: Array<Sleep> = await this._sleepRepo.find(query)
+                    return result.map(item => item.toJSON())
+                } catch (err) {
+                    return err
+                }
+            })
+            .then(() => this._logger.info('Resource sleep.find successful registered'))
+            .catch((err) => this._logger.error(`Error at register resource sleep.find: ${err.message}`))
     }
 
     /**

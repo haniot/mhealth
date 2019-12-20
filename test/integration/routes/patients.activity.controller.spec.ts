@@ -198,7 +198,7 @@ describe('Routes: patients.physicalactivities', () => {
      * POST route to PhysicalActivity with only one item of this type in the body
      */
     describe('POST /v1/patients/:patient_id/physicalactivities with only one PhysicalActivity in the body', () => {
-        context('when posting a new PhysicalActivity with success (there is no connection to RabbitMQ)', () => {
+        context('when posting a new PhysicalActivity with success', () => {
             before(async () => {
                 try {
                     await deleteAllActivities()
@@ -1915,7 +1915,7 @@ describe('Routes: patients.physicalactivities', () => {
      * DELETE route for PhysicalActivity
      */
     describe('DELETE /v1/patients/:patient_id/physicalactivities/:physicalactivity_id', () => {
-        context('when the physical activity was deleted successfully (there is no connection to RabbitMQ)', () => {
+        context('when the physical activity was deleted successfully', () => {
             let result
 
             before(async () => {

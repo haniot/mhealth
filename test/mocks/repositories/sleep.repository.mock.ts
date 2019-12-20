@@ -60,4 +60,8 @@ export class SleepRepositoryMock implements ISleepRepository {
     public removeAllByPatient(patientId: string): Promise<boolean> {
         return Promise.resolve(true)
     }
+
+    public updateOrCreate(item: any): Promise<any> {
+        return Promise.resolve(item)
+    }
 }

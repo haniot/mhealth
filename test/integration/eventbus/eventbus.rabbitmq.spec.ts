@@ -1,12 +1,15 @@
 import { expect } from 'chai'
-import { DIContainer } from '../../../src/di/di'
-import { Identifier } from '../../../src/di/identifiers'
 import { IntegrationEvent } from '../../../src/application/integration-event/event/integration.event'
 import { IIntegrationEventHandler } from '../../../src/application/integration-event/handler/integration.event.handler.interface'
 import { EventBusRabbitMQ } from '../../../src/infrastructure/eventbus/rabbitmq/eventbus.rabbitmq'
 import { Default } from '../../../src/utils/default'
+import { ConnectionRabbitMQ } from '../../../src/infrastructure/eventbus/rabbitmq/connection.rabbitmq'
+import { ConnectionFactoryRabbitMQ } from '../../../src/infrastructure/eventbus/rabbitmq/connection.factory.rabbitmq'
 
-const eventBus: EventBusRabbitMQ = DIContainer.get(Identifier.RABBITMQ_EVENT_BUS)
+const eventBus: EventBusRabbitMQ = new EventBusRabbitMQ(new ConnectionRabbitMQ(new ConnectionFactoryRabbitMQ()),
+    new ConnectionRabbitMQ(new ConnectionFactoryRabbitMQ()),
+    new ConnectionRabbitMQ(new ConnectionFactoryRabbitMQ()),
+    new ConnectionRabbitMQ(new ConnectionFactoryRabbitMQ()))
 
 describe('EVENT BUS', () => {
     before(() => {
@@ -15,10 +18,7 @@ describe('EVENT BUS', () => {
 
     after(async () => {
         try {
-            await eventBus.connectionPub.dispose()
-            await eventBus.connectionSub.dispose()
-            await eventBus.connectionRpcServer.dispose()
-            await eventBus.connectionRpcClient.dispose()
+            await eventBus.dispose()
         } catch (err) {
             throw new Error('Failure on EventBus test: ' + err.message)
         }
@@ -178,7 +178,7 @@ describe('EVENT BUS', () => {
                 await eventBus.connectionRpcClient.open(process.env.RABBITMQ_URI || Default.RABBITMQ_URI,
                     { interval: 100, sslOptions: { ca: [] } })
 
-                return eventBus.executeResource('notification.service',
+                return eventBus.executeResource('notification.rpc',
                     'resource.find', '')
                     .catch(err => {
                         expect(err).to.be.an('error')

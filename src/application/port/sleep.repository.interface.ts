@@ -46,4 +46,13 @@ export interface ISleepRepository extends IRepository<Sleep> {
      * @throws {RepositoryException}
      */
     countByPatient(patientId: string): Promise<number>
+
+    /**
+     * Updates or creates a Sleep.
+     *
+     * @param item Sleep to be updated or created.
+     * @return {Promise<any>}
+     * @throws {RepositoryException}
+     */
+    updateOrCreate(item: any): Promise<any>
 }

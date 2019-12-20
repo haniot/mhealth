@@ -99,4 +99,25 @@ export class SleepRepository extends BaseRepository<Sleep, SleepEntity> implemen
     public countByPatient(patientId: string): Promise<number> {
         return super.count(new Query().fromJSON({ filters: { patient_id: patientId } }))
     }
+
+    /**
+     * Updates or creates a Sleep.
+     *
+     * @param item Sleep to be updated or created.
+     * @return {Promise<any>}
+     * @throws {RepositoryException}
+     */
+    public updateOrCreate(item: any): Promise<any> {
+        const itemUp: any = this.sleepMapper.transform(item)
+        return new Promise<any>((resolve, reject) => {
+            this.Model.findOneAndUpdate({ patient_id: itemUp.patient_id }, itemUp,
+                { new: true, upsert: true })
+                .exec()
+                .then((result) => {
+                    if (!result) return resolve(undefined)
+                    return resolve(this.sleepMapper.transform(result))
+                })
+                .catch(err => reject(this.mongoDBErrorListener(err)))
+        })
+    }
 }
