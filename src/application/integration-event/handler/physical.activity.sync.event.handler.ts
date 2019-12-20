@@ -15,36 +15,52 @@ export class PhysicalActivitySyncEventHandler implements IIntegrationEventHandle
     }
 
     public async handle(event: PhysicalActivitySyncEvent): Promise<void> {
-        try {
-            if (!event.physical_activity) return
-            if (event.physical_activity instanceof Array) {
-                for (const item of event.physical_activity) {
+        let countSuccess = 0
+        let countError = 0
+        if (!event.physical_activity) return
+        if (event.physical_activity instanceof Array) {
+            for (const item of event.physical_activity) {
+                try {
                     await this.updateOrCreate(event, item)
+                    countSuccess++
+                } catch (err) {
+                    this._logger.warn(`An error occurred while attempting `
+                        .concat(`perform the operation with the ${event.event_name} name event. ${err.message}`)
+                        .concat(err.description ? ' ' + err.description : ''))
+                    countError++
                 }
             }
-            else await this.updateOrCreate(event, event.physical_activity)
-        } catch (err) {
-            this._logger.warn(`An error occurred while attempting `
-                .concat(`perform the operation with the ${event.event_name} name event. ${err.message}`)
-                .concat(err.description ? ' ' + err.description : ''))
+            this._logger.info(`Action for event ${event.event_name} successfully held! Total successful items: `
+                .concat(`${countSuccess} / Total items with error: ${countError}`))
+        } else {
+            try {
+                await this.updateOrCreate(event, event.physical_activity)
+                this._logger.info(
+                    `Action for event ${event.event_name} associated with patient with ID: ${event.physical_activity.patient_id}`
+                        .concat('successfully performed!'))
+            } catch (err) {
+                this._logger.warn(`An error occurred while attempting `
+                    .concat(`perform the operation with the ${event.event_name} name event. ${err.message}`)
+                    .concat(err.description ? ' ' + err.description : ''))
+            }
         }
     }
 
-    public async updateOrCreate(event: PhysicalActivitySyncEvent, item: PhysicalActivity): Promise<void> {
+    public async updateOrCreate(event: PhysicalActivitySyncEvent, item: PhysicalActivity): Promise<any> {
         const physicalActivity: PhysicalActivity = new PhysicalActivity().fromJSON(item)
-        let patientId: string = ''
-        if (item.patient_id) {
-            patientId = item.patient_id
-            physicalActivity.patient_id = patientId
+        try {
+            let patientId: string = ''
+            if (item.patient_id) {
+                patientId = item.patient_id
+                physicalActivity.patient_id = patientId
+            }
+
+            // 1. Validate PhysicalActivity object
+            CreatePhysicalActivityValidator.validate(physicalActivity)
+        } catch (err) {
+            throw err
         }
-
-        // 1. Validate PhysicalActivity object
-        CreatePhysicalActivityValidator.validate(physicalActivity)
-
         // 2. Update (or create if doesn't exist) a PhysicalActivity
-        await this._activityRepo.updateOrCreate(physicalActivity)
-
-        this._logger.info(
-            `Action for event ${event.event_name} associated with patient with ID: ${patientId} successfully performed!`)
+        return this._activityRepo.updateOrCreate(physicalActivity)
     }
 }

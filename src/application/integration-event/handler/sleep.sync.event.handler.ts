@@ -15,36 +15,52 @@ export class SleepSyncEventHandler implements IIntegrationEventHandler<SleepSync
     }
 
     public async handle(event: SleepSyncEvent): Promise<void> {
-        try {
-            if (!event.sleep) return
-            if (event.sleep instanceof Array) {
-                for (const item of event.sleep) {
+        let countSuccess = 0
+        let countError = 0
+        if (!event.sleep) return
+        if (event.sleep instanceof Array) {
+            for (const item of event.sleep) {
+                try {
                     await this.updateOrCreate(event, item)
+                    countSuccess++
+                } catch (err) {
+                    this._logger.warn(`An error occurred while attempting `
+                        .concat(`perform the operation with the ${event.event_name} name event. ${err.message}`)
+                        .concat(err.description ? ' ' + err.description : ''))
+                    countError++
                 }
             }
-            else await this.updateOrCreate(event, event.sleep)
-        } catch (err) {
-            this._logger.warn(`An error occurred while attempting `
-                .concat(`perform the operation with the ${event.event_name} name event. ${err.message}`)
-                .concat(err.description ? ' ' + err.description : ''))
+            this._logger.info(`Action for event ${event.event_name} successfully held! Total successful items: `
+                .concat(`${countSuccess} / Total items with error: ${countError}`))
+        } else {
+            try {
+                await this.updateOrCreate(event, event.sleep)
+                this._logger.info(
+                    `Action for event ${event.event_name} associated with patient with ID: ${event.sleep.patient_id}`
+                        .concat('successfully performed!'))
+            } catch (err) {
+                this._logger.warn(`An error occurred while attempting `
+                    .concat(`perform the operation with the ${event.event_name} name event. ${err.message}`)
+                    .concat(err.description ? ' ' + err.description : ''))
+            }
         }
     }
 
-    public async updateOrCreate(event: SleepSyncEvent, item: Sleep): Promise<void> {
+    public async updateOrCreate(event: SleepSyncEvent, item: Sleep): Promise<any> {
         const sleep: Sleep = new Sleep().fromJSON(item)
-        let patientId: string = ''
-        if (item.patient_id) {
-            patientId = item.patient_id
-            sleep.patient_id = patientId
+        try {
+            let patientId: string = ''
+            if (item.patient_id) {
+                patientId = item.patient_id
+                sleep.patient_id = patientId
+            }
+
+            // 1. Validate Sleep object
+            CreateSleepValidator.validate(sleep)
+        } catch (err) {
+            throw err
         }
-
-        // 1. Validate Sleep object
-        CreateSleepValidator.validate(sleep)
-
         // 2. Update (or create if doesn't exist) a Sleep
-        await this._sleepRepo.updateOrCreate(sleep)
-
-        this._logger.info(
-            `Action for event ${event.event_name} associated with patient with ID: ${patientId} successfully performed!`)
+        return this._sleepRepo.updateOrCreate(sleep)
     }
 }

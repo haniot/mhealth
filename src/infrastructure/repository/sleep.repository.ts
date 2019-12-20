@@ -110,7 +110,7 @@ export class SleepRepository extends BaseRepository<Sleep, SleepEntity> implemen
     public updateOrCreate(item: any): Promise<any> {
         const itemUp: any = this.sleepMapper.transform(item)
         return new Promise<any>((resolve, reject) => {
-            this.Model.findOneAndUpdate({ patient_id: itemUp.patient_id }, itemUp,
+            this.Model.findOneAndUpdate({ start_time: itemUp.start_time, patient_id: itemUp.patient_id }, itemUp,
                 { new: true, upsert: true })
                 .exec()
                 .then((result) => {
