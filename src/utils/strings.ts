@@ -9,8 +9,9 @@
  */
 export abstract class Strings {
     public static readonly APP: any = {
-        TITLE: 'Data Acquisition Service',
-        APP_DESCRIPTION: 'Micro-service for Data Acquisition.'
+        TITLE: 'MHealth Service',
+        APP_DESCRIPTION: 'RESTFul microservice API responsible for managing health' +
+            ' measurements, physical activity and sleep.'
     }
 
     public static readonly ERROR_MESSAGE: any = {

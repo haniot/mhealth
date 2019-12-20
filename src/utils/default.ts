@@ -7,15 +7,13 @@
  *
  * @abstract
  */
+
 export abstract class Default {
-    public static readonly APP_TITLE: string = 'HANIoT Measurement Health Service'
-    public static readonly APP_DESCRIPTION: string = 'Microservice responsible for manage user measurements.'
     public static readonly NODE_ENV: string = 'development' // development, test, production
     public static readonly PORT_HTTP: number = 4000
     public static readonly PORT_HTTPS: number = 4001
     public static readonly SWAGGER_PATH: string = './src/ui/swagger/api.yaml'
-    public static readonly SWAGGER_URI: string = 'https://api.swaggerhub.com/apis/haniot/mhealth-service/v2/' +
-        'swagger.json'
+    public static readonly SWAGGER_URI: string = 'https://api.swaggerhub.com/apis/haniot/mhealth-service/v2/swagger.json'
     public static readonly LOGO_URI: string = 'https://i.imgur.com/O7PxGWQ.png'
 
     // RabbitMQ

@@ -1,7 +1,7 @@
 {
   "name": "mhealth-service",
-  "version": "2.1.1",
-  "description": "Microservice responsible for managing health measurements such as temperature, weight, blood pressure, blood glucose and more.",
+  "version": "2.2.0",
+  "description": "RESTFul microservice API responsible for managing health measurements, physical activity and sleep.",
   "main": "dist/server.js",
   "scripts": {
     "build": "gulp build",
@@ -57,6 +57,7 @@
     "dotenv": "^8.2.0",
     "express": "^4.17.1",
     "helmet": "^3.21.2",
+    "http-status-codes": "^1.4.0",
     "inversify": "^5.0.1",
     "inversify-express-utils": "^6.3.2",
     "mongoose": "^5.8.1",
