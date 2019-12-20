@@ -540,6 +540,11 @@ describe('SUBSCRIBE EVENT BUS TASK', () => {
 
                 // Sleep that will be previously created in the repository and updated via the bus
                 const sleepToBeUpdated: Sleep = new SleepMock()
+                sleepToBeUpdated.start_time = new Date(1516417200000).toISOString()
+                sleepToBeUpdated.end_time = new Date(new Date(sleepToBeUpdated.start_time)
+                    .setMilliseconds(Math.floor(Math.random() * 35 + 10) * 60000)).toISOString()
+                sleepToBeUpdated.duration =
+                    new Date(sleepToBeUpdated.end_time).getTime() - new Date(sleepToBeUpdated.start_time).getTime()
                 sleepToBeUpdated.patient_id = '7b73cd12e7f22311035d8c51'
 
                 sleepRepository.create(sleepToBeUpdated)
