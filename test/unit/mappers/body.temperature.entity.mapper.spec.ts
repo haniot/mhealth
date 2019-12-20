@@ -52,7 +52,6 @@ describe('Mappers: BodyTemperatureEntityMapper', () => {
                 assert.propertyVal(result, 'type', DefaultEntityMock.BODY_TEMPERATURE.type)
                 assert.propertyVal(result, 'unit', DefaultEntityMock.BODY_TEMPERATURE.unit)
                 assert.propertyVal(result, 'device_id', DefaultEntityMock.BODY_TEMPERATURE.device_id)
-                assert.propertyVal(result, 'patient_id', DefaultEntityMock.BODY_TEMPERATURE.patient_id)
                 assert.propertyVal(result, 'value', DefaultEntityMock.BODY_TEMPERATURE.value)
                 assert.propertyVal(result, 'timestamp', DefaultEntityMock.BODY_TEMPERATURE.timestamp)
             })

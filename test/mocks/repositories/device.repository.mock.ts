@@ -4,6 +4,7 @@ import { Device } from '../../../src/application/domain/model/device'
 import { DefaultEntityMock } from '../models/default.entity.mock'
 
 const device: Device = new Device().fromJSON(DefaultEntityMock.DEVICE)
+device.patient_id = DefaultEntityMock.DEVICE.patient_id
 
 export class DeviceRepositoryMock implements IDeviceRepository {
     public count(query: IQuery): Promise<number> {

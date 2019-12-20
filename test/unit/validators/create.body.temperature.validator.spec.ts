@@ -7,6 +7,7 @@ import { CreateBodyTemperatureValidator } from '../../../src/application/domain/
 
 describe('Validators: CreateBodyTemperatureValidator', () => {
     const measurement: BodyTemperature = new BodyTemperature().fromJSON(DefaultEntityMock.BODY_TEMPERATURE)
+    measurement.patient_id = DefaultEntityMock.BODY_TEMPERATURE.patient_id
 
     it('should return undefined when the validation was successful', () => {
         const result = CreateBodyTemperatureValidator.validate(measurement)
@@ -71,7 +72,7 @@ describe('Validators: CreateBodyTemperatureValidator', () => {
             try {
                 CreateBodyTemperatureValidator.validate(measurement)
             } catch (err) {
-                assert.propertyVal(err, 'message', 'Datetime: 12-04-2012 is not in valid ISO 8601 format.')
+                assert.propertyVal(err, 'message', 'Datetime: 12-04-2012'.concat(Strings.ERROR_MESSAGE.INVALID_DATE))
                 assert.propertyVal(err, 'description', 'Date must be in the format: yyyy-MM-dd\'T\'HH:mm:ssZ')
             } finally {
                 measurement.timestamp = DefaultEntityMock.BODY_TEMPERATURE.timestamp

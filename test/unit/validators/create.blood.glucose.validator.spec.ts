@@ -8,6 +8,7 @@ import { MeasurementTypes } from '../../../src/application/domain/utils/measurem
 
 describe('Validators: CreateBloodGlucoseValidator', () => {
     const measurement: BloodGlucose = new BloodGlucose().fromJSON(DefaultEntityMock.BLOOD_GLUCOSE)
+    measurement.patient_id = DefaultEntityMock.BLOOD_GLUCOSE.patient_id
 
     it('should return undefined when the validation was successful', () => {
         const result = CreateBloodGlucoseValidator.validate(measurement)
@@ -94,7 +95,7 @@ describe('Validators: CreateBloodGlucoseValidator', () => {
             try {
                 CreateBloodGlucoseValidator.validate(measurement)
             } catch (err) {
-                assert.propertyVal(err, 'message', 'Datetime: 12-04-2012 is not in valid ISO 8601 format.')
+                assert.propertyVal(err, 'message', 'Datetime: 12-04-2012'.concat(Strings.ERROR_MESSAGE.INVALID_DATE))
                 assert.propertyVal(err, 'description', 'Date must be in the format: yyyy-MM-dd\'T\'HH:mm:ssZ')
             } finally {
                 measurement.timestamp = DefaultEntityMock.BLOOD_GLUCOSE.timestamp

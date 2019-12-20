@@ -7,6 +7,7 @@ import { BodyFat } from '../../../src/application/domain/model/body.fat'
 
 describe('Validators: CreateBodyFatValidator', () => {
     const measurement: BodyFat = new BodyFat().fromJSON(DefaultEntityMock.BODY_FAT)
+    measurement.patient_id = DefaultEntityMock.BODY_FAT.patient_id
 
     it('should return undefined when the validation was successful', () => {
         const result = CreateBodyFatValidator.validate(measurement)
@@ -71,7 +72,7 @@ describe('Validators: CreateBodyFatValidator', () => {
             try {
                 CreateBodyFatValidator.validate(measurement)
             } catch (err) {
-                assert.propertyVal(err, 'message', 'Datetime: 12-04-2012 is not in valid ISO 8601 format.')
+                assert.propertyVal(err, 'message', 'Datetime: 12-04-2012'.concat(Strings.ERROR_MESSAGE.INVALID_DATE))
                 assert.propertyVal(err, 'description', 'Date must be in the format: yyyy-MM-dd\'T\'HH:mm:ssZ')
             } finally {
                 measurement.timestamp = DefaultEntityMock.BODY_FAT.timestamp

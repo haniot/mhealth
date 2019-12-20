@@ -1,6 +1,7 @@
 import { MeasurementTypes } from '../../../src/application/domain/utils/measurement.types'
 import { MealTypes } from '../../../src/application/domain/utils/meal.types'
 import { MeasurementUnits } from '../../../src/application/domain/utils/measurement.units'
+import { DeviceTypes } from '../../../src/application/domain/utils/device.types'
 
 export abstract class DefaultEntityMock {
     public static BLOOD_GLUCOSE: any = {
@@ -42,6 +43,17 @@ export abstract class DefaultEntityMock {
         unit: MeasurementUnits.PERCENTUAL,
         type: MeasurementTypes.BODY_FAT,
         timestamp: '2018-11-17T14:40:00Z',
+        patient_id: '5a62be07d6f33400146c9b61',
+        device_id: '5ca77314bc08ec205689a736'
+    }
+
+    public static WEIGHT: any = {
+        id: '5cb4882751b5f21ba364ba6f',
+        value: 50,
+        unit: MeasurementUnits.WEIGHT,
+        type: MeasurementTypes.WEIGHT,
+        timestamp: '2018-11-19T14:40:00Z',
+        body_fat: 20,
         patient_id: '5a62be07d6f33400146c9b61',
         device_id: '5ca77314bc08ec205689a736'
     }
@@ -96,22 +108,11 @@ export abstract class DefaultEntityMock {
         device_id: '5ca77314bc08ec205689a736'
     }
 
-    public static WEIGHT: any = {
-        id: '5cb4882751b5f21ba364ba6f',
-        value: 50,
-        unit: MeasurementUnits.WEIGHT,
-        type: MeasurementTypes.WEIGHT,
-        timestamp: '2018-11-19T14:40:00Z',
-        body_fat: 30,
-        patient_id: '5a62be07d6f33400146c9b61',
-        device_id: '5ca77314bc08ec205689a736'
-    }
-
     public static DEVICE: any = {
         id: '5ca77314bc08ec205689a736',
         name: 'YUNMAI SCALE',
         address: 'D4:36:39:91:75:71',
-        type: 'thermometer',
+        type: DeviceTypes.THERMOMETER,
         model_number: '502C8',
         manufacturer: 'XIAOMI',
         patient_id: '5a62be07d6f33400146c9b61'

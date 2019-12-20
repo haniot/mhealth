@@ -7,6 +7,8 @@ import { Strings } from '../../../src/utils/strings'
 
 describe('Validators: CreateWeightValidator', () => {
     const measurement: Weight = new Weight().fromJSON(DefaultEntityMock.WEIGHT)
+    measurement.patient_id = DefaultEntityMock.WEIGHT.patient_id
+
     it('should return undefined when the validation was successful', () => {
         const result = CreateWeightValidator.validate(measurement)
         assert.isUndefined(result)
@@ -70,7 +72,7 @@ describe('Validators: CreateWeightValidator', () => {
             try {
                 CreateWeightValidator.validate(measurement)
             } catch (err) {
-                assert.propertyVal(err, 'message', 'Datetime: 12-04-2012 is not in valid ISO 8601 format.')
+                assert.propertyVal(err, 'message', 'Datetime: 12-04-2012'.concat(Strings.ERROR_MESSAGE.INVALID_DATE))
                 assert.propertyVal(err, 'description', 'Date must be in the format: yyyy-MM-dd\'T\'HH:mm:ssZ')
             } finally {
                 measurement.timestamp = DefaultEntityMock.WEIGHT.timestamp

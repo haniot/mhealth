@@ -9,8 +9,7 @@ describe('Models: Measurement', () => {
                 const result = new Measurement().fromJSON(DefaultEntityMock.MEASUREMENT)
                 assert.propertyVal(result, 'unit', DefaultEntityMock.MEASUREMENT.unit)
                 assert.propertyVal(result, 'device_id', DefaultEntityMock.MEASUREMENT.device_id)
-                assert.propertyVal(result, 'patient_id', DefaultEntityMock.MEASUREMENT.patient_id)
-                assert.isUndefined(result.type, 'no type defined')
+                assert.propertyVal(result, 'type', DefaultEntityMock.MEASUREMENT.type)
             })
         })
 
@@ -19,8 +18,7 @@ describe('Models: Measurement', () => {
                 const result = new Measurement().fromJSON(JSON.stringify(DefaultEntityMock.MEASUREMENT))
                 assert.propertyVal(result, 'unit', DefaultEntityMock.MEASUREMENT.unit)
                 assert.propertyVal(result, 'device_id', DefaultEntityMock.MEASUREMENT.device_id)
-                assert.propertyVal(result, 'patient_id', DefaultEntityMock.MEASUREMENT.patient_id)
-                assert.isUndefined(result.type, 'no type defined')
+                assert.propertyVal(result, 'type', DefaultEntityMock.MEASUREMENT.type)
             })
         })
 
@@ -66,7 +64,7 @@ describe('Models: Measurement', () => {
     })
 
     describe('toJSON()', () => {
-        context('when covert model to json', () => {
+        context('when convert model to json', () => {
             it('should return a json with model parameters', () => {
                 const measurement = new Measurement().fromJSON(DefaultEntityMock.MEASUREMENT)
                 measurement.id = DefaultEntityMock.MEASUREMENT.id
@@ -76,7 +74,6 @@ describe('Models: Measurement', () => {
                 assert.propertyVal(result, 'type', 'any_type')
                 assert.propertyVal(result, 'unit', DefaultEntityMock.MEASUREMENT.unit)
                 assert.propertyVal(result, 'device_id', DefaultEntityMock.MEASUREMENT.device_id)
-                assert.propertyVal(result, 'patient_id', DefaultEntityMock.MEASUREMENT.patient_id)
             })
         })
 

@@ -55,7 +55,6 @@ describe('Mappers: BloodGlucoseEntityMapper', () => {
                 assert.propertyVal(result, 'type', DefaultEntityMock.BLOOD_GLUCOSE.type)
                 assert.propertyVal(result, 'unit', DefaultEntityMock.BLOOD_GLUCOSE.unit)
                 assert.propertyVal(result, 'device_id', DefaultEntityMock.BLOOD_GLUCOSE.device_id)
-                assert.propertyVal(result, 'patient_id', DefaultEntityMock.BLOOD_GLUCOSE.patient_id)
                 assert.propertyVal(result, 'value', DefaultEntityMock.BLOOD_GLUCOSE.value)
                 assert.propertyVal(result, 'timestamp', DefaultEntityMock.BLOOD_GLUCOSE.timestamp)
                 assert.propertyVal(result, 'meal', DefaultEntityMock.BLOOD_GLUCOSE.meal)

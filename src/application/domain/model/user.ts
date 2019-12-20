@@ -24,7 +24,10 @@ export class User extends Entity implements IJSONSerializable, IJSONDeserializab
     }
 
     public toJSON(): any {
-        return {}
+        return {
+            id: super.id,
+            type: this.type
+        }
     }
 
 }

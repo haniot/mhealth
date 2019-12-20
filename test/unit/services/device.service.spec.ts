@@ -8,6 +8,7 @@ import { Strings } from '../../../src/utils/strings'
 
 describe('Services: DeviceService', () => {
     const device: Device = new Device().fromJSON(DefaultEntityMock.DEVICE)
+    device.patient_id = DefaultEntityMock.DEVICE.patient_id
     const service = new DeviceService(new DeviceRepositoryMock())
 
     describe('add()', () => {

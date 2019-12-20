@@ -10,7 +10,6 @@ describe('Models: BodyTemperature', () => {
                 assert.propertyVal(result, 'type', DefaultEntityMock.BODY_TEMPERATURE.type)
                 assert.propertyVal(result, 'unit', DefaultEntityMock.BODY_TEMPERATURE.unit)
                 assert.propertyVal(result, 'device_id', DefaultEntityMock.BODY_TEMPERATURE.device_id)
-                assert.propertyVal(result, 'patient_id', DefaultEntityMock.BODY_TEMPERATURE.patient_id)
                 assert.propertyVal(result, 'value', DefaultEntityMock.BODY_TEMPERATURE.value)
                 assert.propertyVal(result, 'timestamp', DefaultEntityMock.BODY_TEMPERATURE.timestamp)
             })
@@ -22,7 +21,6 @@ describe('Models: BodyTemperature', () => {
                 assert.propertyVal(result, 'type', DefaultEntityMock.BODY_TEMPERATURE.type)
                 assert.propertyVal(result, 'unit', DefaultEntityMock.BODY_TEMPERATURE.unit)
                 assert.propertyVal(result, 'device_id', DefaultEntityMock.BODY_TEMPERATURE.device_id)
-                assert.propertyVal(result, 'patient_id', DefaultEntityMock.BODY_TEMPERATURE.patient_id)
                 assert.propertyVal(result, 'value', DefaultEntityMock.BODY_TEMPERATURE.value)
                 assert.propertyVal(result, 'timestamp', DefaultEntityMock.BODY_TEMPERATURE.timestamp)
             })
@@ -78,7 +76,7 @@ describe('Models: BodyTemperature', () => {
     })
 
     describe('toJSON()', () => {
-        context('when covert model to json', () => {
+        context('when convert model to json', () => {
             it('should return a json with model parameters', () => {
                 const measurement = new BodyTemperature().fromJSON(DefaultEntityMock.BODY_TEMPERATURE)
                 measurement.id = DefaultEntityMock.BODY_TEMPERATURE.id
@@ -87,7 +85,6 @@ describe('Models: BodyTemperature', () => {
                 assert.propertyVal(result, 'type', DefaultEntityMock.BODY_TEMPERATURE.type)
                 assert.propertyVal(result, 'unit', DefaultEntityMock.BODY_TEMPERATURE.unit)
                 assert.propertyVal(result, 'device_id', DefaultEntityMock.BODY_TEMPERATURE.device_id)
-                assert.propertyVal(result, 'patient_id', DefaultEntityMock.BODY_TEMPERATURE.patient_id)
                 assert.propertyVal(result, 'value', DefaultEntityMock.BODY_TEMPERATURE.value)
                 assert.propertyVal(result, 'timestamp', DefaultEntityMock.BODY_TEMPERATURE.timestamp)
             })

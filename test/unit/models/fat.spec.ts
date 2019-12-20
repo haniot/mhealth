@@ -10,7 +10,6 @@ describe('Models: BodyFat', () => {
                 assert.propertyVal(result, 'type', DefaultEntityMock.BODY_FAT.type)
                 assert.propertyVal(result, 'unit', DefaultEntityMock.BODY_FAT.unit)
                 assert.propertyVal(result, 'device_id', DefaultEntityMock.BODY_FAT.device_id)
-                assert.propertyVal(result, 'patient_id', DefaultEntityMock.BODY_FAT.patient_id)
                 assert.propertyVal(result, 'value', DefaultEntityMock.BODY_FAT.value)
                 assert.propertyVal(result, 'timestamp', DefaultEntityMock.BODY_FAT.timestamp)
             })
@@ -22,7 +21,6 @@ describe('Models: BodyFat', () => {
                 assert.propertyVal(result, 'type', DefaultEntityMock.BODY_FAT.type)
                 assert.propertyVal(result, 'unit', DefaultEntityMock.BODY_FAT.unit)
                 assert.propertyVal(result, 'device_id', DefaultEntityMock.BODY_FAT.device_id)
-                assert.propertyVal(result, 'patient_id', DefaultEntityMock.BODY_FAT.patient_id)
                 assert.propertyVal(result, 'value', DefaultEntityMock.BODY_FAT.value)
                 assert.propertyVal(result, 'timestamp', DefaultEntityMock.BODY_FAT.timestamp)
             })
@@ -78,7 +76,7 @@ describe('Models: BodyFat', () => {
     })
 
     describe('toJSON()', () => {
-        context('when covert model to json', () => {
+        context('when convert model to json', () => {
             it('should return a json with model parameters', () => {
                 const measurement = new BodyFat().fromJSON(DefaultEntityMock.BODY_FAT)
                 measurement.id = DefaultEntityMock.BODY_FAT.id
@@ -87,7 +85,6 @@ describe('Models: BodyFat', () => {
                 assert.propertyVal(result, 'type', DefaultEntityMock.BODY_FAT.type)
                 assert.propertyVal(result, 'unit', DefaultEntityMock.BODY_FAT.unit)
                 assert.propertyVal(result, 'device_id', DefaultEntityMock.BODY_FAT.device_id)
-                assert.propertyVal(result, 'patient_id', DefaultEntityMock.BODY_FAT.patient_id)
                 assert.propertyVal(result, 'value', DefaultEntityMock.BODY_FAT.value)
                 assert.propertyVal(result, 'timestamp', DefaultEntityMock.BODY_FAT.timestamp)
             })

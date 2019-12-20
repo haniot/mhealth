@@ -7,6 +7,7 @@ import { CreateBloodPressureValidator } from '../../../src/application/domain/va
 
 describe('Validators: CreateBloodPressureValidator', () => {
     const measurement: BloodPressure = new BloodPressure().fromJSON(DefaultEntityMock.BLOOD_PRESSURE)
+    measurement.patient_id = DefaultEntityMock.BLOOD_PRESSURE.patient_id
 
     it('should return undefined when the validation was successful', () => {
         const result = CreateBloodPressureValidator.validate(measurement)
@@ -82,7 +83,7 @@ describe('Validators: CreateBloodPressureValidator', () => {
             try {
                 CreateBloodPressureValidator.validate(measurement)
             } catch (err) {
-                assert.propertyVal(err, 'message', 'Datetime: 12-04-2012 is not in valid ISO 8601 format.')
+                assert.propertyVal(err, 'message', 'Datetime: 12-04-2012'.concat(Strings.ERROR_MESSAGE.INVALID_DATE))
                 assert.propertyVal(err, 'description', 'Date must be in the format: yyyy-MM-dd\'T\'HH:mm:ssZ')
             } finally {
                 measurement.timestamp = DefaultEntityMock.BLOOD_PRESSURE.timestamp

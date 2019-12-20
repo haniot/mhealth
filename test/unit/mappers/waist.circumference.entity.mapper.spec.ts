@@ -52,7 +52,6 @@ describe('Mappers: WaistCircumferenceEntityMapper', () => {
                 assert.propertyVal(result, 'type', DefaultEntityMock.WAIST_CIRCUMFERENCE.type)
                 assert.propertyVal(result, 'unit', DefaultEntityMock.WAIST_CIRCUMFERENCE.unit)
                 assert.propertyVal(result, 'device_id', DefaultEntityMock.WAIST_CIRCUMFERENCE.device_id)
-                assert.propertyVal(result, 'patient_id', DefaultEntityMock.WAIST_CIRCUMFERENCE.patient_id)
                 assert.propertyVal(result, 'value', DefaultEntityMock.WAIST_CIRCUMFERENCE.value)
                 assert.propertyVal(result, 'timestamp', DefaultEntityMock.WAIST_CIRCUMFERENCE.timestamp)
             })

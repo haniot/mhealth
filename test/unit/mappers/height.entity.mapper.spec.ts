@@ -52,7 +52,6 @@ describe('Mappers: HeightEntityMapper', () => {
                 assert.propertyVal(result, 'type', DefaultEntityMock.HEIGHT.type)
                 assert.propertyVal(result, 'unit', DefaultEntityMock.HEIGHT.unit)
                 assert.propertyVal(result, 'device_id', DefaultEntityMock.HEIGHT.device_id)
-                assert.propertyVal(result, 'patient_id', DefaultEntityMock.HEIGHT.patient_id)
                 assert.propertyVal(result, 'value', DefaultEntityMock.HEIGHT.value)
                 assert.propertyVal(result, 'timestamp', DefaultEntityMock.HEIGHT.timestamp)
             })

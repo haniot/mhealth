@@ -3,5 +3,6 @@ export enum MealTypes {
     POSTPRANDIAL = 'postprandial',
     FASTING = 'fasting',
     CASUAL = 'casual',
-    BEDTIME = 'bedtime'
+    BEDTIME = 'bedtime',
+    OTHER = 'other'
 }
