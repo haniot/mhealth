@@ -54,10 +54,8 @@ export class MeasurementRepository extends BaseRepository<Measurement, Measureme
             const query: Query = new Query().fromJSON({
                 filters: {
                     type: item.type,
-                    value: item.value,
                     patient_id: item.patient_id,
-                    timestamp: item.timestamp,
-                    device_id: item.device_id
+                    timestamp: item.timestamp
                 }
             })
             this.findOne(query)

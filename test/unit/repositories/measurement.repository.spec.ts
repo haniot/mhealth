@@ -62,10 +62,8 @@ describe('Repositories: MeasurementRepository', () => {
                     .expects('findOne')
                     .withArgs({
                         type: bloodGlucose.type,
-                        value: bloodGlucose.value,
                         patient_id: bloodGlucose.patient_id,
-                        timestamp: bloodGlucose.timestamp,
-                        device_id: bloodGlucose.device_id
+                        timestamp: bloodGlucose.timestamp
                     })
                     .chain('exec')
                     .resolves(bloodGlucose)
@@ -85,10 +83,8 @@ describe('Repositories: MeasurementRepository', () => {
                     .expects('findOne')
                     .withArgs({
                         type: bloodGlucose.type,
-                        value: bloodGlucose.value,
                         patient_id: bloodGlucose.patient_id,
-                        timestamp: bloodGlucose.timestamp,
-                        device_id: bloodGlucose.device_id
+                        timestamp: bloodGlucose.timestamp
                     })
                     .chain('exec')
                     .resolves(undefined)
