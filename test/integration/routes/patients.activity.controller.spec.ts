@@ -254,7 +254,7 @@ describe('Routes: patients.physicalactivities', () => {
                         }
                         expect(res.body.distance).to.eql(defaultActivity.distance)
                         expect(res.body).to.have.property('levels')
-                        expect(res.body.heart_rate_zones).to.eql(defaultActivity.heart_rate_zones!.toJSON())
+                        expect(res.body.heart_rate_zones).to.be.undefined
                         expect(res.body.patient_id).to.eql(defaultActivity.patient_id)
                     })
             })
@@ -1269,7 +1269,6 @@ describe('Routes: patients.physicalactivities', () => {
                         steps: activity.steps ? activity.steps : undefined,
                         distance: activity.distance ? activity.distance : undefined,
                         levels: activity.levels ? activity.levels : undefined,
-                        heart_rate_zones: activity.heart_rate_zones ? activity.heart_rate_zones : undefined
                     }
                     body.push(bodyElem)
                 })
@@ -1295,10 +1294,6 @@ describe('Routes: patients.physicalactivities', () => {
                             if (correctActivitiesArr[i].levels) {
                                 expect(res.body.success[i].item.levels)
                                     .to.eql(correctActivitiesArr[i].levels!.map((elem: ActivityLevel) => elem.toJSON()))
-                            }
-                            if (correctActivitiesArr[i].heart_rate_zones) {
-                                expect(res.body.success[i].item.heart_rate_zones)
-                                    .to.eql(correctActivitiesArr[i].heart_rate_zones!.toJSON())
                             }
                             expect(res.body.success[i].item.patient_id).to.eql(correctActivitiesArr[i].patient_id)
                         }
@@ -1345,7 +1340,6 @@ describe('Routes: patients.physicalactivities', () => {
                         steps: activity.steps ? activity.steps : undefined,
                         distance: activity.distance ? activity.distance : undefined,
                         levels: activity.levels ? activity.levels : undefined,
-                        heart_rate_zones: activity.heart_rate_zones ? activity.heart_rate_zones : undefined
                     }
                     body.push(bodyElem)
                 })
@@ -1371,10 +1365,6 @@ describe('Routes: patients.physicalactivities', () => {
                             if (correctActivitiesArr[i].levels) {
                                 expect(res.body.error[i].item.levels)
                                     .to.eql(correctActivitiesArr[i].levels!.map((elem: ActivityLevel) => elem.toJSON()))
-                            }
-                            if (correctActivitiesArr[i].heart_rate_zones) {
-                                expect(res.body.error[i].item.heart_rate_zones)
-                                    .to.eql(correctActivitiesArr[i].heart_rate_zones!.toJSON())
                             }
                             expect(res.body.error[i].item.patient_id).to.eql(correctActivitiesArr[i].patient_id)
                         }
@@ -1407,7 +1397,6 @@ describe('Routes: patients.physicalactivities', () => {
                         steps: activity.steps ? activity.steps : undefined,
                         distance: activity.distance ? activity.distance : undefined,
                         levels: activity.levels ? activity.levels : undefined,
-                        heart_rate_zones: activity.heart_rate_zones ? activity.heart_rate_zones : undefined
                     }
                     body.push(bodyElem)
                 })
@@ -1433,10 +1422,6 @@ describe('Routes: patients.physicalactivities', () => {
                         if (mixedActivitiesArr[0].levels) {
                             expect(res.body.success[0].item.levels)
                                 .to.eql(mixedActivitiesArr[0].levels.map((elem: ActivityLevel) => elem.toJSON()))
-                        }
-                        if (mixedActivitiesArr[0].heart_rate_zones) {
-                            expect(res.body.success[0].item.heart_rate_zones)
-                                .to.eql(mixedActivitiesArr[0].heart_rate_zones.toJSON())
                         }
                         expect(res.body.success[0].item.patient_id).to.eql(mixedActivitiesArr[0].patient_id)
 
@@ -1593,7 +1578,6 @@ describe('Routes: patients.physicalactivities', () => {
                         steps: defaultActivity.steps ? defaultActivity.steps : undefined,
                         distance: defaultActivity.distance ? defaultActivity.distance : undefined,
                         levels: defaultActivity.levels ? defaultActivity.levels : undefined,
-                        heart_rate_zones: defaultActivity.heart_rate_zones ? defaultActivity.heart_rate_zones : undefined,
                         patient_id: defaultActivity.patient_id
                     })
                 } catch (err) {
@@ -1621,9 +1605,6 @@ describe('Routes: patients.physicalactivities', () => {
                         if (defaultActivity.levels) {
                             expect(res.body[0].levels)
                                 .to.eql(defaultActivity.levels.map((elem: ActivityLevel) => elem.toJSON()))
-                        }
-                        if (defaultActivity.heart_rate_zones) {
-                            expect(res.body[0].heart_rate_zones).to.eql(defaultActivity.heart_rate_zones.toJSON())
                         }
                         expect(res.body[0].patient_id).to.eql(defaultActivity.patient_id)
                     })
@@ -1718,7 +1699,6 @@ describe('Routes: patients.physicalactivities', () => {
                         steps: defaultActivity.steps ? defaultActivity.steps : undefined,
                         distance: defaultActivity.distance ? defaultActivity.distance : undefined,
                         levels: defaultActivity.levels ? defaultActivity.levels : undefined,
-                        heart_rate_zones: defaultActivity.heart_rate_zones ? defaultActivity.heart_rate_zones : undefined,
                         patient_id: defaultActivity.patient_id
                     })
                 } catch (err) {
@@ -1750,9 +1730,6 @@ describe('Routes: patients.physicalactivities', () => {
                         if (defaultActivity.levels) {
                             expect(res.body[0].levels)
                                 .to.eql(defaultActivity.levels.map((elem: ActivityLevel) => elem.toJSON()))
-                        }
-                        if (defaultActivity.heart_rate_zones) {
-                            expect(res.body[0].heart_rate_zones).to.eql(defaultActivity.heart_rate_zones.toJSON())
                         }
                         expect(res.body[0].patient_id).to.eql(defaultActivity.patient_id)
                     })
@@ -1809,7 +1786,6 @@ describe('Routes: patients.physicalactivities', () => {
                         steps: defaultActivity.steps ? defaultActivity.steps : undefined,
                         distance: defaultActivity.distance ? defaultActivity.distance : undefined,
                         levels: defaultActivity.levels ? defaultActivity.levels : undefined,
-                        heart_rate_zones: defaultActivity.heart_rate_zones ? defaultActivity.heart_rate_zones : undefined,
                         patient_id: defaultActivity.patient_id
                     })
                 } catch (err) {
@@ -1835,9 +1811,6 @@ describe('Routes: patients.physicalactivities', () => {
                         if (defaultActivity.levels) {
                             expect(res.body.levels)
                                 .to.eql(defaultActivity.levels.map((elem: ActivityLevel) => elem.toJSON()))
-                        }
-                        if (defaultActivity.heart_rate_zones) {
-                            expect(res.body.heart_rate_zones).to.eql(defaultActivity.heart_rate_zones.toJSON())
                         }
                         expect(res.body.patient_id).to.eql(defaultActivity.patient_id)
                     })
