@@ -1,8 +1,8 @@
 import { ValidationException } from '../exception/validation.exception'
 import { Strings } from '../../../utils/strings'
-import { NumberValidator } from './number.validator'
 import { ActivityLevel } from '../model/activityLevel'
 import { Levels } from '../utils/levels'
+import { IntegerPositiveValidator } from './integer.positive.validator'
 
 export class PhysicalActivityLevelsValidator {
     public static validate(levels: Array<ActivityLevel>): void | ValidationException {
@@ -22,7 +22,7 @@ export class PhysicalActivityLevelsValidator {
                     `The names of the allowed levels are: ${levelsTypes.join(', ')}.`)
             }
             if (level.duration === undefined) fields.push('levels.duration')
-            else NumberValidator.validate(level.duration, 'levels.duration')
+            else IntegerPositiveValidator.validate(level.duration, 'levels.duration')
         })
 
         if (levelsTypes.length !== levels.filter(item => levelsTypes.includes(item.name)).length) {

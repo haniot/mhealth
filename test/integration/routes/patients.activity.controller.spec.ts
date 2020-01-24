@@ -370,8 +370,9 @@ describe('Routes: patients.physicalactivities', () => {
                     .expect(400)
                     .then(err => {
                         expect(err.body.code).to.eql(400)
-                        expect(err.body.message).to.eql(Strings.ERROR_MESSAGE.INVALID_FIELDS)
-                        expect(err.body.description).to.eql('duration'.concat(Strings.ERROR_MESSAGE.INVALID_NUMBER))
+                        expect(err.body.message).to.eql(Strings.ERROR_MESSAGE.INVALID_FIELD
+                            .replace('{0}', 'duration'))
+                        expect(err.body.description).to.eql(Strings.ERROR_MESSAGE.POSITIVE_INTEGER)
                     })
             })
         })
@@ -482,8 +483,9 @@ describe('Routes: patients.physicalactivities', () => {
                     .expect(400)
                     .then(err => {
                         expect(err.body.code).to.eql(400)
-                        expect(err.body.message).to.eql(Strings.ERROR_MESSAGE.INVALID_FIELDS)
-                        expect(err.body.description).to.eql('duration'.concat(Strings.ERROR_MESSAGE.NEGATIVE_NUMBER))
+                        expect(err.body.message).to.eql(Strings.ERROR_MESSAGE.INVALID_FIELD
+                            .replace('{0}', 'duration'))
+                        expect(err.body.description).to.eql(Strings.ERROR_MESSAGE.POSITIVE_INTEGER)
                     })
             })
         })
@@ -589,8 +591,9 @@ describe('Routes: patients.physicalactivities', () => {
                     .expect(400)
                     .then(err => {
                         expect(err.body.code).to.eql(400)
-                        expect(err.body.message).to.eql(Strings.ERROR_MESSAGE.INVALID_FIELDS)
-                        expect(err.body.description).to.eql('calories'.concat(Strings.ERROR_MESSAGE.INVALID_NUMBER))
+                        expect(err.body.message).to.eql(Strings.ERROR_MESSAGE.INVALID_FIELD
+                            .replace('{0}', 'calories'))
+                        expect(err.body.description).to.eql(Strings.ERROR_MESSAGE.POSITIVE_NUMBER)
                     })
             })
         })
@@ -616,8 +619,9 @@ describe('Routes: patients.physicalactivities', () => {
                     .expect(400)
                     .then(err => {
                         expect(err.body.code).to.eql(400)
-                        expect(err.body.message).to.eql(Strings.ERROR_MESSAGE.INVALID_FIELDS)
-                        expect(err.body.description).to.eql('calories'.concat(Strings.ERROR_MESSAGE.NEGATIVE_NUMBER))
+                        expect(err.body.message).to.eql(Strings.ERROR_MESSAGE.INVALID_FIELD
+                            .replace('{0}', 'calories'))
+                        expect(err.body.description).to.eql(Strings.ERROR_MESSAGE.POSITIVE_NUMBER)
                     })
             })
         })
@@ -643,8 +647,9 @@ describe('Routes: patients.physicalactivities', () => {
                     .expect(400)
                     .then(err => {
                         expect(err.body.code).to.eql(400)
-                        expect(err.body.message).to.eql(Strings.ERROR_MESSAGE.INVALID_FIELDS)
-                        expect(err.body.description).to.eql('steps'.concat(Strings.ERROR_MESSAGE.INVALID_NUMBER))
+                        expect(err.body.message).to.eql(Strings.ERROR_MESSAGE.INVALID_FIELD
+                            .replace('{0}', 'steps'))
+                        expect(err.body.description).to.eql(Strings.ERROR_MESSAGE.POSITIVE_INTEGER)
                     })
             })
         })
@@ -670,8 +675,9 @@ describe('Routes: patients.physicalactivities', () => {
                     .expect(400)
                     .then(err => {
                         expect(err.body.code).to.eql(400)
-                        expect(err.body.message).to.eql(Strings.ERROR_MESSAGE.INVALID_FIELDS)
-                        expect(err.body.description).to.eql('steps'.concat(Strings.ERROR_MESSAGE.NEGATIVE_NUMBER))
+                        expect(err.body.message).to.eql(Strings.ERROR_MESSAGE.INVALID_FIELD
+                            .replace('{0}', 'steps'))
+                        expect(err.body.description).to.eql(Strings.ERROR_MESSAGE.POSITIVE_INTEGER)
                     })
             })
         })
@@ -697,8 +703,9 @@ describe('Routes: patients.physicalactivities', () => {
                     .expect(400)
                     .then(err => {
                         expect(err.body.code).to.eql(400)
-                        expect(err.body.message).to.eql(Strings.ERROR_MESSAGE.INVALID_FIELDS)
-                        expect(err.body.description).to.eql('distance'.concat(Strings.ERROR_MESSAGE.INVALID_NUMBER))
+                        expect(err.body.message).to.eql(Strings.ERROR_MESSAGE.INVALID_FIELD
+                            .replace('{0}', 'distance'))
+                        expect(err.body.description).to.eql(Strings.ERROR_MESSAGE.POSITIVE_NUMBER)
                     })
             })
         })
@@ -724,8 +731,9 @@ describe('Routes: patients.physicalactivities', () => {
                     .expect(400)
                     .then(err => {
                         expect(err.body.code).to.eql(400)
-                        expect(err.body.message).to.eql(Strings.ERROR_MESSAGE.INVALID_FIELDS)
-                        expect(err.body.description).to.eql('distance'.concat(Strings.ERROR_MESSAGE.NEGATIVE_NUMBER))
+                        expect(err.body.message).to.eql(Strings.ERROR_MESSAGE.INVALID_FIELD
+                            .replace('{0}', 'distance'))
+                        expect(err.body.description).to.eql(Strings.ERROR_MESSAGE.POSITIVE_NUMBER)
                     })
             })
         })
@@ -813,8 +821,9 @@ describe('Routes: patients.physicalactivities', () => {
                     .expect(400)
                     .then(err => {
                         expect(err.body.code).to.eql(400)
-                        expect(err.body.message).to.eql(Strings.ERROR_MESSAGE.INVALID_FIELDS)
-                        expect(err.body.description).to.eql('levels.duration'.concat(Strings.ERROR_MESSAGE.INVALID_NUMBER))
+                        expect(err.body.message).to.eql(Strings.ERROR_MESSAGE.INVALID_FIELD
+                            .replace('{0}', 'levels.duration'))
+                        expect(err.body.description).to.eql(Strings.ERROR_MESSAGE.POSITIVE_INTEGER)
                     })
             })
         })
@@ -902,8 +911,9 @@ describe('Routes: patients.physicalactivities', () => {
                     .expect(400)
                     .then(err => {
                         expect(err.body.code).to.eql(400)
-                        expect(err.body.message).to.eql(Strings.ERROR_MESSAGE.INVALID_FIELDS)
-                        expect(err.body.description).to.eql('levels.duration'.concat(Strings.ERROR_MESSAGE.NEGATIVE_NUMBER))
+                        expect(err.body.message).to.eql(Strings.ERROR_MESSAGE.INVALID_FIELD
+                            .replace('{0}', 'levels.duration'))
+                        expect(err.body.description).to.eql(Strings.ERROR_MESSAGE.POSITIVE_INTEGER)
                     })
             })
         })
@@ -966,8 +976,9 @@ describe('Routes: patients.physicalactivities', () => {
                         .expect(400)
                         .then(err => {
                             expect(err.body.code).to.eql(400)
-                            expect(err.body.message).to.eql(Strings.ERROR_MESSAGE.INVALID_FIELDS)
-                            expect(err.body.description).to.eql('heart_rate_average'.concat(Strings.ERROR_MESSAGE.INVALID_NUMBER))
+                            expect(err.body.message).to.eql(Strings.ERROR_MESSAGE.INVALID_FIELD
+                                .replace('{0}', 'heart_rate_average'))
+                            expect(err.body.description).to.eql(Strings.ERROR_MESSAGE.INTEGER_GREATER_ZERO)
                         })
                 })
         })
@@ -995,9 +1006,9 @@ describe('Routes: patients.physicalactivities', () => {
                         .expect(400)
                         .then(err => {
                             expect(err.body.code).to.eql(400)
-                            expect(err.body.message).to.eql(Strings.ERROR_MESSAGE.INVALID_FIELDS)
-                            expect(err.body.description).to.eql('heart_rate_average'
-                                .concat(Strings.ERROR_MESSAGE.NEGATIVE_NUMBER))
+                            expect(err.body.message).to.eql(Strings.ERROR_MESSAGE.INVALID_FIELD
+                                .replace('{0}', 'heart_rate_average'))
+                            expect(err.body.description).to.eql(Strings.ERROR_MESSAGE.INTEGER_GREATER_ZERO)
                         })
                 })
         })
@@ -1061,9 +1072,9 @@ describe('Routes: patients.physicalactivities', () => {
                         .expect(400)
                         .then(err => {
                             expect(err.body.code).to.eql(400)
-                            expect(err.body.message).to.eql(Strings.ERROR_MESSAGE.INVALID_FIELDS)
-                            expect(err.body.description).to.eql('heart_rate_zones.fat_burn.min' +
-                                Strings.ERROR_MESSAGE.INVALID_NUMBER)
+                            expect(err.body.message).to.eql(Strings.ERROR_MESSAGE.REQUIRED_FIELDS_NOT_VALID
+                                .replace('{0}', 'heart_rate_zones.fat_burn.min'))
+                            expect(err.body.description).to.eql(Strings.ERROR_MESSAGE.INTEGER_GREATER_ZERO)
                         })
                 })
         })
@@ -1097,9 +1108,9 @@ describe('Routes: patients.physicalactivities', () => {
                         .expect(400)
                         .then(err => {
                             expect(err.body.code).to.eql(400)
-                            expect(err.body.message).to.eql(Strings.ERROR_MESSAGE.INVALID_FIELDS)
-                            expect(err.body.description).to.eql('heart_rate_zones.fat_burn.min' +
-                                Strings.ERROR_MESSAGE.NEGATIVE_NUMBER)
+                            expect(err.body.message).to.eql(Strings.ERROR_MESSAGE.REQUIRED_FIELDS_NOT_VALID
+                                .replace('{0}', 'heart_rate_zones.fat_burn.min'))
+                            expect(err.body.description).to.eql(Strings.ERROR_MESSAGE.INTEGER_GREATER_ZERO)
                         })
                 })
         })
@@ -1133,9 +1144,9 @@ describe('Routes: patients.physicalactivities', () => {
                         .expect(400)
                         .then(err => {
                             expect(err.body.code).to.eql(400)
-                            expect(err.body.message).to.eql(Strings.ERROR_MESSAGE.INVALID_FIELDS)
-                            expect(err.body.description).to.eql('heart_rate_zones.fat_burn.max' +
-                                Strings.ERROR_MESSAGE.INVALID_NUMBER)
+                            expect(err.body.message).to.eql(Strings.ERROR_MESSAGE.REQUIRED_FIELDS_NOT_VALID
+                                .replace('{0}', 'heart_rate_zones.fat_burn.max'))
+                            expect(err.body.description).to.eql(Strings.ERROR_MESSAGE.INTEGER_GREATER_ZERO)
                         })
                 })
         })
@@ -1169,9 +1180,9 @@ describe('Routes: patients.physicalactivities', () => {
                         .expect(400)
                         .then(err => {
                             expect(err.body.code).to.eql(400)
-                            expect(err.body.message).to.eql(Strings.ERROR_MESSAGE.INVALID_FIELDS)
-                            expect(err.body.description).to.eql('heart_rate_zones.fat_burn.max' +
-                                Strings.ERROR_MESSAGE.NEGATIVE_NUMBER)
+                            expect(err.body.message).to.eql(Strings.ERROR_MESSAGE.REQUIRED_FIELDS_NOT_VALID
+                                .replace('{0}', 'heart_rate_zones.fat_burn.max'))
+                            expect(err.body.description).to.eql(Strings.ERROR_MESSAGE.INTEGER_GREATER_ZERO)
                         })
                 })
         })
@@ -1205,9 +1216,9 @@ describe('Routes: patients.physicalactivities', () => {
                         .expect(400)
                         .then(err => {
                             expect(err.body.code).to.eql(400)
-                            expect(err.body.message).to.eql(Strings.ERROR_MESSAGE.INVALID_FIELDS)
-                            expect(err.body.description).to.eql('heart_rate_zones.fat_burn.duration' +
-                                Strings.ERROR_MESSAGE.INVALID_NUMBER)
+                            expect(err.body.message).to.eql(Strings.ERROR_MESSAGE.INVALID_FIELD
+                                .replace('{0}', 'heart_rate_zones.fat_burn.duration'))
+                            expect(err.body.description).to.eql(Strings.ERROR_MESSAGE.POSITIVE_INTEGER)
                         })
                 })
         })
@@ -1235,9 +1246,9 @@ describe('Routes: patients.physicalactivities', () => {
                         .expect(400)
                         .then(err => {
                             expect(err.body.code).to.eql(400)
-                            expect(err.body.message).to.eql(Strings.ERROR_MESSAGE.INVALID_FIELDS)
-                            expect(err.body.description).to.eql('heart_rate_zones.fat_burn.duration' +
-                                Strings.ERROR_MESSAGE.NEGATIVE_NUMBER)
+                            expect(err.body.message).to.eql(Strings.ERROR_MESSAGE.INVALID_FIELD
+                                .replace('{0}', 'heart_rate_zones.fat_burn.duration'))
+                            expect(err.body.description).to.eql(Strings.ERROR_MESSAGE.POSITIVE_INTEGER)
                         })
                 })
         })
@@ -1481,35 +1492,38 @@ describe('Routes: patients.physicalactivities', () => {
                         expect(res.body.error[3].message).to.eql(Strings.ERROR_MESSAGE.INVALID_FIELDS)
                         expect(res.body.error[3].description).to.eql('duration value does not match values passed ' +
                             'in start_time and end_time parameters!')
-                        expect(res.body.error[4].message).to.eql(Strings.ERROR_MESSAGE.INVALID_FIELDS)
-                        expect(res.body.error[4].description).to.eql('duration'.concat(Strings.ERROR_MESSAGE.NEGATIVE_NUMBER))
-                        expect(res.body.error[5].message).to.eql(Strings.ERROR_MESSAGE.INVALID_FIELDS)
-                        expect(res.body.error[5].description).to.eql('calories'.concat(Strings.ERROR_MESSAGE.NEGATIVE_NUMBER))
-                        expect(res.body.error[6].message).to.eql(Strings.ERROR_MESSAGE.INVALID_FIELDS)
-                        expect(res.body.error[6].description).to.eql('steps'.concat(Strings.ERROR_MESSAGE.NEGATIVE_NUMBER))
+                        expect(res.body.error[4].message).to.eql(Strings.ERROR_MESSAGE.INVALID_FIELD
+                            .replace('{0}', 'duration'))
+                        expect(res.body.error[4].description).to.eql(Strings.ERROR_MESSAGE.POSITIVE_INTEGER)
+                        expect(res.body.error[5].message).to.eql(Strings.ERROR_MESSAGE.INVALID_FIELD
+                            .replace('{0}', 'calories'))
+                        expect(res.body.error[5].description).to.eql(Strings.ERROR_MESSAGE.POSITIVE_NUMBER)
+                        expect(res.body.error[6].message).to.eql(Strings.ERROR_MESSAGE.INVALID_FIELD
+                            .replace('{0}', 'steps'))
+                        expect(res.body.error[6].description).to.eql(Strings.ERROR_MESSAGE.POSITIVE_INTEGER)
                         expect(res.body.error[7].message).to.eql(Strings.ERROR_MESSAGE.INVALID_FIELDS)
                         expect(res.body.error[7].description).to.eql('The names of the allowed levels are: ' +
                             'sedentary, lightly, fairly, very.')
                         expect(res.body.error[8].message).to.eql(Strings.ERROR_MESSAGE.INVALID_FIELDS)
                         expect(res.body.error[8].description).to.eql('The levels array must have values for ' +
                             'the following levels: sedentary, lightly, fairly, very.')
-                        expect(res.body.error[9].message).to.eql(Strings.ERROR_MESSAGE.INVALID_FIELDS)
-                        expect(res.body.error[9].description).to.eql('levels.duration'
-                            .concat(Strings.ERROR_MESSAGE.NEGATIVE_NUMBER))
+                        expect(res.body.error[9].message).to.eql(Strings.ERROR_MESSAGE.INVALID_FIELD
+                            .replace('{0}', 'levels.duration'))
+                        expect(res.body.error[9].description).to.eql(Strings.ERROR_MESSAGE.POSITIVE_INTEGER)
                         expect(res.body.error[10].message).to.eql(Strings.ERROR_MESSAGE.REQUIRED_FIELDS)
                         expect(res.body.error[10].description).to.eql('heart_rate_zones.fat_burn, heart_rate_zones.cardio, ' +
                             'heart_rate_zones.peak, heart_rate_zones.out_of_range'
                                 .concat(Strings.ERROR_MESSAGE.REQUIRED_FIELDS_DESC))
-                        expect(res.body.error[11].message).to.eql(Strings.ERROR_MESSAGE.INVALID_FIELDS)
-                        expect(res.body.error[11].description).to.eql('heart_rate_average'
-                            .concat(Strings.ERROR_MESSAGE.NEGATIVE_NUMBER))
+                        expect(res.body.error[11].message).to.eql(Strings.ERROR_MESSAGE.INVALID_FIELD
+                            .replace('{0}', 'heart_rate_average'))
+                        expect(res.body.error[11].description).to.eql(Strings.ERROR_MESSAGE.INTEGER_GREATER_ZERO)
                         expect(res.body.error[12].message).to.eql(Strings.ERROR_MESSAGE.REQUIRED_FIELDS)
                         expect(res.body.error[12].description).to.eql('heart_rate_zones.fat_burn.min, ' +
                             'heart_rate_zones.fat_burn.max, heart_rate_zones.fat_burn.duration'
                                 .concat(Strings.ERROR_MESSAGE.REQUIRED_FIELDS_DESC))
-                        expect(res.body.error[13].message).to.eql(Strings.ERROR_MESSAGE.INVALID_FIELDS)
-                        expect(res.body.error[13].description).to.eql('heart_rate_zones.fat_burn.duration'
-                            .concat(Strings.ERROR_MESSAGE.NEGATIVE_NUMBER))
+                        expect(res.body.error[13].message).to.eql(Strings.ERROR_MESSAGE.INVALID_FIELD
+                            .replace('{0}', 'heart_rate_zones.fat_burn.duration'))
+                        expect(res.body.error[13].description).to.eql(Strings.ERROR_MESSAGE.POSITIVE_INTEGER)
                         expect(res.body.error[14].message).to.eql('Datetime: 2019-12-32T12:52:59Z'
                             .concat(Strings.ERROR_MESSAGE.INVALID_DATE))
                         expect(res.body.error[14].description).to.eql(Strings.ERROR_MESSAGE.INVALID_DATE_DESC)

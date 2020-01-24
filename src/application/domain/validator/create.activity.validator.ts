@@ -2,8 +2,8 @@ import { ValidationException } from '../exception/validation.exception'
 import { Activity } from '../model/activity'
 import { Strings } from '../../../utils/strings'
 import { ObjectIdValidator } from './object.id.validator'
-import { NumberValidator } from './number.validator'
 import { DatetimeValidator } from './date.time.validator'
+import { IntegerPositiveValidator } from './integer.positive.validator'
 
 export class CreateActivityValidator {
     public static validate(activity: Activity): void | ValidationException {
@@ -15,7 +15,7 @@ export class CreateActivityValidator {
             if (!activity.end_time) fields.push('end_time')
             else DatetimeValidator.validate(activity.end_time)
             if (activity.duration === undefined) fields.push('duration')
-            else NumberValidator.validate(activity.duration, 'duration')
+            else IntegerPositiveValidator.validate(activity.duration, 'duration')
             if (activity.start_time && activity.end_time && activity.duration) {
                 const durationValidate: number = new Date(activity.end_time).getTime() - new Date(activity.start_time).getTime()
                 if (durationValidate < 0) {

@@ -21,8 +21,13 @@ describe('Validators: HeartRateZoneValidator', () => {
         })
 
         context('when the HeartRateZone does not have all the required parameters (in this case missing average)', () => {
-            it('should throw a ValidationException', () => {
+            before(() => {
                 activityHeartRate.cardio = undefined
+            })
+            after(() => {
+                activityHeartRate.cardio = cardio_aux
+            })
+            it('should throw a ValidationException', () => {
                 try {
                     HeartRateZoneValidator.validate(activityHeartRate)
                 } catch (err) {
@@ -33,8 +38,16 @@ describe('Validators: HeartRateZoneValidator', () => {
         })
 
         context('when the HeartRateZone does not have any of the required parameters', () => {
-            it('should throw a ValidationException', () => {
+            before(() => {
                 activityHeartRate = new HeartRateZone()
+            })
+            after(() => {
+                activityHeartRate.fat_burn = fat_burn_aux
+                activityHeartRate.cardio = cardio_aux
+                activityHeartRate.peak = peak_aux
+                activityHeartRate.out_of_range = out_of_range_aux
+            })
+            it('should throw a ValidationException', () => {
                 try {
                     HeartRateZoneValidator.validate(activityHeartRate)
                 } catch (err) {
@@ -46,8 +59,13 @@ describe('Validators: HeartRateZoneValidator', () => {
         })
 
         context('when the HeartRateZone has an invalid "Out of Range Zone" parameter (the parameter is empty)', () => {
-            it('should throw a ValidationException', () => {
+            before(() => {
                 activityHeartRate.out_of_range = new HeartRateZoneData()
+            })
+            after(() => {
+                activityHeartRate.out_of_range = out_of_range_aux
+            })
+            it('should throw a ValidationException', () => {
                 try {
                     HeartRateZoneValidator.validate(activityHeartRate)
                 } catch (err) {
@@ -60,9 +78,13 @@ describe('Validators: HeartRateZoneValidator', () => {
         })
 
         context('when the HeartRateZone has an invalid "Fat Burn Zone" parameter (the parameter is empty)', () => {
-            it('should throw a ValidationException', () => {
-                activityHeartRate.out_of_range = out_of_range_aux
+            before(() => {
                 activityHeartRate.fat_burn = new HeartRateZoneData()
+            })
+            after(() => {
+                activityHeartRate.fat_burn = fat_burn_aux
+            })
+            it('should throw a ValidationException', () => {
                 try {
                     HeartRateZoneValidator.validate(activityHeartRate)
                 } catch (err) {
@@ -74,9 +96,13 @@ describe('Validators: HeartRateZoneValidator', () => {
         })
 
         context('when the HeartRateZone has an invalid "Cardio Zone" parameter (the parameter is empty)', () => {
-            it('should throw a ValidationException', () => {
-                activityHeartRate.fat_burn = fat_burn_aux
+            before(() => {
                 activityHeartRate.cardio = new HeartRateZoneData()
+            })
+            after(() => {
+                activityHeartRate.cardio = cardio_aux
+            })
+            it('should throw a ValidationException', () => {
                 try {
                     HeartRateZoneValidator.validate(activityHeartRate)
                 } catch (err) {
@@ -88,9 +114,13 @@ describe('Validators: HeartRateZoneValidator', () => {
         })
 
         context('when the HeartRateZone has an invalid "Peak Zone" parameter (the parameter is empty)', () => {
-            it('should throw a ValidationException', () => {
-                activityHeartRate.cardio = cardio_aux
+            before(() => {
                 activityHeartRate.peak = new HeartRateZoneData()
+            })
+            after(() => {
+                activityHeartRate.peak = peak_aux
+            })
+            it('should throw a ValidationException', () => {
                 try {
                     HeartRateZoneValidator.validate(activityHeartRate)
                 } catch (err) {
@@ -98,172 +128,226 @@ describe('Validators: HeartRateZoneValidator', () => {
                     assert.equal(err.description, 'heart_rate_zones.peak.min, heart_rate_zones.peak.max, ' +
                         'heart_rate_zones.peak.duration'.concat(Strings.ERROR_MESSAGE.REQUIRED_FIELDS_DESC))
                 }
-                activityHeartRate.peak = peak_aux
             })
         })
 
         context('when the HeartRateZone has an invalid "Out of Range Zone" parameter (the min parameter is negative)', () => {
-            it('should throw a ValidationException', () => {
+            before(() => {
                 activityHeartRate.out_of_range!.min = -30
+            })
+            after(() => {
+                activityHeartRate.out_of_range!.min = 30
+            })
+            it('should throw a ValidationException', () => {
                 try {
                     HeartRateZoneValidator.validate(activityHeartRate)
                 } catch (err) {
-                    assert.equal(err.message, Strings.ERROR_MESSAGE.INVALID_FIELDS)
-                    assert.equal(err.description, 'heart_rate_zones.out_of_range.min'
-                        .concat(Strings.ERROR_MESSAGE.NEGATIVE_NUMBER))
+                    assert.equal(err.message, Strings.ERROR_MESSAGE.REQUIRED_FIELDS_NOT_VALID
+                        .replace('{0}', 'heart_rate_zones.out_of_range.min'))
+                    assert.equal(err.description, Strings.ERROR_MESSAGE.INTEGER_GREATER_ZERO)
                 }
-                activityHeartRate.out_of_range!.min = 30
 
             })
         })
 
         context('when the HeartRateZone has an invalid "Out of Range Zone" parameter (the max parameter is negative)', () => {
-            it('should throw a ValidationException', () => {
+            before(() => {
                 activityHeartRate.out_of_range!.max = -91
+            })
+            after(() => {
+                activityHeartRate.out_of_range!.max = 91
+            })
+            it('should throw a ValidationException', () => {
                 try {
                     HeartRateZoneValidator.validate(activityHeartRate)
                 } catch (err) {
-                    assert.equal(err.message, Strings.ERROR_MESSAGE.INVALID_FIELDS)
-                    assert.equal(err.description, 'heart_rate_zones.out_of_range.max'
-                        .concat(Strings.ERROR_MESSAGE.NEGATIVE_NUMBER))
+                    assert.equal(err.message, Strings.ERROR_MESSAGE.REQUIRED_FIELDS_NOT_VALID
+                        .replace('{0}', 'heart_rate_zones.out_of_range.max'))
+                    assert.equal(err.description, Strings.ERROR_MESSAGE.INTEGER_GREATER_ZERO)
                 }
-                activityHeartRate.out_of_range!.max = 91
 
             })
         })
 
         context('when the HeartRateZone has an invalid "Out of Range Zone" parameter ' +
             '(the duration parameter is negative)', () => {
-            it('should throw a ValidationException', () => {
+            before(() => {
                 activityHeartRate.out_of_range!.duration = -60000
+            })
+            after(() => {
+                activityHeartRate.out_of_range!.duration = 60000
+            })
+            it('should throw a ValidationException', () => {
                 try {
                     HeartRateZoneValidator.validate(activityHeartRate)
                 } catch (err) {
-                    assert.equal(err.message, Strings.ERROR_MESSAGE.INVALID_FIELDS)
-                    assert.equal(err.description, 'heart_rate_zones.out_of_range.duration'
-                        .concat(Strings.ERROR_MESSAGE.NEGATIVE_NUMBER))
+                    assert.equal(err.message, Strings.ERROR_MESSAGE.INVALID_FIELD
+                        .replace('{0}', 'heart_rate_zones.out_of_range.duration'))
+                    assert.equal(err.description, Strings.ERROR_MESSAGE.POSITIVE_INTEGER)
                 }
-                activityHeartRate.out_of_range!.duration = 60000
 
             })
         })
 
         context('when the HeartRateZone has an invalid "Fat Burn Zone" parameter (the min parameter is negative)', () => {
-            it('should throw a ValidationException', () => {
+            before(() => {
                 activityHeartRate.fat_burn!.min = -91
+            })
+            after(() => {
+                activityHeartRate.fat_burn!.min = 91
+            })
+            it('should throw a ValidationException', () => {
                 try {
                     HeartRateZoneValidator.validate(activityHeartRate)
                 } catch (err) {
-                    assert.equal(err.message, Strings.ERROR_MESSAGE.INVALID_FIELDS)
-                    assert.equal(err.description, 'heart_rate_zones.fat_burn.min'.concat(Strings.ERROR_MESSAGE.NEGATIVE_NUMBER))
+                    assert.equal(err.message, Strings.ERROR_MESSAGE.REQUIRED_FIELDS_NOT_VALID
+                        .replace('{0}', 'heart_rate_zones.fat_burn.min'))
+                    assert.equal(err.description, Strings.ERROR_MESSAGE.INTEGER_GREATER_ZERO)
                 }
-                activityHeartRate.fat_burn!.min = 91
             })
         })
 
         context('when the HeartRateZone has an invalid "Fat Burn Zone" parameter (the max parameter is negative)', () => {
-            it('should throw a ValidationException', () => {
+            before(() => {
                 activityHeartRate.fat_burn!.max = -127
+            })
+            after(() => {
+                activityHeartRate.fat_burn!.max = 127
+            })
+            it('should throw a ValidationException', () => {
                 try {
                     HeartRateZoneValidator.validate(activityHeartRate)
                 } catch (err) {
-                    assert.equal(err.message, Strings.ERROR_MESSAGE.INVALID_FIELDS)
-                    assert.equal(err.description, 'heart_rate_zones.fat_burn.max'.concat(Strings.ERROR_MESSAGE.NEGATIVE_NUMBER))
+                    assert.equal(err.message, Strings.ERROR_MESSAGE.REQUIRED_FIELDS_NOT_VALID
+                        .replace('{0}', 'heart_rate_zones.fat_burn.max'))
+                    assert.equal(err.description, Strings.ERROR_MESSAGE.INTEGER_GREATER_ZERO)
                 }
-                activityHeartRate.fat_burn!.max = 127
             })
         })
 
         context('when the HeartRateZone has an invalid "Fat Burn Zone" parameter (the duration parameter is negative)', () => {
-            it('should throw a ValidationException', () => {
+            before(() => {
                 activityHeartRate.fat_burn!.duration = -600000
+            })
+            after(() => {
+                activityHeartRate.fat_burn!.duration = 600000
+            })
+            it('should throw a ValidationException', () => {
                 try {
                     HeartRateZoneValidator.validate(activityHeartRate)
                 } catch (err) {
-                    assert.equal(err.message, Strings.ERROR_MESSAGE.INVALID_FIELDS)
-                    assert.equal(err.description, 'heart_rate_zones.fat_burn.duration'
-                        .concat(Strings.ERROR_MESSAGE.NEGATIVE_NUMBER))
+                    assert.equal(err.message, Strings.ERROR_MESSAGE.INVALID_FIELD
+                        .replace('{0}', 'heart_rate_zones.fat_burn.duration'))
+                    assert.equal(err.description, Strings.ERROR_MESSAGE.POSITIVE_INTEGER)
                 }
-                activityHeartRate.fat_burn!.duration = 600000
             })
         })
 
         context('when the HeartRateZone has an invalid "Cardio Zone" parameter (the min parameter is negative)', () => {
-            it('should throw a ValidationException', () => {
+            before(() => {
                 activityHeartRate.cardio!.min = -127
+            })
+            after(() => {
+                activityHeartRate.cardio!.min = 127
+            })
+            it('should throw a ValidationException', () => {
                 try {
                     HeartRateZoneValidator.validate(activityHeartRate)
                 } catch (err) {
-                    assert.equal(err.message, Strings.ERROR_MESSAGE.INVALID_FIELDS)
-                    assert.equal(err.description, 'heart_rate_zones.cardio.min'.concat(Strings.ERROR_MESSAGE.NEGATIVE_NUMBER))
+                    assert.equal(err.message, Strings.ERROR_MESSAGE.REQUIRED_FIELDS_NOT_VALID
+                        .replace('{0}', 'heart_rate_zones.cardio.min'))
+                    assert.equal(err.description, Strings.ERROR_MESSAGE.INTEGER_GREATER_ZERO)
                 }
-                activityHeartRate.cardio!.min = 127
             })
         })
 
         context('when the HeartRateZone has an invalid "Cardio Zone" parameter (the max parameter is negative)', () => {
-            it('should throw a ValidationException', () => {
+            before(() => {
                 activityHeartRate.cardio!.max = -154
+            })
+            after(() => {
+                activityHeartRate.cardio!.max = 154
+            })
+            it('should throw a ValidationException', () => {
                 try {
                     HeartRateZoneValidator.validate(activityHeartRate)
                 } catch (err) {
-                    assert.equal(err.message, Strings.ERROR_MESSAGE.INVALID_FIELDS)
-                    assert.equal(err.description, 'heart_rate_zones.cardio.max'.concat(Strings.ERROR_MESSAGE.NEGATIVE_NUMBER))
+                    assert.equal(err.message, Strings.ERROR_MESSAGE.REQUIRED_FIELDS_NOT_VALID
+                        .replace('{0}', 'heart_rate_zones.cardio.max'))
+                    assert.equal(err.description, Strings.ERROR_MESSAGE.INTEGER_GREATER_ZERO)
                 }
-                activityHeartRate.cardio!.max = 154
             })
         })
 
         context('when the HeartRateZone has an invalid "Cardio Zone" parameter (the duration parameter is negative)', () => {
-            it('should throw a ValidationException', () => {
+            before(() => {
                 activityHeartRate.cardio!.duration = -60000
+            })
+            after(() => {
+                activityHeartRate.cardio!.duration = 60000
+            })
+            it('should throw a ValidationException', () => {
                 try {
                     HeartRateZoneValidator.validate(activityHeartRate)
                 } catch (err) {
-                    assert.equal(err.message, Strings.ERROR_MESSAGE.INVALID_FIELDS)
-                    assert.equal(err.description, 'heart_rate_zones.cardio.duration'
-                        .concat(Strings.ERROR_MESSAGE.NEGATIVE_NUMBER))
+                    assert.equal(err.message, Strings.ERROR_MESSAGE.INVALID_FIELD
+                        .replace('{0}', 'heart_rate_zones.cardio.duration'))
+                    assert.equal(err.description, Strings.ERROR_MESSAGE.POSITIVE_INTEGER)
                 }
-                activityHeartRate.cardio!.duration = 60000
             })
         })
 
         context('when the HeartRateZone has an invalid "Peak Zone" parameter (the min parameter is negative)', () => {
-            it('should throw a ValidationException', () => {
+            before(() => {
                 activityHeartRate.peak!.min = -154
+            })
+            after(() => {
+                activityHeartRate.peak!.min = 154
+            })
+            it('should throw a ValidationException', () => {
                 try {
                     HeartRateZoneValidator.validate(activityHeartRate)
                 } catch (err) {
-                    assert.equal(err.message, Strings.ERROR_MESSAGE.INVALID_FIELDS)
-                    assert.equal(err.description, 'heart_rate_zones.peak.min'.concat(Strings.ERROR_MESSAGE.NEGATIVE_NUMBER))
+                    assert.equal(err.message, Strings.ERROR_MESSAGE.REQUIRED_FIELDS_NOT_VALID
+                        .replace('{0}', 'heart_rate_zones.peak.min'))
+                    assert.equal(err.description, Strings.ERROR_MESSAGE.INTEGER_GREATER_ZERO)
                 }
-                activityHeartRate.peak!.min = 154
             })
         })
 
         context('when the HeartRateZone has an invalid "Peak Zone" parameter (the max parameter is negative)', () => {
-            it('should throw a ValidationException', () => {
+            before(() => {
                 activityHeartRate.peak!.max = -220
+            })
+            after(() => {
+                activityHeartRate.peak!.max = 220
+            })
+            it('should throw a ValidationException', () => {
                 try {
                     HeartRateZoneValidator.validate(activityHeartRate)
                 } catch (err) {
-                    assert.equal(err.message, Strings.ERROR_MESSAGE.INVALID_FIELDS)
-                    assert.equal(err.description, 'heart_rate_zones.peak.max'.concat(Strings.ERROR_MESSAGE.NEGATIVE_NUMBER))
+                    assert.equal(err.message, Strings.ERROR_MESSAGE.REQUIRED_FIELDS_NOT_VALID
+                        .replace('{0}', 'heart_rate_zones.peak.max'))
+                    assert.equal(err.description, Strings.ERROR_MESSAGE.INTEGER_GREATER_ZERO)
                 }
-                activityHeartRate.peak!.max = 220
             })
         })
 
         context('when the HeartRateZone has an invalid "Peak Zone" parameter (the duration parameter is negative)', () => {
-            it('should throw a ValidationException', () => {
+            before(() => {
                 activityHeartRate.peak!.duration = -60000
+            })
+            after(() => {
+                activityHeartRate.peak!.duration = 60000
+            })
+            it('should throw a ValidationException', () => {
                 try {
                     HeartRateZoneValidator.validate(activityHeartRate)
                 } catch (err) {
-                    assert.equal(err.message, Strings.ERROR_MESSAGE.INVALID_FIELDS)
-                    assert.equal(err.description, 'heart_rate_zones.peak.duration'.concat(Strings.ERROR_MESSAGE.NEGATIVE_NUMBER))
+                    assert.equal(err.message, Strings.ERROR_MESSAGE.INVALID_FIELD
+                        .replace('{0}', 'heart_rate_zones.peak.duration'))
+                    assert.equal(err.description, Strings.ERROR_MESSAGE.POSITIVE_INTEGER)
                 }
-                activityHeartRate.peak!.duration = 60000
             })
         })
     })
