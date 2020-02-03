@@ -233,10 +233,7 @@ describe('Services: MeasurementService', () => {
                     bloodGlucose.type = 'exists'
                     return service.addMeasurement(bloodGlucose)
                         .catch(err => {
-                            assert.propertyVal(err, 'message', 'Measurement already registered!')
-                            assert.propertyVal(err, 'description', `A ${bloodGlucose.type} measurement with value ` +
-                                `${bloodGlucose.value}${bloodGlucose.unit} from ${bloodGlucose.patient_id} collected by ` +
-                                `device ${bloodGlucose.device_id} at ${bloodGlucose.timestamp} already exists.`)
+                            assert.propertyVal(err, 'message', Strings.MEASUREMENT.ALREADY_REGISTERED)
                         })
                 })
             })
