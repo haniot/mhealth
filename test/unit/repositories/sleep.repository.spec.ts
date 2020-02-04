@@ -8,6 +8,7 @@ import { ISleepRepository } from '../../../src/application/port/sleep.repository
 import { SleepRepository } from '../../../src/infrastructure/repository/sleep.repository'
 import { SleepMock } from '../../mocks/models/sleep.mock'
 import { EntityMapperMock } from '../../mocks/models/entity.mapper.mock'
+import { Query } from '../../../src/infrastructure/repository/query/query'
 
 require('sinon-mongoose')
 
@@ -223,7 +224,7 @@ describe('Repositories: SleepRepository', () => {
         })
     })
 
-    describe('countSleep(patientId: string)', () => {
+    describe('count(query: IQuery)', () => {
         context('when there is at least one sleep object associated with the patient received', () => {
             it('should return how many sleep objects are associated with such patient in the database', () => {
                 sinon
@@ -233,7 +234,7 @@ describe('Repositories: SleepRepository', () => {
                     .chain('exec')
                     .resolves(2)
 
-                return sleepRepo.countByPatient(defaultSleep.patient_id)
+                return sleepRepo.count(new Query().fromJSON({ filters: { patient_id: defaultSleep.patient_id } }))
                     .then((countSleep: number) => {
                         assert.equal(countSleep, 2)
                     })
@@ -249,7 +250,7 @@ describe('Repositories: SleepRepository', () => {
                     .chain('exec')
                     .resolves(0)
 
-                return sleepRepo.countByPatient(defaultSleep.patient_id)
+                return sleepRepo.count(new Query().fromJSON({ filters: { patient_id: defaultSleep.patient_id } }))
                     .then((countSleep: number) => {
                         assert.equal(countSleep, 0)
                     })
@@ -268,7 +269,7 @@ describe('Repositories: SleepRepository', () => {
                         description: 'Please try again later...'
                     })
 
-                return sleepRepo.countByPatient(defaultSleep.patient_id)
+                return sleepRepo.count(new Query().fromJSON({ filters: { patient_id: defaultSleep.patient_id } }))
                     .catch(err => {
                         assert.propertyVal(err, 'message', 'An internal error has occurred in the database!')
                         assert.propertyVal(err, 'description', 'Please try again later...')

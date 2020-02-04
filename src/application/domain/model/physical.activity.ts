@@ -131,9 +131,10 @@ export class PhysicalActivity extends Activity implements IJSONSerializable, IJS
                 distance: this.distance,
                 levels: this.levels ? this.levels.map(item => item.toJSON()) : this.levels,
                 calories_link: this.calories_link,
-                heart_rate_link: this.heart_rate_link,
+                heart_rate_link: this.heart_rate_average ? this.heart_rate_link : undefined,
                 heart_rate_average: this.heart_rate_average,
-                heart_rate_zones: this.heart_rate_zones ? this.heart_rate_zones.toJSON() : this.heart_rate_zones,
+                heart_rate_zones: this.heart_rate_average && this.heart_rate_zones ? this.heart_rate_zones.toJSON()
+                    : undefined,
             }
         }
     }

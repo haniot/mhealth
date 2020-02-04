@@ -39,15 +39,6 @@ export interface ISleepRepository extends IRepository<Sleep> {
     removeAllByPatient(patientId: string): Promise<boolean>
 
     /**
-     * Returns the total of sleep objects of a patient.
-     *
-     * @param patientId Patient id associated with Sleep objects.
-     * @return {Promise<number>}
-     * @throws {RepositoryException}
-     */
-    countByPatient(patientId: string): Promise<number>
-
-    /**
      * Updates or creates a Sleep.
      *
      * @param item Sleep to be updated or created.

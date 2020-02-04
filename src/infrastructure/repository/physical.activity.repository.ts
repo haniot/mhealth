@@ -92,17 +92,6 @@ export class PhysicalActivityRepository extends BaseRepository<PhysicalActivity,
     }
 
     /**
-     * Returns the total of activities of a patient.
-     *
-     * @param patientId Patient id associated with physical activities.
-     * @return {Promise<number>}
-     * @throws {RepositoryException}
-     */
-    public countByPatient(patientId: string): Promise<number> {
-        return super.count(new Query().fromJSON({ filters: { patient_id: patientId } }))
-    }
-
-    /**
      * Updates or creates a Physical Activity.
      *
      * @param item Physical Activity to be updated or created.

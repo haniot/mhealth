@@ -8,6 +8,7 @@ import { PhysicalActivityRepository } from '../../../src/infrastructure/reposito
 import { ObjectID } from 'bson'
 import { PhysicalActivityMock } from '../../mocks/models/physical.activity.mock'
 import { EntityMapperMock } from '../../mocks/models/entity.mapper.mock'
+import { Query } from '../../../src/infrastructure/repository/query/query'
 
 require('sinon-mongoose')
 
@@ -226,7 +227,7 @@ describe('Repositories: PhysicalActivityRepository', () => {
                     .chain('exec')
                     .resolves(2)
 
-                return activityRepo.countByPatient(defaultActivity.patient_id)
+                return activityRepo.count(new Query().fromJSON({ filters: { patient_id: defaultActivity.patient_id } }))
                     .then((countActivities: number) => {
                         assert.equal(countActivities, 2)
                     })
@@ -242,7 +243,7 @@ describe('Repositories: PhysicalActivityRepository', () => {
                     .chain('exec')
                     .resolves(0)
 
-                return activityRepo.countByPatient(defaultActivity.patient_id)
+                return activityRepo.count(new Query().fromJSON({ filters: { patient_id: defaultActivity.patient_id } }))
                     .then((countActivities: number) => {
                         assert.equal(countActivities, 0)
                     })
@@ -257,9 +258,9 @@ describe('Repositories: PhysicalActivityRepository', () => {
                     .withArgs({ patient_id: defaultActivity.patient_id })
                     .chain('exec')
                     .rejects({ message: 'An internal error has occurred in the database!',
-                               description: 'Please try again later...' })
+                                     description: 'Please try again later...' })
 
-                return activityRepo.countByPatient(defaultActivity.patient_id)
+                return activityRepo.count(new Query().fromJSON({ filters: { patient_id: defaultActivity.patient_id } }))
                     .catch (err => {
                         assert.propertyVal(err, 'message', 'An internal error has occurred in the database!')
                         assert.propertyVal(err, 'description', 'Please try again later...')

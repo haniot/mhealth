@@ -204,18 +204,14 @@ export class PhysicalActivityService implements IPhysicalActivityService {
         throw new Error('Unsupported feature!')
     }
 
-    public async count(query: IQuery): Promise<number> {
-        throw new Error('Unsupported feature!')
-    }
-
     /**
-     * Returns the total of activities of a patient.
+     * Returns the total of activities according to the query.
      *
-     * @param patientId Patient id associated with physical activities.
+     * @param query Defines object to be used for query.
      * @return {Promise<number>}
-     * @throws {RepositoryException}
+     * @throws {ValidationException | RepositoryException}
      */
-    public countByPatient(patientId: string): Promise<number> {
-        return this._activityRepository.countByPatient(patientId)
+    public async count(query: IQuery): Promise<number> {
+        return this._activityRepository.count(query)
     }
 }

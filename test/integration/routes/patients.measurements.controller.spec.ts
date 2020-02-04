@@ -101,10 +101,7 @@ describe('Routes: PatientMeasurement', () => {
                         .set('Content-Type', 'application/json')
                         .expect(409)
                         .then(res => {
-                            expect(res.body).to.have.property('message', 'Measurement already registered!')
-                            expect(res.body).to.have.property('description', `A ${bloodGlucose.type} measurement with value ` +
-                                `${bloodGlucose.value}${bloodGlucose.unit} from ${bloodGlucose.patient_id} collected by ` +
-                                `device ${bloodGlucose.device_id} at ${bloodGlucose.timestamp} already exists.`)
+                            expect(res.body).to.have.property('message', Strings.MEASUREMENT.ALREADY_REGISTERED)
                         })
                 })
             })

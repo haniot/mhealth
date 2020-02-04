@@ -121,8 +121,9 @@ describe('Validators: PhysicalActivityLevelsValidator', () => {
                 try {
                     PhysicalActivityLevelsValidator.validate(levels)
                 } catch (err) {
-                    assert.equal(err.message, Strings.ERROR_MESSAGE.INVALID_FIELDS)
-                    assert.equal(err.description, 'levels.duration'.concat(Strings.ERROR_MESSAGE.NEGATIVE_NUMBER))
+                    assert.equal(err.message, Strings.ERROR_MESSAGE.INVALID_FIELD
+                        .replace('{0}', 'levels.duration'))
+                    assert.equal(err.description, Strings.ERROR_MESSAGE.POSITIVE_INTEGER)
                 }
                 levels[1].duration = Math.floor((Math.random() * 10 + 1) * 60000)
             })
