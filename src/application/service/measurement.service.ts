@@ -81,22 +81,18 @@ export class MeasurementService implements IMeasurementService {
 
     public async add(item: any): Promise<any> {
         try {
+            if (item.patient_id && item.timestamp) {
+                ObjectIdValidator.validate(item.patient_id)
+                const measurementExists = await this._repository.checkExists(item)
+                if (measurementExists) {
+                    throw new ConflictException(Strings.MEASUREMENT.ALREADY_REGISTERED)
+                }
+            }
             if (item.device_id) {
                 ObjectIdValidator.validate(item.device_id)
                 const device: Device = new Device().fromJSON({ id: item.device_id })
                 const result = await this._deviceRepository.checkExists(device)
                 if (!result) throw new ValidationException(Strings.DEVICE.NOT_FOUND, Strings.DEVICE.NOT_FOUND_DESC)
-                if (item.patient_id && item.timestamp) {
-                    ObjectIdValidator.validate(item.patient_id)
-                    const measurementExists = await this._repository.checkExists(item)
-                    if (measurementExists) {
-                        throw new ConflictException(
-                            'Measurement already registered!',
-                            `A ${item.type} measurement with value ${item.value}${item.unit} from ` +
-                            `${item.patient_id} collected by device ${item.device_id} at ${item.timestamp} already ` +
-                            `exists.`)
-                    }
-                }
             }
             switch (item.type) {
                 case(MeasurementTypes.BLOOD_GLUCOSE):

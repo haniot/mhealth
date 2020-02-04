@@ -90,17 +90,6 @@ export class SleepRepository extends BaseRepository<Sleep, SleepEntity> implemen
     }
 
     /**
-     * Returns the total of sleep objects of a patient.
-     *
-     * @param patientId Patient id associated with Sleep objects.
-     * @return {Promise<number>}
-     * @throws {RepositoryException}
-     */
-    public countByPatient(patientId: string): Promise<number> {
-        return super.count(new Query().fromJSON({ filters: { patient_id: patientId } }))
-    }
-
-    /**
      * Updates or creates a Sleep.
      *
      * @param item Sleep to be updated or created.

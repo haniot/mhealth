@@ -38,8 +38,7 @@ export class PatientsDevicesController {
             const query: Query = new Query().fromJSON(req.query)
             query.addFilter({ patient_id: req.params.patient_id })
             const result: Array<Device> = await this._service.getAll(query)
-            const count: number = await this._service.count(
-                new Query().fromJSON({ filters: { patient_id: req.params.patient_id } }))
+            const count: number = await this._service.count(query)
             res.setHeader('X-Total-Count', count)
             return res.status(HttpStatus.OK).send(this.toJSONView(result))
         } catch (err) {

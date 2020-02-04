@@ -46,13 +46,4 @@ export interface IPhysicalActivityService extends IService<PhysicalActivity> {
      * @throws {ValidationException | RepositoryException}
      */
     removeByPatient(activityId: string, patientId: string): Promise<boolean>
-
-    /**
-     * Returns the total of activities of a patient.
-     *
-     * @param patientId Patient id associated with physical activities.
-     * @return {Promise<number>}
-     * @throws {RepositoryException}
-     */
-    countByPatient(patientId: string): Promise<number>
 }

@@ -204,18 +204,14 @@ export class SleepService implements ISleepService {
         throw new Error('Unsupported feature!')
     }
 
-    public async count(query: IQuery): Promise<number> {
-        throw new Error('Unsupported feature!')
-    }
-
     /**
-     * Returns the total of sleep objects of a patient.
+     * Returns the total of sleep objects according to the query.
      *
-     * @param patientId Patient id associated with Sleep objects.
+     * @param query Defines object to be used for query.
      * @return {Promise<number>}
-     * @throws {RepositoryException}
+     * @throws {ValidationException | RepositoryException}
      */
-    public countByPatient(patientId: string): Promise<number> {
-        return this._sleepRepository.countByPatient(patientId)
+    public async count(query: IQuery): Promise<number> {
+        return this._sleepRepository.count(query)
     }
 }

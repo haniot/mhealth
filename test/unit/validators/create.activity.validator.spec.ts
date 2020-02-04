@@ -80,8 +80,9 @@ describe('Validators: CreateActivityValidator', () => {
                 try {
                     CreateActivityValidator.validate(activity)
                 } catch (err) {
-                    assert.equal(err.message, Strings.ERROR_MESSAGE.INVALID_FIELDS)
-                    assert.equal(err.description, 'duration'.concat(Strings.ERROR_MESSAGE.NEGATIVE_NUMBER))
+                    assert.equal(err.message, Strings.ERROR_MESSAGE.INVALID_FIELD
+                        .replace('{0}', 'duration'))
+                    assert.equal(err.description, Strings.ERROR_MESSAGE.POSITIVE_INTEGER)
                 }
                 activity.duration = 1178000
             })

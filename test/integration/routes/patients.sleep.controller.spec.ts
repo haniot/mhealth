@@ -378,8 +378,9 @@ describe('Routes: patients.sleep', () => {
                     .expect(400)
                     .then(err => {
                         expect(err.body.code).to.eql(400)
-                        expect(err.body.message).to.eql(Strings.ERROR_MESSAGE.INVALID_FIELDS)
-                        expect(err.body.description).to.eql('duration'.concat(Strings.ERROR_MESSAGE.NEGATIVE_NUMBER))
+                        expect(err.body.message).to.eql(Strings.ERROR_MESSAGE.INVALID_FIELD
+                            .replace('{0}', 'duration'))
+                        expect(err.body.description).to.eql(Strings.ERROR_MESSAGE.POSITIVE_INTEGER)
                     })
             })
         })
@@ -532,9 +533,9 @@ describe('Routes: patients.sleep', () => {
                         .expect(400)
                         .then(err => {
                             expect(err.body.code).to.eql(400)
-                            expect(err.body.message).to.eql(Strings.ERROR_MESSAGE.INVALID_FIELDS)
-                            expect(err.body.description).to.eql('pattern.data_set.duration'
-                                .concat(Strings.ERROR_MESSAGE.INVALID_NUMBER))
+                            expect(err.body.message).to.eql(Strings.ERROR_MESSAGE.INVALID_FIELD
+                                .replace('{0}', 'pattern.data_set.duration'))
+                            expect(err.body.description).to.eql(Strings.ERROR_MESSAGE.POSITIVE_INTEGER)
                         })
                 })
             })
@@ -565,9 +566,9 @@ describe('Routes: patients.sleep', () => {
                         .expect(400)
                         .then(err => {
                             expect(err.body.code).to.eql(400)
-                            expect(err.body.message).to.eql(Strings.ERROR_MESSAGE.INVALID_FIELDS)
-                            expect(err.body.description).to.eql('pattern.data_set.duration'
-                                .concat(Strings.ERROR_MESSAGE.NEGATIVE_NUMBER))
+                            expect(err.body.message).to.eql(Strings.ERROR_MESSAGE.INVALID_FIELD
+                                .replace('{0}', 'pattern.data_set.duration'))
+                            expect(err.body.description).to.eql(Strings.ERROR_MESSAGE.POSITIVE_INTEGER)
                         })
                 })
             })
@@ -860,8 +861,9 @@ describe('Routes: patients.sleep', () => {
                         expect(res.body.error[3].message).to.eql(Strings.ERROR_MESSAGE.INVALID_FIELDS)
                         expect(res.body.error[3].description).to.eql('duration value does not match values ' +
                             'passed in start_time and end_time parameters!')
-                        expect(res.body.error[4].message).to.eql(Strings.ERROR_MESSAGE.INVALID_FIELDS)
-                        expect(res.body.error[4].description).to.eql('duration'.concat(Strings.ERROR_MESSAGE.NEGATIVE_NUMBER))
+                        expect(res.body.error[4].message).to.eql(Strings.ERROR_MESSAGE.INVALID_FIELD
+                            .replace('{0}', 'duration'))
+                        expect(res.body.error[4].description).to.eql(Strings.ERROR_MESSAGE.POSITIVE_INTEGER)
                         expect(res.body.error[5].message).to.eql(Strings.ERROR_MESSAGE.INVALID_FIELDS)
                         expect(res.body.error[5].description).to.eql('The names of the allowed Sleep Pattern types are: ' +
                             'classic, stages.')
@@ -872,9 +874,9 @@ describe('Routes: patients.sleep', () => {
                         expect(res.body.error[8].message).to.eql(Strings.ERROR_MESSAGE.REQUIRED_FIELDS)
                         expect(res.body.error[8].description).to.eql('pattern.data_set.start_time, pattern.data_set.name, ' +
                             'pattern.data_set.duration'.concat(Strings.ERROR_MESSAGE.REQUIRED_FIELDS_DESC))
-                        expect(res.body.error[9].message).to.eql(Strings.ERROR_MESSAGE.INVALID_FIELDS)
-                        expect(res.body.error[9].description).to.eql('pattern.data_set.duration'
-                            .concat(Strings.ERROR_MESSAGE.NEGATIVE_NUMBER))
+                        expect(res.body.error[9].message).to.eql(Strings.ERROR_MESSAGE.INVALID_FIELD
+                            .replace('{0}', 'pattern.data_set.duration'))
+                        expect(res.body.error[9].description).to.eql(Strings.ERROR_MESSAGE.POSITIVE_INTEGER)
                         expect(res.body.error[10].message).to.eql(Strings.ERROR_MESSAGE.INVALID_FIELDS)
                         if (incorrectSleep11.type === SleepType.CLASSIC)
                             expect(res.body.error[10].description).to.eql('The names of the allowed data_set patterns are: ' +

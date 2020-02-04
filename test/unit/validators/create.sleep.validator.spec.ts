@@ -86,8 +86,9 @@ describe('Validators: CreateSleepValidator', () => {
                 try {
                     CreateSleepValidator.validate(sleep)
                 } catch (err) {
-                    assert.equal(err.message, Strings.ERROR_MESSAGE.INVALID_FIELDS)
-                    assert.equal(err.description, 'duration'.concat(Strings.ERROR_MESSAGE.NEGATIVE_NUMBER))
+                    assert.equal(err.message, Strings.ERROR_MESSAGE.INVALID_FIELD
+                        .replace('{0}', 'duration'))
+                    assert.equal(err.description, Strings.ERROR_MESSAGE.POSITIVE_INTEGER)
                 }
                 sleep.duration = 29520000
             })
@@ -237,8 +238,9 @@ describe('Validators: CreateSleepValidator', () => {
                     try {
                         CreateSleepValidator.validate(sleep)
                     } catch (err) {
-                        assert.equal(err.message, Strings.ERROR_MESSAGE.INVALID_FIELDS)
-                        assert.equal(err.description, 'pattern.data_set.duration'.concat(Strings.ERROR_MESSAGE.NEGATIVE_NUMBER))
+                        assert.equal(err.message, Strings.ERROR_MESSAGE.INVALID_FIELD
+                            .replace('{0}', 'pattern.data_set.duration'))
+                        assert.equal(err.description, Strings.ERROR_MESSAGE.POSITIVE_INTEGER)
                     }
                     dataSetItemTest.duration = 60000
                 })

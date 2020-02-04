@@ -20,9 +20,13 @@ export abstract class Strings {
         UUID_NOT_VALID_FORMAT_DESC: 'A 24-byte hex ID similar to this: 507f191e810c19729de860ea is expected.',
         PARAMETER_COULD_NOT_BE_UPDATED: 'This parameter could not be updated.',
         PARAMETER_COULD_NOT_BE_UPDATED_DESC: 'The follow parameter could not be updated: ',
+        REQUIRED_FIELDS_NOT_VALID: '{0} are not valid!',
         INVALID_FIELDS: 'One or more request fields are invalid...',
-        INVALID_NUMBER: ' must be a valid number!',
-        NEGATIVE_NUMBER: ' can\'t be negative!',
+        INVALID_FIELD: '{0} is not valid!',
+        POSITIVE_INTEGER: 'The value must be an integer equal to or greater than zero.',
+        POSITIVE_NUMBER: 'The value must be a number equal to or greater than zero.',
+        INTEGER_GREATER_ZERO: 'The value must be an integer greater than zero.',
+        NUMBER_GREATER_ZERO: 'The value must be a number greater than zero.',
         INVALID_STRING: ' must be a string!',
         EMPTY_STRING: ' must have at least one character!',
         INVALID_DATE: ', is not in valid ISO 8601 format.',
@@ -42,6 +46,7 @@ export abstract class Strings {
     }
 
     public static readonly MEASUREMENT: any = {
+        ALREADY_REGISTERED: 'Measurement is already registered...',
         NOT_FOUND: 'Measurement not found!',
         NOT_FOUND_DESC: 'Measurement not found or already removed. A new operation for the same resource is required.',
         UNIT_ERROR: 'The unit value is not valid for ',

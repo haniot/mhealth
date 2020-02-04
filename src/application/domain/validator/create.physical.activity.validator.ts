@@ -4,12 +4,15 @@ import { PhysicalActivityLevelsValidator } from './physical.activity.levels.vali
 import { Strings } from '../../../utils/strings'
 import { CreateActivityValidator } from './create.activity.validator'
 import { StringValidator } from './string.validator'
-import { NumberValidator } from './number.validator'
 import { HeartRateZoneValidator } from './heart.rate.zone.validator'
+import { NumberPositiveValidator } from './number.positive.validator'
+import { IntegerPositiveValidator } from './integer.positive.validator'
 
 export class CreatePhysicalActivityValidator {
     public static validate(activity: PhysicalActivity): void | ValidationException {
         const fields: Array<string> = []
+
+        const regZone = new RegExp(/^0*[1-9][0-9]*$/i) // 1-n
 
         try {
             CreateActivityValidator.validate(activity)
@@ -22,11 +25,15 @@ export class CreatePhysicalActivityValidator {
         else StringValidator.validate(activity.name, 'name')
 
         if (activity.calories === undefined) fields.push('calories')
-        else NumberValidator.validate(activity.calories, 'calories')
+        else NumberPositiveValidator.validate(activity.calories, 'calories')
 
-        if (activity.steps !== undefined) NumberValidator.validate(activity.steps, 'steps')
+        if (activity.steps !== undefined) {
+            IntegerPositiveValidator.validate(activity.steps, 'steps')
+        }
 
-        if (activity.distance !== undefined) NumberValidator.validate(activity.distance, 'distance')
+        if (activity.distance !== undefined) {
+            NumberPositiveValidator.validate(activity.distance, 'distance')
+        }
 
         if (activity.levels && activity.levels.length > 0) PhysicalActivityLevelsValidator.validate(activity.levels)
 
@@ -34,7 +41,14 @@ export class CreatePhysicalActivityValidator {
 
         if (activity.heart_rate_link !== undefined) StringValidator.validate(activity.heart_rate_link, 'heart_rate_link')
 
-        if (activity.heart_rate_average !== undefined) NumberValidator.validate(activity.heart_rate_average, 'heart_rate_average')
+        if (activity.heart_rate_average !== undefined) {
+            if (!(regZone.test(String(activity.heart_rate_average)))) {
+                throw new ValidationException(
+                    Strings.ERROR_MESSAGE.INVALID_FIELD.replace('{0}', 'heart_rate_average'),
+                    Strings.ERROR_MESSAGE.INTEGER_GREATER_ZERO
+                )
+            }
+        }
 
         if (activity.heart_rate_zones !== undefined) HeartRateZoneValidator.validate(activity.heart_rate_zones)
 
