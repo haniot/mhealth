@@ -46,13 +46,4 @@ export interface ISleepService extends IService<Sleep> {
      * @throws {ValidationException | RepositoryException}
      */
     removeByPatient(sleepId: string, patientId: string): Promise<boolean>
-
-    /**
-     * Returns the total of sleep objects of a patient.
-     *
-     * @param patientId Patient id associated with Sleep objects.
-     * @return {Promise<number>}
-     * @throws {RepositoryException}
-     */
-    countByPatient(patientId: string): Promise<number>
 }

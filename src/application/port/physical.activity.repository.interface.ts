@@ -39,15 +39,6 @@ export interface IPhysicalActivityRepository extends IRepository<PhysicalActivit
     removeAllByPatient(patientId: string): Promise<boolean>
 
     /**
-     * Returns the total of activities of a patient.
-     *
-     * @param patientId Patient id associated with physical activities.
-     * @return {Promise<number>}
-     * @throws {RepositoryException}
-     */
-    countByPatient(patientId: string): Promise<number>
-
-    /**
      * Updates or creates a Physical Activity.
      *
      * @param item Physical Activity to be updated or created.

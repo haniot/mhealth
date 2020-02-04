@@ -735,7 +735,7 @@ describe('Services: SleepService', () => {
     describe('countSleep(patientId: string)', () => {
         context('when there is at least one sleep object associated with the patient received', () => {
             it('should return how many sleep objects are associated with such patient in the database', () => {
-                return sleepService.countByPatient(sleep.patient_id!)
+                return sleepService.count(new Query().fromJSON({ filters: { patient_id: sleep.patient_id } }))
                     .then(res => {
                         assert.equal(res, 1)
                     })

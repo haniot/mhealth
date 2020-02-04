@@ -100,9 +100,8 @@ export class PatientsSleepController {
         try {
             const query: IQuery = new Query().fromJSON(req.query)
             query.addFilter({ patient_id: req.params.patient_id })
-            const result = await this._sleepService
-                .getAllByPatient(req.params.patient_id, query)
-            const count: number = await this._sleepService.countByPatient(req.params.patient_id)
+            const result = await this._sleepService.getAllByPatient(req.params.patient_id, query)
+            const count: number = await this._sleepService.count(query)
             res.setHeader('X-Total-Count', count)
             return res.status(HttpStatus.OK).send(result)
         } catch (err) {

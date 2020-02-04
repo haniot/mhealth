@@ -781,7 +781,7 @@ describe('Services: PhysicalActivityService', () => {
     describe('countActivities(patientId: string)', () => {
         context('when there is at least one physical activity associated with the patient received', () => {
             it('should return how many physical activities are associated with such patient in the database', () => {
-                return activityService.countByPatient(activity.patient_id!)
+                return activityService.count(new Query().fromJSON({ filters: { patient_id: activity.patient_id } }))
                     .then(res => {
                         assert.equal(res, 1)
                     })
