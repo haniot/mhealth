@@ -7,7 +7,6 @@ import { ISleepRepository } from '../../application/port/sleep.repository.interf
 import { Sleep } from '../../application/domain/model/sleep'
 import { SleepEntity } from '../entity/sleep.entity'
 import { IEntityMapper } from '../port/entity.mapper.interface'
-import { IQuery } from '../../application/port/query.interface'
 
 /**
  * Implementation of the sleep repository.
@@ -39,10 +38,7 @@ export class SleepRepository extends BaseRepository<Sleep, SleepEntity> implemen
                 query.filters = { start_time: sleep.start_time, patient_id: sleep.patient_id }
             }
             super.findOne(query)
-                .then((result: Sleep) => {
-                    if (result) return resolve(true)
-                    return resolve(false)
-                })
+                .then(result => resolve(!!result))
                 .catch(err => reject(err))
         })
     }
@@ -59,10 +55,7 @@ export class SleepRepository extends BaseRepository<Sleep, SleepEntity> implemen
         return new Promise<boolean>((resolve, reject) => {
             this.sleepModel.findOneAndDelete({ patient_id: patientId, _id: sleepId })
                 .exec()
-                .then(result => {
-                    if (!result) return resolve(false)
-                    resolve(true)
-                })
+                .then(result => resolve(!!result))
                 .catch(err => reject(super.mongoDBErrorListener(err)))
         })
     }
@@ -75,16 +68,9 @@ export class SleepRepository extends BaseRepository<Sleep, SleepEntity> implemen
      * @throws {ValidationException | RepositoryException}
      */
     public async removeAllByPatient(patientId: string): Promise<boolean> {
-        // Creates the query with the received parameter
-        const query: IQuery = new Query()
-        query.filters = { patient_id: patientId }
-
         return new Promise<boolean>((resolve, reject) => {
-            this.sleepModel.deleteMany(query.filters)
-                .then(result => {
-                    if (!result) return resolve(false)
-                    return resolve(true)
-                })
+            this.sleepModel.deleteMany({ patient_id: patientId })
+                .then(result => resolve(!!result))
                 .catch(err => reject(super.mongoDBErrorListener(err)))
         })
     }

@@ -22,7 +22,8 @@ import { ValidationException } from '../domain/exception/validation.exception'
 @injectable()
 export class PhysicalActivityService implements IPhysicalActivityService {
 
-    constructor(@inject(Identifier.ACTIVITY_REPOSITORY) private readonly _activityRepository: IPhysicalActivityRepository) {}
+    constructor(@inject(Identifier.ACTIVITY_REPOSITORY) private readonly _activityRepository: IPhysicalActivityRepository) {
+    }
 
     /**
      * Adds a new PhysicalActivity or a list of PhysicalActivity.
@@ -33,18 +34,8 @@ export class PhysicalActivityService implements IPhysicalActivityService {
      */
     public async add(activity: PhysicalActivity | Array<PhysicalActivity>):
         Promise<PhysicalActivity | MultiStatus<PhysicalActivity>> {
-        try {
-            // Multiple items of PhysicalActivity
-            if (activity instanceof Array) {
-                const result = await this.addMultipleActivities(activity)
-                return Promise.resolve(result)
-            }
-
-            // Only one item
-            return this.addActivity(activity)
-        } catch (err) {
-            return Promise.reject(err)
-        }
+        if (activity instanceof Array) return this.addMultipleActivities(activity)
+        return this.addActivity(activity)
     }
 
     /**
@@ -106,11 +97,8 @@ export class PhysicalActivityService implements IPhysicalActivityService {
             const activityExist = await this._activityRepository.checkExist(activity)
             if (activityExist) throw new ConflictException(Strings.PHYSICAL_ACTIVITY.ALREADY_REGISTERED)
 
-            // 3. Create new physical activity register.
-            const activitySaved: PhysicalActivity = await this._activityRepository.create(activity)
-
-            // 4. Returns the created object.
-            return Promise.resolve(activitySaved)
+            // 3. Add PhysicalActivity.
+            return this._activityRepository.create(activity)
         } catch (err) {
             return Promise.reject(err)
         }
@@ -183,7 +171,7 @@ export class PhysicalActivityService implements IPhysicalActivityService {
             ObjectIdValidator.validate(patientId, Strings.PATIENT.PARAM_ID_NOT_VALID_FORMAT)
             ObjectIdValidator.validate(activityId, Strings.PHYSICAL_ACTIVITY.PARAM_ID_NOT_VALID_FORMAT)
 
-            // 2. Create a PhysicalActivity with only one attribute, the id to be used in publishing on the event bus
+            // 2. Create a PhysicalActivity with only one attribute.
             const activityToBeDeleted: PhysicalActivity = new PhysicalActivity()
             activityToBeDeleted.id = activityId
 

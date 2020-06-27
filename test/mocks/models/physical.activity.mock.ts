@@ -4,6 +4,7 @@ import { ActivityLevel } from '../../../src/application/domain/model/activityLev
 import { Levels } from '../../../src/application/domain/utils/levels'
 
 export class PhysicalActivityMock extends PhysicalActivity {
+    public static PATIENT_ID = '5a62be07de34500146d9c544'
 
     constructor(type?: ActivityTypeMock) {
         super()
@@ -18,7 +19,7 @@ export class PhysicalActivityMock extends PhysicalActivity {
         super.end_time = new Date(new Date(super.start_time)
             .setMilliseconds(Math.floor(Math.random() * 35 + 10) * 60000)).toISOString() // 10-45min in milliseconds
         super.duration = new Date(super.end_time).getTime() - new Date(super.start_time).getTime()
-        super.patient_id = '5a62be07de34500146d9c544'
+        super.patient_id = PhysicalActivityMock.PATIENT_ID
         super.name = type
         super.calories = Math.floor((Math.random() * 20000 + 500)) // 500-20100
         if (type === ActivityTypeMock.WALK || type === ActivityTypeMock.RUN) {
@@ -29,7 +30,7 @@ export class PhysicalActivityMock extends PhysicalActivity {
         super.calories_link = '/v1/patients/5a62be07de34500146d9c544/calories/date/2018-12-14/2018-12-14/time/12:52/13:12/interval/1min/timeseries'
         super.heart_rate_link = '/v1/patients/5a62be07de34500146d9c544/heartrate/date/2018-12-14/2018-12-14/time/12:52/13:12/interval/1sec/timeseries'
         super.heart_rate_average = Math.floor((Math.random() * 120 + 70)), // 70-189
-        super.heart_rate_zones = this.generateHeartRate()
+            super.heart_rate_zones = this.generateHeartRate()
     }
 
     private generatePhysicalActivityLevels(): Array<ActivityLevel> {
@@ -62,7 +63,7 @@ export class PhysicalActivityMock extends PhysicalActivity {
                 min: 154,
                 max: 220,
                 duration: 0
-            },
+            }
         }
         return new HeartRateZone().fromJSON(activityHeartRateZoneJSON)
     }

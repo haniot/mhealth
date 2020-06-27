@@ -50,13 +50,10 @@ import { BodyFatEntity } from '../infrastructure/entity/body.fat.entity'
 import { BodyFat } from '../application/domain/model/body.fat'
 import { BodyFatEntityMapper } from '../infrastructure/entity/mapper/body.fat.entity.mapper'
 import { MeasurementsTypesController } from '../ui/controllers/measurements.types.controller'
-import { IIntegrationEventRepository } from '../application/port/integration.event.repository.interface'
 import { ConnectionFactoryRabbitMQ } from '../infrastructure/eventbus/rabbitmq/connection.factory.rabbitmq'
 import { IBackgroundTask } from '../application/port/background.task.interface'
 import { SubscribeEventBusTask } from '../background/task/subscribe.event.bus.task'
 import { EventBusRabbitMQ } from '../infrastructure/eventbus/rabbitmq/eventbus.rabbitmq'
-import { IntegrationEventRepoModel } from '../infrastructure/database/schema/integration.event.schema'
-import { IntegrationEventRepository } from '../infrastructure/repository/integration.event.repository'
 import { IConnectionEventBus } from '../infrastructure/port/connection.event.bus.interface'
 import { ConnectionRabbitMQ } from '../infrastructure/eventbus/rabbitmq/connection.rabbitmq'
 import { IEventBus } from '../infrastructure/port/event.bus.interface'
@@ -136,8 +133,6 @@ export class IoC {
             .to(DeviceRepository).inSingletonScope()
         this._container.bind<IMeasurementRepository>(Identifier.MEASUREMENT_REPOSITORY)
             .to(MeasurementRepository).inSingletonScope()
-        this._container.bind<IIntegrationEventRepository>(Identifier.INTEGRATION_EVENT_REPOSITORY)
-            .to(IntegrationEventRepository).inSingletonScope()
         this._container.bind<IPhysicalActivityRepository>(Identifier.ACTIVITY_REPOSITORY)
             .to(PhysicalActivityRepository).inSingletonScope()
         this._container.bind<ISleepRepository>(Identifier.SLEEP_REPOSITORY)
@@ -146,7 +141,6 @@ export class IoC {
         // Models
         this._container.bind(Identifier.DEVICE_REPO_MODEL).toConstantValue(DeviceRepoModel)
         this._container.bind(Identifier.MEASUREMENT_REPO_MODEL).toConstantValue(MeasurementRepoModel)
-        this._container.bind(Identifier.INTEGRATION_EVENT_REPO_MODEL).toConstantValue(IntegrationEventRepoModel)
         this._container.bind(Identifier.ACTIVITY_REPO_MODEL).toConstantValue(ActivityRepoModel)
         this._container.bind(Identifier.SLEEP_REPO_MODEL).toConstantValue(SleepRepoModel)
 

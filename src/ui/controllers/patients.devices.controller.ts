@@ -26,7 +26,7 @@ export class PatientsDevicesController {
         } catch (err) {
             const handlerError = ApiExceptionManager.build(err)
             return res.status(handlerError.code)
-                .send(handlerError.toJson())
+                .send(handlerError.toJSON())
         } finally {
             req.query = {}
         }
@@ -44,7 +44,7 @@ export class PatientsDevicesController {
         } catch (err) {
             const handlerError = ApiExceptionManager.build(err)
             return res.status(handlerError.code)
-                .send(handlerError.toJson())
+                .send(handlerError.toJSON())
         } finally {
             req.query = {}
         }
@@ -61,7 +61,7 @@ export class PatientsDevicesController {
         } catch (err) {
             const handlerError = ApiExceptionManager.build(err)
             return res.status(handlerError.code)
-                .send(handlerError.toJson())
+                .send(handlerError.toJSON())
         } finally {
             req.query = {}
         }
@@ -78,7 +78,7 @@ export class PatientsDevicesController {
         } catch (err) {
             const handlerError = ApiExceptionManager.build(err)
             return res.status(handlerError.code)
-                .send(handlerError.toJson())
+                .send(handlerError.toJSON())
         }
     }
 
@@ -90,7 +90,7 @@ export class PatientsDevicesController {
         } catch (err) {
             const handlerError = ApiExceptionManager.build(err)
             return res.status(handlerError.code)
-                .send(handlerError.toJson())
+                .send(handlerError.toJSON())
         }
     }
 
@@ -104,6 +104,6 @@ export class PatientsDevicesController {
             HttpStatus.NOT_FOUND,
             Strings.DEVICE.NOT_FOUND,
             Strings.DEVICE.NOT_FOUND_DESC
-        ).toJson()
+        ).toJSON()
     }
 }

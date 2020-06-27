@@ -108,7 +108,7 @@ export abstract class BaseRepository<T extends Entity, TModel> implements IRepos
                     } else if (err.kind === 'ObjectId') {
                         return new ValidationException(Strings.ERROR_MESSAGE.UUID_NOT_VALID_FORMAT,
                             Strings.ERROR_MESSAGE.UUID_NOT_VALID_FORMAT_DESC)
-                    } else if (err.kind === 'number') {
+                    } else if (err.kind === 'Number') {
                         return new ValidationException(`The value \'${err.value}\' of ${err.path} field is not a number.`)
                     } else if (err.kind === 'Boolean') {
                         return new ValidationException(`The value \'${err.value}\' of ${err.path} field is not a boolean.`)

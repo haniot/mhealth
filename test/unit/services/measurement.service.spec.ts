@@ -110,7 +110,7 @@ describe('Services: MeasurementService', () => {
 
     describe('removeMeasurement()', () => {
         context('when remove a measurement from patient', () => {
-            return service.removeMeasurement(height.id!, height.patient_id!)
+            return service.removeByPatient(height.id!, height.patient_id!)
                 .then(res => {
                     assert.isBoolean(res)
                     assert.isTrue(res)
@@ -119,7 +119,7 @@ describe('Services: MeasurementService', () => {
 
         context('when there are validation errors', () => {
             it('should reject an error', () => {
-                return service.removeMeasurement('1a2b3c', '1bd2c3')
+                return service.removeByPatient('1a2b3c', '1bd2c3')
                     .catch(err => {
                         assert.propertyVal(err, 'message', Strings.ERROR_MESSAGE.UUID_NOT_VALID_FORMAT)
                         assert.propertyVal(err, 'description', Strings.ERROR_MESSAGE.UUID_NOT_VALID_FORMAT_DESC)
@@ -164,7 +164,7 @@ describe('Services: MeasurementService', () => {
 
     describe('getLastMeasurements()', () => {
         context('when get a list of last measurements', () => {
-            return service.getLastMeasurements(height.patient_id!)
+            return service.getLast(height.patient_id!)
                 .then(res => {
                     assert.deepEqual(res, lastMeasurements)
                 })
@@ -172,7 +172,7 @@ describe('Services: MeasurementService', () => {
 
         context('when there are validation errors', () => {
             it('should reject an error ()', () => {
-                return service.getLastMeasurements('1a2b23c')
+                return service.getLast('1a2b23c')
                     .catch(err => {
                         assert.propertyVal(err, 'message', Strings.ERROR_MESSAGE.UUID_NOT_VALID_FORMAT)
                         assert.propertyVal(err, 'description', Strings.ERROR_MESSAGE.UUID_NOT_VALID_FORMAT_DESC)
@@ -185,7 +185,7 @@ describe('Services: MeasurementService', () => {
         describe('when save a unique measurement', () => {
             context('when save a blood glucose measurement', () => {
                 it('should return the saved measurement', () => {
-                    return service.addMeasurement(bloodGlucose)
+                    return service.add(bloodGlucose)
                         .then(res => {
                             assert.deepEqual(res, bloodGlucose)
                         })
@@ -195,7 +195,7 @@ describe('Services: MeasurementService', () => {
             context('when does not pass a device_id', () => {
                 it('should return the saved measurement without device_id', () => {
                     bloodGlucose.device_id = undefined
-                    return service.addMeasurement(bloodGlucose)
+                    return service.add(bloodGlucose)
                         .then(res => {
                             assert.deepEqual(res, bloodGlucose)
                         })
@@ -205,7 +205,7 @@ describe('Services: MeasurementService', () => {
             context('when device is not found', () => {
                 it('should reject error for device does not exists', () => {
                     bloodGlucose.device_id = `${new ObjectID()}`
-                    return service.addMeasurement(bloodGlucose)
+                    return service.add(bloodGlucose)
                         .catch(err => {
                             assert.propertyVal(err, 'message', Strings.DEVICE.NOT_FOUND)
                             assert.propertyVal(err, 'description', Strings.DEVICE.NOT_FOUND_DESC)
@@ -218,7 +218,7 @@ describe('Services: MeasurementService', () => {
                 it('should reject an error for missing parameters', () => {
                     bloodGlucose.patient_id = undefined
                     bloodGlucose.timestamp = undefined
-                    return service.addMeasurement(bloodGlucose)
+                    return service.add(bloodGlucose)
                         .catch(err => {
                             assert.propertyVal(err, 'message', 'Required fields were not provided...')
                             assert.propertyVal(err, 'description', 'BloodGlucose validation: timestamp, patient_id required!')
@@ -231,7 +231,7 @@ describe('Services: MeasurementService', () => {
             context('when measurement already exists', () => {
                 it('should reject an error for existent measurement', () => {
                     bloodGlucose.type = 'exists'
-                    return service.addMeasurement(bloodGlucose)
+                    return service.add(bloodGlucose)
                         .catch(err => {
                             assert.propertyVal(err, 'message', Strings.MEASUREMENT.ALREADY_REGISTERED)
                         })
@@ -241,7 +241,7 @@ describe('Services: MeasurementService', () => {
             context('when measurement type is not mapped', () => {
                 it('should reject an error for invalid type', () => {
                     bloodGlucose.type = 'inexistent'
-                    return service.addMeasurement(bloodGlucose)
+                    return service.add(bloodGlucose)
                         .catch(err => {
                             assert.propertyVal(err, 'message',
                                 Strings.ENUM_VALIDATOR.NOT_MAPPED.concat(`type: ${bloodGlucose.type}`))
@@ -256,7 +256,7 @@ describe('Services: MeasurementService', () => {
         describe('when save a list of measurements', () => {
             context('when save a collection of measurements', () => {
                 it('should return a multi status with a list of success saves', () => {
-                    return service.addMeasurement(listMeasurements)
+                    return service.add(listMeasurements)
                         .then(res => {
                             assert.lengthOf(res.success, 7)
                             assert.lengthOf(res.error, 0)
@@ -267,7 +267,7 @@ describe('Services: MeasurementService', () => {
             context('when a validation error occours', () => {
                 it('should return a multi status with a list of error', () => {
                     bloodGlucose.patient_id = undefined
-                    return service.addMeasurement([bloodGlucose])
+                    return service.add([bloodGlucose])
                         .then(res => {
                             assert.lengthOf(res.success, 0)
                             assert.lengthOf(res.error, 1)
@@ -279,7 +279,7 @@ describe('Services: MeasurementService', () => {
             context('when a conflict error occours', () => {
                 it('should return a multi status with a list of error', () => {
                     bloodGlucose.type = 'exists'
-                    return service.addMeasurement([bloodGlucose])
+                    return service.add([bloodGlucose])
                         .then(res => {
                             assert.lengthOf(res.success, 0)
                             assert.lengthOf(res.error, 1)

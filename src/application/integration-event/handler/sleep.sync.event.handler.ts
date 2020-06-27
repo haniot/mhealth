@@ -6,6 +6,7 @@ import { SleepSyncEvent } from '../event/sleep.sync.event'
 import { Sleep } from '../../domain/model/sleep'
 import { CreateSleepValidator } from '../../domain/validator/create.sleep.validator'
 import { ISleepRepository } from '../../port/sleep.repository.interface'
+import { ValidationException } from '../../domain/exception/validation.exception'
 
 export class SleepSyncEventHandler implements IIntegrationEventHandler<SleepSyncEvent> {
     constructor(
@@ -15,9 +16,12 @@ export class SleepSyncEventHandler implements IIntegrationEventHandler<SleepSync
     }
 
     public async handle(event: SleepSyncEvent): Promise<void> {
+        if (!event.sleep)  {
+            throw new ValidationException('Event is not in the expected format!', JSON.stringify(event))
+        }
+
         let countSuccess = 0
         let countError = 0
-        if (!event.sleep) return
         if (event.sleep instanceof Array) {
             for (const item of event.sleep) {
                 try {
@@ -39,7 +43,7 @@ export class SleepSyncEventHandler implements IIntegrationEventHandler<SleepSync
                     `Action for event ${event.event_name} associated with patient with ID: ${event.sleep.patient_id}`
                         .concat('successfully performed!'))
             } catch (err) {
-                this._logger.warn(`An error occurred while attempting `
+                this._logger.error(`An error occurred while attempting `
                     .concat(`perform the operation with the ${event.event_name} name event. ${err.message}`)
                     .concat(err.description ? ' ' + err.description : ''))
             }

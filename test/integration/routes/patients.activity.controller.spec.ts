@@ -9,12 +9,12 @@ import { ActivityRepoModel } from '../../../src/infrastructure/database/schema/a
 import { PhysicalActivityEntityMapper } from '../../../src/infrastructure/entity/mapper/physical.activity.entity.mapper'
 import { ObjectID } from 'bson'
 import { HeartRateZone } from '../../../src/application/domain/model/heart.rate.zone'
-import { Default } from '../../../src/utils/default'
 import { IConnectionDB } from '../../../src/infrastructure/port/connection.db.interface'
 import { PhysicalActivityMock } from '../../mocks/models/physical.activity.mock'
 import { Levels } from '../../../src/application/domain/utils/levels'
 import { HeartRateZoneData } from '../../../src/application/domain/model/heart.rate.zone.data'
 import { ActivityLevel } from '../../../src/application/domain/model/activityLevel'
+import { Config } from '../../../src/utils/config'
 
 const dbConnection: IConnectionDB = DIContainer.get(Identifier.MONGODB_CONNECTION)
 const app: App = DIContainer.get(Identifier.APP)
@@ -177,7 +177,8 @@ describe('Routes: patients.physicalactivities', () => {
     // Start services
     before(async () => {
         try {
-            await dbConnection.tryConnect(process.env.MONGODB_URI_TEST || Default.MONGODB_URI_TEST)
+            const mongoConfigs = Config.getMongoConfig()
+            await dbConnection.tryConnect(mongoConfigs.uri, mongoConfigs.options)
 
             await deleteAllActivities()
         } catch (err) {
@@ -1279,7 +1280,7 @@ describe('Routes: patients.physicalactivities', () => {
                         calories: activity.calories,
                         steps: activity.steps ? activity.steps : undefined,
                         distance: activity.distance ? activity.distance : undefined,
-                        levels: activity.levels ? activity.levels : undefined,
+                        levels: activity.levels ? activity.levels : undefined
                     }
                     body.push(bodyElem)
                 })
@@ -1350,7 +1351,7 @@ describe('Routes: patients.physicalactivities', () => {
                         calories: activity.calories,
                         steps: activity.steps ? activity.steps : undefined,
                         distance: activity.distance ? activity.distance : undefined,
-                        levels: activity.levels ? activity.levels : undefined,
+                        levels: activity.levels ? activity.levels : undefined
                     }
                     body.push(bodyElem)
                 })
@@ -1407,7 +1408,7 @@ describe('Routes: patients.physicalactivities', () => {
                         calories: activity.calories,
                         steps: activity.steps ? activity.steps : undefined,
                         distance: activity.distance ? activity.distance : undefined,
-                        levels: activity.levels ? activity.levels : undefined,
+                        levels: activity.levels ? activity.levels : undefined
                     }
                     body.push(bodyElem)
                 })

@@ -15,37 +15,31 @@ import { Strings } from '../../../src/utils/strings'
 import { Sleep } from '../../../src/application/domain/model/sleep'
 import { SleepMock } from '../../mocks/models/sleep.mock'
 import { ISleepRepository } from '../../../src/application/port/sleep.repository.interface'
+import { Config } from '../../../src/utils/config'
 
 const dbConnection: IConnectionDB = DIContainer.get(Identifier.MONGODB_CONNECTION)
-const rabbitmq: IEventBus = DIContainer.get(Identifier.RABBITMQ_EVENT_BUS)
+const rabbit: IEventBus = DIContainer.get(Identifier.RABBITMQ_EVENT_BUS)
 const rpcServerEventBusTask: IBackgroundTask = DIContainer.get(Identifier.RPC_SERVER_EVENT_BUST_TASK)
 const activityRepository: IPhysicalActivityRepository = DIContainer.get(Identifier.ACTIVITY_REPOSITORY)
 const sleepRepository: ISleepRepository = DIContainer.get(Identifier.SLEEP_REPOSITORY)
-// const measurementService: IMeasurementService = DIContainer.get(Identifier.MEASUREMENT_SERVICE)
 
 describe('RPC SERVER EVENT BUS TASK', () => {
-    // Timeout function for control of execution
-    const timeout = (milliseconds) => {
-        return new Promise(resolve => setTimeout(resolve, milliseconds))
-    }
-
     // Start DB connection, RabbitMQ connection and ProviderEventBusTask
     before(async () => {
         try {
-            await dbConnection.tryConnect(process.env.MONGODB_URI_TEST || Default.MONGODB_URI_TEST)
+            const mongoConfigs = Config.getMongoConfig()
+            await dbConnection.tryConnect(mongoConfigs.uri, mongoConfigs.options)
 
             await deleteAllActivities()
             await deleteAllSleep()
             await deleteAllBodyFats()
             await deleteAllWeights()
 
-            const rabbitUri = process.env.RABBITMQ_URI || Default.RABBITMQ_URI
-            const rabbitOptions: any = { interval: 100, receiveFromYourself: true, sslOptions: { ca: [] } }
-            await rabbitmq.connectionRpcClient.open(rabbitUri, rabbitOptions)
+            const rabbitConfigs = Config.getRabbitConfig()
+            await rabbit.connectionRpcServer.open(rabbitConfigs.uri, rabbitConfigs.options)
+            await rabbit.connectionRpcClient.open(rabbitConfigs.uri, rabbitConfigs.options)
 
             rpcServerEventBusTask.run()
-
-            await timeout(2000)
         } catch (err) {
             throw new Error('Failure on ProviderEventBusTask test: ' + err.message)
         }
@@ -94,7 +88,7 @@ describe('RPC SERVER EVENT BUS TASK', () => {
 
                 activityRepository.create(activity)
                     .then(async () => {
-                        const result = await rabbitmq.executeResource('mhealth.rpc',
+                        const result = await rabbit.executeResource('mhealth.rpc',
                             'physicalactivities.find', '?patient_id=5a62be07d6f33400146c9b61')
                         expect(result.length).to.eql(1)
                         // Comparing the resources
@@ -208,7 +202,7 @@ describe('RPC SERVER EVENT BUS TASK', () => {
                 }
             })
             it('should return an array with six physical activities (regardless of association with a patient)', (done) => {
-                rabbitmq.executeResource('mhealth.rpc', 'physicalactivities.find', '')
+                rabbit.executeResource('mhealth.rpc', 'physicalactivities.find', '')
                     .then(result => {
                         expect(result.length).to.eql(6)
                         done()
@@ -217,7 +211,7 @@ describe('RPC SERVER EVENT BUS TASK', () => {
             })
 
             it('should return an empty array (no activity matches query)', (done) => {
-                rabbitmq.executeResource('mhealth.rpc',
+                rabbit.executeResource('mhealth.rpc',
                     'physicalactivities.find', '?patient_id=5a62be07d6f33400146c9b64')
                     .then(result => {
                         expect(result.length).to.eql(0)
@@ -227,7 +221,7 @@ describe('RPC SERVER EVENT BUS TASK', () => {
             })
 
             it('should return an array with three physical activities (query all activities by patient_id)', (done) => {
-                rabbitmq.executeResource('mhealth.rpc',
+                rabbit.executeResource('mhealth.rpc',
                     'physicalactivities.find', '?patient_id=5a62be07de34500146d9c544')
                     .then(result => {
                         expect(result.length).to.eql(3)
@@ -237,7 +231,7 @@ describe('RPC SERVER EVENT BUS TASK', () => {
             })
 
             it('should return an array with three physical activities (query all activities by name)', (done) => {
-                rabbitmq.executeResource('mhealth.rpc', 'physicalactivities.find', '?name=walk')
+                rabbit.executeResource('mhealth.rpc', 'physicalactivities.find', '?name=walk')
                     .then(result => {
                         expect(result.length).to.eql(3)
                         done()
@@ -246,7 +240,7 @@ describe('RPC SERVER EVENT BUS TASK', () => {
             })
 
             it('should return an array with two physical activities (query all activities by name and patient_id)', (done) => {
-                rabbitmq.executeResource('mhealth.rpc',
+                rabbit.executeResource('mhealth.rpc',
                     'physicalactivities.find', '?name=walk&patient_id=5a62be07d6f33400146c9b61')
                     .then(result => {
                         expect(result.length).to.eql(2)
@@ -257,7 +251,7 @@ describe('RPC SERVER EVENT BUS TASK', () => {
 
             it('should return an array with three physical activities (query all activities performed in one day)',
                 (done) => {
-                    rabbitmq.executeResource('mhealth.rpc',
+                    rabbit.executeResource('mhealth.rpc',
                         'physicalactivities.find',
                         '?start_time=gte:2019-01-20T00:00:00.000Z&end_time=lt:2019-01-20T23:59:59.999Z')
                         .then(result => {
@@ -269,7 +263,7 @@ describe('RPC SERVER EVENT BUS TASK', () => {
 
             it('should return an array with two physical activities (query the activities of a patient performed in one day)',
                 (done) => {
-                    rabbitmq.executeResource('mhealth.rpc',
+                    rabbit.executeResource('mhealth.rpc',
                         'physicalactivities.find',
                         '?start_time=gte:2019-01-20T00:00:00.000Z' +
                         '&end_time=lt:2019-01-20T23:59:59.999Z' +
@@ -283,7 +277,7 @@ describe('RPC SERVER EVENT BUS TASK', () => {
 
             it('should return an array with three physical activities (query all activities performed in one week)',
                 (done) => {
-                    rabbitmq.executeResource('mhealth.rpc',
+                    rabbit.executeResource('mhealth.rpc',
                         'physicalactivities.find',
                         '?start_at=2019-01-20T00:00:00.000Z&period=1w')
                         .then(result => {
@@ -295,7 +289,7 @@ describe('RPC SERVER EVENT BUS TASK', () => {
 
             it('should return an array with two physical activities (query the activities of a patient performed in one week)',
                 (done) => {
-                    rabbitmq.executeResource('mhealth.rpc',
+                    rabbit.executeResource('mhealth.rpc',
                         'physicalactivities.find',
                         '?start_at=2019-01-20T00:00:00.000Z&period=1w&patient_id=5a62be07de34500146d9c544')
                         .then(result => {
@@ -307,7 +301,7 @@ describe('RPC SERVER EVENT BUS TASK', () => {
 
             it('should return an array with five physical activities (query all activities that burned 100 calories or more)',
                 (done) => {
-                    rabbitmq.executeResource('mhealth.rpc',
+                    rabbit.executeResource('mhealth.rpc',
                         'physicalactivities.find',
                         '?calories=gte:100')
                         .then(result => {
@@ -319,7 +313,7 @@ describe('RPC SERVER EVENT BUS TASK', () => {
 
             it('should return an array with three physical activities ' +
                 '(query all activities of a patient that burned 100 calories or more)', (done) => {
-                rabbitmq.executeResource('mhealth.rpc',
+                rabbit.executeResource('mhealth.rpc',
                     'physicalactivities.find',
                     '?calories=gte:100&patient_id=5a62be07de34500146d9c544')
                     .then(result => {
@@ -331,7 +325,7 @@ describe('RPC SERVER EVENT BUS TASK', () => {
 
             it('should return an array with four physical activities (query all activities that had 700 steps or more)',
                 (done) => {
-                    rabbitmq.executeResource('mhealth.rpc',
+                    rabbit.executeResource('mhealth.rpc',
                         'physicalactivities.find',
                         '?steps=gte:700')
                         .then(result => {
@@ -343,7 +337,7 @@ describe('RPC SERVER EVENT BUS TASK', () => {
 
             it('should return an array with three physical activities ' +
                 '(query all activities of a patient that had 700 steps or more)', (done) => {
-                rabbitmq.executeResource('mhealth.rpc',
+                rabbit.executeResource('mhealth.rpc',
                     'physicalactivities.find',
                     '?steps=gte:700&patient_id=5a62be07de34500146d9c544')
                     .then(result => {
@@ -355,7 +349,7 @@ describe('RPC SERVER EVENT BUS TASK', () => {
 
             it('should return an array with three physical activities ' +
                 '(query all activities that have a heart rate average greater than or equal to 100)', (done) => {
-                rabbitmq.executeResource('mhealth.rpc',
+                rabbit.executeResource('mhealth.rpc',
                     'physicalactivities.find',
                     '?heart_rate_average=gte:100')
                     .then(result => {
@@ -367,7 +361,7 @@ describe('RPC SERVER EVENT BUS TASK', () => {
 
             it('should return an array with two physical activities ' +
                 '(query all activities of a patient that have a heart rate average greater than or equal to 100)', (done) => {
-                rabbitmq.executeResource('mhealth.rpc',
+                rabbit.executeResource('mhealth.rpc',
                     'physicalactivities.find',
                     '?heart_rate_average=gte:100&patient_id=5a62be07de34500146d9c544')
                     .then(result => {
@@ -379,7 +373,7 @@ describe('RPC SERVER EVENT BUS TASK', () => {
 
             it('should return an array with three physical activities (query all activities lasting 15 minutes or more)',
                 (done) => {
-                    rabbitmq.executeResource('mhealth.rpc',
+                    rabbit.executeResource('mhealth.rpc',
                         'physicalactivities.find',
                         '?duration=gte:900000')
                         .then(result => {
@@ -391,7 +385,7 @@ describe('RPC SERVER EVENT BUS TASK', () => {
 
             it('should return an array with one physical activity (query all activities of a patient lasting 15 minutes or more)',
                 (done) => {
-                    rabbitmq.executeResource('mhealth.rpc',
+                    rabbit.executeResource('mhealth.rpc',
                         'physicalactivities.find',
                         '?duration=gte:900000&patient_id=5a62be07de34500146d9c544')
                         .then(result => {
@@ -408,7 +402,6 @@ describe('RPC SERVER EVENT BUS TASK', () => {
                     await deleteAllActivities()
 
                     const activity: PhysicalActivity = new PhysicalActivityMock()
-
                     await activityRepository.create(activity)
                 } catch (err) {
                     throw new Error('Failure on Provider PhysicalActivity test: ' + err.message)
@@ -423,7 +416,7 @@ describe('RPC SERVER EVENT BUS TASK', () => {
                 }
             })
             it('should return a ValidationException (query with an invalid date (start_time))', (done) => {
-                rabbitmq.executeResource('mhealth.rpc',
+                rabbit.executeResource('mhealth.rpc',
                     'physicalactivities.find', '?start_time=invalidStartTime')
                     .then(result => {
                         expect(result.length).to.eql(0)
@@ -441,7 +434,7 @@ describe('RPC SERVER EVENT BUS TASK', () => {
             })
 
             it('should return a ValidationException (query with an invalid date (end_time))', (done) => {
-                rabbitmq.executeResource('mhealth.rpc',
+                rabbit.executeResource('mhealth.rpc',
                     'physicalactivities.find', '?end_time=invalidEndTime')
                     .then(result => {
                         expect(result.length).to.eql(0)
@@ -459,7 +452,7 @@ describe('RPC SERVER EVENT BUS TASK', () => {
             })
 
             it('should return a ValidationException (query with an invalid number (duration))', (done) => {
-                rabbitmq.executeResource('mhealth.rpc',
+                rabbit.executeResource('mhealth.rpc',
                     'physicalactivities.find', '?duration=invalidDuration')
                     .then(result => {
                         expect(result.length).to.eql(0)
@@ -467,8 +460,8 @@ describe('RPC SERVER EVENT BUS TASK', () => {
                     })
                     .catch((err) => {
                         try {
-                            expect(err.message).to.eql('Error: '
-                                .concat('The value \'invalidDuration\' of duration field is not a number.'))
+                            expect(err.message)
+                                .to.eql('Error: '.concat('The value \'invalidDuration\' of duration field is not a number.'))
                             done()
                         } catch (err) {
                             done(err)
@@ -477,7 +470,7 @@ describe('RPC SERVER EVENT BUS TASK', () => {
             })
 
             it('should return a ValidationException (query with an invalid number (calories))', (done) => {
-                rabbitmq.executeResource('mhealth.rpc',
+                rabbit.executeResource('mhealth.rpc',
                     'physicalactivities.find', '?calories=invalidCalories')
                     .then(result => {
                         expect(result.length).to.eql(0)
@@ -495,7 +488,7 @@ describe('RPC SERVER EVENT BUS TASK', () => {
             })
 
             it('should return a ValidationException (query with an invalid number (steps))', (done) => {
-                rabbitmq.executeResource('mhealth.rpc',
+                rabbit.executeResource('mhealth.rpc',
                     'physicalactivities.find', '?steps=invalidSteps')
                     .then(result => {
                         expect(result.length).to.eql(0)
@@ -513,7 +506,7 @@ describe('RPC SERVER EVENT BUS TASK', () => {
             })
 
             it('should return a ValidationException (query with an invalid patient id)', (done) => {
-                rabbitmq.executeResource('mhealth.rpc',
+                rabbit.executeResource('mhealth.rpc',
                     'physicalactivities.find', '?patient_id=invalidPatientId')
                     .then(result => {
                         expect(result.length).to.eql(0)
@@ -547,7 +540,7 @@ describe('RPC SERVER EVENT BUS TASK', () => {
                     }
                 })
                 it('should return a rpc timeout error', (done) => {
-                    rabbitmq.executeResource('mhealth.rpc',
+                    rabbit.executeResource('mhealth.rpc',
                         'physicalactivities.find', '?patient_id=5a62be07d6f33400146c9b61')
                         .then(() => {
                             done(new Error('RPC should not function normally'))
@@ -588,7 +581,7 @@ describe('RPC SERVER EVENT BUS TASK', () => {
 
                 sleepRepository.create(sleep)
                     .then(async () => {
-                        const result = await rabbitmq.executeResource('mhealth.rpc', 'sleep.find',
+                        const result = await rabbit.executeResource('mhealth.rpc', 'sleep.find',
                             '?patient_id=5a62be07d6f33400146c9b61')
                         expect(result.length).to.eql(1)
                         // Comparing the resources
@@ -678,7 +671,7 @@ describe('RPC SERVER EVENT BUS TASK', () => {
                 }
             })
             it('should return an array with six sleep objects (regardless of association with a patient)', (done) => {
-                rabbitmq.executeResource('mhealth.rpc', 'sleep.find', '')
+                rabbit.executeResource('mhealth.rpc', 'sleep.find', '')
                     .then(result => {
                         expect(result.length).to.eql(6)
                         done()
@@ -687,7 +680,7 @@ describe('RPC SERVER EVENT BUS TASK', () => {
             })
 
             it('should return an empty array (no sleep matches query)', (done) => {
-                rabbitmq.executeResource('mhealth.rpc', 'sleep.find',
+                rabbit.executeResource('mhealth.rpc', 'sleep.find',
                     '?patient_id=5a62be07d6f33400146c9b64')
                     .then(result => {
                         expect(result.length).to.eql(0)
@@ -697,7 +690,7 @@ describe('RPC SERVER EVENT BUS TASK', () => {
             })
 
             it('should return an array with three sleep objects (query sleep records by patient_id)', (done) => {
-                rabbitmq.executeResource('mhealth.rpc', 'sleep.find',
+                rabbit.executeResource('mhealth.rpc', 'sleep.find',
                     '?patient_id=5a62be07d6f33400146c9b61')
                     .then(result => {
                         expect(result.length).to.eql(3)
@@ -707,7 +700,7 @@ describe('RPC SERVER EVENT BUS TASK', () => {
             })
 
             it('should return an array with three sleep objects (query all sleep records in one day)', (done) => {
-                rabbitmq.executeResource('mhealth.rpc', 'sleep.find',
+                rabbit.executeResource('mhealth.rpc', 'sleep.find',
                     '?start_time=gte:2019-01-20T00:00:00.000Z&end_time=lt:2019-01-20T23:59:59.999Z')
                     .then(result => {
                         expect(result.length).to.eql(3)
@@ -717,7 +710,7 @@ describe('RPC SERVER EVENT BUS TASK', () => {
             })
 
             it('should return an array with two sleep objects (query all sleep records of a patient in one day)', (done) => {
-                rabbitmq.executeResource('mhealth.rpc', 'sleep.find',
+                rabbit.executeResource('mhealth.rpc', 'sleep.find',
                     '?start_time=gte:2019-01-20T00:00:00.000Z' +
                     '&end_time=lt:2019-01-20T23:59:59.999Z' +
                     '&patient_id=5a62be07de34500146d9c544')
@@ -729,7 +722,7 @@ describe('RPC SERVER EVENT BUS TASK', () => {
             })
 
             it('should return an array with three sleep objects (query all sleep records in one week)', (done) => {
-                rabbitmq.executeResource('mhealth.rpc', 'sleep.find',
+                rabbit.executeResource('mhealth.rpc', 'sleep.find',
                     '?start_at=2019-01-20T00:00:00.000Z&period=1w')
                     .then(result => {
                         expect(result.length).to.eql(3)
@@ -739,7 +732,7 @@ describe('RPC SERVER EVENT BUS TASK', () => {
             })
 
             it('should return an array with two sleep objects (query all sleep records of a patient in one week)', (done) => {
-                rabbitmq.executeResource('mhealth.rpc', 'sleep.find',
+                rabbit.executeResource('mhealth.rpc', 'sleep.find',
                     '?start_at=2019-01-20T00:00:00.000Z&period=1w&patient_id=5a62be07de34500146d9c544')
                     .then(result => {
                         expect(result.length).to.eql(2)
@@ -750,7 +743,7 @@ describe('RPC SERVER EVENT BUS TASK', () => {
 
             it('should return an array with three sleep objects (query all sleep records that lasted 8 hours or more)',
                 (done) => {
-                    rabbitmq.executeResource('mhealth.rpc', 'sleep.find',
+                    rabbit.executeResource('mhealth.rpc', 'sleep.find',
                         '?duration=gte:28800000')
                         .then(result => {
                             expect(result.length).to.eql(3)
@@ -761,7 +754,7 @@ describe('RPC SERVER EVENT BUS TASK', () => {
 
             it('should return an array with three sleep objects (query all sleep records that lasted less than 8 hours)',
                 (done) => {
-                    rabbitmq.executeResource('mhealth.rpc', 'sleep.find',
+                    rabbit.executeResource('mhealth.rpc', 'sleep.find',
                         '?duration=lt:28800000')
                         .then(result => {
                             expect(result.length).to.eql(3)
@@ -772,7 +765,7 @@ describe('RPC SERVER EVENT BUS TASK', () => {
 
             it('should return an array with two sleep objects ' +
                 '(query all sleep records of a patient that lasted 8 hours or more)', (done) => {
-                rabbitmq.executeResource('mhealth.rpc', 'sleep.find',
+                rabbit.executeResource('mhealth.rpc', 'sleep.find',
                     '?duration=gte:28800000&patient_id=5a62be07de34500146d9c544')
                     .then(result => {
                         expect(result.length).to.eql(2)
@@ -803,7 +796,7 @@ describe('RPC SERVER EVENT BUS TASK', () => {
                 }
             })
             it('should return a ValidationException (query with an invalid date (start_time))', (done) => {
-                rabbitmq.executeResource('mhealth.rpc', 'sleep.find', '?start_time=invalidStartTime')
+                rabbit.executeResource('mhealth.rpc', 'sleep.find', '?start_time=invalidStartTime')
                     .then(result => {
                         expect(result.length).to.eql(0)
                         done(new Error('The find method of the repository should not function normally'))
@@ -820,7 +813,7 @@ describe('RPC SERVER EVENT BUS TASK', () => {
             })
 
             it('should return a ValidationException (query with an invalid date (end_time))', (done) => {
-                rabbitmq.executeResource('mhealth.rpc', 'sleep.find', '?end_time=invalidEndTime')
+                rabbit.executeResource('mhealth.rpc', 'sleep.find', '?end_time=invalidEndTime')
                     .then(result => {
                         expect(result.length).to.eql(0)
                         done(new Error('The find method of the repository should not function normally'))
@@ -837,7 +830,7 @@ describe('RPC SERVER EVENT BUS TASK', () => {
             })
 
             it('should return a ValidationException (query with an invalid number (duration))', (done) => {
-                rabbitmq.executeResource('mhealth.rpc', 'sleep.find', '?duration=invalidDuration')
+                rabbit.executeResource('mhealth.rpc', 'sleep.find', '?duration=invalidDuration')
                     .then(result => {
                         expect(result.length).to.eql(0)
                         done(new Error('The find method of the repository should not function normally'))
@@ -854,7 +847,7 @@ describe('RPC SERVER EVENT BUS TASK', () => {
             })
 
             it('should return a ValidationException (query with an invalid patient id)', (done) => {
-                rabbitmq.executeResource('mhealth.rpc', 'sleep.find', '?patient_id=invalidPatientId')
+                rabbit.executeResource('mhealth.rpc', 'sleep.find', '?patient_id=invalidPatientId')
                     .then(result => {
                         expect(result.length).to.eql(0)
                         done(new Error('The find method of the repository should not function normally'))
@@ -887,7 +880,7 @@ describe('RPC SERVER EVENT BUS TASK', () => {
                     }
                 })
                 it('should return a rpc timeout error', (done) => {
-                    rabbitmq.executeResource('mhealth.rpc', 'sleep.find',
+                    rabbit.executeResource('mhealth.rpc', 'sleep.find',
                         '?patient_id=5a62be07d6f33400146c9b61')
                         .then(() => {
                             done(new Error('RPC should not function normally'))

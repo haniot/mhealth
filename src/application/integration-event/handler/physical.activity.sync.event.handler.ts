@@ -6,6 +6,7 @@ import { PhysicalActivitySyncEvent } from '../event/physical.activity.sync.event
 import { IPhysicalActivityRepository } from '../../port/physical.activity.repository.interface'
 import { PhysicalActivity } from '../../domain/model/physical.activity'
 import { CreatePhysicalActivityValidator } from '../../domain/validator/create.physical.activity.validator'
+import { ValidationException } from '../../domain/exception/validation.exception'
 
 export class PhysicalActivitySyncEventHandler implements IIntegrationEventHandler<PhysicalActivitySyncEvent> {
     constructor(
@@ -15,9 +16,12 @@ export class PhysicalActivitySyncEventHandler implements IIntegrationEventHandle
     }
 
     public async handle(event: PhysicalActivitySyncEvent): Promise<void> {
+        if (!event.physical_activity) {
+            throw new ValidationException('Event is not in the expected format!', JSON.stringify(event))
+        }
+
         let countSuccess = 0
         let countError = 0
-        if (!event.physical_activity) return
         if (event.physical_activity instanceof Array) {
             for (const item of event.physical_activity) {
                 try {
@@ -39,7 +43,7 @@ export class PhysicalActivitySyncEventHandler implements IIntegrationEventHandle
                     `Action for event ${event.event_name} associated with patient with ID: ${event.physical_activity.patient_id}`
                         .concat('successfully performed!'))
             } catch (err) {
-                this._logger.warn(`An error occurred while attempting `
+                this._logger.error(`An error occurred while attempting `
                     .concat(`perform the operation with the ${event.event_name} name event. ${err.message}`)
                     .concat(err.description ? ' ' + err.description : ''))
             }
