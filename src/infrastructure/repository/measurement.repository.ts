@@ -125,7 +125,7 @@ export class MeasurementRepository extends BaseRepository<Measurement, Measureme
     public updateOrCreate(item: any): Promise<any> {
         const itemUp: any = this.transform(item)
         return new Promise<any>((resolve, reject) => {
-            this.Model.findOneAndUpdate({ patient_id: itemUp.patient_id, type: itemUp.type }, itemUp,
+            this.Model.findOneAndUpdate({ timestamp: itemUp.timestamp, patient_id: itemUp.patient_id, type: itemUp.type }, itemUp,
                 { new: true, upsert: true })
                 .exec()
                 .then((result) => {

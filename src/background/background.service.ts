@@ -29,6 +29,7 @@ export class BackgroundService {
             await this._mongodb.tryConnect(dbConfigs.uri, dbConfigs.options)
 
             // Open RabbitMQ connection and perform tasks
+            this._eventBus.enableLogger()
             this.startTasks()
         } catch (err) {
             return Promise.reject(new Error(`Error initializing services in background! ${err.message}`))
