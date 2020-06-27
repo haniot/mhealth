@@ -101,11 +101,11 @@ export class MeasurementRepository extends BaseRepository<Measurement, Measureme
         })
     }
 
-    public async getLastMeasurement(patientId: string, measurementType: string): Promise<any> {
+    public async getLast(patientId: string, measurementType: string): Promise<any> {
         return new Promise<any>((resolve, reject) => {
             const query: Query = new Query()
             query.addFilter({ patient_id: patientId, type: measurementType })
-            query.addOrdination('timestamp', 'desc')
+            query.addOrdination('timestamp', -1)
             return this
                 .find(query)
                 .then(result => resolve(result[0]))
@@ -114,7 +114,7 @@ export class MeasurementRepository extends BaseRepository<Measurement, Measureme
         })
     }
 
-    public removeMeasurementsFromUser(id: string): Promise<boolean> {
+    public removeAllByPatient(id: string): Promise<boolean> {
         return new Promise<boolean>((resolve, reject) => {
             this.Model.deleteMany({ patient_id: id })
                 .then((result) => resolve(!!result))

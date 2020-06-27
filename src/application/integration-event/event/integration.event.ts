@@ -2,7 +2,7 @@ import { IJSONSerializable } from '../../domain/utils/json.serializable.interfac
 
 export abstract class IntegrationEvent<T> implements IJSONSerializable {
 
-    protected constructor(readonly event_name: string, readonly type: string, readonly timestamp?: Date) {
+    constructor(readonly event_name: string, readonly type: string, readonly timestamp?: Date) {
     }
 
     public toJSON(): any {

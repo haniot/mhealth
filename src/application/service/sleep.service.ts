@@ -34,18 +34,8 @@ export class SleepService implements ISleepService {
      * @throws {ConflictException | RepositoryException} If a data conflict occurs, as an existing sleep.
      */
     public async add(sleep: Sleep | Array<Sleep>): Promise<Sleep | MultiStatus<Sleep>> {
-        try {
-            // Multiple items of Sleep
-            if (sleep instanceof Array) {
-                const result = await this.addMultipleSleep(sleep)
-                return Promise.resolve(result)
-            }
-
-            // Only one item
-            return this.addSleep(sleep)
-        } catch (err) {
-            return Promise.reject(err)
-        }
+        if (sleep instanceof Array) return this.addMultipleSleep(sleep)
+        return this.addSleep(sleep)
     }
 
     /**
@@ -106,11 +96,8 @@ export class SleepService implements ISleepService {
             const sleepExist = await this._sleepRepository.checkExist(sleep)
             if (sleepExist) throw new ConflictException(Strings.SLEEP.ALREADY_REGISTERED)
 
-            // 3. Create new sleep register.
-            const sleepSaved: Sleep = await this._sleepRepository.create(sleep)
-
-            // 4. Returns the created object.
-            return Promise.resolve(sleepSaved)
+            // 3. Add Sleep.
+            return this._sleepRepository.create(sleep)
         } catch (err) {
             return Promise.reject(err)
         }
@@ -179,18 +166,10 @@ export class SleepService implements ISleepService {
      */
     public async removeByPatient(sleepId: string, patientId: string): Promise<boolean> {
         try {
-            // 1. Validate id's
             ObjectIdValidator.validate(patientId, Strings.PATIENT.PARAM_ID_NOT_VALID_FORMAT)
             ObjectIdValidator.validate(sleepId, Strings.SLEEP.PARAM_ID_NOT_VALID_FORMAT)
 
-            // 2. Create a Sleep with only one attribute, the id, to be used in publishing on the event bus
-            const sleepToBeDeleted: Sleep = new Sleep()
-            sleepToBeDeleted.id = sleepId
-
-            const wasDeleted: boolean = await this._sleepRepository.removeByPatient(sleepId, patientId)
-
-            // 3. Returns if sleep was deleted
-            return Promise.resolve(wasDeleted)
+            return this._sleepRepository.removeByPatient(sleepId, patientId)
         } catch (err) {
             return Promise.reject(err)
         }

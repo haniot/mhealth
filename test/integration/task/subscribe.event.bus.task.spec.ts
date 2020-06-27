@@ -2,7 +2,6 @@ import { DIContainer } from '../../../src/di/di'
 import { Identifier } from '../../../src/di/identifiers'
 import { IBackgroundTask } from '../../../src/application/port/background.task.interface'
 import { IConnectionDB } from '../../../src/infrastructure/port/connection.db.interface'
-import { Default } from '../../../src/utils/default'
 import { DefaultEntityMock } from '../../mocks/models/default.entity.mock'
 import { IQuery } from '../../../src/application/port/query.interface'
 import { Query } from '../../../src/infrastructure/repository/query/query'
@@ -14,7 +13,6 @@ import { WeightSyncEvent } from '../../../src/application/integration-event/even
 import { MeasurementTypes } from '../../../src/application/domain/utils/measurement.types'
 import { expect } from 'chai'
 import { MeasurementUnits } from '../../../src/application/domain/utils/measurement.units'
-import { BodyFat } from '../../../src/application/domain/model/body.fat'
 import { ActivityRepoModel } from '../../../src/infrastructure/database/schema/activity.schema'
 import { SleepRepoModel } from '../../../src/infrastructure/database/schema/sleep.schema'
 import { PhysicalActivity } from '../../../src/application/domain/model/physical.activity'
@@ -27,9 +25,15 @@ import { UserDeleteEvent } from '../../../src/application/integration-event/even
 import { User } from '../../../src/application/domain/model/user'
 import { PhysicalActivitySyncEvent } from '../../../src/application/integration-event/event/physical.activity.sync.event'
 import { SleepSyncEvent } from '../../../src/application/integration-event/event/sleep.sync.event'
+import { Config } from '../../../src/utils/config'
+import { UserType } from '../../../src/application/domain/utils/user.type'
+import { BodyTemperature } from '../../../src/application/domain/model/body.temperature'
+import { BloodGlucose } from '../../../src/application/domain/model/blood.glucose'
+import { BloodPressure } from '../../../src/application/domain/model/blood.pressure'
+import { Height } from '../../../src/application/domain/model/height'
 
 const dbConnection: IConnectionDB = DIContainer.get(Identifier.MONGODB_CONNECTION)
-const rabbitmq: EventBusRabbitMQ = DIContainer.get(Identifier.RABBITMQ_EVENT_BUS)
+const rabbit: EventBusRabbitMQ = DIContainer.get(Identifier.RABBITMQ_EVENT_BUS)
 const subscribeEventBusTask: IBackgroundTask = DIContainer.get(Identifier.SUBSCRIBE_EVENT_BUS_TASK)
 const measurementRepository: IMeasurementRepository = DIContainer.get(Identifier.MEASUREMENT_REPOSITORY)
 const activityRepository: IPhysicalActivityRepository = DIContainer.get(Identifier.ACTIVITY_REPOSITORY)
@@ -44,23 +48,19 @@ describe('SUBSCRIBE EVENT BUS TASK', () => {
     // Start DB connection, RabbitMQ connection and SubscribeEventBusTask
     before(async () => {
         try {
-            await dbConnection.tryConnect(process.env.MONGODB_URI_TEST || Default.MONGODB_URI_TEST)
+            const mongoConfigs = Config.getMongoConfig()
+            await dbConnection.tryConnect(mongoConfigs.uri, mongoConfigs.options)
 
             await deleteAllMeasurements()
             await deleteAllActivities()
             await deleteAllSleep()
 
-            // Initialize RabbitMQ Publisher connection
-            const rabbitUri = process.env.RABBITMQ_URI || Default.RABBITMQ_URI
-            const rabbitOptions: any = { interval: 100, receiveFromYourself: true, sslOptions: { ca: [] } }
-
-            await rabbitmq.connectionPub.open(rabbitUri, rabbitOptions)
-
-            rabbitmq.receiveFromYourself = true
+            rabbit.receiveFromYourself = true
+            const rabbitConfigs = Config.getRabbitConfig()
+            await rabbit.connectionSub.open(rabbitConfigs.uri, rabbitConfigs.options)
+            await rabbit.connectionPub.open(rabbitConfigs.uri, rabbitConfigs.options)
 
             subscribeEventBusTask.run()
-
-            await timeout(2000)
         } catch (err) {
             throw new Error('Failure on SubscribeEventBusTask test: ' + err.message)
         }
@@ -74,90 +74,10 @@ describe('SUBSCRIBE EVENT BUS TASK', () => {
             await deleteAllSleep()
 
             await dbConnection.dispose()
-
             await subscribeEventBusTask.stop()
         } catch (err) {
             throw new Error('Failure on SubscribeEventBusTask test: ' + err.message)
         }
-    })
-
-    describe('SUBSCRIBE UserDeleteEvent', () => {
-        before(async () => {
-            try {
-                await deleteAllActivities()
-                await deleteAllSleep()
-                await deleteAllMeasurements()
-            } catch (err) {
-                throw new Error('Failure on Subscribe UserDeleteEvent test: ' + err.message)
-            }
-        })
-        // Delete all objects associated with the user from database after each test case
-        afterEach(async () => {
-            try {
-                await deleteAllActivities()
-                await deleteAllSleep()
-                await deleteAllMeasurements()
-            } catch (err) {
-                throw new Error('Failure on Subscribe UserDeleteEvent test: ' + err.message)
-            }
-        })
-        context('when receiving an UserDeleteEvent with an user that is associated with two activities, ' +
-            'one sleep object, one bodyfat, one weight and one log', () => {
-            before(async () => {
-                try {
-                    const user_id: string = '5d7fb75ae48591c21a793f70'
-                    const activity1: PhysicalActivity = new PhysicalActivityMock()
-                    activity1.patient_id = user_id
-                    activity1.start_time = new Date(1516417200000).toISOString()
-                    activity1.end_time = new Date(new Date(activity1.start_time)
-                        .setMilliseconds(Math.floor(Math.random() * 35 + 10) * 60000)).toISOString() // 10-45min in milliseconds
-                    activity1.duration = new Date(activity1.end_time).getTime() - new Date(activity1.start_time).getTime()
-                    const activity2: PhysicalActivity = new PhysicalActivityMock()
-                    activity2.patient_id = user_id
-                    activity2.start_time = new Date(1516471200000).toISOString()
-                    activity2.end_time = new Date(new Date(activity2.start_time)
-                        .setMilliseconds(Math.floor(Math.random() * 35 + 10) * 60000)).toISOString()
-                    activity2.duration = new Date(activity2.end_time).getTime() - new Date(activity2.start_time).getTime()
-                    const sleep: Sleep = new SleepMock()
-                    sleep.patient_id = user_id
-                    const weight: Weight = new Weight().fromJSON(DefaultEntityMock.WEIGHT)
-                    weight.patient_id = user_id
-
-                    await activityRepository.create(activity1)
-                    await activityRepository.create(activity2)
-                    await sleepRepository.create(sleep)
-                    await measurementRepository.create(weight)
-                } catch (err) {
-                    throw new Error('Failure on Subscribe UserDeleteEvent test: ' + err.message)
-                }
-            })
-
-            it('should return an empty array for each repository queried', (done) => {
-                const user: User = new User()
-                user.id = '5d7fb75ae48591c21a793f70'
-                user.type = 'patient'
-                const userDeleteEvent: UserDeleteEvent = new UserDeleteEvent(new Date(), user)
-
-                rabbitmq.publish(userDeleteEvent, UserDeleteEvent.ROUTING_KEY)
-                    .then(async () => {
-                        // Wait for 2000 milliseconds for the task to be executed
-                        await timeout(2000)
-                        const query: IQuery = new Query()
-                        const activityResult = await activityRepository.find(query)
-                        expect(activityResult.length).to.eql(0)
-
-                        const sleepResult = await sleepRepository.find(query)
-                        expect(sleepResult.length).to.eql(0)
-
-                        query.filters = { type: MeasurementTypes.WEIGHT }
-                        const weightResult = await measurementRepository.find(query)
-                        expect(weightResult.length).to.eql(0)
-
-                        done()
-                    })
-                    .catch(done)
-            })
-        })
     })
 
     describe('WeightSyncEvent', () => {
@@ -176,32 +96,21 @@ describe('SUBSCRIBE EVENT BUS TASK', () => {
                 measurementRepository.create(weight)
                     .then(async weightCreate => {
                         const newWeight: Weight = new Weight().fromJSON(weightCreate)
-                        newWeight.value = 60
-                        newWeight.body_fat = 19
+                        newWeight.value = 60.6
+                        newWeight.body_fat = 19.9
                         newWeight.patient_id = weightCreate.patient_id
-
-                        await timeout(2000)
-
                         const weightSyncEvent: WeightSyncEvent = new WeightSyncEvent(new Date(), newWeight)
-                        await rabbitmq.publish(weightSyncEvent, WeightSyncEvent.ROUTING_KEY)
 
-                        // Wait for 2000 milliseconds for the task to be executed
-                        await timeout(2000)
+                        // publish weight
+                        await rabbit.publish(weightSyncEvent, WeightSyncEvent.ROUTING_KEY)
 
-                        // BodyFat tests
-                        const bodyFatQuery: IQuery = new Query()
-                        bodyFatQuery.addFilter({ patient_id: weightCreate.patient_id, type: MeasurementTypes.BODY_FAT })
-
-                        const bodyFatResult = await measurementRepository.findOne(bodyFatQuery)
-
-                        expect(bodyFatResult.value).to.eql(newWeight.body_fat)
+                        // Wait for 1000 milliseconds for the task to be executed
+                        await timeout(5000)
 
                         // Weight tests
                         const weightQuery: IQuery = new Query()
                         weightQuery.addFilter({ _id: weightCreate.id, type: MeasurementTypes.WEIGHT })
-
                         const weightResult = await measurementRepository.findOne(weightQuery)
-
                         expect(weightResult.value).to.eql(newWeight.value)
                         expect(weightResult.body_fat).to.eql(newWeight.body_fat)
 
@@ -217,32 +126,15 @@ describe('SUBSCRIBE EVENT BUS TASK', () => {
                     type: MeasurementTypes.WEIGHT,
                     timestamp: '2018-11-19T14:40:00Z',
                     body_fat: 21,
-                    patient_id: '5a62be07d6f33400146c9b61',
                     device_id: '5ca77314bc08ec205689a736'
                 })
                 weight.patient_id = DefaultEntityMock.WEIGHT.patient_id
 
-                const bodyFat: BodyFat = new BodyFat().fromJSON(DefaultEntityMock.BODY_FAT)
-                bodyFat.patient_id = DefaultEntityMock.BODY_FAT.patient_id
-
-                measurementRepository.create(bodyFat)
+                const weightSyncEvent: WeightSyncEvent = new WeightSyncEvent(new Date(), weight)
+                rabbit.publish(weightSyncEvent, WeightSyncEvent.ROUTING_KEY)
                     .then(async () => {
-                        await timeout(2000)
-
-                        const weightSyncEvent: WeightSyncEvent = new WeightSyncEvent(new Date(), weight)
-                        await rabbitmq.publish(weightSyncEvent, WeightSyncEvent.ROUTING_KEY)
-
                         // Wait for 2000 milliseconds for the task to be executed
                         await timeout(2000)
-
-                        // BodyFat tests
-                        const bodyFatQuery: IQuery = new Query()
-                        bodyFatQuery.addFilter({ patient_id: bodyFat.patient_id, type: MeasurementTypes.BODY_FAT })
-
-                        const bodyFatResult = await measurementRepository.findOne(bodyFatQuery)
-
-                        expect(bodyFatResult.value).to.eql(weight.body_fat)
-
                         const weightQuery: IQuery = new Query()
                         weightQuery.addFilter({ patient_id: weight.patient_id, type: MeasurementTypes.WEIGHT })
 
@@ -289,10 +181,8 @@ describe('SUBSCRIBE EVENT BUS TASK', () => {
 
                         const weightArray: Array<Weight> = [weight, newWeight]
 
-                        await timeout(2000)
-
                         const weightSyncEvent: WeightSyncEvent = new WeightSyncEvent(new Date(), weightArray)
-                        await rabbitmq.publish(weightSyncEvent, WeightSyncEvent.ROUTING_KEY)
+                        await rabbit.publish(weightSyncEvent, WeightSyncEvent.ROUTING_KEY)
 
                         // Wait for 2000 milliseconds for the task to be executed
                         await timeout(2000)
@@ -337,11 +227,9 @@ describe('SUBSCRIBE EVENT BUS TASK', () => {
                         newActivity.distance = 80
                         newActivity.patient_id = activityCreate.patient_id
 
-                        await timeout(2000)
-
                         const physicalActivitySyncEvent: PhysicalActivitySyncEvent =
                             new PhysicalActivitySyncEvent(new Date(), newActivity)
-                        await rabbitmq.publish(physicalActivitySyncEvent, PhysicalActivitySyncEvent.ROUTING_KEY)
+                        await rabbit.publish(physicalActivitySyncEvent, PhysicalActivitySyncEvent.ROUTING_KEY)
 
                         // Wait for 2000 milliseconds for the task to be executed
                         await timeout(2000)
@@ -361,37 +249,39 @@ describe('SUBSCRIBE EVENT BUS TASK', () => {
                     .catch(done)
             })
 
-            it('should return a new physical activity', async () => {
+            it('should return a new physical activity', (done) => {
                 const physical_activity: PhysicalActivity = new PhysicalActivityMock()
-
-                await timeout(2000)
 
                 const physicalActivitySyncEvent: PhysicalActivitySyncEvent =
                     new PhysicalActivitySyncEvent(new Date(), physical_activity)
-                await rabbitmq.publish(physicalActivitySyncEvent, PhysicalActivitySyncEvent.ROUTING_KEY)
 
-                // Wait for 2000 milliseconds for the task to be executed
-                await timeout(2000)
+                rabbit.publish(physicalActivitySyncEvent, PhysicalActivitySyncEvent.ROUTING_KEY)
+                    .then(async () => {
+                        // Wait for 3000 milliseconds for the task to be executed
+                        await timeout(2000)
 
-                const query: IQuery = new Query()
-                query.addFilter({ patient_id: physical_activity.patient_id })
+                        const query: IQuery = new Query()
+                        query.addFilter({ patient_id: physical_activity.patient_id })
+                        const result = await activityRepository.findOne(query)
 
-                const result = await activityRepository.findOne(query)
+                        expect(result).to.have.property('id')
+                        expect(new Date(result.start_time!).toISOString()).to.eql(physical_activity.start_time)
+                        expect(new Date(result.end_time!).toISOString()).to.eql(physical_activity.end_time)
+                        expect(result.duration).to.eql(physical_activity.duration)
+                        expect(result.patient_id.toString()).to.eql(physical_activity.patient_id)
+                        expect(result.name).to.eql(physical_activity.name)
+                        expect(result.calories).to.eql(physical_activity.calories)
+                        expect(result.steps).to.eql(physical_activity.steps)
+                        expect(result.distance).to.eql(physical_activity.distance)
+                        expect(result.levels).to.eql(physical_activity.levels)
+                        expect(result.calories_link).to.eql(physical_activity.calories_link)
+                        expect(result.heart_rate_link).to.eql(physical_activity.heart_rate_link)
+                        expect(result.heart_rate_average).to.eql(physical_activity.heart_rate_average)
+                        expect(result.heart_rate_zones).to.eql(physical_activity.heart_rate_zones)
 
-                expect(result).to.have.property('id')
-                expect(new Date(result.start_time!).toISOString()).to.eql(physical_activity.start_time)
-                expect(new Date(result.end_time!).toISOString()).to.eql(physical_activity.end_time)
-                expect(result.duration).to.eql(physical_activity.duration)
-                expect(result.patient_id.toString()).to.eql(physical_activity.patient_id)
-                expect(result.name).to.eql(physical_activity.name)
-                expect(result.calories).to.eql(physical_activity.calories)
-                expect(result.steps).to.eql(physical_activity.steps)
-                expect(result.distance).to.eql(physical_activity.distance)
-                expect(result.levels).to.eql(physical_activity.levels)
-                expect(result.calories_link).to.eql(physical_activity.calories_link)
-                expect(result.heart_rate_link).to.eql(physical_activity.heart_rate_link)
-                expect(result.heart_rate_average).to.eql(physical_activity.heart_rate_average)
-                expect(result.heart_rate_zones).to.eql(physical_activity.heart_rate_zones)
+                        done()
+                    })
+                    .catch(done)
             })
         })
 
@@ -421,17 +311,14 @@ describe('SUBSCRIBE EVENT BUS TASK', () => {
 
                         const activitiesArray: Array<PhysicalActivity> = [physical_activity, newActivity]
 
-                        await timeout(2000)
-
                         const physicalActivitySyncEvent: PhysicalActivitySyncEvent =
                             new PhysicalActivitySyncEvent(new Date(), activitiesArray)
-                        await rabbitmq.publish(physicalActivitySyncEvent, PhysicalActivitySyncEvent.ROUTING_KEY)
+                        await rabbit.publish(physicalActivitySyncEvent, PhysicalActivitySyncEvent.ROUTING_KEY)
 
                         // Wait for 2000 milliseconds for the task to be executed
                         await timeout(2000)
 
                         const result = await activityRepository.find(new Query())
-
                         expect(result[0].calories).to.eql(physical_activity.calories)
                         expect(result[0].steps).to.eql(physical_activity.steps)
                         expect(result[0].distance).to.eql(physical_activity.distance)
@@ -471,10 +358,8 @@ describe('SUBSCRIBE EVENT BUS TASK', () => {
                         newSleep.duration = new Date(newSleep.end_time).getTime() - new Date(newSleep.start_time).getTime()
                         newSleep.patient_id = sleepCreate.patient_id
 
-                        await timeout(2000)
-
                         const sleepSyncEvent: SleepSyncEvent = new SleepSyncEvent(new Date(), newSleep)
-                        await rabbitmq.publish(sleepSyncEvent, SleepSyncEvent.ROUTING_KEY)
+                        await rabbit.publish(sleepSyncEvent, SleepSyncEvent.ROUTING_KEY)
 
                         // Wait for 2000 milliseconds for the task to be executed
                         await timeout(2000)
@@ -494,35 +379,36 @@ describe('SUBSCRIBE EVENT BUS TASK', () => {
                     .catch(done)
             })
 
-            it('should return a new sleep', async () => {
+            it('should return a new sleep', (done) => {
                 const sleep: Sleep = new SleepMock()
 
-                await timeout(2000)
-
                 const sleepSyncEvent: SleepSyncEvent = new SleepSyncEvent(new Date(), sleep)
-                await rabbitmq.publish(sleepSyncEvent, SleepSyncEvent.ROUTING_KEY)
+                rabbit.publish(sleepSyncEvent, SleepSyncEvent.ROUTING_KEY)
+                    .then(async () => {
+                        // Wait for 2000 milliseconds for the task to be executed
+                        await timeout(2000)
 
-                // Wait for 2000 milliseconds for the task to be executed
-                await timeout(2000)
+                        const query: IQuery = new Query()
+                        query.addFilter({ patient_id: sleep.patient_id })
 
-                const query: IQuery = new Query()
-                query.addFilter({ patient_id: sleep.patient_id })
+                        const result = await sleepRepository.findOne(query)
+                        expect(result).to.have.property('id')
+                        expect(new Date(result.start_time!).toISOString()).to.eql(sleep.start_time)
+                        expect(new Date(result.end_time!).toISOString()).to.eql(sleep.end_time)
+                        expect(result.duration).to.eql(sleep.duration)
+                        expect(result.patient_id.toString()).to.eql(sleep.patient_id)
+                        let i = 0
+                        for (const elem of result.pattern!.data_set) {
+                            expect(new Date(elem.start_time).toISOString()).to.eql(sleep.pattern!.data_set[i].start_time)
+                            expect(elem.name).to.eql(sleep.pattern!.data_set[i].name)
+                            expect(elem.duration).to.eql(sleep.pattern!.data_set[i].duration)
+                            i++
+                        }
+                        expect(result.type).to.eql(sleep.type)
 
-                const result = await sleepRepository.findOne(query)
-
-                expect(result).to.have.property('id')
-                expect(new Date(result.start_time!).toISOString()).to.eql(sleep.start_time)
-                expect(new Date(result.end_time!).toISOString()).to.eql(sleep.end_time)
-                expect(result.duration).to.eql(sleep.duration)
-                expect(result.patient_id.toString()).to.eql(sleep.patient_id)
-                let i = 0
-                for (const elem of result.pattern!.data_set) {
-                    expect(new Date(elem.start_time).toISOString()).to.eql(sleep.pattern!.data_set[i].start_time)
-                    expect(elem.name).to.eql(sleep.pattern!.data_set[i].name)
-                    expect(elem.duration).to.eql(sleep.pattern!.data_set[i].duration)
-                    i++
-                }
-                expect(result.type).to.eql(sleep.type)
+                        done()
+                    })
+                    .catch(done)
             })
         })
 
@@ -558,16 +444,13 @@ describe('SUBSCRIBE EVENT BUS TASK', () => {
 
                         const sleepArray: Array<Sleep> = [sleep, newSleep]
 
-                        await timeout(2000)
-
                         const sleepSyncEvent: SleepSyncEvent = new SleepSyncEvent(new Date(), sleepArray)
-                        await rabbitmq.publish(sleepSyncEvent, SleepSyncEvent.ROUTING_KEY)
+                        await rabbit.publish(sleepSyncEvent, SleepSyncEvent.ROUTING_KEY)
 
                         // Wait for 2000 milliseconds for the task to be executed
                         await timeout(2000)
 
                         const result = await sleepRepository.find(new Query())
-
                         expect(new Date(result[0].start_time!).toISOString()).to.eql(sleep.start_time)
                         expect(new Date(result[0].end_time!).toISOString()).to.eql(sleep.end_time)
                         expect(result[0].duration).to.eql(sleep.duration)
@@ -581,10 +464,68 @@ describe('SUBSCRIBE EVENT BUS TASK', () => {
             })
         })
     })
+
+    describe('SUBSCRIBE UserDeleteEvent', () => {
+        before(async () => {
+            try {
+                await deleteAllActivities()
+                await deleteAllSleep()
+                await deleteAllMeasurements()
+
+                const activity1 = new PhysicalActivityMock()
+                const activity2 = new PhysicalActivityMock()
+                const sleep = new SleepMock()
+                sleep.patient_id = activity1.patient_id
+                const weight = new Weight().fromJSON(DefaultEntityMock.WEIGHT)
+                weight.patient_id = activity1.patient_id
+                const temp = new BodyTemperature().fromJSON(DefaultEntityMock.BODY_TEMPERATURE)
+                temp.patient_id = activity1.patient_id
+                const bloodPressure = new BloodPressure().fromJSON(DefaultEntityMock.BLOOD_PRESSURE)
+                bloodPressure.patient_id = activity1.patient_id
+                const glucose = new BloodGlucose().fromJSON(DefaultEntityMock.BLOOD_GLUCOSE)
+                glucose.patient_id = activity1.patient_id
+                const height = new Height().fromJSON(DefaultEntityMock.HEIGHT)
+                height.patient_id = activity1.patient_id
+                await Promise.allSettled([
+                    activityRepository.create(activity1), activityRepository.create(activity2),
+                    sleepRepository.create(sleep), measurementRepository.create(weight),
+                    measurementRepository.create(temp), measurementRepository.create(bloodPressure),
+                    measurementRepository.create(glucose), measurementRepository.create(height)
+                ])
+            } catch (err) {
+                throw new Error('Failure on Subscribe UserDeleteEvent test: ' + err.message)
+            }
+        })
+
+        it('should return an empty array for each repository queried', (done) => {
+            const user: User = new User().fromJSON({
+                id: PhysicalActivityMock.PATIENT_ID, type: UserType.PATIENT
+            })
+            const userDeleteEvent: UserDeleteEvent = new UserDeleteEvent(new Date(), user)
+            rabbit.publish(userDeleteEvent, UserDeleteEvent.ROUTING_KEY)
+                .then(async () => {
+                    // Wait for 1000 milliseconds for the task to be executed
+                    await timeout(8000)
+                    const query: IQuery = new Query().fromJSON(
+                        { filters: { patient_id: PhysicalActivityMock.PATIENT_ID } }
+                    )
+                    const activityResult = await activityRepository.find(query)
+                    expect(activityResult.length).to.eql(0)
+
+                    const sleepResult = await sleepRepository.find(query)
+                    expect(sleepResult.length).to.eql(0)
+
+                    const weightResult = await measurementRepository.find(query)
+                    expect(weightResult.length).to.eql(0)
+                    done()
+                })
+                .catch(done)
+        })
+    })
 })
 
 async function deleteAllMeasurements() {
-    return await MeasurementRepoModel.deleteMany({})
+    return MeasurementRepoModel.deleteMany({})
 }
 
 async function deleteAllActivities() {

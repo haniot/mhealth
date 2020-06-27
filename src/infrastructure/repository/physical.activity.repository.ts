@@ -6,7 +6,6 @@ import { BaseRepository } from './base/base.repository'
 import { Query } from './query/query'
 import { ILogger } from '../../utils/custom.logger'
 import { IEntityMapper } from '../port/entity.mapper.interface'
-import { IQuery } from '../../application/port/query.interface'
 import { PhysicalActivityEntity } from '../entity/physical.activity.entity'
 
 /**
@@ -41,10 +40,7 @@ export class PhysicalActivityRepository extends BaseRepository<PhysicalActivity,
                 query.filters = { start_time: activity.start_time, patient_id: activity.patient_id }
             }
             super.findOne(query)
-                .then((result: PhysicalActivity) => {
-                    if (result) return resolve(true)
-                    return resolve(false)
-                })
+                .then(result => resolve(!!result))
                 .catch(err => reject(err))
         })
     }
@@ -61,10 +57,7 @@ export class PhysicalActivityRepository extends BaseRepository<PhysicalActivity,
         return new Promise<boolean>((resolve, reject) => {
             this.activityModel.findOneAndDelete({ patient_id: patientId, _id: activityId })
                 .exec()
-                .then(result => {
-                    if (!result) return resolve(false)
-                    resolve(true)
-                })
+                .then(result => resolve(!!result))
                 .catch(err => reject(super.mongoDBErrorListener(err)))
         })
     }
@@ -77,16 +70,9 @@ export class PhysicalActivityRepository extends BaseRepository<PhysicalActivity,
      * @throws {ValidationException | RepositoryException}
      */
     public async removeAllByPatient(patientId: string): Promise<boolean> {
-        // Creates the query with the received parameter
-        const query: IQuery = new Query()
-        query.filters = { patient_id: patientId }
-
         return new Promise<boolean>((resolve, reject) => {
-            this.activityModel.deleteMany(query.filters)
-                .then(result => {
-                    if (!result) return resolve(false)
-                    return resolve(true)
-                })
+            this.activityModel.deleteMany({ patient_id: patientId })
+                .then(result => resolve(!!result))
                 .catch(err => reject(super.mongoDBErrorListener(err)))
         })
     }

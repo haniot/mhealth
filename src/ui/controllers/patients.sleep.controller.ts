@@ -83,7 +83,7 @@ export class PatientsSleepController {
         } catch (err) {
             const handlerError = ApiExceptionManager.build(err)
             return res.status(handlerError.code)
-                .send(handlerError.toJson())
+                .send(handlerError.toJSON())
         }
     }
 
@@ -107,7 +107,7 @@ export class PatientsSleepController {
         } catch (err) {
             const handlerError = ApiExceptionManager.build(err)
             return res.status(handlerError.code)
-                .send(handlerError.toJson())
+                .send(handlerError.toJSON())
         }
     }
 
@@ -131,7 +131,7 @@ export class PatientsSleepController {
         } catch (err) {
             const handlerError = ApiExceptionManager.build(err)
             return res.status(handlerError.code)
-                .send(handlerError.toJson())
+                .send(handlerError.toJSON())
         }
     }
 
@@ -149,7 +149,7 @@ export class PatientsSleepController {
         } catch (err) {
             const handlerError = ApiExceptionManager.build(err)
             return res.status(handlerError.code)
-                .send(handlerError.toJson())
+                .send(handlerError.toJSON())
         }
     }
 
@@ -161,6 +161,6 @@ export class PatientsSleepController {
             HttpStatus.NOT_FOUND,
             'Sleep not found!',
             'Sleep not found or already removed. A new operation for the same resource is not required.'
-        ).toJson()
+        ).toJSON()
     }
 }

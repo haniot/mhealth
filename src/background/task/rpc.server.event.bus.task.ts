@@ -9,8 +9,6 @@ import { IMeasurementRepository } from '../../application/port/measurement.repos
 import { ObjectIdValidator } from '../../application/domain/validator/object.id.validator'
 import { MeasurementTypes } from '../../application/domain/utils/measurement.types'
 import { IQuery } from '../../application/port/query.interface'
-import fs from 'fs'
-import { Default } from '../../utils/default'
 import { IPhysicalActivityRepository } from '../../application/port/physical.activity.repository.interface'
 import { ISleepRepository } from '../../application/port/sleep.repository.interface'
 import { PhysicalActivity } from '../../application/domain/model/physical.activity'
@@ -28,24 +26,7 @@ export class RpcServerEventBusTask implements IBackgroundTask {
     }
 
     public run(): void {
-        // To use SSL/TLS, simply mount the uri with the amqps protocol and pass the CA.
-        const rabbitUri = process.env.RABBITMQ_URI || Default.RABBITMQ_URI
-        const rabbitOptions: any = { sslOptions: { ca: [] } }
-        if (rabbitUri.indexOf('amqps') === 0) {
-            rabbitOptions.sslOptions.ca = [fs.readFileSync(process.env.RABBITMQ_CA_PATH || Default.RABBITMQ_CA_PATH)]
-        }
-        // It RPC Server events, that for some reason could not
-        // e sent and were saved for later submission.
-        this._eventBus
-            .connectionRpcServer
-            .open(rabbitUri, rabbitOptions)
-            .then(() => {
-                this._logger.info('Connection with RPC Server opened successful!')
-                this.initializeServer()
-            })
-            .catch(err => {
-                this._logger.error(`Error trying to get connection to Event Bus for RPC Server. ${err.message}`)
-            })
+        this.initializeServer()
     }
 
     public async stop(): Promise<void> {
@@ -77,17 +58,17 @@ export class RpcServerEventBusTask implements IBackgroundTask {
                     ObjectIdValidator.validate(patientId)
 
                     result.blood_glucose =
-                        await this._measurementRepo.getLastMeasurement(patientId, MeasurementTypes.BLOOD_GLUCOSE)
+                        await this._measurementRepo.getLast(patientId, MeasurementTypes.BLOOD_GLUCOSE)
                     result.blood_pressure =
-                        await this._measurementRepo.getLastMeasurement(patientId, MeasurementTypes.BLOOD_PRESSURE)
+                        await this._measurementRepo.getLast(patientId, MeasurementTypes.BLOOD_PRESSURE)
                     result.body_fat =
-                        await this._measurementRepo.getLastMeasurement(patientId, MeasurementTypes.BODY_FAT)
+                        await this._measurementRepo.getLast(patientId, MeasurementTypes.BODY_FAT)
                     result.body_temperature =
-                        await this._measurementRepo.getLastMeasurement(patientId, MeasurementTypes.BODY_TEMPERATURE)
-                    result.height = await this._measurementRepo.getLastMeasurement(patientId, MeasurementTypes.HEIGHT)
+                        await this._measurementRepo.getLast(patientId, MeasurementTypes.BODY_TEMPERATURE)
+                    result.height = await this._measurementRepo.getLast(patientId, MeasurementTypes.HEIGHT)
                     result.waist_circumference =
-                        await this._measurementRepo.getLastMeasurement(patientId, MeasurementTypes.WAIST_CIRCUMFERENCE)
-                    result.weight = await this._measurementRepo.getLastMeasurement(patientId, MeasurementTypes.WEIGHT)
+                        await this._measurementRepo.getLast(patientId, MeasurementTypes.WAIST_CIRCUMFERENCE)
+                    result.weight = await this._measurementRepo.getLast(patientId, MeasurementTypes.WEIGHT)
 
                     return result
                 } catch (err) {

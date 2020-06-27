@@ -23,7 +23,6 @@ export abstract class Identifier {
     // Repositories
     public static readonly DEVICE_REPOSITORY: any = Symbol.for('DeviceRepository')
     public static readonly MEASUREMENT_REPOSITORY: any = Symbol.for('MeasurementRepository')
-    public static readonly INTEGRATION_EVENT_REPOSITORY: any = Symbol.for('IntegrationEventRepository')
     public static readonly ACTIVITY_REPOSITORY: any = Symbol.for('PhysicalActivityRepository')
     public static readonly SLEEP_REPOSITORY: any = Symbol.for('SleepRepository')
 
@@ -32,7 +31,6 @@ export abstract class Identifier {
     public static readonly MEASUREMENT_REPO_MODEL: any = Symbol.for('MeasurementRepoModel')
     public static readonly ACTIVITY_REPO_MODEL: any = Symbol.for('ActivityRepoModel')
     public static readonly SLEEP_REPO_MODEL: any = Symbol.for('SleepRepoModel')
-    public static readonly INTEGRATION_EVENT_REPO_MODEL: any = Symbol.for('IntegrationEventRepoModel')
 
     // Mappers
     public static readonly DEVICE_ENTITY_MAPPER: any = Symbol.for('DeviceEntityMapper')

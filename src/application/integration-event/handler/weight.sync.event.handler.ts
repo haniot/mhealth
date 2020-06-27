@@ -8,6 +8,7 @@ import { Weight } from '../../domain/model/weight'
 import { CreateWeightValidator } from '../../domain/validator/create.weight.validator'
 import { BodyFat } from '../../domain/model/body.fat'
 import { MeasurementTypes } from '../../domain/utils/measurement.types'
+import { ValidationException } from '../../domain/exception/validation.exception'
 
 export class WeightSyncEventHandler implements IIntegrationEventHandler<WeightSyncEvent> {
     constructor(
@@ -17,9 +18,12 @@ export class WeightSyncEventHandler implements IIntegrationEventHandler<WeightSy
     }
 
     public async handle(event: WeightSyncEvent): Promise<void> {
+        if (!event.weight) {
+            throw new ValidationException('Event is not in the expected format!', JSON.stringify(event))
+        }
+
         let countSuccess = 0
         let countError = 0
-        if (!event.weight) return
         if (event.weight instanceof Array) {
             for (const item of event.weight) {
                 try {
@@ -41,7 +45,7 @@ export class WeightSyncEventHandler implements IIntegrationEventHandler<WeightSy
                     `Action for event ${event.event_name} associated with patient with ID: ${event.weight.patient_id}`
                         .concat('successfully performed!'))
             } catch (err) {
-                this._logger.warn(`An error occurred while attempting `
+                this._logger.error(`An error occurred while attempting `
                     .concat(`perform the operation with the ${event.event_name} name event. ${err.message}`)
                     .concat(err.description ? ' ' + err.description : ''))
             }

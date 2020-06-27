@@ -29,13 +29,13 @@ export class PatientsMeasurementsController {
     @httpPost('/')
     public async addMeasurementFromPatient(@request() req: Request, @response() res: Response): Promise<Response> {
         try {
-            const result = await this._service.addMeasurement(this.transform(req.body, req.params.patient_id))
+            const result = await this._service.add(this.transform(req.body, req.params.patient_id))
             if (result.success && result.error) return res.status(HttpStatus.MULTI_STATUS).send(this.toJSONView(result))
             return res.status(HttpStatus.CREATED).send(this.toJSONView(result))
         } catch (err) {
             const handlerError = ApiExceptionManager.build(err)
             return res.status(handlerError.code)
-                .send(handlerError.toJson())
+                .send(handlerError.toJSON())
         } finally {
             req.query = {}
         }
@@ -53,7 +53,7 @@ export class PatientsMeasurementsController {
         } catch (err) {
             const handlerError = ApiExceptionManager.build(err)
             return res.status(handlerError.code)
-                .send(handlerError.toJson())
+                .send(handlerError.toJSON())
         } finally {
             req.query = {}
         }
@@ -62,12 +62,12 @@ export class PatientsMeasurementsController {
     @httpGet('/last')
     public async getLastMeasurementsFromPatient(@request() req: Request, @response() res: Response): Promise<Response> {
         try {
-            const result: LastMeasurements = await this._service.getLastMeasurements(req.params.patient_id)
+            const result: LastMeasurements = await this._service.getLast(req.params.patient_id)
             return res.status(HttpStatus.OK).send(result.toJSON())
         } catch (err) {
             const handlerError = ApiExceptionManager.build(err)
             return res.status(handlerError.code)
-                .send(handlerError.toJson())
+                .send(handlerError.toJSON())
         }
     }
 
@@ -82,7 +82,7 @@ export class PatientsMeasurementsController {
         } catch (err) {
             const handlerError = ApiExceptionManager.build(err)
             return res.status(handlerError.code)
-                .send(handlerError.toJson())
+                .send(handlerError.toJSON())
         } finally {
             req.query = {}
         }
@@ -91,12 +91,12 @@ export class PatientsMeasurementsController {
     @httpDelete('/:measurement_id')
     public async deleteMeasurementFromPatient(@request() req: Request, @response() res: Response): Promise<Response> {
         try {
-            await this._service.removeMeasurement(req.params.measurement_id, req.params.patient_id)
+            await this._service.removeByPatient(req.params.measurement_id, req.params.patient_id)
             return res.status(HttpStatus.NO_CONTENT).send()
         } catch (err) {
             const handlerError = ApiExceptionManager.build(err)
             return res.status(handlerError.code)
-                .send(handlerError.toJson())
+                .send(handlerError.toJSON())
         }
     }
 
@@ -111,7 +111,7 @@ export class PatientsMeasurementsController {
             HttpStatus.NOT_FOUND,
             Strings.MEASUREMENT.NOT_FOUND,
             Strings.MEASUREMENT.NOT_FOUND_DESC
-        ).toJson()
+        ).toJSON()
     }
 
     public transform(item: any | Array<any>, patientId: string): any | Array<any> {
@@ -129,7 +129,6 @@ export class PatientsMeasurementsController {
     }
 
     private jsonToModel(item: any): any {
-        if (!item.type) return undefined
         switch (item.type) {
             case MeasurementTypes.HEIGHT:
                 const height = new Height().fromJSON(item)

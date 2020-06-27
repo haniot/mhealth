@@ -3,6 +3,10 @@ export interface IConnectionFactory {
 }
 
 export interface IDBOptions {
+    sslValidate: boolean
+    tlsCAFile: any
+    tlsCertificateKeyFile: any
+    tlsCertificateFile: any
 }
 
 export interface IEventBusOptions {
