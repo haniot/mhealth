@@ -165,4 +165,16 @@ describe('Mappers: PhysicalActivityEntityMapper', () => {
                 })
         })
     })
+
+    describe('modelEntityToModel()', () => {
+        context('when try to use modelEntityToModel() function', () => {
+            it('should throw an error', () => {
+                try {
+                    new PhysicalActivityEntityMapper().modelEntityToModel(new PhysicalActivityEntity())
+                } catch (err) {
+                    assert.propertyVal(err, 'message', 'Not implemented!')
+                }
+            })
+        })
+    })
 })

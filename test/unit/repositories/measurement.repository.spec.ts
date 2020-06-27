@@ -368,13 +368,13 @@ describe('Repositories: MeasurementRepository', () => {
                     .expects('find')
                     .withArgs({ patient_id: bloodGlucose.patient_id, type: bloodGlucose.type })
                     .chain('sort')
-                    .withArgs({ timestamp: 'desc', created_at: 'desc' })
+                    .withArgs({ timestamp: -1})
                     .chain('skip')
                     .chain('limit')
                     .chain('exec')
                     .resolves([bloodGlucose])
 
-                return repo.getLastMeasurement(bloodGlucose.patient_id!, bloodGlucose.type!)
+                return repo.getLast(bloodGlucose.patient_id!, bloodGlucose.type!)
                     .then(result => {
                         assert.propertyVal(result, 'id', DefaultEntityMock.BLOOD_GLUCOSE.id)
                         assert.propertyVal(result, 'type', DefaultEntityMock.BLOOD_GLUCOSE.type)
@@ -394,13 +394,13 @@ describe('Repositories: MeasurementRepository', () => {
                     .expects('find')
                     .withArgs({ patient_id: bloodGlucose.patient_id, type: bloodGlucose.type })
                     .chain('sort')
-                    .withArgs({ timestamp: 'desc', created_at: 'desc' })
+                    .withArgs({ timestamp: -1, created_at: -1})
                     .chain('skip')
                     .chain('limit')
                     .chain('exec')
                     .rejects({ message: 'An internal error has occurred in the database!' })
 
-                return repo.getLastMeasurement(bloodGlucose.patient_id!, bloodGlucose.type!)
+                return repo.getLast(bloodGlucose.patient_id!, bloodGlucose.type!)
                     .catch(err => {
                         assert.propertyVal(err, 'message', 'An internal error has occurred in the database!')
                     })

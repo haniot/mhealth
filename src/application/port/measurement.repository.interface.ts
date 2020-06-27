@@ -11,9 +11,9 @@ export interface IMeasurementRepository extends IRepository<Measurement> {
 
     findOne(query: IQuery): Promise<any>
 
-    getLastMeasurement(patientId: string, measurementType: string): Promise<any>
+    getLast(patientId: string, measurementType: string): Promise<any>
 
-    removeMeasurementsFromUser(id: string): Promise<boolean>
+    removeAllByPatient(id: string): Promise<boolean>
 
     updateOrCreate(item: any): Promise<any>
 }

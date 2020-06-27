@@ -9,6 +9,7 @@
  */
 
 export abstract class Default {
+    public static readonly APP_ID: string = 'mhealth.app'
     public static readonly NODE_ENV: string = 'development' // development, test, production
     public static readonly PORT_HTTP: number = 4000
     public static readonly PORT_HTTPS: number = 4001
@@ -31,4 +32,35 @@ export abstract class Default {
     public static readonly SSL_KEY_PATH: string = '.certs/server.key'
     public static readonly SSL_CERT_PATH: string = '.certs/server.crt'
     public static readonly RABBITMQ_CA_PATH: string = '.certs/ca.crt'
+
+    public static readonly MEASUREMENTS_TYPES: Array<any> = [
+        {
+            id: 'blood_glucose',
+            display_name: 'Blood Glucose'
+        },
+        {
+            id: 'blood_pressure',
+            display_name: 'Blood Pressure'
+        },
+        {
+            id: 'body_temperature',
+            display_name: 'Body Temperature'
+        },
+        {
+            id: 'body_fat',
+            display_name: 'Body Fat'
+        },
+        {
+            id: 'height',
+            display_name: 'Height'
+        },
+        {
+            id: 'waist_circumference',
+            display_name: 'Waist Circumference'
+        },
+        {
+            id: 'weight',
+            display_name: 'Weight'
+        }
+    ]
 }

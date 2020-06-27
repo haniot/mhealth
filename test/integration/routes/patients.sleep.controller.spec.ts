@@ -10,10 +10,10 @@ import { SleepRepoModel } from '../../../src/infrastructure/database/schema/slee
 import { SleepEntityMapper } from '../../../src/infrastructure/entity/mapper/sleep.entity.mapper'
 import { ObjectID } from 'bson'
 import { SleepPatternDataSet } from '../../../src/application/domain/model/sleep.pattern.data.set'
-import { Default } from '../../../src/utils/default'
 import { IConnectionDB } from '../../../src/infrastructure/port/connection.db.interface'
 import { SleepMock } from '../../mocks/models/sleep.mock'
 import { SleepType } from '../../../src/application/domain/utils/sleep.type'
+import { Config } from '../../../src/utils/config'
 
 const dbConnection: IConnectionDB = DIContainer.get(Identifier.MONGODB_CONNECTION)
 const app: App = DIContainer.get(Identifier.APP)
@@ -139,7 +139,8 @@ describe('Routes: patients.sleep', () => {
     // Start services
     before(async () => {
         try {
-            await dbConnection.tryConnect(process.env.MONGODB_URI_TEST || Default.MONGODB_URI_TEST)
+            const mongoConfigs = Config.getMongoConfig()
+            await dbConnection.tryConnect(mongoConfigs.uri, mongoConfigs.options)
 
             await deleteAllSleep()
         } catch (err) {

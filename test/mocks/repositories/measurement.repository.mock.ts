@@ -27,7 +27,7 @@ bodyTemperature.patient_id = DefaultEntityMock.BODY_TEMPERATURE.patient_id
 const listMeasurements = [height, weight, waist, bodyFat, bloodPressure, bloodGlucose, bodyTemperature]
 
 export class MeasurementRepositoryMock implements IMeasurementRepository {
-    public removeMeasurementsFromUser(id: string): Promise<boolean> {
+    public removeAllByPatient(id: string): Promise<boolean> {
         return Promise.resolve(true)
     }
 
@@ -89,7 +89,7 @@ export class MeasurementRepositoryMock implements IMeasurementRepository {
         return Promise.resolve(item.type === 'exists')
     }
 
-    public getLastMeasurement(patientId: string, measurementType: string): Promise<any> {
+    public getLast(patientId: string, measurementType: string): Promise<any> {
         let result: any
         switch (measurementType) {
             case MeasurementTypes.HEIGHT:

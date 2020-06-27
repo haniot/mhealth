@@ -31,7 +31,7 @@ export class ApiException extends Exception {
      *
      * @return Object
      */
-    public toJson(): object {
+    public toJSON(): object {
         return {
             code: this.code,
             message: this.message,

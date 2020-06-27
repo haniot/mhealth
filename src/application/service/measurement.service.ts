@@ -34,19 +34,20 @@ export class MeasurementService implements IMeasurementService {
     ) {
     }
 
-    public async addMeasurement(item: any | Array<any>): Promise<any> {
-        if (item instanceof Array) return await this.addMultipleMeasurements(item)
-        return await this.add(item)
+    public async add(item: any | Array<any>): Promise<any> {
+        if (item instanceof Array) return this.addMultipleMeasurements(item)
+        return this.addMeasurement(item)
     }
 
     public async getAll(query: Query): Promise<Array<any>> {
         try {
             const patient_id = query.toJSON().filters.patient_id
             if (patient_id) ObjectIdValidator.validate(patient_id)
+
+            return this._repository.find(query)
         } catch (err) {
             return Promise.reject(err)
         }
-        return this._repository.find(query)
     }
 
     public async getById(id: string, query: IQuery): Promise<any> {
@@ -54,21 +55,23 @@ export class MeasurementService implements IMeasurementService {
             ObjectIdValidator.validate(id)
             const patient_id = query.toJSON().filters.patient_id
             if (patient_id) ObjectIdValidator.validate(patient_id)
+
+            query.addFilter({ _id: id })
+            return this._repository.findOne(query)
         } catch (err) {
             return Promise.reject(err)
         }
-        query.addFilter({ _id: id })
-        return this._repository.findOne(query)
     }
 
-    public async removeMeasurement(measurementId: string, userId: string): Promise<boolean> {
+    public async removeByPatient(measurementId: string, userId: string): Promise<boolean> {
         try {
             ObjectIdValidator.validate(measurementId)
             ObjectIdValidator.validate(userId)
+
+            return this._repository.delete(measurementId)
         } catch (err) {
             return Promise.reject(err)
         }
-        return this._repository.delete(measurementId)
     }
 
     public async remove(id: string): Promise<boolean> {
@@ -79,7 +82,7 @@ export class MeasurementService implements IMeasurementService {
         throw Error('Not implemented!')
     }
 
-    public async add(item: any): Promise<any> {
+    private async addMeasurement(item: any): Promise<any> {
         try {
             if (item.patient_id && item.timestamp) {
                 ObjectIdValidator.validate(item.patient_id)
@@ -123,38 +126,17 @@ export class MeasurementService implements IMeasurementService {
                             .concat(Object.values(MeasurementTypes).join(', ').concat('.')))
             }
             if (item.type === MeasurementTypes.WEIGHT && item.body_fat) {
-                const bodyFat = new BodyFat().fromJSON({ ...item.toJSON(), type: MeasurementTypes.BODY_FAT,
-                    value: item.body_fat, unit: '%' })
+                const bodyFat = new BodyFat().fromJSON({
+                    ...item.toJSON(), type: MeasurementTypes.BODY_FAT,
+                    value: item.body_fat, unit: '%'
+                })
                 bodyFat.patient_id = item.patient_id
                 await this.add(bodyFat)
             }
-            return await this._repository.create(item)
+            return this._repository.create(item)
         } catch (err) {
             return Promise.reject(err)
         }
-    }
-
-    public count(query: IQuery): Promise<number> {
-        return this._repository.count(query)
-    }
-
-    public async getLastMeasurements(patientId: string): Promise<LastMeasurements> {
-        const result: LastMeasurements = new LastMeasurements()
-        try {
-            ObjectIdValidator.validate(patientId)
-            result.blood_glucose = await this._repository.getLastMeasurement(patientId, MeasurementTypes.BLOOD_GLUCOSE)
-            result.blood_pressure = await this._repository.getLastMeasurement(patientId, MeasurementTypes.BLOOD_PRESSURE)
-            result.body_fat = await this._repository.getLastMeasurement(patientId, MeasurementTypes.BODY_FAT)
-            result.body_temperature =
-                await this._repository.getLastMeasurement(patientId, MeasurementTypes.BODY_TEMPERATURE)
-            result.height = await this._repository.getLastMeasurement(patientId, MeasurementTypes.HEIGHT)
-            result.waist_circumference =
-                await this._repository.getLastMeasurement(patientId, MeasurementTypes.WAIST_CIRCUMFERENCE)
-            result.weight = await this._repository.getLastMeasurement(patientId, MeasurementTypes.WEIGHT)
-        } catch (err) {
-            return Promise.reject(err)
-        }
-        return Promise.resolve(result)
     }
 
     private async addMultipleMeasurements(measurements: Array<any>): Promise<MultiStatus<any>> {
@@ -183,5 +165,27 @@ export class MeasurementService implements IMeasurementService {
         multiStatus.error = statusErrorArr
 
         return Promise.resolve(multiStatus)
+    }
+
+    public count(query: IQuery): Promise<number> {
+        return this._repository.count(query)
+    }
+
+    public async getLast(patientId: string): Promise<LastMeasurements> {
+        const result: LastMeasurements = new LastMeasurements()
+        try {
+            ObjectIdValidator.validate(patientId)
+            result.blood_glucose = await this._repository.getLast(patientId, MeasurementTypes.BLOOD_GLUCOSE)
+            result.blood_pressure = await this._repository.getLast(patientId, MeasurementTypes.BLOOD_PRESSURE)
+            result.body_fat = await this._repository.getLast(patientId, MeasurementTypes.BODY_FAT)
+            result.body_temperature = await this._repository.getLast(patientId, MeasurementTypes.BODY_TEMPERATURE)
+            result.height = await this._repository.getLast(patientId, MeasurementTypes.HEIGHT)
+            result.waist_circumference = await this._repository.getLast(patientId, MeasurementTypes.WAIST_CIRCUMFERENCE)
+            result.weight = await this._repository.getLast(patientId, MeasurementTypes.WEIGHT)
+
+            return Promise.resolve(result)
+        } catch (err) {
+            return Promise.reject(err)
+        }
     }
 }

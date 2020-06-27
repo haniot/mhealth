@@ -29,5 +29,4 @@ export class User extends Entity implements IJSONSerializable, IJSONDeserializab
             type: this.type
         }
     }
-
 }

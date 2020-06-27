@@ -37,6 +37,17 @@ describe('Validators: CreateBloodPressureValidator', () => {
                 measurement.diastolic = DefaultEntityMock.BLOOD_PRESSURE.diastolic
             }
         })
+        it('should throw an error for does not pass pulse', () => {
+            measurement.pulse = undefined
+            try {
+                CreateBloodPressureValidator.validate(measurement)
+            } catch (err) {
+                assert.propertyVal(err, 'message', 'Required fields were not provided...')
+                assert.propertyVal(err, 'description', 'BloodPressure validation: pulse required!')
+            } finally {
+                measurement.pulse = DefaultEntityMock.BLOOD_PRESSURE.pulse
+            }
+        })
         it('should throw an error for does not pass unit', () => {
             measurement.unit = undefined
             try {

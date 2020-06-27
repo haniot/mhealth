@@ -79,8 +79,10 @@ export class ConnectionMongodb implements IConnectionDB {
         }
 
         connection.on('connected', (con) => {
-            this._logger.warn('Reconnection established with MongoDB...')
-            this._eventConnection.emit('connected')
+            setTimeout(() => {
+                this._logger.warn('Reconnection established with MongoDB...')
+                this._eventConnection.emit('connected', con)
+            }, 1000)
         })
 
         connection.on('disconnected', () => {

@@ -3,9 +3,10 @@ import { User } from '../../domain/model/user'
 
 export class UserDeleteEvent extends IntegrationEvent<any> {
     public static readonly ROUTING_KEY: string = 'users.delete'
+    public static readonly NAME: string = 'UserDeleteEvent'
 
     constructor(public timestamp?: Date, public user?: User) {
-        super('UserDeleteEvent', EventType.USER, timestamp)
+        super(UserDeleteEvent.NAME, EventType.USER, timestamp)
     }
 
     public toJSON(): any {

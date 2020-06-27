@@ -5,7 +5,6 @@ import { SleepPatternDataSet } from '../../../src/application/domain/model/sleep
 import { SleepEntity } from '../../../src/infrastructure/entity/sleep.entity'
 import { SleepMock } from '../../mocks/models/sleep.mock'
 import { SleepType } from '../../../src/application/domain/utils/sleep.type'
-// import { SleepPattern } from '../../../src/application/domain/model/sleep.pattern'
 
 describe('Mappers: SleepEntityMapper', () => {
     const sleep: Sleep = new SleepMock()
@@ -86,6 +85,18 @@ describe('Mappers: SleepEntityMapper', () => {
                 assert.propertyVal(result, 'patient_id', undefined)
                 assert.propertyVal(result, 'pattern', undefined)
                 assert.propertyVal(result, 'type', undefined)
+            })
+        })
+    })
+
+    describe('modelEntityToModel()', () => {
+        context('when try to use modelEntityToModel() function', () => {
+            it('should throw an error', () => {
+                try {
+                    new SleepEntityMapper().modelEntityToModel(new SleepEntity())
+                } catch (err) {
+                    assert.propertyVal(err, 'message', 'Not implemented!')
+                }
             })
         })
     })
