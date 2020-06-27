@@ -24,6 +24,11 @@ const activityRepository: IPhysicalActivityRepository = DIContainer.get(Identifi
 const sleepRepository: ISleepRepository = DIContainer.get(Identifier.SLEEP_REPOSITORY)
 
 describe('RPC SERVER EVENT BUS TASK', () => {
+    // Timeout function for control of execution
+    const timeout = (milliseconds) => {
+        return new Promise(resolve => setTimeout(resolve, milliseconds))
+    }
+
     // Start DB connection, RabbitMQ connection and ProviderEventBusTask
     before(async () => {
         try {
@@ -40,6 +45,8 @@ describe('RPC SERVER EVENT BUS TASK', () => {
             await rabbit.connectionRpcClient.open(rabbitConfigs.uri, rabbitConfigs.options)
 
             rpcServerEventBusTask.run()
+
+            await timeout(5000)
         } catch (err) {
             throw new Error('Failure on ProviderEventBusTask test: ' + err.message)
         }

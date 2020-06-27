@@ -3,7 +3,7 @@ node_js:
   - "12"
   - "13"
 env:
-  - NODE_ENV=test RABBITMQ_URI=amqp://guest:guest@127.0.0.1:5672/ssm MONGODB_URI_TEST=mongodb://127.0.0.1:27017/ssm-account-test
+  - NODE_ENV=test RABBITMQ_URI=amqp://guest:guest@localhost:5672/ssm MONGODB_ENABLE_TLS=false MONGODB_URI_TEST=mongodb://localhost:27017/ssm-account-test
 dist: xenial
 addons:
   apt:

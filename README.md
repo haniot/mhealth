@@ -150,10 +150,10 @@ docker build -t image_name:tag .
 [//]: # (These are reference links used in the body of this note.)
 [license-image]: https://img.shields.io/badge/license-Apache%202-blue.svg
 [license-url]: https://github.com/haniot/mhealth/blob/master/LICENSE
-[node-image]: https://img.shields.io/badge/node-%3E%3D%208.0.0-brightgreen.svg
+[node-image]: https://img.shields.io/badge/node-%3E%3D%2012.0.0-brightgreen.svg
 [node-url]: https://nodejs.org
-[travis-image]: https://travis-ci.org/haniot/mhealth.svg?branch=master
-[travis-url]: https://travis-ci.org/haniot/mhealth
+[travis-image]: https://travis-ci.com/haniot/mhealth.svg?branch=master
+[travis-url]: https://travis-ci.com/haniot/mhealth
 [coverage-image]: https://coveralls.io/repos/github/haniot/mhealth/badge.svg
 [coverage-url]: https://coveralls.io/github/haniot/mhealth?branch=master
 [known-vulnerabilities-image]: https://snyk.io/test/github/haniot/mhealth/badge.svg

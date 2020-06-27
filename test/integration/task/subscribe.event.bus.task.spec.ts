@@ -61,6 +61,7 @@ describe('SUBSCRIBE EVENT BUS TASK', () => {
             await rabbit.connectionPub.open(rabbitConfigs.uri, rabbitConfigs.options)
 
             subscribeEventBusTask.run()
+            await timeout(2000)
         } catch (err) {
             throw new Error('Failure on SubscribeEventBusTask test: ' + err.message)
         }
@@ -89,42 +90,12 @@ describe('SUBSCRIBE EVENT BUS TASK', () => {
                     throw new Error('Failure on SubscribeEventBusTask test: ' + err.message)
                 }
             })
-            it('should return the weight with updated values', (done) => {
-                const weight: Weight = new Weight().fromJSON(DefaultEntityMock.WEIGHT)
-                weight.patient_id = DefaultEntityMock.WEIGHT.patient_id
-
-                measurementRepository.create(weight)
-                    .then(async weightCreate => {
-                        const newWeight: Weight = new Weight().fromJSON(weightCreate)
-                        newWeight.value = 60.6
-                        newWeight.body_fat = 19.9
-                        newWeight.patient_id = weightCreate.patient_id
-                        const weightSyncEvent: WeightSyncEvent = new WeightSyncEvent(new Date(), newWeight)
-
-                        // publish weight
-                        await rabbit.publish(weightSyncEvent, WeightSyncEvent.ROUTING_KEY)
-
-                        // Wait for 1000 milliseconds for the task to be executed
-                        await timeout(5000)
-
-                        // Weight tests
-                        const weightQuery: IQuery = new Query()
-                        weightQuery.addFilter({ _id: weightCreate.id, type: MeasurementTypes.WEIGHT })
-                        const weightResult = await measurementRepository.findOne(weightQuery)
-                        expect(weightResult.value).to.eql(newWeight.value)
-                        expect(weightResult.body_fat).to.eql(newWeight.body_fat)
-
-                        done()
-                    })
-                    .catch(done)
-            })
-
             it('should return a new weight', (done) => {
                 const weight: Weight = new Weight().fromJSON({
                     value: 55,
                     unit: MeasurementUnits.WEIGHT,
                     type: MeasurementTypes.WEIGHT,
-                    timestamp: '2018-11-19T14:40:00Z',
+                    timestamp: '2018-11-19T23:15:00Z',
                     body_fat: 21,
                     device_id: '5ca77314bc08ec205689a736'
                 })
@@ -134,7 +105,7 @@ describe('SUBSCRIBE EVENT BUS TASK', () => {
                 rabbit.publish(weightSyncEvent, WeightSyncEvent.ROUTING_KEY)
                     .then(async () => {
                         // Wait for 2000 milliseconds for the task to be executed
-                        await timeout(2000)
+                        await timeout(5000)
                         const weightQuery: IQuery = new Query()
                         weightQuery.addFilter({ patient_id: weight.patient_id, type: MeasurementTypes.WEIGHT })
 
