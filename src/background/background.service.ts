@@ -29,7 +29,7 @@ export class BackgroundService {
             await this._mongodb.tryConnect(dbConfigs.uri, dbConfigs.options)
 
             // Open RabbitMQ connection and perform tasks
-            this.startTasks()
+            this._startTasks()
         } catch (err) {
             return Promise.reject(new Error(`Error initializing services in background! ${err.message}`))
         }
@@ -49,7 +49,7 @@ export class BackgroundService {
     /**
      * Open RabbitMQ connection and perform tasks
      */
-    private startTasks(): void {
+    private _startTasks(): void {
         const rabbitConfigs = Config.getRabbitConfig()
         this._eventBus
             .connectionSub
