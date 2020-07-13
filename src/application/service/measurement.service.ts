@@ -25,6 +25,9 @@ import { CreateBodyFatValidator } from '../domain/validator/create.body.fat.vali
 import { Device } from '../domain/model/device'
 import { LastMeasurements } from '../domain/model/last.measurements'
 import { BodyFat } from '../domain/model/body.fat'
+import { Weight } from '../domain/model/weight'
+import { Height } from '../domain/model/height'
+import { DateValidator } from '../domain/validator/date.validator'
 
 @injectable()
 export class MeasurementService implements IMeasurementService {
@@ -43,8 +46,14 @@ export class MeasurementService implements IMeasurementService {
         try {
             const patient_id = query.toJSON().filters.patient_id
             if (patient_id) ObjectIdValidator.validate(patient_id)
+            const measurements: Array<any> = await this._repository.find(query)
 
-            return this._repository.find(query)
+            for await(let measurement of measurements) {
+                if (measurement.type === MeasurementTypes.WEIGHT) {
+                    measurement = await this.addBmi(measurement)
+                }
+            }
+            return Promise.resolve(measurements)
         } catch (err) {
             return Promise.reject(err)
         }
@@ -57,7 +66,11 @@ export class MeasurementService implements IMeasurementService {
             if (patient_id) ObjectIdValidator.validate(patient_id)
 
             query.addFilter({ _id: id })
-            return this._repository.findOne(query)
+            let measurement: any = await this._repository.findOne(query)
+            if (measurement && measurement.type === MeasurementTypes.WEIGHT) {
+                measurement = await this.addBmi(measurement)
+            }
+            return Promise.resolve(measurement)
         } catch (err) {
             return Promise.reject(err)
         }
@@ -133,7 +146,11 @@ export class MeasurementService implements IMeasurementService {
                 bodyFat.patient_id = item.patient_id
                 await this.add(bodyFat)
             }
-            return this._repository.create(item)
+            let measurement: any = await this._repository.create(item)
+            if (measurement && measurement.type === MeasurementTypes.WEIGHT) {
+                measurement = await this.addBmi(measurement)
+            }
+            return Promise.resolve(measurement)
         } catch (err) {
             return Promise.reject(err)
         }
@@ -182,8 +199,42 @@ export class MeasurementService implements IMeasurementService {
             result.height = await this._repository.getLast(patientId, MeasurementTypes.HEIGHT)
             result.waist_circumference = await this._repository.getLast(patientId, MeasurementTypes.WAIST_CIRCUMFERENCE)
             result.weight = await this._repository.getLast(patientId, MeasurementTypes.WEIGHT)
-
+            if (result.weight) result.weight = await this.addBmi(result.weight)
             return Promise.resolve(result)
+        } catch (err) {
+            return Promise.reject(err)
+        }
+    }
+
+    public async getLastFromDate(patientId: string, date: string): Promise<LastMeasurements> {
+        const result: LastMeasurements = new LastMeasurements()
+        try {
+            ObjectIdValidator.validate(patientId)
+            DateValidator.validate(date)
+            result.blood_glucose = await this._repository.getLastFromDate(patientId, MeasurementTypes.BLOOD_GLUCOSE, date)
+            result.blood_pressure = await this._repository.getLastFromDate(patientId, MeasurementTypes.BLOOD_PRESSURE, date)
+            result.body_fat = await this._repository.getLastFromDate(patientId, MeasurementTypes.BODY_FAT, date)
+            result.body_temperature = await this._repository.getLastFromDate(patientId, MeasurementTypes.BODY_TEMPERATURE, date)
+            result.height = await this._repository.getLastFromDate(patientId, MeasurementTypes.HEIGHT, date)
+            result.waist_circumference =
+                await this._repository.getLastFromDate(patientId, MeasurementTypes.WAIST_CIRCUMFERENCE, date)
+            result.weight = await this._repository.getLastFromDate(patientId, MeasurementTypes.WEIGHT, date)
+            if (result.weight) result.weight = await this.addBmi(result.weight)
+            return Promise.resolve(result)
+        } catch (err) {
+            return Promise.reject(err)
+        }
+    }
+
+    private async addBmi(weight: Weight): Promise<Weight> {
+        try {
+            const lastHeight: Height = await this._repository.getLast(weight.patient_id!, MeasurementTypes.HEIGHT)
+            if (!lastHeight) return Promise.resolve(weight)
+            // Formula for calculating BMI = weight (kg) / ((height (cm) ^ 2) / 100000)
+            const bmi: number = (weight.value! / (Math.pow(lastHeight.value!, 2) / 10000))
+            // Round number to 2 decimal places
+            weight.bmi = Math.round(bmi * 100) / 100
+            return Promise.resolve(weight)
         } catch (err) {
             return Promise.reject(err)
         }

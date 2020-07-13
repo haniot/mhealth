@@ -42,12 +42,6 @@ const physicalActivitySchema = new Mongoose.Schema({
                 }
             }
         ],
-        calories_link: {
-            type: String
-        },
-        heart_rate_link: {
-            type: String
-        },
         heart_rate_average: {
             type: Number
         },
