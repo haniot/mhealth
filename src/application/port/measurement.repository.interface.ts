@@ -13,6 +13,8 @@ export interface IMeasurementRepository extends IRepository<Measurement> {
 
     getLast(patientId: string, measurementType: string): Promise<any>
 
+    getLastFromDate(patientId: string, measurementType: string, date: string): Promise<any>
+
     removeAllByPatient(id: string): Promise<boolean>
 
     updateOrCreate(item: any): Promise<any>

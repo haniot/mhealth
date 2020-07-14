@@ -17,8 +17,6 @@ export class PhysicalActivity extends Activity implements IJSONSerializable, IJS
     private _steps?: number // Number of steps taken during the physical activity.
     private _distance?: number // Distance traveled during the physical activity.
     private _levels?: Array<ActivityLevel> // PhysicalActivity levels (sedentary, light, fair or very).
-    private _calories_link?: string // Time series of calories spent during activity grouped in 1 minute.
-    private _heart_rate_link?: string // Time series of heart rate recorded during activity grouped in 1 seconds.
     private _heart_rate_average?: number // Average heart rate
     private _heart_rate_zones?: HeartRateZone // PhysicalActivity heart rate zones
 
@@ -66,22 +64,6 @@ export class PhysicalActivity extends Activity implements IJSONSerializable, IJS
         this._levels = value
     }
 
-    get calories_link(): string | undefined {
-        return this._calories_link
-    }
-
-    set calories_link(value: string | undefined) {
-        this._calories_link = value
-    }
-
-    get heart_rate_link(): string | undefined {
-        return this._heart_rate_link
-    }
-
-    set heart_rate_link(value: string | undefined) {
-        this._heart_rate_link = value
-    }
-
     get heart_rate_average(): number | undefined{
         return this._heart_rate_average
     }
@@ -113,8 +95,6 @@ export class PhysicalActivity extends Activity implements IJSONSerializable, IJS
         if (json.levels !== undefined && json.levels instanceof Array) {
             this.levels = json.levels.map(level => new ActivityLevel().fromJSON(level))
         }
-        if (json.calories_link !== undefined) this.calories_link = json.calories_link
-        if (json.heart_rate_link !== undefined) this.heart_rate_link = json.heart_rate_link
         if (json.heart_rate_average !== undefined) this.heart_rate_average = json.heart_rate_average
         if (json.heart_rate_zones !== undefined) this.heart_rate_zones = new HeartRateZone().fromJSON(json.heart_rate_zones)
 
@@ -130,8 +110,6 @@ export class PhysicalActivity extends Activity implements IJSONSerializable, IJS
                 steps: this.steps,
                 distance: this.distance,
                 levels: this.levels ? this.levels.map(item => item.toJSON()) : this.levels,
-                calories_link: this.calories_link,
-                heart_rate_link: this.heart_rate_average ? this.heart_rate_link : undefined,
                 heart_rate_average: this.heart_rate_average,
                 heart_rate_zones: this.heart_rate_average && this.heart_rate_zones ? this.heart_rate_zones.toJSON()
                     : undefined,

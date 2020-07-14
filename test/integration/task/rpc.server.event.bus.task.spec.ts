@@ -109,8 +109,6 @@ describe('RPC SERVER EVENT BUS TASK', () => {
                         expect(result[0].distance).to.eql(activity.distance)
                         expect(result[0].steps).to.eql(activity.steps)
                         expect(result[0].levels).to.eql(activity.levels!.map(item => item.toJSON()))
-                        expect(result[0].calories_link).to.eql(activity.calories_link)
-                        expect(result[0].heart_rate_link).to.eql(activity.heart_rate_link)
                         expect(result[0].heart_rate_average).to.eql(activity.heart_rate_average)
                         expect(result[0].heart_rate_zones).to.eql(activity.heart_rate_zones!.toJSON())
                         done()

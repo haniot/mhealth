@@ -41,8 +41,6 @@ describe('Mappers: PhysicalActivityEntityMapper', () => {
                 duration: Math.floor((Math.random() * 10) * 60000)
             }
         ],
-        calories_link: '/v1/patients/5a62be07de34500146d9c544/calories/date/2018-12-14/2018-12-14/time/12:52/13:12/interval/1min/timeseries',
-        heart_rate_link: '/v1/patients/5a62be07de34500146d9c544/heartrate/date/2018-12-14/2018-12-14/time/12:52/13:12/interval/1sec/timeseries',
         heart_rate_average: 91,
         heart_rate_zones: {
             out_of_range: {
@@ -87,8 +85,6 @@ describe('Mappers: PhysicalActivityEntityMapper', () => {
                 assert.propertyVal(result, 'distance', activity.distance)
                 if (activity.levels)
                     assert.deepPropertyVal(result, 'levels', activity.levels.map((elem: ActivityLevel) => elem.toJSON()))
-                assert.deepPropertyVal(result, 'calories_link', activity.calories_link)
-                assert.deepPropertyVal(result, 'heart_rate_link', activity.heart_rate_link)
                 assert.deepPropertyVal(result, 'heart_rate_average', activity.heart_rate_average)
                 assert.deepPropertyVal(result, 'heart_rate_zones', activity.heart_rate_zones!.toJSON())
             })
@@ -116,8 +112,6 @@ describe('Mappers: PhysicalActivityEntityMapper', () => {
                 assert.propertyVal(result, 'distance', activityJSON.distance)
                 if (activity.levels)
                     assert.deepEqual(result.levels!.map((elem: ActivityLevel) => elem.toJSON()), activityJSON.levels)
-                assert.propertyVal(result, 'calories_link', activityJSON.calories_link)
-                assert.propertyVal(result, 'heart_rate_link', activityJSON.heart_rate_link)
                 assert.propertyVal(result, 'heart_rate_average', activityJSON.heart_rate_average)
                 assert.deepPropertyVal(result, 'heart_rate_zones', new HeartRateZone().fromJSON(activityJSON.heart_rate_zones))
             })
@@ -136,8 +130,6 @@ describe('Mappers: PhysicalActivityEntityMapper', () => {
                 assert.propertyVal(result, 'steps', emptyActivityJSON.steps)
                 assert.propertyVal(result, 'distance', emptyActivityJSON.distance)
                 assert.propertyVal(result, 'levels', emptyActivityJSON.levels)
-                assert.propertyVal(result, 'calories_link', emptyActivityJSON.calories_link)
-                assert.propertyVal(result, 'heart_rate_link', emptyActivityJSON.heart_rate_link)
                 assert.propertyVal(result, 'heart_rate_average', emptyActivityJSON.heart_rate_average)
                 assert.propertyVal(result, 'heart_rate_zones', emptyActivityJSON.heart_rate)
             })
@@ -158,8 +150,6 @@ describe('Mappers: PhysicalActivityEntityMapper', () => {
                     assert.propertyVal(result, 'steps', undefined)
                     assert.propertyVal(result, 'distance', undefined)
                     assert.propertyVal(result, 'levels', undefined)
-                    assert.propertyVal(result, 'calories_link', undefined)
-                    assert.propertyVal(result, 'heart_rate_link', undefined)
                     assert.propertyVal(result, 'heart_rate_average', undefined)
                     assert.propertyVal(result, 'heart_rate_zones', undefined)
                 })

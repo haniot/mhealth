@@ -30,4 +30,14 @@ export interface IMeasurementService extends IService<Measurement> {
      * @throws {RepositoryException}
      */
     getLast(patientId: string): Promise<LastMeasurements>
+
+    /**
+     * Retrieve LastMeasurements by unique identifier (ID)  and related patient from date.
+     *
+     * @param patientId Patient unique identifier.
+     * @param date Date from measurement collect.
+     * @return {Promise<PhysicalActivity>}
+     * @throws {RepositoryException}
+     */
+    getLastFromDate(patientId: string, date: string): Promise<LastMeasurements>
 }

@@ -6,6 +6,7 @@ import { MeasurementTypes } from '../utils/measurement.types'
 
 export class Weight extends Measurement implements IJSONSerializable, IJSONDeserializable<Weight> {
     private _body_fat?: number
+    private _bmi?: number
 
     constructor() {
         super()
@@ -20,6 +21,14 @@ export class Weight extends Measurement implements IJSONSerializable, IJSONDeser
         this._body_fat = value
     }
 
+    get bmi(): number | undefined {
+        return this._bmi
+    }
+
+    set bmi(value: number | undefined) {
+        this._bmi = value
+    }
+
     public fromJSON(json: any): Weight {
         if (!json) return this
         if (typeof json === 'string' && JsonUtils.isJsonString(json)) {
@@ -27,6 +36,7 @@ export class Weight extends Measurement implements IJSONSerializable, IJSONDeser
         }
         super.fromJSON(json)
         if (json.body_fat !== undefined) this.body_fat = json.body_fat
+        if (json.bmi !== undefined) this.bmi = json.bmi
         return this
     }
 
@@ -34,7 +44,8 @@ export class Weight extends Measurement implements IJSONSerializable, IJSONDeser
         return {
             ...super.toJSON(),
             ...{
-                body_fat: this.body_fat
+                body_fat: this.body_fat,
+                bmi: this.bmi
             }
         }
     }

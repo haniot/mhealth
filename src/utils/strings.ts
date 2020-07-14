@@ -35,7 +35,15 @@ export abstract class Strings {
         INVALID_DATE: ', is not in valid ISO 8601 format.',
         INVALID_DATE_DESC: 'Date must be in the format: yyyy-MM-dd\'T\'HH:mm:ssZ',
         REQUIRED_FIELDS: 'Required fields were not provided...',
-        REQUIRED_FIELDS_DESC: ' are required!'
+        REQUIRED_FIELDS_DESC: ' are required!',
+        DATE: {
+            YEAR_NOT_ALLOWED: 'Date {0} has year not allowed. The year must be greater than 1678 and less than 2261.',
+            INVALID_FORMAT: 'Date {0} is not valid!',
+            INVALID_FORMAT_DESC: 'Date must be in the format: yyyy-MM-dd',
+            RANGE_INVALID: 'The interval between dates {0} and {1} is invalid!',
+            RANGE_INVALID_DESC: 'The end_date parameter can not contain an older date than that the start_date parameter.',
+            RANGE_EXCEED_YEAR_DESC: 'The period between the received dates can not exceed 1 year.'
+        },
     }
 
     public static readonly ENUM_VALIDATOR: any = {

@@ -114,6 +114,26 @@ export class MeasurementRepository extends BaseRepository<Measurement, Measureme
         })
     }
 
+    public async getLastFromDate(patientId: string, measurementType: string, date: string): Promise<any> {
+        return new Promise<any>((resolve, reject) => {
+            const query: Query = new Query()
+            query.addFilter({
+                patient_id: patientId,
+                type: measurementType,
+                $and: [
+                    { timestamp: { $lt: `${date}T23:59:59` } },
+                    { timestamp: { $gte: `${date}T00:00:00` } }
+                ]
+            })
+            query.addOrdination('timestamp', -1)
+            return this
+                .find(query)
+                .then(result => resolve(result[0]))
+                .catch(err => reject(this.mongoDBErrorListener(err)))
+
+        })
+    }
+
     public removeAllByPatient(id: string): Promise<boolean> {
         return new Promise<boolean>((resolve, reject) => {
             this.Model.deleteMany({ patient_id: id })

@@ -37,10 +37,6 @@ export class CreatePhysicalActivityValidator {
 
         if (activity.levels && activity.levels.length > 0) PhysicalActivityLevelsValidator.validate(activity.levels)
 
-        if (activity.calories_link !== undefined) StringValidator.validate(activity.calories_link, 'calories_link')
-
-        if (activity.heart_rate_link !== undefined) StringValidator.validate(activity.heart_rate_link, 'heart_rate_link')
-
         if (activity.heart_rate_average !== undefined) {
             if (!(regZone.test(String(activity.heart_rate_average)))) {
                 throw new ValidationException(

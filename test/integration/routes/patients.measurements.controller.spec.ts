@@ -280,6 +280,67 @@ describe('Routes: PatientMeasurement', () => {
         })
     })
 
+    describe('GET /v1/patients/:patient_id/measurements/last/:date', () => {
+        context('when get the last measurements of patient from date', () => {
+            it('should return status code 200 and a object with a last measurements for each type', () => {
+                return request
+                    .get(`/v1/patients/${bloodGlucose.patient_id}/measurements/last/2018-11-19`)
+                    .set('Content-Type', 'application/json')
+                    .expect(200)
+                    .then(res => {
+                        expect(res.body.blood_glucose).to.not.equal({})
+                        expect(res.body.blood_pressure).to.not.eql({})
+                        expect(res.body.body_fat).to.not.eql({})
+                        expect(res.body.body_temperature).to.not.eql({})
+                        expect(res.body.height).to.not.eql({})
+                        expect(res.body.waist_circumference).to.not.eql({})
+                        expect(res.body.weight).to.not.eql({})
+                    })
+            })
+        })
+
+        context('when there are no measurements from patient', () => {
+            it('should return status code 200 and a object with empty measurements', () => {
+                return request
+                    .get(`/v1/patients/${new ObjectID()}/measurements/last/2020-07-13`)
+                    .set('Content-Type', 'application/json')
+                    .expect(200)
+                    .then(res => {
+                        expect(res.body.blood_glucose).to.be.empty
+                        expect(res.body.blood_pressure).to.be.empty
+                        expect(res.body.body_fat).to.be.empty
+                        expect(res.body.body_temperature).to.be.empty
+                        expect(res.body.height).to.be.empty
+                        expect(res.body.waist_circumference).to.be.empty
+                        expect(res.body.weight).to.be.empty
+                    })
+            })
+        })
+
+        context('when there are validation errors', () => {
+            it('should return status code 400 and message from invalid patient id', () => {
+                return request
+                    .get('/v1/patients/123/measurements/last/2018-11-19')
+                    .set('Content-Type', 'application/json')
+                    .expect(400)
+                    .then(res => {
+                        expect(res.body).to.have.property('message', Strings.ERROR_MESSAGE.UUID_NOT_VALID_FORMAT)
+                        expect(res.body).to.have.property('description', Strings.ERROR_MESSAGE.UUID_NOT_VALID_FORMAT_DESC)
+                    })
+            })
+            it('should return status code 400 and message from invalid date', () => {
+                return request
+                    .get('/v1/patients/123/measurements/last/19-11-2018')
+                    .set('Content-Type', 'application/json')
+                    .expect(400)
+                    .then(res => {
+                        expect(res.body).to.have.property('message', Strings.ERROR_MESSAGE.UUID_NOT_VALID_FORMAT)
+                        expect(res.body).to.have.property('description', Strings.ERROR_MESSAGE.UUID_NOT_VALID_FORMAT_DESC)
+                    })
+            })
+        })
+    })
+
     describe('DELETE /v1/patients/:patient_id/measurements/:measurement_id', () => {
         context('when delete a measurement from patient', () => {
             it('should return status code 204 and no content', () => {

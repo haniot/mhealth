@@ -116,4 +116,32 @@ export class MeasurementRepositoryMock implements IMeasurementRepository {
         }
         return Promise.resolve(result)
     }
+
+    public getLastFromDate(patientId: string, measurementType: string, date: string): Promise<any> {
+        let result: any
+        switch (measurementType) {
+            case MeasurementTypes.HEIGHT:
+                result = height
+                break
+            case MeasurementTypes.WEIGHT:
+                result = weight
+                break
+            case MeasurementTypes.WAIST_CIRCUMFERENCE:
+                result = waist
+                break
+            case MeasurementTypes.BODY_FAT:
+                result = bodyFat
+                break
+            case MeasurementTypes.BLOOD_PRESSURE:
+                result = bloodPressure
+                break
+            case MeasurementTypes.BLOOD_GLUCOSE:
+                result = bloodGlucose
+                break
+            case MeasurementTypes.BODY_TEMPERATURE:
+                result = bodyTemperature
+                break
+        }
+        return Promise.resolve(result)
+    }
 }
