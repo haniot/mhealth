@@ -245,8 +245,6 @@ describe('SUBSCRIBE EVENT BUS TASK', () => {
                         expect(result.steps).to.eql(physical_activity.steps)
                         expect(result.distance).to.eql(physical_activity.distance)
                         expect(result.levels).to.eql(physical_activity.levels)
-                        expect(result.calories_link).to.eql(physical_activity.calories_link)
-                        expect(result.heart_rate_link).to.eql(physical_activity.heart_rate_link)
                         expect(result.heart_rate_average).to.eql(physical_activity.heart_rate_average)
                         expect(result.heart_rate_zones).to.eql(physical_activity.heart_rate_zones)
 

@@ -368,7 +368,7 @@ describe('Repositories: MeasurementRepository', () => {
                     .expects('find')
                     .withArgs({ patient_id: bloodGlucose.patient_id, type: bloodGlucose.type })
                     .chain('sort')
-                    .withArgs({ timestamp: -1})
+                    .withArgs({ timestamp: -1 })
                     .chain('skip')
                     .chain('limit')
                     .chain('exec')
@@ -394,13 +394,83 @@ describe('Repositories: MeasurementRepository', () => {
                     .expects('find')
                     .withArgs({ patient_id: bloodGlucose.patient_id, type: bloodGlucose.type })
                     .chain('sort')
-                    .withArgs({ timestamp: -1, created_at: -1})
+                    .withArgs({ timestamp: -1, created_at: -1 })
                     .chain('skip')
                     .chain('limit')
                     .chain('exec')
                     .rejects({ message: 'An internal error has occurred in the database!' })
 
                 return repo.getLast(bloodGlucose.patient_id!, bloodGlucose.type!)
+                    .catch(err => {
+                        assert.propertyVal(err, 'message', 'An internal error has occurred in the database!')
+                    })
+            })
+        })
+    })
+
+    describe('getLastMeasurementFromDate()', () => {
+        context('when get a last measurement for any type from specific date', () => {
+            it('should return a last measurement', () => {
+
+                const date: string = '2018-11-19'
+
+                const filter: any = {
+                    patient_id: bloodGlucose.patient_id,
+                    type: bloodGlucose.type,
+                    $and: [
+                        { timestamp: { $lt: `${date}T23:59:59` } },
+                        { timestamp: { $gte: `${date}T00:00:00` } }
+                    ]
+                }
+                sinon
+                    .mock(modelFake)
+                    .expects('find')
+                    .withArgs(filter)
+                    .chain('sort')
+                    .withArgs({ timestamp: -1 })
+                    .chain('skip')
+                    .chain('limit')
+                    .chain('exec')
+                    .resolves([bloodGlucose])
+
+                return repo.getLastFromDate(bloodGlucose.patient_id!, bloodGlucose.type!, date)
+                    .then(result => {
+                        assert.propertyVal(result, 'id', DefaultEntityMock.BLOOD_GLUCOSE.id)
+                        assert.propertyVal(result, 'type', DefaultEntityMock.BLOOD_GLUCOSE.type)
+                        assert.propertyVal(result, 'unit', DefaultEntityMock.BLOOD_GLUCOSE.unit)
+                        assert.propertyVal(result, 'device_id', DefaultEntityMock.BLOOD_GLUCOSE.device_id)
+                        assert.propertyVal(result, 'value', DefaultEntityMock.BLOOD_GLUCOSE.value)
+                        assert.propertyVal(result, 'timestamp', DefaultEntityMock.BLOOD_GLUCOSE.timestamp)
+                        assert.propertyVal(result, 'meal', DefaultEntityMock.BLOOD_GLUCOSE.meal)
+                    })
+            })
+        })
+
+        context('when a database error occurs', () => {
+            it('should reject an error', () => {
+                const date: string = '2018-11-19'
+
+                const filter: any = {
+                    patient_id: bloodGlucose.patient_id,
+                    type: bloodGlucose.type,
+                    $and: [
+                        { timestamp: { $lt: `${date}T23:59:59` } },
+                        { timestamp: { $gte: `${date}T00:00:00` } }
+                    ]
+                }
+
+                sinon
+                    .mock(modelFake)
+                    .expects('find')
+                    .withArgs(filter)
+                    .chain('sort')
+                    .withArgs({ timestamp: -1, created_at: -1 })
+                    .chain('skip')
+                    .chain('limit')
+                    .chain('exec')
+                    .rejects({ message: 'An internal error has occurred in the database!' })
+
+                return repo.getLastFromDate(bloodGlucose.patient_id!, bloodGlucose.type!, date)
                     .catch(err => {
                         assert.propertyVal(err, 'message', 'An internal error has occurred in the database!')
                     })

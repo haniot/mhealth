@@ -181,6 +181,35 @@ describe('Services: MeasurementService', () => {
         })
     })
 
+    describe('getLastMeasurementFromDate()', () => {
+        context('when get a list of last measurements', () => {
+            const date: string = '2018-11-19'
+            return service.getLastFromDate(height.patient_id!, date)
+                .then(res => {
+                    assert.deepEqual(res, lastMeasurements)
+                })
+        })
+
+        context('when there are validation errors', () => {
+            it('should reject an error when patient id is invalid', () => {
+                const date: string = '2018-11-19'
+                return service.getLastFromDate('1a2b23c', date)
+                    .catch(err => {
+                        assert.propertyVal(err, 'message', Strings.ERROR_MESSAGE.UUID_NOT_VALID_FORMAT)
+                        assert.propertyVal(err, 'description', Strings.ERROR_MESSAGE.UUID_NOT_VALID_FORMAT_DESC)
+                    })
+            })
+            it('should reject an error when date is invalid', () => {
+                const date: string = '19-11-2018'
+                return service.getLastFromDate(height.patient_id!, date)
+                    .catch(err => {
+                        assert.propertyVal(err, 'message', Strings.ERROR_MESSAGE.DATE.INVALID_FORMAT.replace('{0}', date))
+                        assert.propertyVal(err, 'description', Strings.ERROR_MESSAGE.DATE.INVALID_FORMAT_DESC)
+                    })
+            })
+        })
+    })
+
     describe('addMeasurement()', () => {
         describe('when save a unique measurement', () => {
             context('when save a blood glucose measurement', () => {

@@ -71,6 +71,18 @@ export class PatientsMeasurementsController {
         }
     }
 
+    @httpGet('/last/:date')
+    public async getLastMeasurementsOfPatientFromDate(@request() req: Request, @response() res: Response): Promise<Response> {
+        try {
+            const result: LastMeasurements = await this._service.getLastFromDate(req.params.patient_id, req.params.date)
+            return res.status(HttpStatus.OK).send(result.toJSON())
+        } catch (err) {
+            const handlerError = ApiExceptionManager.build(err)
+            return res.status(handlerError.code)
+                .send(handlerError.toJSON())
+        }
+    }
+
     @httpGet('/:measurement_id')
     public async getMeasurementFromPatient(@request() req: Request, @response() res: Response): Promise<Response> {
         try {

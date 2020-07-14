@@ -36,8 +36,6 @@ export class PhysicalActivityEntityMapper implements IEntityMapper<PhysicalActiv
         if (json.levels !== undefined && json.levels.length > 0) {
             result.levels = json.levels.map(elem => new ActivityLevel().fromJSON(elem))
         }
-        if (json.calories_link !== undefined) result.calories_link = json.calories_link
-        if (json.heart_rate_link !== undefined) result.heart_rate_link = json.heart_rate_link
         if (json.heart_rate_average !== undefined) result.heart_rate_average = json.heart_rate_average
         if (json.heart_rate_zones !== undefined) result.heart_rate_zones = new HeartRateZone().fromJSON(json.heart_rate_zones)
 
@@ -71,8 +69,6 @@ export class PhysicalActivityEntityMapper implements IEntityMapper<PhysicalActiv
         if (item.levels !== undefined && item.levels.length > 0) {
             result.levels = item.levels.map((elem: ActivityLevel) => elem.toJSON())
         } else result.levels = []
-        if (item.calories_link !== undefined) result.calories_link = item.calories_link
-        if (item.heart_rate_link !== undefined) result.heart_rate_link = item.heart_rate_link
         if (item.heart_rate_average !== undefined) result.heart_rate_average = item.heart_rate_average
         if (item.heart_rate_zones !== undefined) result.heart_rate_zones = item.heart_rate_zones.toJSON()
 
