@@ -75,6 +75,10 @@ import { PhysicalActivityRepository } from '../infrastructure/repository/physica
 import { SleepRepository } from '../infrastructure/repository/sleep.repository'
 import { PatientsActivityController } from '../ui/controllers/patients.activity.controller'
 import { PatientsSleepController } from '../ui/controllers/patients.sleep.controller'
+import { IntegrationEventRepository } from '../infrastructure/repository/integration.event.repository'
+import { IIntegrationEventRepository } from '../application/port/integration.event.repository.interface'
+import { IntegrationEventRepoModel } from '../infrastructure/database/schema/integration.event.schema'
+import { PublishEventBusTask } from '../background/task/publish.event.bus.task'
 
 export class IoC {
     private readonly _container: Container
@@ -136,12 +140,17 @@ export class IoC {
             .to(PhysicalActivityRepository).inSingletonScope()
         this._container.bind<ISleepRepository>(Identifier.SLEEP_REPOSITORY)
             .to(SleepRepository).inSingletonScope()
+        this._container
+            .bind<IIntegrationEventRepository>(Identifier.INTEGRATION_EVENT_REPOSITORY)
+            .to(IntegrationEventRepository).inSingletonScope()
 
         // Models
         this._container.bind(Identifier.DEVICE_REPO_MODEL).toConstantValue(DeviceRepoModel)
         this._container.bind(Identifier.MEASUREMENT_REPO_MODEL).toConstantValue(MeasurementRepoModel)
         this._container.bind(Identifier.ACTIVITY_REPO_MODEL).toConstantValue(ActivityRepoModel)
         this._container.bind(Identifier.SLEEP_REPO_MODEL).toConstantValue(SleepRepoModel)
+        this._container.bind(Identifier.INTEGRATION_EVENT_REPO_MODEL).toConstantValue(IntegrationEventRepoModel)
+
 
         // Mappers
         this._container
@@ -199,6 +208,9 @@ export class IoC {
             .to(BackgroundService).inSingletonScope()
 
         // Tasks
+        this._container
+            .bind<IBackgroundTask>(Identifier.PUBLISH_EVENT_BUS_TASK)
+            .to(PublishEventBusTask).inRequestScope()
         this._container
             .bind<IBackgroundTask>(Identifier.SUBSCRIBE_EVENT_BUS_TASK)
             .to(SubscribeEventBusTask).inSingletonScope()

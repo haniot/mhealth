@@ -1,6 +1,6 @@
 import { assert } from 'chai'
 import { SleepPatternSummaryData } from '../../../src/application/domain/model/sleep.pattern.summary.data'
-import { SleepPatternStageSummary } from '../../../src/application/domain/model/sleepPatternStageSummary'
+import { SleepPatternStageSummary } from '../../../src/application/domain/model/sleep.pattern.stage.summary'
 
 describe('Models: SleepPatternStagesSummary', () => {
     const summaryDataJSON: any = {

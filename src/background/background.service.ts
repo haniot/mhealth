@@ -12,6 +12,7 @@ export class BackgroundService {
     constructor(
         @inject(Identifier.RABBITMQ_EVENT_BUS) private readonly _eventBus: IEventBus,
         @inject(Identifier.MONGODB_CONNECTION) private readonly _mongodb: IConnectionDB,
+        @inject(Identifier.PUBLISH_EVENT_BUS_TASK) private readonly _publishTask: IBackgroundTask,
         @inject(Identifier.SUBSCRIBE_EVENT_BUS_TASK) private readonly _subscribeTask: IBackgroundTask,
         @inject(Identifier.LOGGER) private readonly _logger: ILogger
     ) {
@@ -58,6 +59,22 @@ export class BackgroundService {
             })
             .catch(err => {
                 this._logger.error(`Error trying to get connection to Event Bus for event subscribing. ${err.message}`)
+            })
+
+        this._eventBus
+            .connectionPub
+            .open(rabbitConfigs.uri, rabbitConfigs.options)
+            .then((conn) => {
+                this._publishTask.run()
+                this._logger.info('Connection with publish event opened successful!')
+
+                // When the connection has been lost and reestablished the task will be executed again
+                conn.on('reestablished', () => {
+                    this._publishTask.run()
+                })
+            })
+            .catch(err => {
+                this._logger.error(`Error trying to get connection to Event Bus for event publishing. ${err.message}`)
             })
     }
 }
