@@ -22,7 +22,7 @@ const measurementSchema = new Mongoose.Schema({
             ref: 'Device'
         },
         patient_id: {
-            type: Schema.Types.ObjectId,
+            type: String,
             required: 'Id of patient associated with a measurement is required!',
             index: true
         },

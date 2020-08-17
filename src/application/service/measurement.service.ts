@@ -28,18 +28,37 @@ import { BodyFat } from '../domain/model/body.fat'
 import { Weight } from '../domain/model/weight'
 import { Height } from '../domain/model/height'
 import { DateValidator } from '../domain/validator/date.validator'
+import { IEventBus } from '../../infrastructure/port/event.bus.interface'
+import { WeightLastSaveEvent } from '../integration-event/event/weight.last.save.event'
+import { HeightLastSaveEvent } from '../integration-event/event/height.last.save.event'
+import { ILogger } from '../../utils/custom.logger'
+import moment from 'moment'
 
 @injectable()
 export class MeasurementService implements IMeasurementService {
     constructor(
         @inject(Identifier.MEASUREMENT_REPOSITORY) private readonly _repository: IMeasurementRepository,
-        @inject(Identifier.DEVICE_REPOSITORY) private readonly _deviceRepository: IDeviceRepository
+        @inject(Identifier.DEVICE_REPOSITORY) private readonly _deviceRepository: IDeviceRepository,
+        @inject(Identifier.RABBITMQ_EVENT_BUS) private readonly _eventBus: IEventBus,
+        @inject(Identifier.LOGGER) private readonly _logger: ILogger
     ) {
     }
 
     public async add(item: any | Array<any>): Promise<any> {
-        if (item instanceof Array) return this.addMultipleMeasurements(item)
-        return this.addMeasurement(item)
+        try {
+            if (item instanceof Array) {
+                const multi_status: MultiStatus<any> = await this.addMultipleMeasurements(item)
+                if (multi_status.success?.length) {
+                    await this.publishLastMeasurement(multi_status.success.map(value => value.item))
+                }
+                return Promise.resolve(multi_status)
+            }
+            const result: any = await this.addMeasurement(item)
+            if (result) this.publishLastMeasurement(result)
+            return Promise.resolve(result)
+        } catch (err) {
+            return Promise.reject(err)
+        }
     }
 
     public async getAll(query: Query): Promise<Array<any>> {
@@ -163,9 +182,9 @@ export class MeasurementService implements IMeasurementService {
 
         for (const elem of measurements) {
             try {
-                const measurement: any = await this.add(elem)
+                const measurement: any = await this.addMeasurement(elem)
                 if (measurement) {
-                    const statusSuccess: StatusSuccess<any> = new StatusSuccess<any>(HttpStatus.CREATED, elem)
+                    const statusSuccess: StatusSuccess<any> = new StatusSuccess<any>(HttpStatus.CREATED, measurement)
                     statusSuccessArr.push(statusSuccess)
                 }
             } catch (err) {
@@ -239,4 +258,36 @@ export class MeasurementService implements IMeasurementService {
             return Promise.reject(err)
         }
     }
+
+    private publishLastMeasurement(data: any | Array<any>): void {
+        if (data instanceof Array) {
+            // Descent sort by timestamp
+            const sort_data: Array<any> =
+                data.sort((prev, next) => moment(prev.timestamp).diff(moment(next.timestamp)) > 0 ? -1 : 1)
+
+            const weight: Weight = sort_data.filter(measurement => measurement.type === MeasurementTypes.WEIGHT)[0]
+            const height: Height = sort_data.filter(measurement => measurement.type === MeasurementTypes.HEIGHT)[0]
+
+            if (weight !== undefined) this.publishEvent(weight)
+            if (height !== undefined) this.publishEvent(height)
+        }
+
+        if (data.type === MeasurementTypes.WEIGHT || data.type === MeasurementTypes.HEIGHT) this.publishEvent(data)
+    }
+
+    private publishEvent(item: any): void {
+        let event: WeightLastSaveEvent | HeightLastSaveEvent
+        let resource: string
+        let routing_key: string
+
+        [resource, event, routing_key] = item.type === MeasurementTypes.WEIGHT ?
+            [MeasurementTypes.WEIGHT, new WeightLastSaveEvent(new Date(), item), WeightLastSaveEvent.ROUTING_KEY] :
+            [MeasurementTypes.HEIGHT, new HeightLastSaveEvent(new Date(), item), HeightLastSaveEvent.ROUTING_KEY]
+
+        this._eventBus
+            .publish(event, routing_key)
+            .then(() => this._logger.info(`Last ${resource} from ${item.patient_id} successful published!`))
+            .catch(err => this._logger.error(`Error at publish error message from ${item.patient_id}: ${err.message}`))
+    }
+
 }

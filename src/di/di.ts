@@ -57,7 +57,6 @@ import { EventBusRabbitMQ } from '../infrastructure/eventbus/rabbitmq/eventbus.r
 import { IConnectionEventBus } from '../infrastructure/port/connection.event.bus.interface'
 import { ConnectionRabbitMQ } from '../infrastructure/eventbus/rabbitmq/connection.rabbitmq'
 import { IEventBus } from '../infrastructure/port/event.bus.interface'
-import { RpcServerEventBusTask } from '../background/task/rpc.server.event.bus.task'
 import { IPhysicalActivityService } from '../application/port/physical.activity.service.interface'
 import { PhysicalActivityService } from '../application/service/physical.activity.service'
 import { ISleepService } from '../application/port/sleep.service.interface'
@@ -203,9 +202,6 @@ export class IoC {
         this._container
             .bind<IBackgroundTask>(Identifier.SUBSCRIBE_EVENT_BUS_TASK)
             .to(SubscribeEventBusTask).inSingletonScope()
-        this._container
-            .bind<IBackgroundTask>(Identifier.RPC_SERVER_EVENT_BUST_TASK)
-            .to(RpcServerEventBusTask).inSingletonScope()
 
         // Log
         this._container.bind<ILogger>(Identifier.LOGGER).to(CustomLogger).inSingletonScope()

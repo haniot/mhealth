@@ -53,7 +53,6 @@ export abstract class Identifier {
     public static readonly RABBITMQ_EVENT_BUS: any = Symbol.for('EventBusRabbitMQ')
     public static readonly BACKGROUND_SERVICE: any = Symbol.for('BackgroundService')
     public static readonly SUBSCRIBE_EVENT_BUS_TASK: any = Symbol.for('SubscribeEventBusTask')
-    public static readonly RPC_SERVER_EVENT_BUST_TASK: any = Symbol.for('RpcServerEventBusTask')
 
     // Tasks
 
