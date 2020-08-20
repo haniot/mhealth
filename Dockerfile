@@ -1,5 +1,5 @@
 FROM node:12-alpine
-RUN apk --no-cache add bash curl grep
+RUN apk --no-cache add bash curl grep tzdata
 
 # Create app directory
 RUN mkdir -p /usr/src/mhealth

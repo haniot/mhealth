@@ -9,10 +9,11 @@ import { User } from '../../../src/application/domain/model/user'
 import { GenericUserEventMock } from '../../mocks/generic.user.event.mock'
 import { GenericUserEventHandlerMock } from '../../mocks/generic.user.event.handler.mock'
 
-const eventBus: EventBusRabbitMQ = new EventBusRabbitMQ(new ConnectionRabbitMQ(new ConnectionFactoryRabbitMQ()),
+const eventBus: EventBusRabbitMQ = new EventBusRabbitMQ(
     new ConnectionRabbitMQ(new ConnectionFactoryRabbitMQ()),
     new ConnectionRabbitMQ(new ConnectionFactoryRabbitMQ()),
-    new ConnectionRabbitMQ(new ConnectionFactoryRabbitMQ()))
+    new ConnectionRabbitMQ(new ConnectionFactoryRabbitMQ())
+)
 
 describe('EVENT BUS', () => {
     before(() => {
@@ -29,16 +30,14 @@ describe('EVENT BUS', () => {
 
     describe('CONNECTION', () => {
         it('should return throw an error when trying to publish up without connection.', async () => {
-            await eventBus.connectionPub.open(process.env.RABBITMQ_URI || Default.RABBITMQ_URI,
-                { interval: 100, sslOptions: { ca: [] } })
             return eventBus
                 .publish(new GenericUserEventMock(new Date(), new User()), GenericUserEventMock.ROUTING_KEY)
                 .catch(err => {
-                    expect(err).to.have.property('message', 'Missing publish eventbus connection.')
+                    expect(err).to.have.property('message', 'No connection open!')
                 })
         })
 
-        it('should return false when trying to subscribe up without connection.', () => {
+        it('should return throw an error when trying to subscribe up without connection.', () => {
             return eventBus
                 .subscribe(
                     new GenericUserEventMock(),
@@ -46,7 +45,7 @@ describe('EVENT BUS', () => {
                     GenericUserEventMock.ROUTING_KEY
                 )
                 .catch(err => {
-                    expect(err).to.have.property('message', 'Missing subscribe eventbus connection.')
+                    expect(err).to.have.property('message', 'No connection open!')
                 })
         })
 
@@ -152,41 +151,6 @@ describe('EVENT BUS', () => {
                     })
                     .then((result: boolean) => {
                         expect(result).to.equal(true)
-                    })
-            } catch (err) {
-                throw new Error('Failure on EventBus test: ' + err.message)
-            }
-        })
-
-        it('should return a requested resource.', async () => {
-            try {
-                await eventBus.connectionRpcClient.open(process.env.RABBITMQ_URI || Default.RABBITMQ_URI,
-                    { interval: 100, sslOptions: { ca: [] } })
-                await eventBus.provideResource('resource.test.get', (query: string) => {
-                    return { content: '123', original_query: query }
-                })
-
-                return eventBus.executeResource('mhealth.rpc',
-                    'resource.test.get',
-                    '?test=321')
-                    .then(res => {
-                        expect(res).to.have.property('content', '123')
-                        expect(res).to.have.property('original_query', '?test=321')
-                    })
-            } catch (err) {
-                throw new Error('Failure on EventBus test: ' + err.message)
-            }
-        })
-
-        it('should return time out for a requested resource that is not being provided.', async () => {
-            try {
-                await eventBus.connectionRpcClient.open(process.env.RABBITMQ_URI || Default.RABBITMQ_URI,
-                    { interval: 100, sslOptions: { ca: [] } })
-
-                return eventBus.executeResource('notification.rpc',
-                    'resource.find', '')
-                    .catch(err => {
-                        expect(err).to.be.an('error')
                     })
             } catch (err) {
                 throw new Error('Failure on EventBus test: ' + err.message)

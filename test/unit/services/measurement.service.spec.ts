@@ -46,10 +46,11 @@ describe('Services: MeasurementService', () => {
     lastMeasurements.waist_circumference!.patient_id = DefaultEntityMock.WAIST_CIRCUMFERENCE.patient_id
     lastMeasurements.weight!.patient_id = DefaultEntityMock.WEIGHT.patient_id
 
-    const eventBus: EventBusRabbitMQ = new EventBusRabbitMQ(new ConnectionRabbitMQ(new ConnectionFactoryRabbitMQ()),
+    const eventBus: EventBusRabbitMQ = new EventBusRabbitMQ(
         new ConnectionRabbitMQ(new ConnectionFactoryRabbitMQ()),
         new ConnectionRabbitMQ(new ConnectionFactoryRabbitMQ()),
-        new ConnectionRabbitMQ(new ConnectionFactoryRabbitMQ()))
+        new ConnectionRabbitMQ(new ConnectionFactoryRabbitMQ())
+    )
 
     const service = new MeasurementService(
         new MeasurementRepositoryMock(),

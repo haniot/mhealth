@@ -273,12 +273,13 @@ export class MeasurementService implements IMeasurementService {
 
             if (weight !== undefined) this.publishLastMeasurement(weight)
             if (height !== undefined) this.publishLastMeasurement(height)
+
+            return
         }
 
         if (data.type === MeasurementTypes.WEIGHT) {
             this.publishEvent(new WeightLastSaveEvent(new Date(), data), MeasurementTypes.WEIGHT, data.patient_id).then()
-        }
-        else if (data.type === MeasurementTypes.HEIGHT) {
+        } else if (data.type === MeasurementTypes.HEIGHT) {
             this.publishEvent(new HeightLastSaveEvent(new Date(), data), MeasurementTypes.HEIGHT, data.patient_id).then()
         }
     }
