@@ -57,7 +57,7 @@ export class MeasurementService implements IMeasurementService {
                 return Promise.resolve(multi_status)
             }
             const result: any = await this.addMeasurement(item)
-            if (result) this.publishLastMeasurement(result)
+            if (result) await this.publishLastMeasurement(result)
             return Promise.resolve(result)
         } catch (err) {
             return Promise.reject(err)
@@ -282,14 +282,14 @@ export class MeasurementService implements IMeasurementService {
                 // Get last weight measurement, sorted by timestamp
                 const lastWeight: Weight = await this._repository.getLast(data.patient_id, data.type)
                 // if the current weight is the same than the last weight, publish it
-                if (lastWeight && moment(lastWeight.timestamp).isSame(data.timestamp)) {
+                if (lastWeight && this.isTheSameMeasurement(data, lastWeight)) {
                     this.publishEvent(new WeightLastSaveEvent(new Date(), data), MeasurementTypes.WEIGHT, data.patient_id).then()
                 }
             } else if (data.type === MeasurementTypes.HEIGHT) {
                 // Get last height measurement, sorted by timestamp
                 const lastHeight: Height = await this._repository.getLast(data.patient_id, data.type)
                 // if the current height is the same than the last height, publish it
-                if (lastHeight && moment(lastHeight.timestamp).isSame(data.timestamp)) {
+                if (lastHeight && this.isTheSameMeasurement(data, lastHeight)) {
                     this.publishEvent(new HeightLastSaveEvent(new Date(), data), MeasurementTypes.HEIGHT, data.patient_id).then()
                 }
             }
@@ -324,5 +324,14 @@ export class MeasurementService implements IMeasurementService {
                         .concat(`Error: ${err.message}. Event: ${JSON.stringify(saveEvent)}`))
                 })
         }
+    }
+
+
+    private isTheSameMeasurement(current: Measurement, last: Measurement): boolean {
+        return current.type === last.type && // verify if both are the same type
+            current.patient_id === last.patient_id && // verify if both are from the same patient
+            current.value === last.value && // verify if both have the same value
+            current.unit === last.unit && // verify if both have the same unit
+            moment(current.timestamp).isSame(last.timestamp) // verify if both have the same timestamp
     }
 }
