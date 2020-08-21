@@ -262,25 +262,42 @@ export class MeasurementService implements IMeasurementService {
         }
     }
 
-    private publishLastMeasurement(data: any | Array<any>): void {
-        if (data instanceof Array) {
-            // Descent sort by timestamp
-            const sort_data: Array<any> =
-                data.sort((prev, next) => moment(prev.timestamp).diff(moment(next.timestamp)) > 0 ? -1 : 1)
+    private async publishLastMeasurement(data: any | Array<any>): Promise<void> {
+        try {
+            if (data instanceof Array) {
+                // Descent sort by timestamp
+                const sort_data: Array<any> =
+                    data.sort((prev, next) => moment(prev.timestamp).diff(moment(next.timestamp)) > 0 ? -1 : 1)
 
-            const weight: Weight = sort_data.filter(measurement => measurement.type === MeasurementTypes.WEIGHT)[0]
-            const height: Height = sort_data.filter(measurement => measurement.type === MeasurementTypes.HEIGHT)[0]
+                const weight: Weight = sort_data.filter(measurement => measurement.type === MeasurementTypes.WEIGHT)[0]
+                const height: Height = sort_data.filter(measurement => measurement.type === MeasurementTypes.HEIGHT)[0]
 
-            if (weight !== undefined) this.publishLastMeasurement(weight)
-            if (height !== undefined) this.publishLastMeasurement(height)
+                if (weight !== undefined) await this.publishLastMeasurement(weight)
+                if (height !== undefined) await this.publishLastMeasurement(height)
 
-            return
-        }
+                return
+            }
 
-        if (data.type === MeasurementTypes.WEIGHT) {
-            this.publishEvent(new WeightLastSaveEvent(new Date(), data), MeasurementTypes.WEIGHT, data.patient_id).then()
-        } else if (data.type === MeasurementTypes.HEIGHT) {
-            this.publishEvent(new HeightLastSaveEvent(new Date(), data), MeasurementTypes.HEIGHT, data.patient_id).then()
+            if (data.type === MeasurementTypes.WEIGHT) {
+                // Get last weight measurement, sorted by timestamp
+                const lastWeight: Weight = await this._repository.getLast(data.patient_id, data.type)
+                // if the current weight is the same than the last weight, publish it
+                if (lastWeight && moment(lastWeight.timestamp).isSame(data.timestamp)) {
+                    this.publishEvent(new WeightLastSaveEvent(new Date(), data), MeasurementTypes.WEIGHT, data.patient_id).then()
+                }
+            } else if (data.type === MeasurementTypes.HEIGHT) {
+                // Get last height measurement, sorted by timestamp
+                const lastHeight: Height = await this._repository.getLast(data.patient_id, data.type)
+                // if the current height is the same than the last height, publish it
+                if (lastHeight && moment(lastHeight.timestamp).isSame(data.timestamp)) {
+                    this.publishEvent(new HeightLastSaveEvent(new Date(), data), MeasurementTypes.HEIGHT, data.patient_id).then()
+                }
+            }
+            return Promise.resolve()
+        } catch (err) {
+            const patientId: string = data instanceof Array ? data[0].patient_id : data.patient_id
+            this._logger.error(`Error at publish last measurement from ${patientId}: ${err.message}`)
+            return Promise.resolve()
         }
     }
 
