@@ -3,7 +3,7 @@ import { SleepPatternSummaryData } from '../../../src/application/domain/model/s
 import { SleepPattern } from '../../../src/application/domain/model/sleep.pattern'
 import { SleepPatternDataSet } from '../../../src/application/domain/model/sleep.pattern.data.set'
 import { Stages } from '../../../src/application/domain/utils/stages'
-import { SleepPatternStageSummary } from '../../../src/application/domain/model/sleepPatternStageSummary'
+import { SleepPatternStageSummary } from '../../../src/application/domain/model/sleep.pattern.stage.summary'
 
 describe('Models: SleepPattern', () => {
     const dataSetItem: SleepPatternDataSet = new SleepPatternDataSet()

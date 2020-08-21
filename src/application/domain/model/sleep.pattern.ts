@@ -1,9 +1,9 @@
 import { SleepPatternDataSet } from './sleep.pattern.data.set'
-import { SleepPatternPhaseSummary } from './sleepPatternPhaseSummary'
+import { SleepPatternPhaseSummary } from './sleep.pattern.phase.summary'
 import { IJSONSerializable } from '../utils/json.serializable.interface'
 import { IJSONDeserializable } from '../utils/json.deserializable.interface'
 import { JsonUtils } from '../utils/json.utils'
-import { SleepPatternStageSummary } from './sleepPatternStageSummary'
+import { SleepPatternStageSummary } from './sleep.pattern.stage.summary'
 
 /**
  * Implementation of the entity of the pattern of sleep.

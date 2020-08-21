@@ -63,7 +63,10 @@ export class SubscribeEventBusTask implements IBackgroundTask {
          */
         this._eventBus
             .subscribe(new WeightSyncEvent(), new WeightSyncEventHandler(
-                DIContainer.get<IMeasurementRepository>(Identifier.MEASUREMENT_REPOSITORY), this._logger),
+                DIContainer.get<IMeasurementRepository>(Identifier.MEASUREMENT_REPOSITORY),
+                DIContainer.get(Identifier.INTEGRATION_EVENT_REPOSITORY),
+                DIContainer.get(Identifier.RABBITMQ_EVENT_BUS),
+                this._logger),
                 WeightSyncEvent.ROUTING_KEY)
             .then((result: boolean) => {
                 if (result) this._logger.info('Subscribe in WeightSyncEvent successful!')

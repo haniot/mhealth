@@ -33,12 +33,15 @@ import { WeightLastSaveEvent } from '../integration-event/event/weight.last.save
 import { HeightLastSaveEvent } from '../integration-event/event/height.last.save.event'
 import { ILogger } from '../../utils/custom.logger'
 import moment from 'moment'
+import { IntegrationEvent } from '../integration-event/event/integration.event'
+import { IIntegrationEventRepository } from '../port/integration.event.repository.interface'
 
 @injectable()
 export class MeasurementService implements IMeasurementService {
     constructor(
         @inject(Identifier.MEASUREMENT_REPOSITORY) private readonly _repository: IMeasurementRepository,
         @inject(Identifier.DEVICE_REPOSITORY) private readonly _deviceRepository: IDeviceRepository,
+        @inject(Identifier.INTEGRATION_EVENT_REPOSITORY) private readonly _integrationEventRepo: IIntegrationEventRepository,
         @inject(Identifier.RABBITMQ_EVENT_BUS) private readonly _eventBus: IEventBus,
         @inject(Identifier.LOGGER) private readonly _logger: ILogger
     ) {
@@ -268,26 +271,40 @@ export class MeasurementService implements IMeasurementService {
             const weight: Weight = sort_data.filter(measurement => measurement.type === MeasurementTypes.WEIGHT)[0]
             const height: Height = sort_data.filter(measurement => measurement.type === MeasurementTypes.HEIGHT)[0]
 
-            if (weight !== undefined) this.publishEvent(weight)
-            if (height !== undefined) this.publishEvent(height)
+            if (weight !== undefined) this.publishLastMeasurement(weight)
+            if (height !== undefined) this.publishLastMeasurement(height)
         }
 
-        if (data.type === MeasurementTypes.WEIGHT || data.type === MeasurementTypes.HEIGHT) this.publishEvent(data)
+        if (data.type === MeasurementTypes.WEIGHT) {
+            this.publishEvent(new WeightLastSaveEvent(new Date(), data), MeasurementTypes.WEIGHT, data.patient_id).then()
+        }
+        else if (data.type === MeasurementTypes.HEIGHT) {
+            this.publishEvent(new HeightLastSaveEvent(new Date(), data), MeasurementTypes.HEIGHT, data.patient_id).then()
+        }
     }
 
-    private publishEvent(item: any): void {
-        let event: WeightLastSaveEvent | HeightLastSaveEvent
-        let resource: string
-        let routing_key: string
-
-        [resource, event, routing_key] = item.type === MeasurementTypes.WEIGHT ?
-            [MeasurementTypes.WEIGHT, new WeightLastSaveEvent(new Date(), item), WeightLastSaveEvent.ROUTING_KEY] :
-            [MeasurementTypes.HEIGHT, new HeightLastSaveEvent(new Date(), item), HeightLastSaveEvent.ROUTING_KEY]
-
-        this._eventBus
-            .publish(event, routing_key)
-            .then(() => this._logger.info(`Last ${resource} from ${item.patient_id} successful published!`))
-            .catch(err => this._logger.error(`Error at publish error message from ${item.patient_id}: ${err.message}`))
+    private async publishEvent(event: IntegrationEvent<Height | Weight>, resource: string, userId: string): Promise<void> {
+        const routing_key: string = resource === MeasurementTypes.WEIGHT ?
+            WeightLastSaveEvent.ROUTING_KEY : HeightLastSaveEvent.ROUTING_KEY
+        try {
+            const successPublish = await this._eventBus.publish(event, routing_key)
+            if (!successPublish) throw new Error('')
+            this._logger.info(`Last ${resource} from ${userId} successful published!`)
+        } catch (err) {
+            const saveEvent: any = event.toJSON()
+            this._integrationEventRepo.create({
+                ...saveEvent,
+                __routing_key: routing_key,
+                __operation: 'publish'
+            })
+                .then(() => {
+                    this._logger.warn(`Could not publish the event named ${event.event_name}.`
+                        .concat(` The event was saved in the database for a possible recovery.`))
+                })
+                .catch(err => {
+                    this._logger.error(`There was an error trying to save the name event: ${event.event_name}.`
+                        .concat(`Error: ${err.message}. Event: ${JSON.stringify(saveEvent)}`))
+                })
+        }
     }
-
 }

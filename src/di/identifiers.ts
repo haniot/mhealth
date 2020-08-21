@@ -25,12 +25,15 @@ export abstract class Identifier {
     public static readonly MEASUREMENT_REPOSITORY: any = Symbol.for('MeasurementRepository')
     public static readonly ACTIVITY_REPOSITORY: any = Symbol.for('PhysicalActivityRepository')
     public static readonly SLEEP_REPOSITORY: any = Symbol.for('SleepRepository')
+    public static readonly INTEGRATION_EVENT_REPOSITORY: any = Symbol.for('IntegrationEventRepository')
 
     // Models
     public static readonly DEVICE_REPO_MODEL: any = Symbol.for('DeviceRepoModel')
     public static readonly MEASUREMENT_REPO_MODEL: any = Symbol.for('MeasurementRepoModel')
     public static readonly ACTIVITY_REPO_MODEL: any = Symbol.for('ActivityRepoModel')
     public static readonly SLEEP_REPO_MODEL: any = Symbol.for('SleepRepoModel')
+    public static readonly INTEGRATION_EVENT_REPO_MODEL: any = Symbol.for('IntegrationEventRepoModel')
+
 
     // Mappers
     public static readonly DEVICE_ENTITY_MAPPER: any = Symbol.for('DeviceEntityMapper')
@@ -52,9 +55,10 @@ export abstract class Identifier {
     public static readonly RABBITMQ_CONNECTION: any = Symbol.for('ConnectionRabbitMQ')
     public static readonly RABBITMQ_EVENT_BUS: any = Symbol.for('EventBusRabbitMQ')
     public static readonly BACKGROUND_SERVICE: any = Symbol.for('BackgroundService')
-    public static readonly SUBSCRIBE_EVENT_BUS_TASK: any = Symbol.for('SubscribeEventBusTask')
 
     // Tasks
+    public static readonly SUBSCRIBE_EVENT_BUS_TASK: any = Symbol.for('SubscribeEventBusTask')
+    public static readonly PUBLISH_EVENT_BUS_TASK: any = Symbol.for('PublishEventBusTask')
 
     // Log
     public static readonly LOGGER: any = Symbol.for('CustomLogger')
