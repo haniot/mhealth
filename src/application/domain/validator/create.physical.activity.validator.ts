@@ -32,7 +32,7 @@ export class CreatePhysicalActivityValidator {
         }
 
         if (activity.distance !== undefined) {
-            NumberPositiveValidator.validate(activity.distance, 'distance')
+            IntegerPositiveValidator.validate(activity.distance, 'distance')
         }
 
         if (activity.levels && activity.levels.length > 0) PhysicalActivityLevelsValidator.validate(activity.levels)
