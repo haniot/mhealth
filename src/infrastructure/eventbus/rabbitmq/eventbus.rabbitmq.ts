@@ -20,7 +20,8 @@ export class EventBusRabbitMQ implements IEventBus {
     constructor(
         @inject(Identifier.RABBITMQ_CONNECTION) public connectionPub: IConnectionEventBus,
         @inject(Identifier.RABBITMQ_CONNECTION) public connectionSub: IConnectionEventBus,
-        @inject(Identifier.RABBITMQ_CONNECTION) public connectionRpcServer: IConnectionEventBus
+        @inject(Identifier.RABBITMQ_CONNECTION) public connectionRpcServer: IConnectionEventBus,
+        @inject(Identifier.RABBITMQ_CONNECTION) public connectionRpcClient: IConnectionEventBus
     ) {
         this._event_handlers = new Map()
         this._receiveFromYourself = false
@@ -115,6 +116,25 @@ export class EventBusRabbitMQ implements IEventBus {
         })
     }
 
+    public executeResource(serviceName: string, resourceName: string, ...params: any[]): Promise<any> {
+        if (!this.connectionRpcClient.isOpen) {
+            return Promise.reject(new EventBusException('No connection open!'))
+        }
+
+        return this.connectionRpcClient
+            .rpcClient(
+                serviceName,
+                resourceName,
+                params,
+                {
+                    exchange: {
+                        type: 'direct',
+                        durable: true
+                    },
+                    rpcTimeout: 5000
+                })
+    }
+
     private initializeRPCServer(): void {
         if (!this._rpcServerInitialized) {
             this._rpcServerInitialized = true
@@ -143,6 +163,7 @@ export class EventBusRabbitMQ implements IEventBus {
         if (this.connectionPub) await this.connectionPub.close()
         if (this.connectionSub) await this.connectionSub.close()
         if (this.connectionRpcServer) await this.connectionRpcServer.close()
+        if (this.connectionRpcClient) await this.connectionRpcClient.close()
         this._event_handlers.clear()
         return Promise.resolve()
     }

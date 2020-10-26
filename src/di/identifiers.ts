@@ -34,7 +34,6 @@ export abstract class Identifier {
     public static readonly SLEEP_REPO_MODEL: any = Symbol.for('SleepRepoModel')
     public static readonly INTEGRATION_EVENT_REPO_MODEL: any = Symbol.for('IntegrationEventRepoModel')
 
-
     // Mappers
     public static readonly DEVICE_ENTITY_MAPPER: any = Symbol.for('DeviceEntityMapper')
     public static readonly MEASUREMENT_ENTITY_MAPPER: any = Symbol.for('MeasurementEntityMapper')
@@ -59,6 +58,7 @@ export abstract class Identifier {
     // Tasks
     public static readonly SUBSCRIBE_EVENT_BUS_TASK: any = Symbol.for('SubscribeEventBusTask')
     public static readonly PUBLISH_EVENT_BUS_TASK: any = Symbol.for('PublishEventBusTask')
+    public static readonly NIGHT_AWAKENING_TASK: any = Symbol.for('NightAwakeningTask')
 
     // Log
     public static readonly LOGGER: any = Symbol.for('CustomLogger')

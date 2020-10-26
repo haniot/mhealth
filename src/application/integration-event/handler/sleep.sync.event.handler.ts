@@ -7,10 +7,12 @@ import { Sleep } from '../../domain/model/sleep'
 import { CreateSleepValidator } from '../../domain/validator/create.sleep.validator'
 import { ISleepRepository } from '../../port/sleep.repository.interface'
 import { ValidationException } from '../../domain/exception/validation.exception'
+import { NightAwakeningTask } from '../../../background/task/night.awakening.task'
 
 export class SleepSyncEventHandler implements IIntegrationEventHandler<SleepSyncEvent> {
     constructor(
         @inject(Identifier.SLEEP_REPOSITORY) private readonly _sleepRepo: ISleepRepository,
+        @inject(Identifier.NIGHT_AWAKENING_TASK) private readonly _nightAwakeningTask: NightAwakeningTask,
         @inject(Identifier.LOGGER) private readonly _logger: ILogger
     ) {
     }
@@ -25,7 +27,8 @@ export class SleepSyncEventHandler implements IIntegrationEventHandler<SleepSync
         if (event.sleep instanceof Array) {
             for (const item of event.sleep) {
                 try {
-                    await this.updateOrCreate(event, item)
+                    const sleep: Sleep = await this.updateOrCreate(event, item)
+                    await this._nightAwakeningTask.calculateNightAwakening(sleep)
                     countSuccess++
                 } catch (err) {
                     this._logger.warn(`An error occurred while attempting `
@@ -38,7 +41,8 @@ export class SleepSyncEventHandler implements IIntegrationEventHandler<SleepSync
                 .concat(`${countSuccess} / Total items with error: ${countError}`))
         } else {
             try {
-                await this.updateOrCreate(event, event.sleep)
+                const sleep: Sleep = await this.updateOrCreate(event, event.sleep)
+                await this._nightAwakeningTask.calculateNightAwakening(sleep)
                 this._logger.info(
                     `Action for event ${event.event_name} associated with patient with ID: ${event.sleep.patient_id}`
                         .concat('successfully performed!'))
@@ -53,11 +57,7 @@ export class SleepSyncEventHandler implements IIntegrationEventHandler<SleepSync
     public async updateOrCreate(event: SleepSyncEvent, item: Sleep): Promise<any> {
         const sleep: Sleep = new Sleep().fromJSON(item)
         try {
-            let patientId: string = ''
-            if (item.patient_id) {
-                patientId = item.patient_id
-                sleep.patient_id = patientId
-            }
+            if (item.patient_id) sleep.patient_id = item.patient_id
 
             // 1. Validate Sleep object
             CreateSleepValidator.validate(sleep)

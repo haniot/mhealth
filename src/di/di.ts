@@ -79,6 +79,7 @@ import { IntegrationEventRepository } from '../infrastructure/repository/integra
 import { IIntegrationEventRepository } from '../application/port/integration.event.repository.interface'
 import { IntegrationEventRepoModel } from '../infrastructure/database/schema/integration.event.schema'
 import { PublishEventBusTask } from '../background/task/publish.event.bus.task'
+import { NightAwakeningTask } from '../background/task/night.awakening.task'
 
 export class IoC {
     private readonly _container: Container
@@ -214,6 +215,9 @@ export class IoC {
         this._container
             .bind<IBackgroundTask>(Identifier.SUBSCRIBE_EVENT_BUS_TASK)
             .to(SubscribeEventBusTask).inSingletonScope()
+        this._container
+            .bind<NightAwakeningTask>(Identifier.NIGHT_AWAKENING_TASK)
+            .to(NightAwakeningTask).inSingletonScope()
 
         // Log
         this._container.bind<ILogger>(Identifier.LOGGER).to(CustomLogger).inSingletonScope()

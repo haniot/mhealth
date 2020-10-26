@@ -15,6 +15,7 @@ import { IPhysicalActivityRepository } from '../../application/port/physical.act
 import { SleepSyncEvent } from '../../application/integration-event/event/sleep.sync.event'
 import { SleepSyncEventHandler } from '../../application/integration-event/handler/sleep.sync.event.handler'
 import { ISleepRepository } from '../../application/port/sleep.repository.interface'
+import { NightAwakeningTask } from './night.awakening.task'
 
 @injectable()
 export class SubscribeEventBusTask implements IBackgroundTask {
@@ -96,6 +97,7 @@ export class SubscribeEventBusTask implements IBackgroundTask {
         this._eventBus
             .subscribe(new SleepSyncEvent(), new SleepSyncEventHandler(
                 DIContainer.get<ISleepRepository>(Identifier.SLEEP_REPOSITORY),
+                DIContainer.get<NightAwakeningTask>(Identifier.NIGHT_AWAKENING_TASK),
                 this._logger),
                 SleepSyncEvent.ROUTING_KEY)
             .then((result: boolean) => {

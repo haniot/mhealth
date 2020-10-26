@@ -7,6 +7,7 @@ export interface IEventBus extends IDisposable {
     connectionPub: IConnectionEventBus
     connectionSub: IConnectionEventBus
     connectionRpcServer: IConnectionEventBus
+    connectionRpcClient: IConnectionEventBus
 
     enableLogger(level?: string): void
 
@@ -19,4 +20,6 @@ export interface IEventBus extends IDisposable {
     ): Promise<boolean>
 
     provideResource(name: string, listener: (...any) => any): Promise<boolean>
+
+    executeResource(serviceName: string, resourceName: string, ...params: any[]): Promise<any>
 }

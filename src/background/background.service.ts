@@ -82,5 +82,18 @@ export class BackgroundService {
             .catch(err => {
                 this._logger.error(`Error trying to get connection to Event Bus for event publishing. ${err.message}`)
             })
+
+        this._eventBus
+            .connectionRpcClient
+            .open(rabbitConfigs.uri, rabbitConfigs.options)
+            .then((conn) => {
+                this._logger.info('RPC client connection established!')
+
+                conn.on('disconnected', () => this._logger.warn('RPC client connection has been lost...'))
+                conn.on('reestablished', () => this._logger.info('RPC client connection re-established!'))
+            })
+            .catch(err => {
+                this._logger.error(`Error trying to get connection to Event Bus for event publishing. ${err.message}`)
+            })
     }
 }
