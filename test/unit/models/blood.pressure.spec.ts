@@ -14,6 +14,7 @@ describe('Models: BloodPressure', () => {
                 assert.propertyVal(result, 'unit', DefaultEntityMock.BLOOD_PRESSURE.unit)
                 assert.propertyVal(result, 'device_id', DefaultEntityMock.BLOOD_PRESSURE.device_id)
                 assert.propertyVal(result, 'type', DefaultEntityMock.BLOOD_PRESSURE.type)
+                assert.isUndefined(result.value)
             })
         })
 

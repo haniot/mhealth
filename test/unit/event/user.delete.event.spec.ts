@@ -14,7 +14,7 @@ describe('Event: UserDeleteEvent', () => {
             assert.propertyVal(obj, 'user', undefined)
         })
 
-        it('should attributes must have values ​​passed as parameter', () => {
+        it('should attributes must have values passed as parameter', () => {
             for(const user of defaultUsers) {
                 let timestamp = new Date()
                 let obj = new UserDeleteEvent(timestamp, user)

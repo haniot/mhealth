@@ -18,7 +18,7 @@ export class SleepSyncEventHandler implements IIntegrationEventHandler<SleepSync
     }
 
     public async handle(event: SleepSyncEvent): Promise<void> {
-        if (!event.sleep)  {
+        if (!event.sleep) {
             throw new ValidationException('Event is not in the expected format!', JSON.stringify(event))
         }
 
@@ -28,7 +28,14 @@ export class SleepSyncEventHandler implements IIntegrationEventHandler<SleepSync
             for (const item of event.sleep) {
                 try {
                     const sleep: Sleep = await this.updateOrCreate(event, item)
-                    this._nightAwakeningTask.calculateNightAwakening(sleep).then()
+                    // Calculates the night awakening for synchronized sleep.
+                    this._nightAwakeningTask.calculateNightAwakening(sleep)
+                        .then()
+                        .catch((err) => {
+                            this._logger.error(`An error occurred while attempting calculate the night awakening `
+                                .concat(`for the sleep with id: ${sleep.id}. ${err.message}`)
+                                .concat(err.description ? ' ' + err.description : ''))
+                        })
                     countSuccess++
                 } catch (err) {
                     this._logger.warn(`An error occurred while attempting `
@@ -42,7 +49,14 @@ export class SleepSyncEventHandler implements IIntegrationEventHandler<SleepSync
         } else {
             try {
                 const sleep: Sleep = await this.updateOrCreate(event, event.sleep)
-                this._nightAwakeningTask.calculateNightAwakening(sleep).then()
+                // Calculates the night awakening for synchronized sleep.
+                this._nightAwakeningTask.calculateNightAwakening(sleep)
+                    .then()
+                    .catch((err) => {
+                        this._logger.error(`An error occurred while attempting calculate the night awakening `
+                            .concat(`for the sleep with id: ${sleep.id}. ${err.message}`)
+                            .concat(err.description ? ' ' + err.description : ''))
+                    })
                 this._logger.info(
                     `Action for event ${event.event_name} associated with patient with ID: ${event.sleep.patient_id}`
                         .concat('successfully performed!'))

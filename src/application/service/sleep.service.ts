@@ -13,6 +13,8 @@ import { MultiStatus } from '../domain/model/multi.status'
 import { StatusSuccess } from '../domain/model/status.success'
 import { StatusError } from '../domain/model/status.error'
 import { ValidationException } from '../domain/exception/validation.exception'
+import { NightAwakeningTask } from '../../background/task/night.awakening.task'
+import { ILogger } from '../../utils/custom.logger'
 
 /**
  * Implementing sleep Service.
@@ -22,7 +24,9 @@ import { ValidationException } from '../domain/exception/validation.exception'
 @injectable()
 export class SleepService implements ISleepService {
 
-    constructor(@inject(Identifier.SLEEP_REPOSITORY) private readonly _sleepRepository: ISleepRepository) {
+    constructor(@inject(Identifier.SLEEP_REPOSITORY) private readonly _sleepRepository: ISleepRepository,
+                @inject(Identifier.NIGHT_AWAKENING_TASK) private readonly _nightAwakeningTask: NightAwakeningTask,
+                @inject(Identifier.LOGGER) private readonly _logger: ILogger) {
     }
 
     /**
@@ -97,7 +101,10 @@ export class SleepService implements ISleepService {
             if (sleepExist) throw new ConflictException(Strings.SLEEP.ALREADY_REGISTERED)
 
             // 3. Add Sleep.
-            return this._sleepRepository.create(sleep)
+            const sleepCreate: Sleep = await this._sleepRepository.create(sleep)
+
+            // 4. Calculate the night awakening for the created sleep.
+            return this._internalNightAwkCalculate(sleepCreate)
         } catch (err) {
             return Promise.reject(err)
         }
@@ -192,5 +199,17 @@ export class SleepService implements ISleepService {
      */
     public async count(query: IQuery): Promise<number> {
         return this._sleepRepository.count(query)
+    }
+
+    private async _internalNightAwkCalculate(sleep: Sleep): Promise<Sleep> {
+        try {
+            const sleepUp: Sleep = await this._nightAwakeningTask.calculateNightAwakening(sleep)
+            return Promise.resolve(sleepUp)
+        } catch (err) {
+            this._logger.error(`An error occurred while attempting calculate the night awakening `
+                .concat(`for the sleep with id: ${sleep.id}. ${err.message}`)
+                .concat(err.description ? ' ' + err.description : ''))
+            return Promise.resolve(sleep)
+        }
     }
 }

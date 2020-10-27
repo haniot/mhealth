@@ -4,6 +4,7 @@ import { SleepPattern } from '../../../src/application/domain/model/sleep.patter
 import { SleepPatternDataSet } from '../../../src/application/domain/model/sleep.pattern.data.set'
 import { Phases } from '../../../src/application/domain/utils/phases'
 import { Stages } from '../../../src/application/domain/utils/stages'
+import { SleepNightAwakening } from '../../../src/application/domain/model/sleep.night.awakening'
 
 export class SleepMock extends Sleep {
 
@@ -14,13 +15,14 @@ export class SleepMock extends Sleep {
 
     private generateSleep(): void {
         super.id = this.generateObjectId()
-        super.start_time = new Date(1560826800000 + Math.floor((Math.random() * 1000))).toISOString()
+        super.start_time = new Date(1603767600000 + Math.floor((Math.random() * 1000))).toISOString()
         super.end_time = new Date(new Date(super.start_time)
             .setMilliseconds(Math.floor(Math.random() * 7 + 4) * 3.6e+6)).toISOString() // 4-10h in milliseconds
         super.duration = new Date(super.end_time).getTime() - new Date(super.start_time).getTime()
         super.patient_id = '5a62be07de34500146d9c544'
         super.type = this.generateType()
         super.pattern = this.generateSleepPattern(super.start_time, super.duration, super.type)
+        super.night_awakening = this.generateNightAwakening()
     }
 
     private generateSleepPattern(start_time: string, duration: number, sleepType: SleepType): SleepPattern {
@@ -85,6 +87,30 @@ export class SleepMock extends Sleep {
                 }
             }
         }
+    }
+
+    private generateNightAwakening(): Array<SleepNightAwakening> {
+        const nightAwakeningItem: SleepNightAwakening = new SleepNightAwakening()
+        nightAwakeningItem.start_time = '21:30:30'
+        nightAwakeningItem.end_time = '21:45:30'
+        nightAwakeningItem.steps = Math.floor((Math.random() * 50)) + 9 // 9-50
+
+        const nightAwakeningItem2: SleepNightAwakening = new SleepNightAwakening()
+        nightAwakeningItem2.start_time = '01:00:30'
+        nightAwakeningItem2.end_time = '01:25:00'
+        nightAwakeningItem2.steps = Math.floor((Math.random() * 50)) + 9 // 9-50
+
+        const nightAwakeningItem3: SleepNightAwakening = new SleepNightAwakening()
+        nightAwakeningItem3.start_time = '03:30:30'
+        nightAwakeningItem3.end_time = '03:40:00'
+        nightAwakeningItem3.steps = Math.floor((Math.random() * 50)) + 9 // 9-50
+
+        const sleepNightAwakening: Array<SleepNightAwakening> = new Array<SleepNightAwakening>()
+        sleepNightAwakening.push(nightAwakeningItem)
+        sleepNightAwakening.push(nightAwakeningItem2)
+        sleepNightAwakening.push(nightAwakeningItem3)
+
+        return sleepNightAwakening
     }
 
     private generateObjectId(): string {

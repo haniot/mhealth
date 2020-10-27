@@ -35,10 +35,7 @@ export class NightAwakeningTask {
             let startCurrent = this.generateSimpleDate(sleep.pattern?.data_set[0].start_time!)
 
             // Gets first intraday.
-            let intradayDataSet: any = await this._eventBus.executeResource('timeseries.rpc',
-                'intraday.find', sleep.patient_id, 'steps', startCurrent, startCurrent,
-                '00:00:00', '23:59:59', '1m')
-            intradayDataSet = intradayDataSet.data_set
+            let intradayDataSet: any = (await this.getIntraday(sleep.patient_id, startCurrent, startCurrent)).data_set
 
             const result: any = []
             for (const awk of sleepDataSet) {
@@ -49,16 +46,12 @@ export class NightAwakeningTask {
                 if (startCurrent.split('-')[2] !== awkSimpleDate.split('-')[2]) {
                     startCurrent = awkSimpleDate
                     // Get second intraday.
-                    intradayDataSet = await this._eventBus.executeResource('timeseries.rpc',
-                        'intraday.find', sleep.patient_id, 'steps', startCurrent, startCurrent,
-                        '00:00:00', '23:59:59', '1m')
-                    intradayDataSet = intradayDataSet.data_set
+                    intradayDataSet = (await this.getIntraday(sleep.patient_id, startCurrent, startCurrent)).data_set
                 }
 
                 // Gets start and end time of awake item.
                 const start = this.getTime(awk.start_time) // HH:mm:ss
-                let end = new Date(new Date(awk.start_time).getTime() + awk.duration).toISOString()
-                end = this.getTime(end)
+                const end = this.getTime(new Date(new Date(awk.start_time).getTime() + awk.duration).toISOString())
 
                 // Calculates total steps of awake item.
                 let totalSteps = 0
@@ -75,14 +68,24 @@ export class NightAwakeningTask {
 
             sleep.night_awakening = result.map(item => new SleepNightAwakening().fromJSON(item))
             const sleepUp: Sleep = await this._sleepRepo.update(sleep)
-            this._logger.info(`Night awakening successfully calculated for the sleep of the patient with id: ${sleep.patient_id}`)
+            this._logger.info(`Night awakening successfully calculated for the sleep with id: ${sleep.id}`)
             return Promise.resolve(sleepUp)
         } catch (err) {
-            this._logger.error(`An error occurred while attempting calculate the night awakening for the sleep of the patient with id: `
-                .concat(`${sleep.patient_id}. ${err.message}`)
-                .concat(err.description ? ' ' + err.description : ''))
             return Promise.reject(err)
         }
+    }
+
+    /**
+     * Retrieves an intraday time series.
+     *
+     * @param patientId Patient ID.
+     * @param startDate Date used to get intraday time series.
+     * @param endDate Date used to get intraday time series.
+     * @return {Promise<any>}
+     */
+    private getIntraday(patientId: string, startDate: string, endDate: string): Promise<any> {
+        return this._eventBus.executeResource('timeseries.rpc', 'intraday.find',
+            patientId, 'steps', startDate, endDate, '00:00:00', '23:59:59', '1m')
     }
 
     /**

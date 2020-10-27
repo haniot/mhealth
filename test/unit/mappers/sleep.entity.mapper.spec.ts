@@ -5,6 +5,7 @@ import { SleepPatternDataSet } from '../../../src/application/domain/model/sleep
 import { SleepEntity } from '../../../src/infrastructure/entity/sleep.entity'
 import { SleepMock } from '../../mocks/models/sleep.mock'
 import { SleepType } from '../../../src/application/domain/utils/sleep.type'
+import { SleepNightAwakening } from '../../../src/application/domain/model/sleep.night.awakening'
 
 describe('Mappers: SleepEntityMapper', () => {
     const sleep: Sleep = new SleepMock()
@@ -20,6 +21,7 @@ describe('Mappers: SleepEntityMapper', () => {
         duration: 29520000,
         patient_id: '5a62be07de34500146d9c544',
         pattern: sleep.pattern!.data_set,
+        night_awakening: sleep.night_awakening,
         type: SleepType.CLASSIC
     }
 
@@ -38,6 +40,8 @@ describe('Mappers: SleepEntityMapper', () => {
                 assert.propertyVal(result, 'type', sleep.type)
                 assert.deepPropertyVal(result, 'pattern',
                     sleep.pattern!.data_set.map((elem: SleepPatternDataSet) => elem.toJSON()))
+                assert.deepPropertyVal(result, 'night_awakening',
+                    sleep.night_awakening?.map((elem: SleepNightAwakening) => elem.toJSON()))
             })
         })
 
@@ -58,6 +62,7 @@ describe('Mappers: SleepEntityMapper', () => {
                 assert.propertyVal(result, 'patient_id', sleepJSON.patient_id)
                 assert.propertyVal(result, 'type', sleepJSON.type)
                 assert.deepPropertyVal(result.pattern, 'data_set', sleepJSON.pattern)
+                assert.deepPropertyVal(result, 'night_awakening', sleepJSON.night_awakening)
             })
         })
 
@@ -71,6 +76,7 @@ describe('Mappers: SleepEntityMapper', () => {
                 assert.propertyVal(result, 'patient_id', emptySleepJSON.patient_id)
                 assert.propertyVal(result, 'type', emptySleepJSON.type)
                 assert.propertyVal(result, 'pattern', emptySleepJSON.pattern)
+                assert.propertyVal(result, 'night_awakening', emptySleepJSON.night_awakening)
             })
         })
 
@@ -84,6 +90,7 @@ describe('Mappers: SleepEntityMapper', () => {
                 assert.propertyVal(result, 'duration', undefined)
                 assert.propertyVal(result, 'patient_id', undefined)
                 assert.propertyVal(result, 'pattern', undefined)
+                assert.propertyVal(result, 'night_awakening', undefined)
                 assert.propertyVal(result, 'type', undefined)
             })
         })
