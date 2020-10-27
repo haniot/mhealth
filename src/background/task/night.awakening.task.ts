@@ -13,6 +13,9 @@ import { ISleepRepository } from '../../application/port/sleep.repository.interf
  */
 @injectable()
 export class NightAwakeningTask {
+    private static readonly MINIMUM_PATTERN_DURATION: number = 420000   // 7 minutes in milliseconds.
+    private static readonly MINIMUM_STEPS: number = 7
+
     constructor(
         @inject(Identifier.RABBITMQ_EVENT_BUS) private readonly _eventBus: IEventBus,
         @inject(Identifier.SLEEP_REPOSITORY) private readonly _sleepRepo: ISleepRepository,
@@ -20,14 +23,16 @@ export class NightAwakeningTask {
     ) {
     }
 
-    public async calculateNightAwakening(sleep: Sleep): Promise<void> {
+    public async calculateNightAwakening(sleep: Sleep): Promise<Sleep> {
         try {
             // Filters the received sleep data set keeping only AWAKE elements lasting 7 minutes or more.
             const sleepDataSet: Array<SleepPatternDataSet> =
-                sleep.pattern!.data_set.filter(elem => elem.name === Stages.AWAKE && elem.duration >= 420000)
+                sleep.pattern!.data_set.filter(elem => {
+                    return elem.name === Stages.AWAKE && elem.duration >= NightAwakeningTask.MINIMUM_PATTERN_DURATION
+                })
 
-            // Gets first start_time of Sleep data set in format YYYY-MM-DD.
-            let startCurrent = this.generateDate(sleep.pattern?.data_set[0].start_time!)
+            // Gets first start_time of Sleep data set in format YYYY-MM-dd.
+            let startCurrent = this.generateSimpleDate(sleep.pattern?.data_set[0].start_time!)
 
             // Gets first intraday.
             let intradayDataSet: any = await this._eventBus.executeResource('timeseries.rpc',
@@ -37,16 +42,8 @@ export class NightAwakeningTask {
 
             const result: any = []
             for (const awk of sleepDataSet) {
-                // Disregards timezone.
-                const awkStart = new Date(awk.start_time)
-                const awkStartTimezone = awkStart.getTimezoneOffset() * 60000
-                const awkStartWithoutTimezone = new Date(awkStart.getTime() - awkStartTimezone)
-
-                // Redefines start_time of the awake item.
-                awk.start_time = awkStartWithoutTimezone.toISOString().slice(0, -1)   // Disregards the 'Z'.
-
-                // Sets start_time in format YYYY-MM-DD.
-                const awkSimpleDate = this.generateDate(awk.start_time)
+                // Sets start_time in format YYYY-MM-dd.
+                const awkSimpleDate = this.generateSimpleDate(awk.start_time)
 
                 // If the days of the dates are different.
                 if (startCurrent.split('-')[2] !== awkSimpleDate.split('-')[2]) {
@@ -59,55 +56,62 @@ export class NightAwakeningTask {
                 }
 
                 // Gets start and end time of awake item.
-                const start = awk.start_time.split('T')[1].split('.')[0] // HH:mm:ss
-                let end = new Date(awkStartWithoutTimezone.getTime() + awk.duration).toISOString()
-                end = end.split('T')[1].split('.')[0]
+                const start = this.getTime(awk.start_time) // HH:mm:ss
+                let end = new Date(new Date(awk.start_time).getTime() + awk.duration).toISOString()
+                end = this.getTime(end)
 
                 // Calculates total steps of awake item.
                 let totalSteps = 0
-                for (const intradayItem of intradayDataSet) {
-                    if (intradayItem.time >= start && intradayItem.time <= end) {
-                        totalSteps += intradayItem.value
-                    }
-                }
+
+                totalSteps = intradayDataSet.reduce((prev, item) => {
+                    if (item.time >= start && item.time <= end) return prev + item.value
+                    return prev
+                }, 0)
 
                 // Associates (or not) a new item to the final result.
-                if (totalSteps >= 7) {
-                    result.push(
-                        {
-                            start_time: start,
-                            end_time: end,
-                            steps: totalSteps
-                        }
-                    )
-                }
+                if (totalSteps >= NightAwakeningTask.MINIMUM_STEPS)
+                    result.push({ start_time: start, end_time: end, steps: totalSteps })
             }
 
             sleep.night_awakening = result.map(item => new SleepNightAwakening().fromJSON(item))
-            await this._sleepRepo.update(sleep)
+            const sleepUp: Sleep = await this._sleepRepo.update(sleep)
             this._logger.info(`Night awakening successfully calculated for the sleep of the patient with id: ${sleep.patient_id}`)
+            return Promise.resolve(sleepUp)
         } catch (err) {
             this._logger.error(`An error occurred while attempting calculate the night awakening for the sleep of the patient with id: `
                 .concat(`${sleep.patient_id}. ${err.message}`)
                 .concat(err.description ? ' ' + err.description : ''))
+            return Promise.reject(err)
         }
     }
 
     /**
-     * Builds the date in YYYY-MM-DD format.
+     * Builds the date in format YYYY-MM-dd.
      *
      * @param dateString Date used to construct the final date.
      * @return {string}
      */
-    private generateDate(dateString: string): string {
+    private generateSimpleDate(dateString: string): string {
         const date = new Date(dateString)
-        const year = String(date.getFullYear())
-        let month = String(date.getMonth() + 1)
-        let day = String(date.getDate())
+        return [
+            date.getFullYear().toString(),
+            (date.getMonth() + 1).toString().padStart(2, '0'),
+            date.getDate().toString().padStart(2, '0')
+        ].join('-')
+    }
 
-        if (month.length === 1) month = month.padStart(2, '0')
-        if (day.length === 1) day = day.padStart(2, '0')
-
-        return [year, month, day].join('-')
+    /**
+     * Retrieves the time of a date in format HH:mm:ss.
+     *
+     * @param dateString Date used to retrieve the time.
+     * @return {string}
+     */
+    private getTime(dateString: string): string {
+        const date = new Date(dateString)
+        return [
+            date.getHours().toString().padStart(2, '0'),
+            date.getMinutes().toString().padStart(2, '0'),
+            date.getSeconds().toString().padStart(2, '0')
+        ].join(':')
     }
 }

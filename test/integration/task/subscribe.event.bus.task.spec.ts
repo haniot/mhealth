@@ -59,6 +59,7 @@ describe('SUBSCRIBE EVENT BUS TASK', () => {
             const rabbitConfigs = Config.getRabbitConfig()
             await rabbit.connectionSub.open(rabbitConfigs.uri, rabbitConfigs.options)
             await rabbit.connectionPub.open(rabbitConfigs.uri, rabbitConfigs.options)
+            await rabbit.connectionRpcClient.open(rabbitConfigs.uri, rabbitConfigs.options)
 
             subscribeEventBusTask.run()
             await timeout(2000)

@@ -28,7 +28,7 @@ export class SleepSyncEventHandler implements IIntegrationEventHandler<SleepSync
             for (const item of event.sleep) {
                 try {
                     const sleep: Sleep = await this.updateOrCreate(event, item)
-                    await this._nightAwakeningTask.calculateNightAwakening(sleep)
+                    this._nightAwakeningTask.calculateNightAwakening(sleep).then()
                     countSuccess++
                 } catch (err) {
                     this._logger.warn(`An error occurred while attempting `
@@ -42,7 +42,7 @@ export class SleepSyncEventHandler implements IIntegrationEventHandler<SleepSync
         } else {
             try {
                 const sleep: Sleep = await this.updateOrCreate(event, event.sleep)
-                await this._nightAwakeningTask.calculateNightAwakening(sleep)
+                this._nightAwakeningTask.calculateNightAwakening(sleep).then()
                 this._logger.info(
                     `Action for event ${event.event_name} associated with patient with ID: ${event.sleep.patient_id}`
                         .concat('successfully performed!'))
