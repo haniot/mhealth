@@ -59,6 +59,7 @@
     "http-status-codes": "^1.4.0",
     "inversify": "^5.0.1",
     "inversify-express-utils": "^6.3.2",
+    "moment": "^2.27.0",
     "mongoose": "^5.10.0",
     "morgan": "^1.10.0",
     "query-strings-parser": "^2.1.6",

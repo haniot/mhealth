@@ -13,18 +13,21 @@ export abstract class Identifier {
     public static readonly PATIENTS_MEASUREMENTS_CONTROLLER: any = Symbol.for('PatientsMeasurementsController')
     public static readonly PATIENTS_ACTIVITY_CONTROLLER: any = Symbol.for('PatientsActivityController')
     public static readonly PATIENTS_SLEEP_CONTROLLER: any = Symbol.for('PatientsSleepController')
+    public static readonly PATIENTS_SLEEP_DURATION_CONTROLLER: any = Symbol.for('PatientsSleepDurationsController')
 
     // Services
     public static readonly DEVICE_SERVICE: any = Symbol.for('DeviceService')
     public static readonly MEASUREMENT_SERVICE: any = Symbol.for('MeasurementService')
     public static readonly ACTIVITY_SERVICE: any = Symbol.for('PhysicalActivityService')
     public static readonly SLEEP_SERVICE: any = Symbol.for('SleepService')
+    public static readonly SLEEP_DURATION_SERVICE: any = Symbol.for('SleepDurationService')
 
     // Repositories
     public static readonly DEVICE_REPOSITORY: any = Symbol.for('DeviceRepository')
     public static readonly MEASUREMENT_REPOSITORY: any = Symbol.for('MeasurementRepository')
     public static readonly ACTIVITY_REPOSITORY: any = Symbol.for('PhysicalActivityRepository')
     public static readonly SLEEP_REPOSITORY: any = Symbol.for('SleepRepository')
+    public static readonly SLEEP_DURATION_REPOSITORY: any = Symbol.for('SleepDurationRepository')
     public static readonly INTEGRATION_EVENT_REPOSITORY: any = Symbol.for('IntegrationEventRepository')
 
     // Models
@@ -46,6 +49,7 @@ export abstract class Identifier {
     public static readonly BODY_FAT_ENTITY_MAPPER: any = Symbol.for('BodyFatEntityMapper')
     public static readonly ACTIVITY_ENTITY_MAPPER: any = Symbol.for('PhysicalActivityEntityMapper')
     public static readonly SLEEP_ENTITY_MAPPER: any = Symbol.for('SleepEntityMapper')
+    public static readonly SLEEP_DURATION_ENTITY_MAPPER: any = Symbol.for('SleepDurationEntityMapper')
 
     // Background Services
     public static readonly MONGODB_CONNECTION_FACTORY: any = Symbol.for('ConnectionFactoryMongodb')

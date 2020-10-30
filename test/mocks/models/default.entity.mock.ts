@@ -138,6 +138,20 @@ export abstract class DefaultEntityMock {
         steps: 9
     }
 
+    public static readonly SLEEP_DURATION_SUMMARY: any = {
+        total: 19417
+    }
+
+    public static readonly SLEEP_DURATION_ITEM: any = {
+        date: '2020-11-01',
+        value: 7234
+    }
+
+    public static readonly SLEEP_DURATION: any = {
+        summary: DefaultEntityMock.SLEEP_DURATION_SUMMARY,
+        data_set: [DefaultEntityMock.SLEEP_DURATION_ITEM]
+    }
+
     public static readonly USER: any = {
         id: '5f3ab9e5f4d399ae75cd39e3',
         type: 'patient'

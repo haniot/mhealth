@@ -201,6 +201,13 @@ export class SleepService implements ISleepService {
         return this._sleepRepository.count(query)
     }
 
+    /**
+     * Returns a Sleep updated with a night awakening object.
+     *
+     * @param sleep Sleep that will have its night awakening calculated.
+     * @return {Promise<Sleep>}
+     * @throws {RepositoryException}
+     */
     private async _internalNightAwkCalculate(sleep: Sleep): Promise<Sleep> {
         try {
             const sleepUp: Sleep = await this._nightAwakeningTask.calculateNightAwakening(sleep)
