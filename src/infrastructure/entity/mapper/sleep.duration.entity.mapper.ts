@@ -42,11 +42,12 @@ export class SleepDurationEntityMapper implements IEntityMapper<SleepDuration, S
      */
     public jsonToModel(json: any): SleepDuration {
         const result: SleepDuration = new SleepDuration()
-        if (!json || !(json.data_set instanceof Array)) return result
+        if (!json) return result
+
+        if (!json.summary) result.summary = new SleepDurationSummary().fromJSON({ total: 0 })
+        else result.summary = new SleepDurationSummary().fromJSON(json.summary)
 
         json.data_set = this.mountSleepDuration(json.data_set, json.start_date, json.end_date)
-
-        result.summary = new SleepDurationSummary().fromJSON(json.summary)
         result.data_set = json.data_set?.map(elem => new SleepDurationItem().fromJSON(elem))
 
         return result

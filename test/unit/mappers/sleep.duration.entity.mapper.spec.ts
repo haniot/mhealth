@@ -42,6 +42,9 @@ describe('MAPPERS: SleepDurationEntityMapper', () => {
                 const result: SleepDuration = sleepDurationEntityMapper.transform({})
 
                 assert.isUndefined(result.id)
+                assert.propertyVal(result.summary, 'total', 0)
+                assert.propertyVal(result.data_set[0], 'date', generateSimpleDate(new Date().toISOString()))
+                assert.propertyVal(result.data_set[0], 'value', 0)
             })
         })
 
@@ -66,3 +69,18 @@ describe('MAPPERS: SleepDurationEntityMapper', () => {
         })
     })
 })
+
+/**
+ * Builds the date in format YYYY-MM-dd.
+ *
+ * @param dateString Date used to construct the final date.
+ * @return {string}
+ */
+function generateSimpleDate(dateString: string): string {
+    const date = new Date(dateString)
+    return [
+        date.getFullYear().toString(),
+        (date.getMonth() + 1).toString().padStart(2, '0'),
+        date.getDate().toString().padStart(2, '0')
+    ].join('-')
+}

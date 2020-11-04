@@ -90,7 +90,7 @@ describe('Routes: patients.sleep.durations', () => {
                     })
             })
 
-            it('should return status code 200 and the total sleep durations of the days 2020-10-31 and 2020-11-04 ' +
+            it('should return status code 200 and the total sleep durations of the days 2020-10-31 and 2020-11-02 ' +
                 '(range 2020-10-30 ~ 2020-11-03)', () => {
                 return request
                     .get(`/v1/patients/${sleep.patient_id}/date/2020-10-30/2020-11-03/sleep/durations`)
@@ -112,6 +112,25 @@ describe('Routes: patients.sleep.durations', () => {
                     })
             })
 
+            it('should return status code 200 and data_set with values equal to 0 (range 2020-11-05 ~ 2020-11-08)', () => {
+                return request
+                    .get(`/v1/patients/${sleep.patient_id}/date/2020-11-05/2020-11-08/sleep/durations`)
+                    .set('Content-Type', 'application/json')
+                    .expect(200)
+                    .then(res => {
+                        expect(res.body.summary.total).to.eql(0)
+                        expect(res.body.data_set.length).to.eql(4)
+                        expect(res.body.data_set[0].date).to.eql('2020-11-05')
+                        expect(res.body.data_set[0].value).to.eql(0)
+                        expect(res.body.data_set[1].date).to.eql('2020-11-06')
+                        expect(res.body.data_set[1].value).to.eql(0)
+                        expect(res.body.data_set[2].date).to.eql('2020-11-07')
+                        expect(res.body.data_set[2].value).to.eql(0)
+                        expect(res.body.data_set[3].date).to.eql('2020-11-08')
+                        expect(res.body.data_set[3].value).to.eql(0)
+                    })
+            })
+
             it('should return status code 200 and an empty object for today\'s total sleep durations (range today ~ today)',
                 () => {
                     return request
@@ -119,7 +138,10 @@ describe('Routes: patients.sleep.durations', () => {
                         .set('Content-Type', 'application/json')
                         .expect(200)
                         .then(res => {
-                            expect(res.body).to.eql({})
+                            expect(res.body.summary.total).to.eql(0)
+                            expect(res.body.data_set.length).to.eql(1)
+                            expect(res.body.data_set[0].date).to.eql(generateSimpleDate(new Date().toISOString()))
+                            expect(res.body.data_set[0].value).to.eql(0)
                         })
                 })
         })
@@ -235,4 +257,19 @@ async function createSleep(sleep: Sleep): Promise<Sleep> {
 
 async function deleteAllSleep() {
     return SleepRepoModel.deleteMany({})
+}
+
+/**
+ * Builds the date in format YYYY-MM-dd.
+ *
+ * @param dateString Date used to construct the final date.
+ * @return {string}
+ */
+function generateSimpleDate(dateString: string): string {
+    const date = new Date(dateString)
+    return [
+        date.getFullYear().toString(),
+        (date.getMonth() + 1).toString().padStart(2, '0'),
+        date.getDate().toString().padStart(2, '0')
+    ].join('-')
 }
