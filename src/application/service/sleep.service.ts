@@ -13,7 +13,7 @@ import { MultiStatus } from '../domain/model/multi.status'
 import { StatusSuccess } from '../domain/model/status.success'
 import { StatusError } from '../domain/model/status.error'
 import { ValidationException } from '../domain/exception/validation.exception'
-import { NightAwakeningTask } from '../../background/task/night.awakening.task'
+import { AwakeningsTask } from '../../background/task/awakenings.task'
 import { ILogger } from '../../utils/custom.logger'
 
 /**
@@ -25,7 +25,7 @@ import { ILogger } from '../../utils/custom.logger'
 export class SleepService implements ISleepService {
 
     constructor(@inject(Identifier.SLEEP_REPOSITORY) private readonly _sleepRepository: ISleepRepository,
-                @inject(Identifier.NIGHT_AWAKENING_TASK) private readonly _nightAwakeningTask: NightAwakeningTask,
+                @inject(Identifier.AWAKENINGS_TASK) private readonly _awakeningsTask: AwakeningsTask,
                 @inject(Identifier.LOGGER) private readonly _logger: ILogger) {
     }
 
@@ -103,8 +103,8 @@ export class SleepService implements ISleepService {
             // 3. Add Sleep.
             const sleepCreate: Sleep = await this._sleepRepository.create(sleep)
 
-            // 4. Calculate the night awakening for the created sleep.
-            return this._internalNightAwkCalculate(sleepCreate)
+            // 4. Calculate awakenings for the created sleep.
+            return this._internalAwkCalculate(sleepCreate)
         } catch (err) {
             return Promise.reject(err)
         }
@@ -142,11 +142,17 @@ export class SleepService implements ISleepService {
      * @return {Promise<Array<Sleep>>}
      * @throws {RepositoryException}
      */
-    public getByIdAndPatient(sleepId: string, patientId: string, query: IQuery): Promise<Sleep> {
+    public async getByIdAndPatient(sleepId: string, patientId: string, query: IQuery): Promise<Sleep> {
+        // 1. Validate params.
         ObjectIdValidator.validate(patientId, Strings.PATIENT.PARAM_ID_NOT_VALID_FORMAT)
         ObjectIdValidator.validate(sleepId, Strings.SLEEP.PARAM_ID_NOT_VALID_FORMAT)
 
-        return this._sleepRepository.findOne(query)
+        // 2. Find Sleep.
+        const sleepRepo: Sleep = await this._sleepRepository.findOne(query)
+        if (!sleepRepo) return Promise.resolve(sleepRepo)
+
+        // 3. Calculate awakenings for the returned sleep.
+        return this._internalAwkCalculate(sleepRepo)
     }
 
     /**
@@ -202,18 +208,18 @@ export class SleepService implements ISleepService {
     }
 
     /**
-     * Returns a Sleep updated with a night awakening object.
+     * Returns a Sleep updated with a awakenings object.
      *
-     * @param sleep Sleep that will have its night awakening calculated.
+     * @param sleep Sleep that will have its awakenings calculated.
      * @return {Promise<Sleep>}
      * @throws {RepositoryException}
      */
-    private async _internalNightAwkCalculate(sleep: Sleep): Promise<Sleep> {
+    private async _internalAwkCalculate(sleep: Sleep): Promise<Sleep> {
         try {
-            const sleepUp: Sleep = await this._nightAwakeningTask.calculateNightAwakening(sleep)
+            const sleepUp: Sleep = await this._awakeningsTask.calculateAwakenings(sleep)
             return Promise.resolve(sleepUp)
         } catch (err) {
-            this._logger.error(`An error occurred while attempting calculate the night awakening `
+            this._logger.error(`An error occurred while attempting calculate awakenings `
                 .concat(`for the sleep with id: ${sleep.id}. ${err.message}`)
                 .concat(err.description ? ' ' + err.description : ''))
             return Promise.resolve(sleep)

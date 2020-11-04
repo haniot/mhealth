@@ -82,7 +82,7 @@ export class SleepDurationQueryFiltersMock {
     }
 
     /**
-     * Builds an aggregation group pipeline stage by end_time for the query used in aggregating sleep durations (groups data_set).
+     * Builds an aggregation group pipeline stage for the query used in aggregating sleep durations (groups data_set).
      *
      * @return {object}
      */

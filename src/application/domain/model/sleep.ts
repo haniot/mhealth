@@ -4,7 +4,7 @@ import { JsonUtils } from '../utils/json.utils'
 import { Activity } from './activity'
 import { SleepPattern } from './sleep.pattern'
 import { SleepType } from '../utils/sleep.type'
-import { SleepNightAwakening } from './sleep.night.awakening'
+import { SleepAwakening } from './sleep.awakening'
 
 /**
  * Implementation of the sleep entity.
@@ -14,7 +14,7 @@ import { SleepNightAwakening } from './sleep.night.awakening'
  */
 export class Sleep extends Activity implements IJSONSerializable, IJSONDeserializable<Sleep> {
     private _pattern?: SleepPattern // Sleep Pattern tracking.
-    private _night_awakening?: Array<SleepNightAwakening> // Sleep night awakenings set.
+    private _awakenings?: Array<SleepAwakening> // Sleep awakenings set.
     private _type?: SleepType // Sleep Pattern type
 
     constructor() {
@@ -29,12 +29,12 @@ export class Sleep extends Activity implements IJSONSerializable, IJSONDeseriali
         this._pattern = value
     }
 
-    get night_awakening(): Array<SleepNightAwakening> | undefined {
-        return this._night_awakening
+    get awakenings(): Array<SleepAwakening> | undefined {
+        return this._awakenings
     }
 
-    set night_awakening(value: Array<SleepNightAwakening> | undefined) {
-        this._night_awakening = value
+    set awakenings(value: Array<SleepAwakening> | undefined) {
+        this._awakenings = value
     }
 
     get type(): SleepType | undefined {
@@ -65,7 +65,7 @@ export class Sleep extends Activity implements IJSONSerializable, IJSONDeseriali
             ...{
                 type: this.type,
                 pattern: this.pattern ? this.pattern.toJSON() : this.pattern,
-                night_awakening: this.night_awakening?.map(item => item.toJSON())
+                awakenings: this.awakenings?.map(item => item.toJSON())
             }
         }
     }

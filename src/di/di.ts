@@ -79,7 +79,7 @@ import { IntegrationEventRepository } from '../infrastructure/repository/integra
 import { IIntegrationEventRepository } from '../application/port/integration.event.repository.interface'
 import { IntegrationEventRepoModel } from '../infrastructure/database/schema/integration.event.schema'
 import { PublishEventBusTask } from '../background/task/publish.event.bus.task'
-import { NightAwakeningTask } from '../background/task/night.awakening.task'
+import { AwakeningsTask } from '../background/task/awakenings.task'
 import { PatientsSleepDurationsController } from '../ui/controllers/patients.sleep.durations.controller'
 import { ISleepDurationService } from '../application/port/sleep.duration.service.interface'
 import { SleepDurationService } from '../application/service/sleep.duration.service'
@@ -232,8 +232,8 @@ export class IoC {
             .bind<IBackgroundTask>(Identifier.SUBSCRIBE_EVENT_BUS_TASK)
             .to(SubscribeEventBusTask).inSingletonScope()
         this._container
-            .bind<NightAwakeningTask>(Identifier.NIGHT_AWAKENING_TASK)
-            .to(NightAwakeningTask).inSingletonScope()
+            .bind<AwakeningsTask>(Identifier.AWAKENINGS_TASK)
+            .to(AwakeningsTask).inSingletonScope()
 
         // Log
         this._container.bind<ILogger>(Identifier.LOGGER).to(CustomLogger).inSingletonScope()

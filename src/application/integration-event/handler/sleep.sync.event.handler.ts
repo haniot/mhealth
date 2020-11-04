@@ -7,12 +7,12 @@ import { Sleep } from '../../domain/model/sleep'
 import { CreateSleepValidator } from '../../domain/validator/create.sleep.validator'
 import { ISleepRepository } from '../../port/sleep.repository.interface'
 import { ValidationException } from '../../domain/exception/validation.exception'
-import { NightAwakeningTask } from '../../../background/task/night.awakening.task'
+import { AwakeningsTask } from '../../../background/task/awakenings.task'
 
 export class SleepSyncEventHandler implements IIntegrationEventHandler<SleepSyncEvent> {
     constructor(
         @inject(Identifier.SLEEP_REPOSITORY) private readonly _sleepRepo: ISleepRepository,
-        @inject(Identifier.NIGHT_AWAKENING_TASK) private readonly _nightAwakeningTask: NightAwakeningTask,
+        @inject(Identifier.AWAKENINGS_TASK) private readonly _awakeningsTask: AwakeningsTask,
         @inject(Identifier.LOGGER) private readonly _logger: ILogger
     ) {
     }
@@ -28,11 +28,11 @@ export class SleepSyncEventHandler implements IIntegrationEventHandler<SleepSync
             for (const item of event.sleep) {
                 try {
                     const sleep: Sleep = await this.updateOrCreate(event, item)
-                    // Calculates the night awakening for synchronized sleep.
-                    this._nightAwakeningTask.calculateNightAwakening(sleep)
+                    // Calculates the awakenings for synchronized sleep.
+                    this._awakeningsTask.calculateAwakenings(sleep)
                         .then()
                         .catch((err) => {
-                            this._logger.error(`An error occurred while attempting calculate the night awakening `
+                            this._logger.error(`An error occurred while attempting calculate awakenings `
                                 .concat(`for the sleep with id: ${sleep.id}. ${err.message}`)
                                 .concat(err.description ? ' ' + err.description : ''))
                         })
@@ -49,11 +49,11 @@ export class SleepSyncEventHandler implements IIntegrationEventHandler<SleepSync
         } else {
             try {
                 const sleep: Sleep = await this.updateOrCreate(event, event.sleep)
-                // Calculates the night awakening for synchronized sleep.
-                this._nightAwakeningTask.calculateNightAwakening(sleep)
+                // Calculates awakenings for synchronized sleep.
+                this._awakeningsTask.calculateAwakenings(sleep)
                     .then()
                     .catch((err) => {
-                        this._logger.error(`An error occurred while attempting calculate the night awakening `
+                        this._logger.error(`An error occurred while attempting calculate awakenings `
                             .concat(`for the sleep with id: ${sleep.id}. ${err.message}`)
                             .concat(err.description ? ' ' + err.description : ''))
                     })

@@ -5,14 +5,14 @@ import { Identifier } from '../../di/identifiers'
 import { IEventBus } from '../../infrastructure/port/event.bus.interface'
 import { ILogger } from '../../utils/custom.logger'
 import { Sleep } from '../../application/domain/model/sleep'
-import { SleepNightAwakening } from '../../application/domain/model/sleep.night.awakening'
+import { SleepAwakening } from '../../application/domain/model/sleep.awakening'
 import { ISleepRepository } from '../../application/port/sleep.repository.interface'
 
 /**
- * Task responsible for calculating Night Awakenings associated with a Sleep.
+ * Task responsible for calculating Awakenings associated with a Sleep.
  */
 @injectable()
-export class NightAwakeningTask {
+export class AwakeningsTask {
     private static readonly MINIMUM_PATTERN_DURATION: number = 420000   // 7 minutes in milliseconds.
     private static readonly MINIMUM_STEPS: number = 7
 
@@ -23,12 +23,12 @@ export class NightAwakeningTask {
     ) {
     }
 
-    public async calculateNightAwakening(sleep: Sleep): Promise<Sleep> {
+    public async calculateAwakenings(sleep: Sleep): Promise<Sleep> {
         try {
             // Filters the received sleep data set keeping only AWAKE elements lasting 7 minutes or more.
             const sleepDataSet: Array<SleepPatternDataSet> =
                 sleep.pattern!.data_set.filter(elem => {
-                    return elem.name === Stages.AWAKE && elem.duration >= NightAwakeningTask.MINIMUM_PATTERN_DURATION
+                    return elem.name === Stages.AWAKE && elem.duration >= AwakeningsTask.MINIMUM_PATTERN_DURATION
                 })
 
             // Gets first start_time of Sleep data set in format YYYY-MM-dd.
@@ -62,13 +62,13 @@ export class NightAwakeningTask {
                 }, 0)
 
                 // Associates (or not) a new item to the final result.
-                if (totalSteps >= NightAwakeningTask.MINIMUM_STEPS)
-                    result.push({ start_time: start, end_time: end, steps: totalSteps })
+                if (totalSteps >= AwakeningsTask.MINIMUM_STEPS)
+                    result.push({ start_time: start, end_time: end, duration: awk.duration, steps: totalSteps })
             }
 
-            sleep.night_awakening = result.map(item => new SleepNightAwakening().fromJSON(item))
+            sleep.awakenings = result.map(item => new SleepAwakening().fromJSON(item))
             const sleepUp: Sleep = await this._sleepRepo.update(sleep)
-            this._logger.info(`Night awakening successfully calculated for the sleep with id: ${sleep.id}`)
+            this._logger.info(`Awakenings successfully calculated for sleep with id: ${sleep.id}`)
             return Promise.resolve(sleepUp)
         } catch (err) {
             return Promise.reject(err)

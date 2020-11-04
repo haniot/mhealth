@@ -4,7 +4,7 @@ import { Sleep } from '../../../src/application/domain/model/sleep'
 import { SleepPattern } from '../../../src/application/domain/model/sleep.pattern'
 import { SleepPatternDataSet } from '../../../src/application/domain/model/sleep.pattern.data.set'
 import { Phases } from '../../../src/application/domain/utils/phases'
-import { SleepNightAwakening } from '../../../src/application/domain/model/sleep.night.awakening'
+import { SleepAwakening } from '../../../src/application/domain/model/sleep.awakening'
 
 describe('Models: Sleep', () => {
     // Creating a sleepPattern
@@ -31,19 +31,21 @@ describe('Models: Sleep', () => {
     const sleepPattern: SleepPattern = new SleepPattern()
     sleepPattern.data_set = dataSet
 
-    const nightAwakeningItem: SleepNightAwakening = new SleepNightAwakening()
-    nightAwakeningItem.start_time = '01:30:30'
-    nightAwakeningItem.end_time = '01:45:30'
-    nightAwakeningItem.steps = 9
+    const sleepAwakening: SleepAwakening = new SleepAwakening()
+    sleepAwakening.start_time = '01:30:30'
+    sleepAwakening.end_time = '01:45:30'
+    sleepAwakening.duration = 900000
+    sleepAwakening.steps = 9
 
-    const nightAwakeningItem2: SleepNightAwakening = new SleepNightAwakening()
-    nightAwakeningItem2.start_time = '02:30:30'
-    nightAwakeningItem2.end_time = '02:55:00'
-    nightAwakeningItem2.steps = 17
+    const sleepAwakening2: SleepAwakening = new SleepAwakening()
+    sleepAwakening2.start_time = '02:30:00'
+    sleepAwakening2.end_time = '02:55:00'
+    sleepAwakening2.duration = 1500000
+    sleepAwakening2.steps = 17
 
-    const sleepNightAwakening: Array<SleepNightAwakening> = new Array<SleepNightAwakening>()
-    sleepNightAwakening.push(nightAwakeningItem)
-    sleepNightAwakening.push(nightAwakeningItem2)
+    const sleepAwakenings: Array<SleepAwakening> = new Array<SleepAwakening>()
+    sleepAwakenings.push(sleepAwakening)
+    sleepAwakenings.push(sleepAwakening2)
 
     const sleepJSON: any = {
         id: new ObjectID(),
@@ -52,7 +54,6 @@ describe('Models: Sleep', () => {
         duration: 900000,
         patient_id: new ObjectID(),
         pattern: sleepPattern
-
     }
 
     describe('fromJSON(json: any)', () => {
@@ -96,7 +97,7 @@ describe('Models: Sleep', () => {
         context('when the Sleep model is correct', () => {
             it('should return a JSON from Sleep model', () => {
                 let result = new Sleep().fromJSON(sleepJSON)
-                result.night_awakening = sleepNightAwakening
+                result.awakenings = sleepAwakenings
 
                 result = result.toJSON()
                 assert.propertyVal(result, 'id', sleepJSON.id)
@@ -104,7 +105,7 @@ describe('Models: Sleep', () => {
                 assert.propertyVal(result, 'end_time', sleepJSON.end_time)
                 assert.propertyVal(result, 'duration', sleepJSON.duration)
                 assert.deepPropertyVal(result, 'pattern', (new SleepPattern().fromJSON(sleepJSON.pattern)).toJSON())
-                assert.deepPropertyVal(result, 'night_awakening', sleepNightAwakening.map(item => item.toJSON()))
+                assert.deepPropertyVal(result, 'awakenings', sleepAwakenings.map(item => item.toJSON()))
             })
         })
     })

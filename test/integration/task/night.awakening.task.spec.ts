@@ -7,7 +7,7 @@ import { IEventBus } from '../../../src/infrastructure/port/event.bus.interface'
 import { EventBusRabbitMQMock } from '../../mocks/eventbus/eventbus.rabbitmq.mock'
 import { ConnectionRabbitMQ } from '../../../src/infrastructure/eventbus/rabbitmq/connection.rabbitmq'
 import { ConnectionFactoryRabbitMQ } from '../../../src/infrastructure/eventbus/rabbitmq/connection.factory.rabbitmq'
-import { NightAwakeningTask } from '../../../src/background/task/night.awakening.task'
+import { AwakeningsTask } from '../../../src/background/task/awakenings.task'
 import { ISleepRepository } from '../../../src/application/port/sleep.repository.interface'
 import { SleepMock } from '../../mocks/models/sleep.mock'
 import { Sleep } from '../../../src/application/domain/model/sleep'
@@ -23,12 +23,11 @@ const eventBus: IEventBus = new EventBusRabbitMQMock(
 )
 const dbConnection: IConnectionDB = DIContainer.get(Identifier.MONGODB_CONNECTION)
 const sleepRepository: ISleepRepository = DIContainer.get(Identifier.SLEEP_REPOSITORY)
-const nightAwakeningTask: NightAwakeningTask =
-    new NightAwakeningTask(eventBus, sleepRepository, DIContainer.get(Identifier.LOGGER))
+const awakeningsTask: AwakeningsTask = new AwakeningsTask(eventBus, sleepRepository, DIContainer.get(Identifier.LOGGER))
 
-describe('NIGHT AWAKENING TASK', () => {
+describe('AWAKENINGS TASK', () => {
     // Mock pattern.data_set objects.
-    // Sleep pattern data set with two night awakenings.
+    // Sleep pattern data set with two awakenings.
     const dataSetItemTwoAwk: SleepPatternDataSet = new SleepPatternDataSet()
     dataSetItemTwoAwk.start_time = '2020-10-20T04:00:00.000Z'
     dataSetItemTwoAwk.name = Phases.AWAKE
@@ -43,7 +42,7 @@ describe('NIGHT AWAKENING TASK', () => {
     dataSetWithTwoAwk.push(dataSetItemTwoAwk)
     dataSetWithTwoAwk.push(dataSetItemTwoAwk2)
 
-    // Sleep pattern data set with one night awakening.
+    // Sleep pattern data set with one awakening.
     const dataSetItemOneAwk: SleepPatternDataSet = new SleepPatternDataSet()
     dataSetItemOneAwk.start_time = '2020-10-21T04:00:00.000Z'
     dataSetItemOneAwk.name = Phases.AWAKE
@@ -58,7 +57,7 @@ describe('NIGHT AWAKENING TASK', () => {
     dataSetWithOneAwk.push(dataSetItemOneAwk)
     dataSetWithOneAwk.push(dataSetItemOneAwk2)
 
-    // Sleep pattern data set without night awakenings.
+    // Sleep pattern data set without awakenings.
     const dataSetItemWithoutAwk: SleepPatternDataSet = new SleepPatternDataSet()
     dataSetItemWithoutAwk.start_time = '2020-10-22T02:00:00.000Z'
     dataSetItemWithoutAwk.name = Phases.AWAKE
@@ -83,17 +82,17 @@ describe('NIGHT AWAKENING TASK', () => {
     dataSetRpcError.push(dataSetItemRpcError)
 
     // Mock Sleep objects.
-    // Sleep with two night awakenings.
+    // Sleep with two awakenings.
     const sleepWithTwoAwk: Sleep = new SleepMock()
     sleepWithTwoAwk.pattern!.data_set = dataSetWithTwoAwk
 
-    // Sleep with one night awakening.
+    // Sleep with one awakening.
     const sleepWithOneAwk: Sleep = new SleepMock()
     sleepWithOneAwk.pattern!.data_set = dataSetWithOneAwk
 
-    // Sleep without night awakenings.
+    // Sleep without awakenings.
     const sleepWithoutAwk: Sleep = new SleepMock()
-    sleepWithoutAwk.night_awakening = undefined
+    sleepWithoutAwk.awakenings = undefined
     sleepWithoutAwk.pattern!.data_set = dataSetWithoutAwk
 
     const sleepRpcError: Sleep = new SleepMock()
@@ -107,7 +106,7 @@ describe('NIGHT AWAKENING TASK', () => {
 
             await deleteAllSleep()
         } catch (err) {
-            throw new Error('Failure on NightAwakeningTask test: ' + err.message)
+            throw new Error('Failure on AwakeningsTask test: ' + err.message)
         }
     })
 
@@ -118,12 +117,12 @@ describe('NIGHT AWAKENING TASK', () => {
 
             await dbConnection.dispose()
         } catch (err) {
-            throw new Error('Failure on NightAwakeningTask test: ' + err.message)
+            throw new Error('Failure on AwakeningsTask test: ' + err.message)
         }
     })
 
-    describe('calculateNightAwakening(sleep: Sleep)', () => {
-        context('When night awakening is successfully calculated', () => {
+    describe('calculateAwakenings(sleep: Sleep)', () => {
+        context('When awakenings are successfully calculated', () => {
             before(async () => {
                 try {
                     await deleteAllSleep()
@@ -137,36 +136,39 @@ describe('NIGHT AWAKENING TASK', () => {
                     const result3 = await sleepRepository.create(sleepWithoutAwk)
                     sleepWithoutAwk.id = result3.id
                 } catch (err) {
-                    throw new Error('Failure on NightAwakeningTask test: ' + err.message)
+                    throw new Error('Failure on AwakeningsTask test: ' + err.message)
                 }
             })
 
-            it('should return the Sleep updated with two night awakenings', async () => {
-                const sleepUp: Sleep = await nightAwakeningTask.calculateNightAwakening(sleepWithTwoAwk)
-                expect(sleepUp.night_awakening?.length).to.eql(2)
-                expect(sleepUp.night_awakening![0].start_time).to.eql('01:00:00')
-                expect(sleepUp.night_awakening![0].end_time).to.eql('01:07:00')
-                expect(sleepUp.night_awakening![0].steps).to.eql(7)
-                expect(sleepUp.night_awakening![1].start_time).to.eql('03:00:00')
-                expect(sleepUp.night_awakening![1].end_time).to.eql('03:07:00')
-                expect(sleepUp.night_awakening![1].steps).to.eql(7)
+            it('should return the Sleep updated with two awakenings', async () => {
+                const sleepUp: Sleep = await awakeningsTask.calculateAwakenings(sleepWithTwoAwk)
+                expect(sleepUp.awakenings?.length).to.eql(2)
+                expect(sleepUp.awakenings![0].start_time).to.eql('01:00:00')
+                expect(sleepUp.awakenings![0].end_time).to.eql('01:07:00')
+                expect(sleepUp.awakenings![0].duration).to.eql(420000)
+                expect(sleepUp.awakenings![0].steps).to.eql(7)
+                expect(sleepUp.awakenings![1].start_time).to.eql('03:00:00')
+                expect(sleepUp.awakenings![1].end_time).to.eql('03:07:00')
+                expect(sleepUp.awakenings![1].duration).to.eql(420000)
+                expect(sleepUp.awakenings![1].steps).to.eql(7)
             })
 
-            it('should return the Sleep updated with one night awakening', async () => {
-                const sleepUp: Sleep = await nightAwakeningTask.calculateNightAwakening(sleepWithOneAwk)
-                expect(sleepUp.night_awakening?.length).to.eql(1)
-                expect(sleepUp.night_awakening![0].start_time).to.eql('01:00:00')
-                expect(sleepUp.night_awakening![0].end_time).to.eql('01:07:00')
-                expect(sleepUp.night_awakening![0].steps).to.eql(7)
+            it('should return the Sleep updated with one awakening', async () => {
+                const sleepUp: Sleep = await awakeningsTask.calculateAwakenings(sleepWithOneAwk)
+                expect(sleepUp.awakenings?.length).to.eql(1)
+                expect(sleepUp.awakenings![0].start_time).to.eql('01:00:00')
+                expect(sleepUp.awakenings![0].end_time).to.eql('01:07:00')
+                expect(sleepUp.awakenings![0].duration).to.eql(420000)
+                expect(sleepUp.awakenings![0].steps).to.eql(7)
             })
 
-            it('should return the Sleep without night awakenings', async () => {
-                const sleepUp: Sleep = await nightAwakeningTask.calculateNightAwakening(sleepWithoutAwk)
-                expect(sleepUp.night_awakening).to.be.undefined
+            it('should return the Sleep without awakenings', async () => {
+                const sleepUp: Sleep = await awakeningsTask.calculateAwakenings(sleepWithoutAwk)
+                expect(sleepUp.awakenings).to.be.undefined
             })
         })
 
-        context('When night awakening is not successfully calculated', () => {
+        context('When awakenings are not successfully calculated', () => {
             before(async () => {
                 try {
                     await deleteAllSleep()
@@ -174,14 +176,14 @@ describe('NIGHT AWAKENING TASK', () => {
                     const result = await sleepRepository.create(sleepRpcError)
                     sleepRpcError.id = result.id
                 } catch (err) {
-                    throw new Error('Failure on NightAwakeningTask test: ' + err.message)
+                    throw new Error('Failure on AwakeningsTask test: ' + err.message)
                 }
             })
 
             it('should return a rpc timed out error', async () => {
                 try {
-                    const sleepUp: Sleep = await nightAwakeningTask.calculateNightAwakening(sleepRpcError)
-                    expect(sleepUp.night_awakening).to.be.undefined
+                    const sleepUp: Sleep = await awakeningsTask.calculateAwakenings(sleepRpcError)
+                    expect(sleepUp.awakenings).to.be.undefined
                 } catch (err) {
                     expect(err.message).to.eql('rpc timed out')
                 }

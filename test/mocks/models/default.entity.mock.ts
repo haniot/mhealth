@@ -132,9 +132,10 @@ export abstract class DefaultEntityMock {
         body_temperature: DefaultEntityMock.BODY_TEMPERATURE
     }
 
-    public static readonly SLEEP_NIGHT_AWAKENING: any = {
+    public static readonly SLEEP_AWAKENING: any = {
         start_time: '01:30:30',
         end_time: '01:45:30',
+        duration: 900000,
         steps: 9
     }
 

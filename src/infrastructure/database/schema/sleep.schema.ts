@@ -33,13 +33,17 @@ const sleepSchema = new Mongoose.Schema({
                 required: true
             }
         }],
-        night_awakening: [{
+        awakenings: [{
             start_time: {
                 type: String,
                 required: true
             },
             end_time: {
                 type: String,
+                required: true
+            },
+            duration: {
+                type: Number,
                 required: true
             },
             steps: {

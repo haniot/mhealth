@@ -20,7 +20,7 @@ import { IEventBus } from '../../../src/infrastructure/port/event.bus.interface'
 import { EventBusRabbitMQMock } from '../../mocks/eventbus/eventbus.rabbitmq.mock'
 import { ConnectionRabbitMQ } from '../../../src/infrastructure/eventbus/rabbitmq/connection.rabbitmq'
 import { ConnectionFactoryRabbitMQ } from '../../../src/infrastructure/eventbus/rabbitmq/connection.factory.rabbitmq'
-import { NightAwakeningTask } from '../../../src/background/task/night.awakening.task'
+import { AwakeningsTask } from '../../../src/background/task/awakenings.task'
 import { Phases } from '../../../src/application/domain/utils/phases'
 
 describe('Services: SleepService', () => {
@@ -147,7 +147,7 @@ describe('Services: SleepService', () => {
     const sleepRepo: ISleepRepository = new SleepRepositoryMock()
 
     const sleepService: ISleepService =
-        new SleepService(sleepRepo, DIContainer.get(Identifier.NIGHT_AWAKENING_TASK), DIContainer.get(Identifier.LOGGER))
+        new SleepService(sleepRepo, DIContainer.get(Identifier.AWAKENINGS_TASK), DIContainer.get(Identifier.LOGGER))
 
     /**
      * Method: add(sleep: Sleep | Array<Sleep>) with Sleep argument)
@@ -169,8 +169,8 @@ describe('Services: SleepService', () => {
             })
         })
 
-        context('when the Sleep is correct, it has night awakenings and it still does not exist in the repository', () => {
-            // Mock pattern data_set object with two night awakenings.
+        context('when the Sleep is correct, it has awakenings and it still does not exist in the repository', () => {
+            // Mock pattern data_set object with two awakenings.
             const dataSetItemTwoAwk: SleepPatternDataSet = new SleepPatternDataSet()
             dataSetItemTwoAwk.start_time = '2020-10-20T04:00:00.000Z'
             dataSetItemTwoAwk.name = Phases.AWAKE
@@ -185,7 +185,7 @@ describe('Services: SleepService', () => {
             dataSetWithTwoAwk.push(dataSetItemTwoAwk)
             dataSetWithTwoAwk.push(dataSetItemTwoAwk2)
 
-            // Mock Sleep object with two night awakenings.
+            // Mock Sleep object with two awakenings.
             const sleepWithTwoAwk: Sleep = new SleepMock()
             sleepWithTwoAwk.pattern!.data_set = dataSetWithTwoAwk
 
@@ -198,10 +198,10 @@ describe('Services: SleepService', () => {
                     new ConnectionRabbitMQ(new ConnectionFactoryRabbitMQ()),
                     new ConnectionRabbitMQ(new ConnectionFactoryRabbitMQ())
                 )
-                const nightAwakeningTask: NightAwakeningTask =
-                    new NightAwakeningTask(eventBus, sleepRepo, DIContainer.get(Identifier.LOGGER))
+                const awakeningsTask: AwakeningsTask =
+                    new AwakeningsTask(eventBus, sleepRepo, DIContainer.get(Identifier.LOGGER))
 
-                sleepServiceWithEventBusMock = new SleepService(sleepRepo, nightAwakeningTask, DIContainer.get(Identifier.LOGGER))
+                sleepServiceWithEventBusMock = new SleepService(sleepRepo, awakeningsTask, DIContainer.get(Identifier.LOGGER))
             })
 
             it('should return the Sleep that was added', () => {
@@ -215,13 +215,15 @@ describe('Services: SleepService', () => {
                         assert.propertyVal(result, 'patient_id', sleepWithTwoAwk.patient_id)
                         assert.propertyVal(result, 'pattern', sleepWithTwoAwk.pattern)
                         assert.propertyVal(result, 'type', sleepWithTwoAwk.type)
-                        assert.propertyVal(result.night_awakening, 'length', 2)
-                        assert.propertyVal(result.night_awakening![0], 'start_time', '01:00:00')
-                        assert.propertyVal(result.night_awakening![0], 'end_time', '01:07:00')
-                        assert.propertyVal(result.night_awakening![0], 'steps', 7)
-                        assert.propertyVal(result.night_awakening![1], 'start_time', '03:00:00')
-                        assert.propertyVal(result.night_awakening![1], 'end_time', '03:07:00')
-                        assert.propertyVal(result.night_awakening![1], 'steps', 7)
+                        assert.propertyVal(result.awakenings, 'length', 2)
+                        assert.propertyVal(result.awakenings![0], 'start_time', '01:00:00')
+                        assert.propertyVal(result.awakenings![0], 'end_time', '01:07:00')
+                        assert.propertyVal(result.awakenings![0], 'duration', 420000)
+                        assert.propertyVal(result.awakenings![0], 'steps', 7)
+                        assert.propertyVal(result.awakenings![1], 'start_time', '03:00:00')
+                        assert.propertyVal(result.awakenings![1], 'end_time', '03:07:00')
+                        assert.propertyVal(result.awakenings![1], 'duration', 420000)
+                        assert.propertyVal(result.awakenings![1], 'steps', 7)
                     })
             })
         })
@@ -623,6 +625,57 @@ describe('Services: SleepService', () => {
                 return sleepService.getByIdAndPatient(sleep.id!, sleep.patient_id, query)
                     .then(result => {
                         assert(result, 'result must not be undefined')
+                    })
+            })
+        })
+
+        context('when the Sleep is correct, it has awakenings and it still does not exist in the repository', () => {
+            // Mock pattern data_set object with two awakenings.
+            const dataSetItemTwoAwk: SleepPatternDataSet = new SleepPatternDataSet()
+            dataSetItemTwoAwk.start_time = '2020-10-20T04:00:00.000Z'
+            dataSetItemTwoAwk.name = Phases.AWAKE
+            dataSetItemTwoAwk.duration = 420000 // 7min milliseconds
+
+            const dataSetItemTwoAwk2: SleepPatternDataSet = new SleepPatternDataSet()
+            dataSetItemTwoAwk2.start_time = '2020-10-20T06:00:00.000Z'
+            dataSetItemTwoAwk2.name = Phases.AWAKE
+            dataSetItemTwoAwk2.duration = 420000 // 7min in milliseconds
+
+            const dataSetWithTwoAwk: Array<SleepPatternDataSet> = new Array<SleepPatternDataSet>()
+            dataSetWithTwoAwk.push(dataSetItemTwoAwk)
+            dataSetWithTwoAwk.push(dataSetItemTwoAwk2)
+
+            // Mock Sleep object with two awakenings.
+            const sleepWithTwoAwk: Sleep = new SleepMock()
+            sleepWithTwoAwk.id = '507f1f77bcf86cd799439011'            // Make mock return a sleep
+            sleepWithTwoAwk.pattern!.data_set = dataSetWithTwoAwk
+
+            const query: IQuery = new Query()
+            query.filters = {
+                _id: sleepWithTwoAwk.id,
+                patient_id: sleepWithTwoAwk.patient_id
+            }
+
+            let sleepServiceWithEventBusMock: ISleepService
+
+            before(() => {
+                const eventBus: IEventBus = new EventBusRabbitMQMock(
+                    new ConnectionRabbitMQ(new ConnectionFactoryRabbitMQ()),
+                    new ConnectionRabbitMQ(new ConnectionFactoryRabbitMQ()),
+                    new ConnectionRabbitMQ(new ConnectionFactoryRabbitMQ()),
+                    new ConnectionRabbitMQ(new ConnectionFactoryRabbitMQ())
+                )
+                const awakeningsTask: AwakeningsTask =
+                    new AwakeningsTask(eventBus, sleepRepo, DIContainer.get(Identifier.LOGGER))
+
+                sleepServiceWithEventBusMock = new SleepService(sleepRepo, awakeningsTask, DIContainer.get(Identifier.LOGGER))
+            })
+
+            it('should return the Sleep that was added (with calculated awakenings)', () => {
+                return sleepServiceWithEventBusMock.getByIdAndPatient(sleepWithTwoAwk.id!, sleepWithTwoAwk.patient_id, query)
+                    .then((result: Sleep | Array<Sleep>) => {
+                        result = result as Sleep
+                        assert.isArray(result.awakenings)
                     })
             })
         })

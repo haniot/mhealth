@@ -10,7 +10,7 @@ import { Phases } from '../../../application/domain/utils/phases'
 import { SleepPatternStageSummary } from '../../../application/domain/model/sleep.pattern.stage.summary'
 import { Stages } from '../../../application/domain/utils/stages'
 import { SleepType } from '../../../application/domain/utils/sleep.type'
-import { SleepNightAwakening } from '../../../application/domain/model/sleep.night.awakening'
+import { SleepAwakening } from '../../../application/domain/model/sleep.awakening'
 
 @injectable()
 export class SleepEntityMapper implements IEntityMapper<Sleep, SleepEntity> {
@@ -36,8 +36,8 @@ export class SleepEntityMapper implements IEntityMapper<Sleep, SleepEntity> {
         if (json.duration !== undefined) result.duration = json.duration
         if (json.patient_id !== undefined) result.patient_id = json.patient_id
         if (json.pattern !== undefined) result.pattern = this.deserializeSleepPattern(json.pattern, json.type)
-        if (json.night_awakening?.length) {
-            result.night_awakening = json.night_awakening.map(elem => new SleepNightAwakening().fromJSON(elem))
+        if (json.awakenings?.length) {
+            result.awakenings = json.awakenings.map(elem => new SleepAwakening().fromJSON(elem))
         }
         if (json.type !== undefined) result.type = json.type
 
@@ -71,8 +71,8 @@ export class SleepEntityMapper implements IEntityMapper<Sleep, SleepEntity> {
         if (item.pattern) {
             result.pattern = item.pattern.data_set.map((elem: SleepPatternDataSet) => elem.toJSON())
         }
-        if (item.night_awakening?.length) {
-            result.night_awakening = item.night_awakening.map((elem: SleepNightAwakening) => elem.toJSON())
+        if (item.awakenings?.length) {
+            result.awakenings = item.awakenings.map((elem: SleepAwakening) => elem.toJSON())
         }
         if (item.type) result.type = item.type
 

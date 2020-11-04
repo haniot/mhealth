@@ -3,14 +3,15 @@ import { IJSONDeserializable } from '../utils/json.deserializable.interface'
 import { JsonUtils } from '../utils/json.utils'
 
 /**
- * The implementation of the night awakening set entity present in the sleep.
+ * The implementation of the awakenings set item entity present in the sleep.
  *
- * @implements {IJSONSerializable, IJSONDeserializable<SleepNightAwakening>}
+ * @implements {IJSONSerializable, IJSONDeserializable<SleepAwakening>}
  */
-export class SleepNightAwakening implements IJSONSerializable, IJSONDeserializable<SleepNightAwakening> {
-    private _start_time!: string // Night awakening start time.
-    private _end_time!: string // Night awakening end time.
-    private _steps!: number // Total night awakening steps.
+export class SleepAwakening implements IJSONSerializable, IJSONDeserializable<SleepAwakening> {
+    private _start_time!: string // Awakening start time.
+    private _end_time!: string // Awakening end time.
+    private _duration!: number // Total in milliseconds of the awakening duration.
+    private _steps!: number // Total awakening steps.
 
     get start_time(): string {
         return this._start_time
@@ -28,6 +29,14 @@ export class SleepNightAwakening implements IJSONSerializable, IJSONDeserializab
         this._end_time = value
     }
 
+    get duration(): number {
+        return this._duration
+    }
+
+    set duration(value: number) {
+        this._duration = value
+    }
+
     get steps(): number {
         return this._steps
     }
@@ -36,7 +45,7 @@ export class SleepNightAwakening implements IJSONSerializable, IJSONDeserializab
         this._steps = value
     }
 
-    public fromJSON(json: any): SleepNightAwakening {
+    public fromJSON(json: any): SleepAwakening {
         if (!json) return this
         if (typeof json === 'string' && JsonUtils.isJsonString(json)) {
             json = JSON.parse(json)
@@ -44,6 +53,7 @@ export class SleepNightAwakening implements IJSONSerializable, IJSONDeserializab
 
         if (json.start_time !== undefined) this.start_time = json.start_time
         if (json.end_time !== undefined) this.end_time = json.end_time
+        if (json.duration !== undefined) this.duration = json.duration
         if (json.steps !== undefined) this.steps = json.steps
 
         return this
@@ -53,6 +63,7 @@ export class SleepNightAwakening implements IJSONSerializable, IJSONDeserializab
         return {
             start_time: this.start_time,
             end_time: this.end_time,
+            duration: this.duration,
             steps: this.steps
         }
     }
