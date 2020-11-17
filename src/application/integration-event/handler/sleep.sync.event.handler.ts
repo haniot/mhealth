@@ -17,7 +17,7 @@ export class SleepSyncEventHandler implements IIntegrationEventHandler<SleepSync
     ) {
     }
 
-    public async handle(event: SleepSyncEvent): Promise<void> {
+    public async handle(event: any): Promise<void> {
         if (!event.sleep) {
             throw new ValidationException('Event is not in the expected format!', JSON.stringify(event))
         }
@@ -58,7 +58,7 @@ export class SleepSyncEventHandler implements IIntegrationEventHandler<SleepSync
                             .concat(err.description ? ' ' + err.description : ''))
                     })
                 this._logger.info(
-                    `Action for event ${event.event_name} associated with patient with ID: ${event.sleep.patient_id}`
+                    `Action for event ${event.event_name} associated with patient with ID: ${event.sleep.user_id}`
                         .concat(' successfully performed!'))
             } catch (err) {
                 this._logger.error(`An error occurred while attempting `
@@ -68,11 +68,10 @@ export class SleepSyncEventHandler implements IIntegrationEventHandler<SleepSync
         }
     }
 
-    public async updateOrCreate(event: SleepSyncEvent, item: Sleep): Promise<any> {
+    public async updateOrCreate(event: SleepSyncEvent, item: any): Promise<any> {
         const sleep: Sleep = new Sleep().fromJSON(item)
+        if (item.user_id) sleep.patient_id = item.user_id
         try {
-            if (item.patient_id) sleep.patient_id = item.patient_id
-
             // 1. Validate Sleep object
             CreateSleepValidator.validate(sleep)
         } catch (err) {

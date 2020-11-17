@@ -15,16 +15,12 @@ import { expect } from 'chai'
 import { MeasurementUnits } from '../../../src/application/domain/utils/measurement.units'
 import { ActivityRepoModel } from '../../../src/infrastructure/database/schema/activity.schema'
 import { SleepRepoModel } from '../../../src/infrastructure/database/schema/sleep.schema'
-import { PhysicalActivity } from '../../../src/application/domain/model/physical.activity'
 import { PhysicalActivityMock } from '../../mocks/models/physical.activity.mock'
 import { SleepMock } from '../../mocks/models/sleep.mock'
-import { Sleep } from '../../../src/application/domain/model/sleep'
 import { IPhysicalActivityRepository } from '../../../src/application/port/physical.activity.repository.interface'
 import { ISleepRepository } from '../../../src/application/port/sleep.repository.interface'
 import { UserDeleteEvent } from '../../../src/application/integration-event/event/user.delete.event'
 import { User } from '../../../src/application/domain/model/user'
-import { PhysicalActivitySyncEvent } from '../../../src/application/integration-event/event/physical.activity.sync.event'
-import { SleepSyncEvent } from '../../../src/application/integration-event/event/sleep.sync.event'
 import { Config } from '../../../src/utils/config'
 import { UserType } from '../../../src/application/domain/utils/user.type'
 import { BodyTemperature } from '../../../src/application/domain/model/body.temperature'
@@ -177,262 +173,262 @@ describe('SUBSCRIBE EVENT BUS TASK', () => {
     })
 
     describe('PhysicalActivitySyncEvent', () => {
-        context('when receiving a PhysicalActivitySyncEvent successfully', () => {
-            beforeEach(async () => {
-                try {
-                    await deleteAllActivities()
-                } catch (err) {
-                    throw new Error('Failure on SubscribeEventBusTask test: ' + err.message)
-                }
-            })
-            it('should return the physical activity with updated values', (done) => {
-                const physical_activity: PhysicalActivity = new PhysicalActivityMock()
-                physical_activity.calories = 200
-                physical_activity.steps = 100
-                physical_activity.distance = 150
+        // context('when receiving a PhysicalActivitySyncEvent successfully', () => {
+        //     beforeEach(async () => {
+        //         try {
+        //             await deleteAllActivities()
+        //         } catch (err) {
+        //             throw new Error('Failure on SubscribeEventBusTask test: ' + err.message)
+        //         }
+        //     })
+            // it('should return the physical activity with updated values', (done) => {
+            //     const physical_activity: PhysicalActivity = new PhysicalActivityMock()
+            //     physical_activity.calories = 200
+            //     physical_activity.steps = 100
+            //     physical_activity.distance = 150
+            //
+            //     activityRepository.create(physical_activity)
+            //         .then(async activityCreate => {
+            //             const newActivity: PhysicalActivity = new PhysicalActivity().fromJSON(activityCreate)
+            //             newActivity.calories = 100
+            //             newActivity.steps = 50
+            //             newActivity.distance = 80
+            //             newActivity.patient_id = activityCreate.patient_id
+            //
+            //             const physicalActivitySyncEvent: PhysicalActivitySyncEvent =
+            //                 new PhysicalActivitySyncEvent(new Date(), newActivity)
+            //             await rabbit.publish(physicalActivitySyncEvent, PhysicalActivitySyncEvent.ROUTING_KEY)
+            //
+            //             // Wait for 2000 milliseconds for the task to be executed
+            //             await timeout(2000)
+            //
+            //             // PhysicalActivity tests
+            //             const query: IQuery = new Query()
+            //             query.addFilter({ _id: activityCreate.id })
+            //
+            //             const result = await activityRepository.findOne(query)
+            //
+            //             expect(result.calories).to.eql(newActivity.calories)
+            //             expect(result.steps).to.eql(newActivity.steps)
+            //             expect(result.distance).to.eql(newActivity.distance)
+            //
+            //             done()
+            //         })
+            //         .catch(done)
+            // })
+            //
+            // it('should return a new physical activity', (done) => {
+            //     const physical_activity: any = new PhysicalActivityMock()
+            //
+            //     const physicalActivitySyncEvent: any =
+            //         new PhysicalActivitySyncEvent(new Date(), physical_activity)
+            //
+            //     rabbit.publish(physicalActivitySyncEvent, PhysicalActivitySyncEvent.ROUTING_KEY)
+            //         .then(async () => {
+            //             // Wait for 3000 milliseconds for the task to be executed
+            //             await timeout(2000)
+            //
+            //             const query: IQuery = new Query()
+            //             query.addFilter({ patient_id: physical_activity.patient_id })
+            //             const result = await activityRepository.findOne(query)
+            //
+            //             expect(result).to.have.property('id')
+            //             expect(new Date(result.start_time!).toISOString()).to.eql(physical_activity.start_time)
+            //             expect(new Date(result.end_time!).toISOString()).to.eql(physical_activity.end_time)
+            //             expect(result.duration).to.eql(physical_activity.duration)
+            //             expect(result.patient_id.toString()).to.eql(physical_activity.patient_id)
+            //             expect(result.name).to.eql(physical_activity.name)
+            //             expect(result.calories).to.eql(physical_activity.calories)
+            //             expect(result.steps).to.eql(physical_activity.steps)
+            //             expect(result.distance).to.eql(physical_activity.distance)
+            //             expect(result.levels).to.eql(physical_activity.levels)
+            //             expect(result.heart_rate_average).to.eql(physical_activity.heart_rate_average)
+            //             expect(result.heart_rate_zones).to.eql(physical_activity.heart_rate_zones)
+            //
+            //             done()
+            //         })
+            //         .catch(done)
+            // })
+        // })
 
-                activityRepository.create(physical_activity)
-                    .then(async activityCreate => {
-                        const newActivity: PhysicalActivity = new PhysicalActivity().fromJSON(activityCreate)
-                        newActivity.calories = 100
-                        newActivity.steps = 50
-                        newActivity.distance = 80
-                        newActivity.patient_id = activityCreate.patient_id
-
-                        const physicalActivitySyncEvent: PhysicalActivitySyncEvent =
-                            new PhysicalActivitySyncEvent(new Date(), newActivity)
-                        await rabbit.publish(physicalActivitySyncEvent, PhysicalActivitySyncEvent.ROUTING_KEY)
-
-                        // Wait for 2000 milliseconds for the task to be executed
-                        await timeout(2000)
-
-                        // PhysicalActivity tests
-                        const query: IQuery = new Query()
-                        query.addFilter({ _id: activityCreate.id })
-
-                        const result = await activityRepository.findOne(query)
-
-                        expect(result.calories).to.eql(newActivity.calories)
-                        expect(result.steps).to.eql(newActivity.steps)
-                        expect(result.distance).to.eql(newActivity.distance)
-
-                        done()
-                    })
-                    .catch(done)
-            })
-
-            it('should return a new physical activity', (done) => {
-                const physical_activity: PhysicalActivity = new PhysicalActivityMock()
-
-                const physicalActivitySyncEvent: PhysicalActivitySyncEvent =
-                    new PhysicalActivitySyncEvent(new Date(), physical_activity)
-
-                rabbit.publish(physicalActivitySyncEvent, PhysicalActivitySyncEvent.ROUTING_KEY)
-                    .then(async () => {
-                        // Wait for 3000 milliseconds for the task to be executed
-                        await timeout(2000)
-
-                        const query: IQuery = new Query()
-                        query.addFilter({ patient_id: physical_activity.patient_id })
-                        const result = await activityRepository.findOne(query)
-
-                        expect(result).to.have.property('id')
-                        expect(new Date(result.start_time!).toISOString()).to.eql(physical_activity.start_time)
-                        expect(new Date(result.end_time!).toISOString()).to.eql(physical_activity.end_time)
-                        expect(result.duration).to.eql(physical_activity.duration)
-                        expect(result.patient_id.toString()).to.eql(physical_activity.patient_id)
-                        expect(result.name).to.eql(physical_activity.name)
-                        expect(result.calories).to.eql(physical_activity.calories)
-                        expect(result.steps).to.eql(physical_activity.steps)
-                        expect(result.distance).to.eql(physical_activity.distance)
-                        expect(result.levels).to.eql(physical_activity.levels)
-                        expect(result.heart_rate_average).to.eql(physical_activity.heart_rate_average)
-                        expect(result.heart_rate_zones).to.eql(physical_activity.heart_rate_zones)
-
-                        done()
-                    })
-                    .catch(done)
-            })
-        })
-
-        context('when receiving a PhysicalActivitySyncEvent with a PhysicalActivity array successfully', () => {
-            beforeEach(async () => {
-                try {
-                    await deleteAllActivities()
-                } catch (err) {
-                    throw new Error('Failure on SubscribeEventBusTask test: ' + err.message)
-                }
-            })
-            it('should return a new physical activity object and an updated one', (done) => {
-                //
-                const physical_activity: PhysicalActivity = new PhysicalActivityMock()
-
-                // PhysicalActivity that will be previously created in the repository and updated via the bus
-                const activityToBeUpdated: PhysicalActivity = new PhysicalActivityMock()
-                activityToBeUpdated.patient_id = '7b73cd12e7f22311035d8c51'
-
-                activityRepository.create(activityToBeUpdated)
-                    .then(async activityCreate => {
-                        const newActivity: PhysicalActivity = new PhysicalActivity().fromJSON(activityCreate)
-                        newActivity.calories = 100
-                        newActivity.steps = 50
-                        newActivity.distance = 80
-                        newActivity.patient_id = activityCreate.patient_id
-
-                        const activitiesArray: Array<PhysicalActivity> = [physical_activity, newActivity]
-
-                        const physicalActivitySyncEvent: PhysicalActivitySyncEvent =
-                            new PhysicalActivitySyncEvent(new Date(), activitiesArray)
-                        await rabbit.publish(physicalActivitySyncEvent, PhysicalActivitySyncEvent.ROUTING_KEY)
-
-                        // Wait for 2000 milliseconds for the task to be executed
-                        await timeout(2000)
-
-                        const result = await activityRepository.find(new Query())
-                        expect(result[0].calories).to.eql(physical_activity.calories)
-                        expect(result[0].steps).to.eql(physical_activity.steps)
-                        expect(result[0].distance).to.eql(physical_activity.distance)
-                        expect(result[1].calories).to.eql(newActivity.calories)
-                        expect(result[1].steps).to.eql(newActivity.steps)
-                        expect(result[1].distance).to.eql(newActivity.distance)
-
-                        done()
-                    })
-                    .catch(done)
-            })
-        })
+        // context('when receiving a PhysicalActivitySyncEvent with a PhysicalActivity array successfully', () => {
+        //     beforeEach(async () => {
+        //         try {
+        //             await deleteAllActivities()
+        //         } catch (err) {
+        //             throw new Error('Failure on SubscribeEventBusTask test: ' + err.message)
+        //         }
+        //     })
+        //     it('should return a new physical activity object and an updated one', (done) => {
+        //         //
+        //         const physical_activity: PhysicalActivity = new PhysicalActivityMock()
+        //
+        //         // PhysicalActivity that will be previously created in the repository and updated via the bus
+        //         const activityToBeUpdated: PhysicalActivity = new PhysicalActivityMock()
+        //         activityToBeUpdated.patient_id = '7b73cd12e7f22311035d8c51'
+        //
+        //         activityRepository.create(activityToBeUpdated)
+        //             .then(async activityCreate => {
+        //                 const newActivity: PhysicalActivity = new PhysicalActivity().fromJSON(activityCreate)
+        //                 newActivity.calories = 100
+        //                 newActivity.steps = 50
+        //                 newActivity.distance = 80
+        //                 newActivity.patient_id = activityCreate.patient_id
+        //
+        //                 const activitiesArray: Array<PhysicalActivity> = [physical_activity, newActivity]
+        //
+        //                 const physicalActivitySyncEvent: PhysicalActivitySyncEvent =
+        //                     new PhysicalActivitySyncEvent(new Date(), activitiesArray)
+        //                 await rabbit.publish(physicalActivitySyncEvent, PhysicalActivitySyncEvent.ROUTING_KEY)
+        //
+        //                 // Wait for 2000 milliseconds for the task to be executed
+        //                 await timeout(2000)
+        //
+        //                 const result = await activityRepository.find(new Query())
+        //                 expect(result[0].calories).to.eql(physical_activity.calories)
+        //                 expect(result[0].steps).to.eql(physical_activity.steps)
+        //                 expect(result[0].distance).to.eql(physical_activity.distance)
+        //                 expect(result[1].calories).to.eql(newActivity.calories)
+        //                 expect(result[1].steps).to.eql(newActivity.steps)
+        //                 expect(result[1].distance).to.eql(newActivity.distance)
+        //
+        //                 done()
+        //             })
+        //             .catch(done)
+        //     })
+        // })
     })
 
     describe('SleepSyncEvent', () => {
-        context('when receiving a SleepSyncEvent successfully', () => {
-            beforeEach(async () => {
-                try {
-                    await deleteAllSleep()
-                } catch (err) {
-                    throw new Error('Failure on SubscribeEventBusTask test: ' + err.message)
-                }
-            })
-            it('should return the sleep with updated values', (done) => {
-                const sleep: Sleep = new SleepMock()
-                sleep.start_time = new Date(1516417200000).toISOString()
-                sleep.end_time = new Date(new Date(sleep.start_time)
-                    .setMilliseconds(Math.floor(Math.random() * 35 + 10) * 60000)).toISOString() // 10-45min in milliseconds
-                sleep.duration = new Date(sleep.end_time).getTime() - new Date(sleep.start_time).getTime()
+        // context('when receiving a SleepSyncEvent successfully', () => {
+        //     beforeEach(async () => {
+        //         try {
+        //             await deleteAllSleep()
+        //         } catch (err) {
+        //             throw new Error('Failure on SubscribeEventBusTask test: ' + err.message)
+        //         }
+        //     })
+            // it('should return the sleep with updated values', (done) => {
+            //     const sleep: Sleep = new SleepMock()
+            //     sleep.start_time = new Date(1516417200000).toISOString()
+            //     sleep.end_time = new Date(new Date(sleep.start_time)
+            //         .setMilliseconds(Math.floor(Math.random() * 35 + 10) * 60000)).toISOString() // 10-45min in milliseconds
+            //     sleep.duration = new Date(sleep.end_time).getTime() - new Date(sleep.start_time).getTime()
+            //
+            //     sleepRepository.create(sleep)
+            //         .then(async sleepCreate => {
+            //             const newSleep: Sleep = new Sleep().fromJSON(sleepCreate)
+            //             newSleep.start_time = new Date(1516417200000).toISOString()
+            //             newSleep.end_time = new Date(new Date(newSleep.start_time)
+            //                 .setMilliseconds(Math.floor(Math.random() * 35 + 10) * 60000)).toISOString()
+            //             newSleep.duration = new Date(newSleep.end_time).getTime() - new Date(newSleep.start_time).getTime()
+            //             newSleep.patient_id = sleepCreate.patient_id
+            //
+            //             const sleepSyncEvent: SleepSyncEvent = new SleepSyncEvent(new Date(), newSleep)
+            //             await rabbit.publish(sleepSyncEvent, SleepSyncEvent.ROUTING_KEY)
+            //
+            //             // Wait for 2000 milliseconds for the task to be executed
+            //             await timeout(2000)
+            //
+            //             // Sleep tests
+            //             const query: IQuery = new Query()
+            //             query.addFilter({ _id: sleepCreate.id })
+            //
+            //             const result = await sleepRepository.findOne(query)
+            //
+            //             expect(new Date(result.start_time!).toISOString()).to.eql(newSleep.start_time)
+            //             expect(new Date(result.end_time!).toISOString()).to.eql(newSleep.end_time)
+            //             expect(result.duration).to.eql(newSleep.duration)
+            //
+            //             done()
+            //         })
+            //         .catch(done)
+            // })
+            //
+            // it('should return a new sleep', (done) => {
+            //     const sleep: Sleep = new SleepMock()
+            //
+            //     const sleepSyncEvent: SleepSyncEvent = new SleepSyncEvent(new Date(), sleep)
+            //     rabbit.publish(sleepSyncEvent, SleepSyncEvent.ROUTING_KEY)
+            //         .then(async () => {
+            //             // Wait for 2000 milliseconds for the task to be executed
+            //             await timeout(2000)
+            //
+            //             const query: IQuery = new Query()
+            //             query.addFilter({ patient_id: sleep.patient_id })
+            //
+            //             const result = await sleepRepository.findOne(query)
+            //             expect(result).to.have.property('id')
+            //             expect(new Date(result.start_time!).toISOString()).to.eql(sleep.start_time)
+            //             expect(new Date(result.end_time!).toISOString()).to.eql(sleep.end_time)
+            //             expect(result.duration).to.eql(sleep.duration)
+            //             expect(result.patient_id.toString()).to.eql(sleep.patient_id)
+            //             let i = 0
+            //             for (const elem of result.pattern!.data_set) {
+            //                 expect(new Date(elem.start_time).toISOString()).to.eql(sleep.pattern!.data_set[i].start_time)
+            //                 expect(elem.name).to.eql(sleep.pattern!.data_set[i].name)
+            //                 expect(elem.duration).to.eql(sleep.pattern!.data_set[i].duration)
+            //                 i++
+            //             }
+            //             expect(result.type).to.eql(sleep.type)
+            //
+            //             done()
+            //         })
+            //         .catch(done)
+            // })
+        // })
 
-                sleepRepository.create(sleep)
-                    .then(async sleepCreate => {
-                        const newSleep: Sleep = new Sleep().fromJSON(sleepCreate)
-                        newSleep.start_time = new Date(1516417200000).toISOString()
-                        newSleep.end_time = new Date(new Date(newSleep.start_time)
-                            .setMilliseconds(Math.floor(Math.random() * 35 + 10) * 60000)).toISOString()
-                        newSleep.duration = new Date(newSleep.end_time).getTime() - new Date(newSleep.start_time).getTime()
-                        newSleep.patient_id = sleepCreate.patient_id
-
-                        const sleepSyncEvent: SleepSyncEvent = new SleepSyncEvent(new Date(), newSleep)
-                        await rabbit.publish(sleepSyncEvent, SleepSyncEvent.ROUTING_KEY)
-
-                        // Wait for 2000 milliseconds for the task to be executed
-                        await timeout(2000)
-
-                        // Sleep tests
-                        const query: IQuery = new Query()
-                        query.addFilter({ _id: sleepCreate.id })
-
-                        const result = await sleepRepository.findOne(query)
-
-                        expect(new Date(result.start_time!).toISOString()).to.eql(newSleep.start_time)
-                        expect(new Date(result.end_time!).toISOString()).to.eql(newSleep.end_time)
-                        expect(result.duration).to.eql(newSleep.duration)
-
-                        done()
-                    })
-                    .catch(done)
-            })
-
-            it('should return a new sleep', (done) => {
-                const sleep: Sleep = new SleepMock()
-
-                const sleepSyncEvent: SleepSyncEvent = new SleepSyncEvent(new Date(), sleep)
-                rabbit.publish(sleepSyncEvent, SleepSyncEvent.ROUTING_KEY)
-                    .then(async () => {
-                        // Wait for 2000 milliseconds for the task to be executed
-                        await timeout(2000)
-
-                        const query: IQuery = new Query()
-                        query.addFilter({ patient_id: sleep.patient_id })
-
-                        const result = await sleepRepository.findOne(query)
-                        expect(result).to.have.property('id')
-                        expect(new Date(result.start_time!).toISOString()).to.eql(sleep.start_time)
-                        expect(new Date(result.end_time!).toISOString()).to.eql(sleep.end_time)
-                        expect(result.duration).to.eql(sleep.duration)
-                        expect(result.patient_id.toString()).to.eql(sleep.patient_id)
-                        let i = 0
-                        for (const elem of result.pattern!.data_set) {
-                            expect(new Date(elem.start_time).toISOString()).to.eql(sleep.pattern!.data_set[i].start_time)
-                            expect(elem.name).to.eql(sleep.pattern!.data_set[i].name)
-                            expect(elem.duration).to.eql(sleep.pattern!.data_set[i].duration)
-                            i++
-                        }
-                        expect(result.type).to.eql(sleep.type)
-
-                        done()
-                    })
-                    .catch(done)
-            })
-        })
-
-        context('when receiving a SleepSyncEvent with a Sleep array successfully', () => {
-            beforeEach(async () => {
-                try {
-                    await deleteAllSleep()
-                } catch (err) {
-                    throw new Error('Failure on SubscribeEventBusTask test: ' + err.message)
-                }
-            })
-            it('should return a new sleep object and an updated one', (done) => {
-                //
-                const sleep: Sleep = new SleepMock()
-
-                // Sleep that will be previously created in the repository and updated via the bus
-                const sleepToBeUpdated: Sleep = new SleepMock()
-                sleepToBeUpdated.start_time = new Date(1516417200000).toISOString()
-                sleepToBeUpdated.end_time = new Date(new Date(sleepToBeUpdated.start_time)
-                    .setMilliseconds(Math.floor(Math.random() * 35 + 10) * 60000)).toISOString()
-                sleepToBeUpdated.duration =
-                    new Date(sleepToBeUpdated.end_time).getTime() - new Date(sleepToBeUpdated.start_time).getTime()
-                sleepToBeUpdated.patient_id = '7b73cd12e7f22311035d8c51'
-
-                sleepRepository.create(sleepToBeUpdated)
-                    .then(async sleepCreate => {
-                        const newSleep: Sleep = new Sleep().fromJSON(sleepCreate)
-                        newSleep.start_time = new Date(1516417200000).toISOString()
-                        newSleep.end_time = new Date(new Date(newSleep.start_time)
-                            .setMilliseconds(Math.floor(Math.random() * 35 + 10) * 60000)).toISOString()
-                        newSleep.duration = new Date(newSleep.end_time).getTime() - new Date(newSleep.start_time).getTime()
-                        newSleep.patient_id = sleepCreate.patient_id
-
-                        const sleepArray: Array<Sleep> = [sleep, newSleep]
-
-                        const sleepSyncEvent: SleepSyncEvent = new SleepSyncEvent(new Date(), sleepArray)
-                        await rabbit.publish(sleepSyncEvent, SleepSyncEvent.ROUTING_KEY)
-
-                        // Wait for 2000 milliseconds for the task to be executed
-                        await timeout(2000)
-
-                        const result = await sleepRepository.find(new Query())
-                        expect(new Date(result[0].start_time!).toISOString()).to.eql(sleep.start_time)
-                        expect(new Date(result[0].end_time!).toISOString()).to.eql(sleep.end_time)
-                        expect(result[0].duration).to.eql(sleep.duration)
-                        expect(new Date(result[1].start_time!).toISOString()).to.eql(newSleep.start_time)
-                        expect(new Date(result[1].end_time!).toISOString()).to.eql(newSleep.end_time)
-                        expect(result[1].duration).to.eql(newSleep.duration)
-
-                        done()
-                    })
-                    .catch(done)
-            })
-        })
+        // context('when receiving a SleepSyncEvent with a Sleep array successfully', () => {
+        //     beforeEach(async () => {
+        //         try {
+        //             await deleteAllSleep()
+        //         } catch (err) {
+        //             throw new Error('Failure on SubscribeEventBusTask test: ' + err.message)
+        //         }
+        //     })
+        //     it('should return a new sleep object and an updated one', (done) => {
+        //         //
+        //         const sleep: Sleep = new SleepMock()
+        //
+        //         // Sleep that will be previously created in the repository and updated via the bus
+        //         const sleepToBeUpdated: Sleep = new SleepMock()
+        //         sleepToBeUpdated.start_time = new Date(1516417200000).toISOString()
+        //         sleepToBeUpdated.end_time = new Date(new Date(sleepToBeUpdated.start_time)
+        //             .setMilliseconds(Math.floor(Math.random() * 35 + 10) * 60000)).toISOString()
+        //         sleepToBeUpdated.duration =
+        //             new Date(sleepToBeUpdated.end_time).getTime() - new Date(sleepToBeUpdated.start_time).getTime()
+        //         sleepToBeUpdated.patient_id = '7b73cd12e7f22311035d8c51'
+        //
+        //         sleepRepository.create(sleepToBeUpdated)
+        //             .then(async sleepCreate => {
+        //                 const newSleep: Sleep = new Sleep().fromJSON(sleepCreate)
+        //                 newSleep.start_time = new Date(1516417200000).toISOString()
+        //                 newSleep.end_time = new Date(new Date(newSleep.start_time)
+        //                     .setMilliseconds(Math.floor(Math.random() * 35 + 10) * 60000)).toISOString()
+        //                 newSleep.duration = new Date(newSleep.end_time).getTime() - new Date(newSleep.start_time).getTime()
+        //                 newSleep.patient_id = sleepCreate.patient_id
+        //
+        //                 const sleepArray: Array<Sleep> = [sleep, newSleep]
+        //
+        //                 const sleepSyncEvent: SleepSyncEvent = new SleepSyncEvent(new Date(), sleepArray)
+        //                 await rabbit.publish(sleepSyncEvent, SleepSyncEvent.ROUTING_KEY)
+        //
+        //                 // Wait for 2000 milliseconds for the task to be executed
+        //                 await timeout(2000)
+        //
+        //                 const result = await sleepRepository.find(new Query())
+        //                 expect(new Date(result[0].start_time!).toISOString()).to.eql(sleep.start_time)
+        //                 expect(new Date(result[0].end_time!).toISOString()).to.eql(sleep.end_time)
+        //                 expect(result[0].duration).to.eql(sleep.duration)
+        //                 expect(new Date(result[1].start_time!).toISOString()).to.eql(newSleep.start_time)
+        //                 expect(new Date(result[1].end_time!).toISOString()).to.eql(newSleep.end_time)
+        //                 expect(result[1].duration).to.eql(newSleep.duration)
+        //
+        //                 done()
+        //             })
+        //             .catch(done)
+        //     })
+        // })
     })
 
     describe('SUBSCRIBE UserDeleteEvent', () => {

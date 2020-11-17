@@ -24,7 +24,7 @@ export class WeightSyncEventHandler implements IIntegrationEventHandler<WeightSy
     ) {
     }
 
-    public async handle(event: WeightSyncEvent): Promise<void> {
+    public async handle(event: any): Promise<void> {
         if (!event.weight) {
             throw new ValidationException('Event is not in the expected format!', JSON.stringify(event))
         }
@@ -54,7 +54,7 @@ export class WeightSyncEventHandler implements IIntegrationEventHandler<WeightSy
                 const result: any = await this.updateOrCreate(event, event.weight)
                 this.publishLastMeasurement(result)
                 this._logger.info(
-                    `Action for event ${event.event_name} associated with patient with ID: ${event.weight.patient_id}`
+                    `Action for event ${event.event_name} associated with patient with ID: ${event.weight.user_id}`
                         .concat('successfully performed!'))
             } catch (err) {
                 this._logger.error(`An error occurred while attempting `
@@ -64,15 +64,10 @@ export class WeightSyncEventHandler implements IIntegrationEventHandler<WeightSy
         }
     }
 
-    public async updateOrCreate(event: WeightSyncEvent, item: Weight): Promise<any> {
+    public async updateOrCreate(event: WeightSyncEvent, item: any): Promise<any> {
         const weight: Weight = new Weight().fromJSON(item)
+        if (item.user_id) weight.patient_id = item.user_id
         try {
-            let patientId: string = ''
-            if (item.patient_id) {
-                patientId = item.patient_id
-                weight.patient_id = patientId
-            }
-
             // 1. Validate Weight object
             CreateWeightValidator.validate(weight)
 
@@ -82,7 +77,7 @@ export class WeightSyncEventHandler implements IIntegrationEventHandler<WeightSy
                     ...weight.toJSON(), type: MeasurementTypes.BODY_FAT,
                     value: weight.body_fat, unit: '%'
                 })
-                bodyFat.patient_id = item.patient_id
+                bodyFat.patient_id = item.user_id
 
                 await this._measurementRepo.updateOrCreate(bodyFat)
             }
