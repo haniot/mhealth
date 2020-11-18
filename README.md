@@ -23,9 +23,9 @@ RESTFul microservice API responsible for managing health measurements, physical 
  See the [documentation](https://github.com/haniot/mhealth/wiki) for more information.
 
 ## Prerequisites
-- [Node 12.0.0+](https://nodejs.org/en/download/)
+- [Node 13.0.0+](https://nodejs.org/en/download/)
 - [MongoDB Server 4.0.0+](https://www.mongodb.com/download-center/community)
-- [RabbitMQ 3.7.0+](https://www.rabbitmq.com/download.html)
+- [RabbitMQ 3.8.0+](https://www.rabbitmq.com/download.html)
 
 ---
 
