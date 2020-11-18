@@ -13,7 +13,7 @@ describe('Event: SleepSyncEvent', () => {
             assert.propertyVal(obj, 'sleep', undefined)
         })
 
-        it('should attributes must have values ​​passed as parameter', () => {
+        it('should attributes must have values passed as parameter', () => {
             let timestamp = new Date()
             const sleep = new SleepMock()
             let obj = new SleepSyncEvent(timestamp, sleep)

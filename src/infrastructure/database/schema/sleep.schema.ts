@@ -33,6 +33,24 @@ const sleepSchema = new Mongoose.Schema({
                 required: true
             }
         }],
+        awakenings: [{
+            start_time: {
+                type: String,
+                required: true
+            },
+            end_time: {
+                type: String,
+                required: true
+            },
+            duration: {
+                type: Number,
+                required: true
+            },
+            steps: {
+                type: Number,
+                required: true
+            }
+        }],
         patient_id: {
             type: Mongoose.Schema.Types.ObjectId,
             required: true

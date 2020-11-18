@@ -13,7 +13,7 @@ describe('Event: PhysicalActivitySyncEvent', () => {
             assert.propertyVal(obj, 'physical_activity', undefined)
         })
 
-        it('should attributes must have values ​​passed as parameter', () => {
+        it('should attributes must have values passed as parameter', () => {
             let timestamp = new Date()
             const activity = new PhysicalActivityMock()
             let obj = new PhysicalActivitySyncEvent(timestamp, activity)

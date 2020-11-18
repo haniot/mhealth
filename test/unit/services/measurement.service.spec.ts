@@ -15,6 +15,11 @@ import { Strings } from '../../../src/utils/strings'
 import { LastMeasurements } from '../../../src/application/domain/model/last.measurements'
 import { ObjectID } from 'bson'
 import { MeasurementTypes } from '../../../src/application/domain/utils/measurement.types'
+import { EventBusRabbitMQ } from '../../../src/infrastructure/eventbus/rabbitmq/eventbus.rabbitmq'
+import { ConnectionRabbitMQ } from '../../../src/infrastructure/eventbus/rabbitmq/connection.rabbitmq'
+import { ConnectionFactoryRabbitMQ } from '../../../src/infrastructure/eventbus/rabbitmq/connection.factory.rabbitmq'
+import { CustomLoggerMock } from '../../mocks/custom.logger.mock'
+import { IntegrationEventRepositoryMock } from '../../mocks/repositories/integration.event.repository.mock'
 
 describe('Services: MeasurementService', () => {
     const height: Height = new Height().fromJSON(DefaultEntityMock.HEIGHT)
@@ -40,7 +45,20 @@ describe('Services: MeasurementService', () => {
     lastMeasurements.height!.patient_id = DefaultEntityMock.HEIGHT.patient_id
     lastMeasurements.waist_circumference!.patient_id = DefaultEntityMock.WAIST_CIRCUMFERENCE.patient_id
     lastMeasurements.weight!.patient_id = DefaultEntityMock.WEIGHT.patient_id
-    const service = new MeasurementService(new MeasurementRepositoryMock(), new DeviceRepositoryMock())
+
+    const eventBus: EventBusRabbitMQ = new EventBusRabbitMQ(
+        new ConnectionRabbitMQ(new ConnectionFactoryRabbitMQ()),
+        new ConnectionRabbitMQ(new ConnectionFactoryRabbitMQ()),
+        new ConnectionRabbitMQ(new ConnectionFactoryRabbitMQ()),
+        new ConnectionRabbitMQ(new ConnectionFactoryRabbitMQ())
+    )
+
+    const service = new MeasurementService(
+        new MeasurementRepositoryMock(),
+        new DeviceRepositoryMock(),
+        new IntegrationEventRepositoryMock(),
+        eventBus,
+        new CustomLoggerMock())
 
     describe('getAll()', () => {
         context('when get all measurements from patient', () => {

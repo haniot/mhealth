@@ -106,6 +106,7 @@ export class MeasurementRepository extends BaseRepository<Measurement, Measureme
             const query: Query = new Query()
             query.addFilter({ patient_id: patientId, type: measurementType })
             query.addOrdination('timestamp', -1)
+            query.pagination.limit = 1
             return this
                 .find(query)
                 .then(result => resolve(result[0]))
@@ -126,6 +127,7 @@ export class MeasurementRepository extends BaseRepository<Measurement, Measureme
                 ]
             })
             query.addOrdination('timestamp', -1)
+            query.pagination.limit = 1
             return this
                 .find(query)
                 .then(result => resolve(result[0]))
@@ -145,7 +147,11 @@ export class MeasurementRepository extends BaseRepository<Measurement, Measureme
     public updateOrCreate(item: any): Promise<any> {
         const itemUp: any = this.transform(item)
         return new Promise<any>((resolve, reject) => {
-            this.Model.findOneAndUpdate({ timestamp: itemUp.timestamp, patient_id: itemUp.patient_id, type: itemUp.type }, itemUp,
+            this.Model.findOneAndUpdate({
+                    timestamp: itemUp.timestamp,
+                    patient_id: itemUp.patient_id,
+                    type: itemUp.type
+                }, itemUp,
                 { new: true, upsert: true })
                 .exec()
                 .then((result) => {

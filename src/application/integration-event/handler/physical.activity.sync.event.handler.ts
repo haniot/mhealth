@@ -15,7 +15,7 @@ export class PhysicalActivitySyncEventHandler implements IIntegrationEventHandle
     ) {
     }
 
-    public async handle(event: PhysicalActivitySyncEvent): Promise<void> {
+    public async handle(event: any): Promise<void> {
         if (!event.physical_activity) {
             throw new ValidationException('Event is not in the expected format!', JSON.stringify(event))
         }
@@ -40,7 +40,7 @@ export class PhysicalActivitySyncEventHandler implements IIntegrationEventHandle
             try {
                 await this.updateOrCreate(event, event.physical_activity)
                 this._logger.info(
-                    `Action for event ${event.event_name} associated with patient with ID: ${event.physical_activity.patient_id}`
+                    `Action for event ${event.event_name} associated with patient with ID: ${event.physical_activity.user_id}`
                         .concat('successfully performed!'))
             } catch (err) {
                 this._logger.error(`An error occurred while attempting `
@@ -50,15 +50,10 @@ export class PhysicalActivitySyncEventHandler implements IIntegrationEventHandle
         }
     }
 
-    public async updateOrCreate(event: PhysicalActivitySyncEvent, item: PhysicalActivity): Promise<any> {
+    public async updateOrCreate(event: PhysicalActivitySyncEvent, item: any): Promise<any> {
         const physicalActivity: PhysicalActivity = new PhysicalActivity().fromJSON(item)
+        if (item.user_id) physicalActivity.patient_id = item.user_id
         try {
-            let patientId: string = ''
-            if (item.patient_id) {
-                patientId = item.patient_id
-                physicalActivity.patient_id = patientId
-            }
-
             // 1. Validate PhysicalActivity object
             CreatePhysicalActivityValidator.validate(physicalActivity)
         } catch (err) {

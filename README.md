@@ -23,28 +23,28 @@ RESTFul microservice API responsible for managing health measurements, physical 
  See the [documentation](https://github.com/haniot/mhealth/wiki) for more information.
 
 ## Prerequisites
-- [Node 12.0.0+](https://nodejs.org/en/download/)
+- [Node 13.0.0+](https://nodejs.org/en/download/)
 - [MongoDB Server 4.0.0+](https://www.mongodb.com/download-center/community)
-- [RabbitMQ 3.7.0+](https://www.rabbitmq.com/download.html)
+- [RabbitMQ 3.8.0+](https://www.rabbitmq.com/download.html)
 
 ---
 
 ## Set the environment variables
-Application settings are defined by environment variables.. To define the settings, make a copy of the `.env.example` file, naming for `.env`. After that, open and edit the settings as needed. The following environments variables are available:
+Application settings are defined by environment variables. To define the settings, make a copy of the `.env.example` file, naming for `.env`. After that, open and edit the settings as needed. The following environments variables are available:
 
 | VARIABLE | DESCRIPTION  | DEFAULT |
 |-----|-----|-----|
 | `NODE_ENV` | Defines the environment in which the application runs. You can set: `test` _(in this environment, the database defined in `MONGODB_URI_TEST` is used and the logs are disabled for better visualization of the test output)_, `development` _(in this environment, all log levels are enabled)_ and `production` _(in this environment, only the warning and error logs are enabled)_. | `development` |
 | `PORT_HTTP` | Port used to listen for HTTP requests. Any request received on this port is redirected to the HTTPS port. | `4000` |
 | `PORT_HTTPS` | Port used to listen for HTTPS requests. Do not forget to provide the private key and the SSL/TLS certificate. See the topic [generate certificates](#generate-certificates). | `4001` |
-| `SSL_KEY_PATH` | SSL/TLS certificate private key. | `.certs/server.key` |
-| `SSL_CERT_PATH` | SSL/TLS certificate. | `.certs/server.crt` |
+| `SSL_CERT_PATH` | SSL/TLS certificate. | `.certs/server_cert.pem` |
+| `SSL_KEY_PATH` | SSL/TLS certificate private key. | `.certs/server_key.pem` |
 | `MONGODB_URI` | Database connection URI used if the application is running in development or production environment. The [URI specifications ](https://docs.mongodb.com/manual/reference/connection-string) defined by MongoDB are accepted. For example: `mongodb://user:pass@host:port/database?options`. | `mongodb://127.0.0.1:27017`<br/>`/mhealth-service` |
 | `MONGODB_URI_TEST` | Database connection URI used if the application is running in test environment. The [URI specifications ](https://docs.mongodb.com/manual/reference/connection-string) defined by MongoDB are accepted. For example: `mongodb://user:pass@host:port/database?options`. | `mongodb://127.0.0.1:27017`<br/>`/mhealth-service-test` |
 | `MONGODB_ENABLE_TLS` | Enables/Disables connection to TLS. When TLS is used for connection, client certificates are required (`MONGODB_KEY_PATH`, `MONGODB_CA_PATH`). | `false` |
 | `MONGODB_KEY_PATH` | Client certificate and key in .pem format to connect to MongoDB | `.certs/mongodb/client.pem` |
 | `MONGODB_CA_PATH` | MongoDB Certificate of the Authentication entity (CA) | `.certs/mongodb/ca.pem` |
-| `RABBITMQ_URI` | URI for connection to RabbitMQ. The [URI specifications ](https://www.rabbitmq.com/uri-spec.html). For example: `amqp://user:pass@host:port/vhost`. When TLS is used for conection the protocol is amqps and client certificates are required (`RABBITMQ_CERT_PATH`, `RABBITMQ_KEY_PATH`, `RABBITMQ_CA_PATH`) | `amqp://guest:guest`<br/>`@127.0.0.1:5672` |
+| `RABBITMQ_URI` | URI for connection to RabbitMQ. The [URI specifications ](https://www.rabbitmq.com/uri-spec.html). For example: `amqp://user:pass@host:port/vhost`. When TLS is used for connection the protocol is amqps and client certificates are required (`RABBITMQ_CERT_PATH`, `RABBITMQ_KEY_PATH`, `RABBITMQ_CA_PATH`) | `amqp://guest:guest`<br/>`@127.0.0.1:5672` |
 | `RABBITMQ_CERT_PATH` | RabbitMQ Certificate | `.certs/rabbitmq/cert.pem` |
 | `RABBITMQ_KEY_PATH` | RabbitMQ Key | `.certs/rabbitmq/key.pem` |
 | `RABBITMQ_CA_PATH` | RabbitMQ Certificate of the Authentication entity (CA). | `.certs/rabbitmq/ca.pem` |

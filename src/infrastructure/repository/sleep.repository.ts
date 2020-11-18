@@ -76,15 +76,36 @@ export class SleepRepository extends BaseRepository<Sleep, SleepEntity> implemen
     }
 
     /**
+     * Updates a Sleep.
+     *
+     * @param item Sleep to be updated.
+     * @return {Promise<Sleep>}
+     * @throws {RepositoryException}
+     */
+    public update(item: Sleep): Promise<Sleep> {
+        const itemUp: any = this.sleepMapper.transform(item)
+        return new Promise<Sleep>((resolve, reject) => {
+            this.Model.findOneAndUpdate({ start_time: itemUp.start_time, patient_id: itemUp.patient_id }, itemUp,
+                { new: true })
+                .exec()
+                .then((result) => {
+                    if (!result) return resolve(undefined)
+                    return resolve(this.sleepMapper.transform(result))
+                })
+                .catch(err => reject(super.mongoDBErrorListener(err)))
+        })
+    }
+
+    /**
      * Updates or creates a Sleep.
      *
      * @param item Sleep to be updated or created.
-     * @return {Promise<any>}
+     * @return {Promise<Sleep>}
      * @throws {RepositoryException}
      */
-    public updateOrCreate(item: any): Promise<any> {
+    public updateOrCreate(item: Sleep): Promise<Sleep> {
         const itemUp: any = this.sleepMapper.transform(item)
-        return new Promise<any>((resolve, reject) => {
+        return new Promise<Sleep>((resolve, reject) => {
             this.Model.findOneAndUpdate({ start_time: itemUp.start_time, patient_id: itemUp.patient_id }, itemUp,
                 { new: true, upsert: true })
                 .exec()
@@ -92,7 +113,7 @@ export class SleepRepository extends BaseRepository<Sleep, SleepEntity> implemen
                     if (!result) return resolve(undefined)
                     return resolve(this.sleepMapper.transform(result))
                 })
-                .catch(err => reject(this.mongoDBErrorListener(err)))
+                .catch(err => reject(super.mongoDBErrorListener(err)))
         })
     }
 }

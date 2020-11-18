@@ -75,6 +75,7 @@ export class Measurement extends Entity implements IJSONSerializable, IJSONDeser
         if (json.timestamp !== undefined) this.timestamp = json.timestamp
         if (json.type !== undefined) this.type = json.type
         if (json.device_id !== undefined) this.device_id = json.device_id
+        if (json.patient_id !== undefined) this.patient_id = json.patient_id
 
         return this
     }
@@ -82,10 +83,10 @@ export class Measurement extends Entity implements IJSONSerializable, IJSONDeser
     public toJSON(): any {
         return {
             id: super.id,
-            value: this.value,
-            unit: this.unit,
             timestamp: this.timestamp,
             type: this.type,
+            value: this.value,
+            unit: this.unit,
             device_id: this.device_id,
             patient_id: this.patient_id
         }

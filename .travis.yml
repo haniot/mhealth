@@ -1,7 +1,8 @@
 language: node_js
 node_js:
-  - "12"
   - "13"
+  - "14"
+  - "15"
 env:
   - NODE_ENV=test RABBITMQ_URI=amqp://guest:guest@localhost:5672/haniot MONGODB_ENABLE_TLS=false MONGODB_URI_TEST=mongodb://localhost:27017/mhealth-test
 addons:
@@ -10,13 +11,14 @@ addons:
       - rabbitmq-server
 services:
   - rabbitmq
-  - mongodb
 sudo: false
 before_script:
+  - docker run -d -p 27017:27017 mongo:4.4.1
   - sudo rabbitmqctl add_vhost haniot
   - sudo rabbitmqctl set_permissions -p haniot guest ".*" ".*" ".*"
   - npm install && npm install coveralls mocha-lcov-reporter --save-dev
 script:
+  - npm run build
   - npm test
 after_success:
   - nyc report --reporter=text-lcov | coveralls

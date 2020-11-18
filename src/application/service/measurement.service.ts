@@ -28,18 +28,40 @@ import { BodyFat } from '../domain/model/body.fat'
 import { Weight } from '../domain/model/weight'
 import { Height } from '../domain/model/height'
 import { DateValidator } from '../domain/validator/date.validator'
+import { IEventBus } from '../../infrastructure/port/event.bus.interface'
+import { WeightLastSaveEvent } from '../integration-event/event/weight.last.save.event'
+import { HeightLastSaveEvent } from '../integration-event/event/height.last.save.event'
+import { ILogger } from '../../utils/custom.logger'
+import moment from 'moment'
+import { IntegrationEvent } from '../integration-event/event/integration.event'
+import { IIntegrationEventRepository } from '../port/integration.event.repository.interface'
 
 @injectable()
 export class MeasurementService implements IMeasurementService {
     constructor(
         @inject(Identifier.MEASUREMENT_REPOSITORY) private readonly _repository: IMeasurementRepository,
-        @inject(Identifier.DEVICE_REPOSITORY) private readonly _deviceRepository: IDeviceRepository
+        @inject(Identifier.DEVICE_REPOSITORY) private readonly _deviceRepository: IDeviceRepository,
+        @inject(Identifier.INTEGRATION_EVENT_REPOSITORY) private readonly _integrationEventRepo: IIntegrationEventRepository,
+        @inject(Identifier.RABBITMQ_EVENT_BUS) private readonly _eventBus: IEventBus,
+        @inject(Identifier.LOGGER) private readonly _logger: ILogger
     ) {
     }
 
     public async add(item: any | Array<any>): Promise<any> {
-        if (item instanceof Array) return this.addMultipleMeasurements(item)
-        return this.addMeasurement(item)
+        try {
+            if (item instanceof Array) {
+                const multi_status: MultiStatus<any> = await this.addMultipleMeasurements(item)
+                if (multi_status.success?.length) {
+                    await this.publishLastMeasurement(multi_status.success.map(value => value.item))
+                }
+                return Promise.resolve(multi_status)
+            }
+            const result: any = await this.addMeasurement(item)
+            if (result) await this.publishLastMeasurement(result)
+            return Promise.resolve(result)
+        } catch (err) {
+            return Promise.reject(err)
+        }
     }
 
     public async getAll(query: Query): Promise<Array<any>> {
@@ -163,9 +185,9 @@ export class MeasurementService implements IMeasurementService {
 
         for (const elem of measurements) {
             try {
-                const measurement: any = await this.add(elem)
+                const measurement: any = await this.addMeasurement(elem)
                 if (measurement) {
-                    const statusSuccess: StatusSuccess<any> = new StatusSuccess<any>(HttpStatus.CREATED, elem)
+                    const statusSuccess: StatusSuccess<any> = new StatusSuccess<any>(HttpStatus.CREATED, measurement)
                     statusSuccessArr.push(statusSuccess)
                 }
             } catch (err) {
@@ -238,5 +260,78 @@ export class MeasurementService implements IMeasurementService {
         } catch (err) {
             return Promise.reject(err)
         }
+    }
+
+    private async publishLastMeasurement(data: any | Array<any>): Promise<void> {
+        try {
+            if (data instanceof Array) {
+                // Descent sort by timestamp
+                const sort_data: Array<any> =
+                    data.sort((prev, next) => moment(prev.timestamp).diff(moment(next.timestamp)) > 0 ? -1 : 1)
+
+                const weight: Weight = sort_data.filter(measurement => measurement.type === MeasurementTypes.WEIGHT)[0]
+                const height: Height = sort_data.filter(measurement => measurement.type === MeasurementTypes.HEIGHT)[0]
+
+                if (weight !== undefined) await this.publishLastMeasurement(weight)
+                if (height !== undefined) await this.publishLastMeasurement(height)
+
+                return
+            }
+
+            if (data.type === MeasurementTypes.WEIGHT) {
+                // Get last weight measurement, sorted by timestamp
+                const lastWeight: Weight = await this._repository.getLast(data.patient_id, data.type)
+                // if the current weight is the same than the last weight, publish it
+                if (lastWeight && this.isTheSameMeasurement(data, lastWeight)) {
+                    this.publishEvent(new WeightLastSaveEvent(new Date(), data), MeasurementTypes.WEIGHT, data.patient_id).then()
+                }
+            } else if (data.type === MeasurementTypes.HEIGHT) {
+                // Get last height measurement, sorted by timestamp
+                const lastHeight: Height = await this._repository.getLast(data.patient_id, data.type)
+                // if the current height is the same than the last height, publish it
+                if (lastHeight && this.isTheSameMeasurement(data, lastHeight)) {
+                    this.publishEvent(new HeightLastSaveEvent(new Date(), data), MeasurementTypes.HEIGHT, data.patient_id).then()
+                }
+            }
+            return Promise.resolve()
+        } catch (err) {
+            const patientId: string = data instanceof Array ? data[0].patient_id : data.patient_id
+            this._logger.error(`Error at publish last measurement from ${patientId}: ${err.message}`)
+            return Promise.resolve()
+        }
+    }
+
+    private async publishEvent(event: IntegrationEvent<Height | Weight>, resource: string, userId: string): Promise<void> {
+        const routing_key: string = resource === MeasurementTypes.WEIGHT ?
+            WeightLastSaveEvent.ROUTING_KEY : HeightLastSaveEvent.ROUTING_KEY
+        try {
+            const successPublish = await this._eventBus.publish(event, routing_key)
+            if (!successPublish) throw new Error('')
+            this._logger.info(`Last ${resource} from ${userId} successful published!`)
+        } catch (err) {
+            const saveEvent: any = event.toJSON()
+            this._integrationEventRepo.create({
+                ...saveEvent,
+                __routing_key: routing_key,
+                __operation: 'publish'
+            })
+                .then(() => {
+                    this._logger.warn(`Could not publish the event named ${event.event_name}.`
+                        .concat(` The event was saved in the database for a possible recovery.`))
+                })
+                .catch(err => {
+                    this._logger.error(`There was an error trying to save the name event: ${event.event_name}.`
+                        .concat(`Error: ${err.message}. Event: ${JSON.stringify(saveEvent)}`))
+                })
+        }
+    }
+
+
+    private isTheSameMeasurement(current: Measurement, last: Measurement): boolean {
+        return current.type === last.type && // verify if both are the same type
+            current.patient_id === last.patient_id && // verify if both are from the same patient
+            current.value === last.value && // verify if both have the same value
+            current.unit === last.unit && // verify if both have the same unit
+            moment(current.timestamp).isSame(last.timestamp) // verify if both have the same timestamp
     }
 }

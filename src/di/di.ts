@@ -57,7 +57,6 @@ import { EventBusRabbitMQ } from '../infrastructure/eventbus/rabbitmq/eventbus.r
 import { IConnectionEventBus } from '../infrastructure/port/connection.event.bus.interface'
 import { ConnectionRabbitMQ } from '../infrastructure/eventbus/rabbitmq/connection.rabbitmq'
 import { IEventBus } from '../infrastructure/port/event.bus.interface'
-import { RpcServerEventBusTask } from '../background/task/rpc.server.event.bus.task'
 import { IPhysicalActivityService } from '../application/port/physical.activity.service.interface'
 import { PhysicalActivityService } from '../application/service/physical.activity.service'
 import { ISleepService } from '../application/port/sleep.service.interface'
@@ -76,6 +75,19 @@ import { PhysicalActivityRepository } from '../infrastructure/repository/physica
 import { SleepRepository } from '../infrastructure/repository/sleep.repository'
 import { PatientsActivityController } from '../ui/controllers/patients.activity.controller'
 import { PatientsSleepController } from '../ui/controllers/patients.sleep.controller'
+import { IntegrationEventRepository } from '../infrastructure/repository/integration.event.repository'
+import { IIntegrationEventRepository } from '../application/port/integration.event.repository.interface'
+import { IntegrationEventRepoModel } from '../infrastructure/database/schema/integration.event.schema'
+import { PublishEventBusTask } from '../background/task/publish.event.bus.task'
+import { AwakeningsTask } from '../background/task/awakenings.task'
+import { PatientsSleepDurationsController } from '../ui/controllers/patients.sleep.durations.controller'
+import { ISleepDurationService } from '../application/port/sleep.duration.service.interface'
+import { SleepDurationService } from '../application/service/sleep.duration.service'
+import { ISleepDurationRepository } from '../application/port/sleep.duration.repository.interface'
+import { SleepDurationRepository } from '../infrastructure/repository/sleep.duration.repository'
+import { SleepDuration } from '../application/domain/model/sleep.duration'
+import { SleepDurationEntity } from '../infrastructure/entity/sleep.duration.entity'
+import { SleepDurationEntityMapper } from '../infrastructure/entity/mapper/sleep.duration.entity.mapper'
 
 export class IoC {
     private readonly _container: Container
@@ -121,12 +133,15 @@ export class IoC {
             .to(PatientsActivityController).inSingletonScope()
         this._container.bind<PatientsSleepController>(Identifier.PATIENTS_SLEEP_CONTROLLER)
             .to(PatientsSleepController).inSingletonScope()
+        this._container.bind<PatientsSleepDurationsController>(Identifier.PATIENTS_SLEEP_DURATION_CONTROLLER)
+            .to(PatientsSleepDurationsController).inSingletonScope()
 
         // Services
         this._container.bind<IDeviceService>(Identifier.DEVICE_SERVICE).to(DeviceService).inSingletonScope()
         this._container.bind<IMeasurementService>(Identifier.MEASUREMENT_SERVICE).to(MeasurementService).inSingletonScope()
         this._container.bind<IPhysicalActivityService>(Identifier.ACTIVITY_SERVICE).to(PhysicalActivityService).inSingletonScope()
         this._container.bind<ISleepService>(Identifier.SLEEP_SERVICE).to(SleepService).inSingletonScope()
+        this._container.bind<ISleepDurationService>(Identifier.SLEEP_DURATION_SERVICE).to(SleepDurationService).inSingletonScope()
 
         // Repositories
         this._container.bind<IDeviceRepository>(Identifier.DEVICE_REPOSITORY)
@@ -137,12 +152,19 @@ export class IoC {
             .to(PhysicalActivityRepository).inSingletonScope()
         this._container.bind<ISleepRepository>(Identifier.SLEEP_REPOSITORY)
             .to(SleepRepository).inSingletonScope()
+        this._container.bind<ISleepDurationRepository>(Identifier.SLEEP_DURATION_REPOSITORY)
+            .to(SleepDurationRepository).inSingletonScope()
+        this._container
+            .bind<IIntegrationEventRepository>(Identifier.INTEGRATION_EVENT_REPOSITORY)
+            .to(IntegrationEventRepository).inSingletonScope()
 
         // Models
         this._container.bind(Identifier.DEVICE_REPO_MODEL).toConstantValue(DeviceRepoModel)
         this._container.bind(Identifier.MEASUREMENT_REPO_MODEL).toConstantValue(MeasurementRepoModel)
         this._container.bind(Identifier.ACTIVITY_REPO_MODEL).toConstantValue(ActivityRepoModel)
         this._container.bind(Identifier.SLEEP_REPO_MODEL).toConstantValue(SleepRepoModel)
+        this._container.bind(Identifier.INTEGRATION_EVENT_REPO_MODEL).toConstantValue(IntegrationEventRepoModel)
+
 
         // Mappers
         this._container
@@ -178,6 +200,9 @@ export class IoC {
         this.container
             .bind<IEntityMapper<Sleep, SleepEntity>>(Identifier.SLEEP_ENTITY_MAPPER)
             .to(SleepEntityMapper).inSingletonScope()
+        this.container
+            .bind<IEntityMapper<SleepDuration, SleepDurationEntity>>(Identifier.SLEEP_DURATION_ENTITY_MAPPER)
+            .to(SleepDurationEntityMapper).inSingletonScope()
 
         // Background Services
         this._container
@@ -201,11 +226,14 @@ export class IoC {
 
         // Tasks
         this._container
+            .bind<IBackgroundTask>(Identifier.PUBLISH_EVENT_BUS_TASK)
+            .to(PublishEventBusTask).inRequestScope()
+        this._container
             .bind<IBackgroundTask>(Identifier.SUBSCRIBE_EVENT_BUS_TASK)
             .to(SubscribeEventBusTask).inSingletonScope()
         this._container
-            .bind<IBackgroundTask>(Identifier.RPC_SERVER_EVENT_BUST_TASK)
-            .to(RpcServerEventBusTask).inSingletonScope()
+            .bind<AwakeningsTask>(Identifier.AWAKENINGS_TASK)
+            .to(AwakeningsTask).inSingletonScope()
 
         // Log
         this._container.bind<ILogger>(Identifier.LOGGER).to(CustomLogger).inSingletonScope()

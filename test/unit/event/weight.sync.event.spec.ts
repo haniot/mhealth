@@ -16,7 +16,7 @@ describe('Event: WeightSyncEvent', () => {
             assert.propertyVal(obj, 'weight', undefined)
         })
 
-        it('should attributes must have values ​​passed as parameter', () => {
+        it('should attributes must have values passed as parameter', () => {
             let timestamp = new Date()
             const weight = defaultWeights[0]
             let obj = new WeightSyncEvent(timestamp, weight)

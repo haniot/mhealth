@@ -186,7 +186,7 @@ describe('Validators: CreatePhysicalActivityValidator', () => {
                 } catch (err) {
                     assert.equal(err.message, Strings.ERROR_MESSAGE.INVALID_FIELD
                         .replace('{0}', 'distance'))
-                    assert.equal(err.description, Strings.ERROR_MESSAGE.POSITIVE_NUMBER)
+                    assert.equal(err.description, Strings.ERROR_MESSAGE.POSITIVE_INTEGER)
                 }
                 activity.distance = 1000
             })

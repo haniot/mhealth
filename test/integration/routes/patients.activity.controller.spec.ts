@@ -684,7 +684,7 @@ describe('Routes: patients.physicalactivities', () => {
         })
 
         context('when a validation error occurs (the distance parameter is invalid)', () => {
-            it('should return status code 400 and info message about the invalid parameter of distance', () => {
+            it('should return status code 400 and info message about the invalid parameter of distance (string)', () => {
                 const body = {
                     name: defaultActivity.name,
                     start_time: defaultActivity.start_time,
@@ -706,7 +706,33 @@ describe('Routes: patients.physicalactivities', () => {
                         expect(err.body.code).to.eql(400)
                         expect(err.body.message).to.eql(Strings.ERROR_MESSAGE.INVALID_FIELD
                             .replace('{0}', 'distance'))
-                        expect(err.body.description).to.eql(Strings.ERROR_MESSAGE.POSITIVE_NUMBER)
+                        expect(err.body.description).to.eql(Strings.ERROR_MESSAGE.POSITIVE_INTEGER)
+                    })
+            })
+
+            it('should return status code 400 and info message about the invalid parameter of distance (decimal)', () => {
+                const body = {
+                    name: defaultActivity.name,
+                    start_time: defaultActivity.start_time,
+                    end_time: defaultActivity.end_time,
+                    duration: defaultActivity.duration,
+                    calories: defaultActivity.calories,
+                    steps: defaultActivity.steps ? defaultActivity.steps : undefined,
+                    distance: 1250.5,
+                    levels: defaultActivity.levels ? defaultActivity.levels : undefined,
+                    heart_rate_zones: defaultActivity.heart_rate_zones ? defaultActivity.heart_rate_zones : undefined
+                }
+
+                return request
+                    .post(`/v1/patients/${defaultActivity.patient_id}/physicalactivities`)
+                    .send(body)
+                    .set('Content-Type', 'application/json')
+                    .expect(400)
+                    .then(err => {
+                        expect(err.body.code).to.eql(400)
+                        expect(err.body.message).to.eql(Strings.ERROR_MESSAGE.INVALID_FIELD
+                            .replace('{0}', 'distance'))
+                        expect(err.body.description).to.eql(Strings.ERROR_MESSAGE.POSITIVE_INTEGER)
                     })
             })
         })
@@ -734,7 +760,7 @@ describe('Routes: patients.physicalactivities', () => {
                         expect(err.body.code).to.eql(400)
                         expect(err.body.message).to.eql(Strings.ERROR_MESSAGE.INVALID_FIELD
                             .replace('{0}', 'distance'))
-                        expect(err.body.description).to.eql(Strings.ERROR_MESSAGE.POSITIVE_NUMBER)
+                        expect(err.body.description).to.eql(Strings.ERROR_MESSAGE.POSITIVE_INTEGER)
                     })
             })
         })

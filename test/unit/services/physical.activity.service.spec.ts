@@ -324,7 +324,7 @@ describe('Services: PhysicalActivityService', () => {
                     .catch(err => {
                         assert.propertyVal(err, 'message', Strings.ERROR_MESSAGE.INVALID_FIELD
                             .replace('{0}', 'distance'))
-                        assert.propertyVal(err, 'description', Strings.ERROR_MESSAGE.POSITIVE_NUMBER)
+                        assert.propertyVal(err, 'description', Strings.ERROR_MESSAGE.POSITIVE_INTEGER)
                     })
             })
         })

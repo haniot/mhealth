@@ -15,6 +15,7 @@ import { IPhysicalActivityRepository } from '../../application/port/physical.act
 import { SleepSyncEvent } from '../../application/integration-event/event/sleep.sync.event'
 import { SleepSyncEventHandler } from '../../application/integration-event/handler/sleep.sync.event.handler'
 import { ISleepRepository } from '../../application/port/sleep.repository.interface'
+import { AwakeningsTask } from './awakenings.task'
 
 @injectable()
 export class SubscribeEventBusTask implements IBackgroundTask {
@@ -63,7 +64,10 @@ export class SubscribeEventBusTask implements IBackgroundTask {
          */
         this._eventBus
             .subscribe(new WeightSyncEvent(), new WeightSyncEventHandler(
-                DIContainer.get<IMeasurementRepository>(Identifier.MEASUREMENT_REPOSITORY), this._logger),
+                DIContainer.get<IMeasurementRepository>(Identifier.MEASUREMENT_REPOSITORY),
+                DIContainer.get(Identifier.INTEGRATION_EVENT_REPOSITORY),
+                DIContainer.get(Identifier.RABBITMQ_EVENT_BUS),
+                this._logger),
                 WeightSyncEvent.ROUTING_KEY)
             .then((result: boolean) => {
                 if (result) this._logger.info('Subscribe in WeightSyncEvent successful!')
@@ -93,6 +97,7 @@ export class SubscribeEventBusTask implements IBackgroundTask {
         this._eventBus
             .subscribe(new SleepSyncEvent(), new SleepSyncEventHandler(
                 DIContainer.get<ISleepRepository>(Identifier.SLEEP_REPOSITORY),
+                DIContainer.get<AwakeningsTask>(Identifier.AWAKENINGS_TASK),
                 this._logger),
                 SleepSyncEvent.ROUTING_KEY)
             .then((result: boolean) => {

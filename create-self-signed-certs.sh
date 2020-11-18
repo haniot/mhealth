@@ -2,42 +2,77 @@
 # Define where to store the generated certs and metadata.
 DIR="$(pwd)/.certs"
 
-# Optional: Ensure the target directory exists and is empty.
-rm -rf "${DIR}"
-mkdir -p "${DIR}"
+rm -rf $DIR
+mkdir -p $DIR
 
 # Create the openssl configuration file. This is used for both generating
 # the certificate as well as for specifying the extensions. It aims in favor
 # of automation, so the DN is encoding and not prompted.
-cat > "${DIR}/openssl.cnf" << EOF
-[req]
-default_bits = 2048
-encrypt_key  = no # Change to encrypt the private key using des3 or similar
-default_md   = sha256
-prompt       = no
-utf8         = yes
-# Speify the DN here so we aren't prompted (along with prompt = no above).
-distinguished_name = req_distinguished_name
-# Extensions for SAN IP and SAN DNS
-req_extensions = v3_req
-# Be sure to update the subject to match your organization.
-[req_distinguished_name]
-C  = BR
-ST = PB
-L  = PB
-O  = HANIoT CA
-CN = localhost
-# Allow client and server auth. You may want to only allow server auth.
-# Link to SAN names.
-[v3_req]
-basicConstraints     = CA:FALSE
+cat >"${DIR}/openssl.cnf" <<EOF
+####################################################################
+[ ca ]
+default_ca = CA_default        # The default ca section
+
+[ CA_default ]
+default_md  = sha256            # use public key default MD
+preserve    = no                # keep passed DN ordering
+
+x509_extensions = ca_extensions # The extensions to add to the cert
+
+email_in_dn = no                # Don't concat the email in the DN
+copy_extensions = copy          # Required to copy SANs from CSR to cert
+
+####################################################################
+[ req ]
+default_bits        = 2048
+default_keyfile     = tmp/external.key
+distinguished_name  = ca_distinguished_name
+x509_extensions     = ca_extensions
+string_mask         = utf8only
+
+####################################################################
+[ ca_distinguished_name ]
+countryName                    = BR
+stateOrProvinceName            = PB
+localityName                   = Campina Grande
+organizationName               = HANIoT
+organizationalUnitName         = HANIoT
+commonName                     = HANIoT CA
+
+####################################################################
+[ ca_extensions ]
 subjectKeyIdentifier = hash
+authorityKeyIdentifier = keyid:always, issuer
+basicConstraints = critical, CA:true
+keyUsage = critical, digitalSignature, nonRepudiation, keyCertSign, cRLSign
+
+####################################################################
+[ client_extensions ]
+basicConstraints = CA:false
+keyUsage         = digitalSignature, keyEncipherment
+extendedKeyUsage = clientAuth
+subjectAltName   = @alt_names
+
+####################################################################
+[ server_extensions ]
+basicConstraints = CA:false
+keyUsage         = digitalSignature, keyEncipherment
+extendedKeyUsage = serverAuth
+subjectAltName   = @alt_names
+subjectKeyIdentifier = hash
+authorityKeyIdentifier = keyid,issuer
+
+####################################################################
+[ client_server_extensions ]
+basicConstraints     = CA:FALSE
 keyUsage             = digitalSignature, keyEncipherment
 extendedKeyUsage     = clientAuth, serverAuth
+subjectKeyIdentifier = hash
 subjectAltName       = @alt_names
-# Alternative names are specified as IP.# and DNS.# for IP addresses and
-# DNS accordingly.
-[alt_names]
+
+####################################################################
+
+[ alt_names ]
 IP.1  = 127.0.0.1
 DNS.1 = localhost
 EOF
@@ -50,41 +85,62 @@ EOF
 # To put a password on the key, remove the -nodes option.
 #
 # Be sure to update the subject to match your organization.
-openssl req \
-  -new \
-  -newkey rsa:2048 \
-  -days 365 \
-  -nodes \
-  -x509 \
-  -subj "/C=BR/ST=PB/L=PB/O=HANIoT CA/CN=localhost" \
-  -keyout "${DIR}/ca.key" \
-  -out "${DIR}/ca.crt"
-# For each server/service you want to secure with your CA, repeat the
-# following steps:
+#
+# Generate your CA certificate
+openssl req -x509 \
+  -config "$DIR/openssl.cnf" \
+  -nodes -days 3650 \
+  -subj "/O=HANIoT,CN=HANIoT CA" \
+  -keyout "$DIR/ca.key" \
+  -out "$DIR/ca.pem" 2>/dev/null
 
-# Generate the private key for the service. Again, you may want to increase
-# the bits to 4096.
-openssl genrsa -out "${DIR}/server.key" 2048
+# Params:
+# type (server, client) $1, CN $2, Alt Names $3, filename $4
+generateCerts() {
+  ORG="$2"
+  TYPE="server_extensions"
 
-# Generate a CSR using the configuration and the key just generated. We will
-# give this CSR to our CA to sign.
-openssl req \
-  -new -key "${DIR}/server.key" \
-  -out "${DIR}/server.csr" \
-  -config "${DIR}/openssl.cnf"
+  if [ "$1" = "client" ]; then
+    TYPE="client_extensions"
+  elif [ "$1" = "client/server" ]; then
+    TYPE="client_server_extensions"
+  fi
 
-# Sign the CSR with our CA. This will generate a new certificate that is signed
-# by our CA.
-openssl x509 \
-  -req \
-  -days 365 \
-  -in "${DIR}/server.csr" \
-  -CA "${DIR}/ca.crt" \
-  -CAkey "${DIR}/ca.key" \
-  -CAcreateserial \
-  -extensions v3_req \
-  -extfile "${DIR}/openssl.cnf" \
-  -out "${DIR}/server.crt"
+  # Add Subject Alternative Names
+  DNS_LIST=$(echo $3 | sed "s/,/ /g")
+  NUMBER=2
+  for DNS in ${DNS_LIST}; do
+    echo "DNS.${NUMBER} = ${DNS}" >>$DIR/openssl.cnf
+    NUMBER=$((NUMBER + 1))
+  done
+
+  # Generate the private key
+  openssl genrsa -out "$DIR/$4_key.pem" 2>/dev/null
+
+  # Generate a CSR using the configuration and the key just generated. We will
+  # give this CSR to our CA to sign.
+  openssl req \
+    -new -nodes \
+    -key "$DIR/$4_key.pem" \
+    -subj "/O=$ORG/CN=HANIoT" \
+    -out "$DIR/$4.csr" 2>/dev/null
+
+  # Sign the CSR with our CA. This will generate a new certificate that is signed
+  # by our CA.
+  openssl x509 \
+    -req -days 3650 -in "$DIR/$4.csr" \
+    -CA "$DIR/ca.pem" -CAkey "$DIR/ca.key" -CAcreateserial \
+    -out "$DIR/$4_cert.pem" -extfile "$DIR/openssl.cnf" \
+    -extensions $TYPE 2>/dev/null
+
+  chmod 0644 "$DIR/ca.pem" "$DIR/$4_key.pem" "$DIR/$4_cert.pem"
+}
+
+# Certificates for service
+COUNT=1
+SERVICE="mhealth"
+echo "$COUNT - Generating certificates for the \"${SERVICE^^}\" Service..."
+generateCerts "server" "$SERVICE" "localhost" "server" "$DIR"  # Server
 
 # (Optional) Remove unused files at the moment
-rm -rf "${DIR}/ca.key" "${DIR}/ca.srl" ".srl" "${DIR}/server.csr" "${DIR}/openssl.cnf"
+rm -rf $DIR/ca.key $DIR/*.srl $DIR/*.csr $DIR/*.cnf

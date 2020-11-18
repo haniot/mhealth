@@ -17,6 +17,7 @@ export abstract class DefaultEntityMock {
 
     public static BLOOD_PRESSURE: any = {
         id: '5cb48827217ee2910ea11e84',
+        value: 10,
         systolic: 120,
         diastolic: 80,
         pulse: 80,
@@ -71,7 +72,9 @@ export abstract class DefaultEntityMock {
 
     public static MEASUREMENT: any = {
         id: '5cb488279ea138bd6abf937b',
+        value: 50,
         unit: '-',
+        timestamp: new Date().toISOString(),
         type: 'measurement',
         patient_id: '5a62be07d6f33400146c9b61',
         device_id: '5ca77314bc08ec205689a736'
@@ -127,5 +130,31 @@ export abstract class DefaultEntityMock {
         blood_pressure: DefaultEntityMock.BLOOD_PRESSURE,
         blood_glucose: DefaultEntityMock.BLOOD_GLUCOSE,
         body_temperature: DefaultEntityMock.BODY_TEMPERATURE
+    }
+
+    public static readonly SLEEP_AWAKENING: any = {
+        start_time: '01:30:30',
+        end_time: '01:45:30',
+        duration: 900000,
+        steps: 9
+    }
+
+    public static readonly SLEEP_DURATION_SUMMARY: any = {
+        total: 19417
+    }
+
+    public static readonly SLEEP_DURATION_ITEM: any = {
+        date: '2020-11-01',
+        value: 7234
+    }
+
+    public static readonly SLEEP_DURATION: any = {
+        summary: DefaultEntityMock.SLEEP_DURATION_SUMMARY,
+        data_set: [DefaultEntityMock.SLEEP_DURATION_ITEM]
+    }
+
+    public static readonly USER: any = {
+        id: '5f3ab9e5f4d399ae75cd39e3',
+        type: 'patient'
     }
 }

@@ -7,16 +7,18 @@ import { Sleep } from '../../domain/model/sleep'
 import { CreateSleepValidator } from '../../domain/validator/create.sleep.validator'
 import { ISleepRepository } from '../../port/sleep.repository.interface'
 import { ValidationException } from '../../domain/exception/validation.exception'
+import { AwakeningsTask } from '../../../background/task/awakenings.task'
 
 export class SleepSyncEventHandler implements IIntegrationEventHandler<SleepSyncEvent> {
     constructor(
         @inject(Identifier.SLEEP_REPOSITORY) private readonly _sleepRepo: ISleepRepository,
+        @inject(Identifier.AWAKENINGS_TASK) private readonly _awakeningsTask: AwakeningsTask,
         @inject(Identifier.LOGGER) private readonly _logger: ILogger
     ) {
     }
 
-    public async handle(event: SleepSyncEvent): Promise<void> {
-        if (!event.sleep)  {
+    public async handle(event: any): Promise<void> {
+        if (!event.sleep) {
             throw new ValidationException('Event is not in the expected format!', JSON.stringify(event))
         }
 
@@ -25,7 +27,15 @@ export class SleepSyncEventHandler implements IIntegrationEventHandler<SleepSync
         if (event.sleep instanceof Array) {
             for (const item of event.sleep) {
                 try {
-                    await this.updateOrCreate(event, item)
+                    const sleep: Sleep = await this.updateOrCreate(event, item)
+                    // Calculates the awakenings for synchronized sleep.
+                    this._awakeningsTask.calculateAwakenings(sleep)
+                        .then()
+                        .catch((err) => {
+                            this._logger.error(`An error occurred while attempting calculate awakenings `
+                                .concat(`for the sleep with id: ${sleep.id}. ${err.message}`)
+                                .concat(err.description ? ' ' + err.description : ''))
+                        })
                     countSuccess++
                 } catch (err) {
                     this._logger.warn(`An error occurred while attempting `
@@ -38,10 +48,18 @@ export class SleepSyncEventHandler implements IIntegrationEventHandler<SleepSync
                 .concat(`${countSuccess} / Total items with error: ${countError}`))
         } else {
             try {
-                await this.updateOrCreate(event, event.sleep)
+                const sleep: Sleep = await this.updateOrCreate(event, event.sleep)
+                // Calculates awakenings for synchronized sleep.
+                this._awakeningsTask.calculateAwakenings(sleep)
+                    .then()
+                    .catch((err) => {
+                        this._logger.error(`An error occurred while attempting calculate awakenings `
+                            .concat(`for the sleep with id: ${sleep.id}. ${err.message}`)
+                            .concat(err.description ? ' ' + err.description : ''))
+                    })
                 this._logger.info(
-                    `Action for event ${event.event_name} associated with patient with ID: ${event.sleep.patient_id}`
-                        .concat('successfully performed!'))
+                    `Action for event ${event.event_name} associated with patient with ID: ${event.sleep.user_id}`
+                        .concat(' successfully performed!'))
             } catch (err) {
                 this._logger.error(`An error occurred while attempting `
                     .concat(`perform the operation with the ${event.event_name} name event. ${err.message}`)
@@ -50,15 +68,10 @@ export class SleepSyncEventHandler implements IIntegrationEventHandler<SleepSync
         }
     }
 
-    public async updateOrCreate(event: SleepSyncEvent, item: Sleep): Promise<any> {
+    public async updateOrCreate(event: SleepSyncEvent, item: any): Promise<any> {
         const sleep: Sleep = new Sleep().fromJSON(item)
+        if (item.user_id) sleep.patient_id = item.user_id
         try {
-            let patientId: string = ''
-            if (item.patient_id) {
-                patientId = item.patient_id
-                sleep.patient_id = patientId
-            }
-
             // 1. Validate Sleep object
             CreateSleepValidator.validate(sleep)
         } catch (err) {
