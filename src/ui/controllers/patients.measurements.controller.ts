@@ -88,7 +88,7 @@ export class PatientsMeasurementsController {
         try {
             const query: Query = new Query().fromJSON(req.query)
             query.addFilter({ patient_id: req.params.patient_id })
-            const result: Measurement = await this._service.getById(req.params.measurement_id, query)
+            const result: Measurement | undefined = await this._service.getById(req.params.measurement_id, query)
             if (!result) return res.status(HttpStatus.NOT_FOUND).send(this.getMessageMeasurementNotFound())
             return res.status(HttpStatus.OK).send(this.toJSONView(result))
         } catch (err) {

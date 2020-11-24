@@ -124,7 +124,7 @@ export class PatientsActivityController {
         try {
             const query: IQuery = new Query().fromJSON(req.query)
             query.addFilter({ _id: req.params.physicalactivity_id, patient_id: req.params.patient_id })
-            const result: PhysicalActivity = await this._activityService
+            const result: PhysicalActivity | undefined = await this._activityService
                 .getByIdAndPatient(req.params.physicalactivity_id, req.params.patient_id, query)
             if (!result) return res.status(HttpStatus.NOT_FOUND).send(this.getMessageNotActivityFound())
             return res.status(HttpStatus.OK).send(result)

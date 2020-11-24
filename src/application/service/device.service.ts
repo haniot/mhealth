@@ -16,7 +16,7 @@ export class DeviceService implements IDeviceService {
     ) {
     }
 
-    public async add(item: Device): Promise<Device> {
+    public async add(item: Device): Promise<Device | undefined> {
         try {
             CreateDeviceValidator.validate(item)
         } catch (err) {
@@ -25,7 +25,7 @@ export class DeviceService implements IDeviceService {
         return this._repository.create(item)
     }
 
-    public async addDevice(item: Device, userId: string): Promise<Device> {
+    public async addDevice(item: Device, userId: string): Promise<Device | undefined> {
         try {
             ObjectIdValidator.validate(userId)
             item.patient_id = userId
@@ -47,7 +47,7 @@ export class DeviceService implements IDeviceService {
         return this._repository.find(query)
     }
 
-    public async getById(id: string, query: IQuery): Promise<Device> {
+    public async getById(id: string, query: IQuery): Promise<Device | undefined> {
         try {
             ObjectIdValidator.validate(id)
             const patient_id = query.toJSON().filters.patient_id
@@ -73,7 +73,7 @@ export class DeviceService implements IDeviceService {
         return this._repository.delete(id)
     }
 
-    public async update(item: Device): Promise<Device> {
+    public async update(item: Device): Promise<Device | undefined> {
         try {
             UpdateDeviceValidator.validate(item)
         } catch (err) {
@@ -82,7 +82,7 @@ export class DeviceService implements IDeviceService {
         return this._repository.update(item)
     }
 
-    public async updateDevice(item: Device, userId: string): Promise<Device> {
+    public async updateDevice(item: Device, userId: string): Promise<Device | undefined> {
         try {
             ObjectIdValidator.validate(userId)
             UpdateDeviceValidator.validate(item)
