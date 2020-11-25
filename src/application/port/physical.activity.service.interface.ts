@@ -32,10 +32,10 @@ export interface IPhysicalActivityService extends IService<PhysicalActivity> {
      * @param activityId PhysicalActivity unique identifier.
      * @param patientId Patient unique identifier.
      * @param query Defines object to be used for queries.
-     * @return {Promise<PhysicalActivity>}
+     * @return {Promise<PhysicalActivity | undefined>}
      * @throws {RepositoryException}
      */
-    getByIdAndPatient(activityId: string, patientId: string, query: IQuery): Promise<PhysicalActivity>
+    getByIdAndPatient(activityId: string, patientId: string, query: IQuery): Promise<PhysicalActivity | undefined>
 
     /**
      * Removes physicalactivity according to its unique identifier and related patient.

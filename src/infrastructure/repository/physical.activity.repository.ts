@@ -81,12 +81,12 @@ export class PhysicalActivityRepository extends BaseRepository<PhysicalActivity,
      * Updates or creates a Physical Activity.
      *
      * @param item Physical Activity to be updated or created.
-     * @return {Promise<any>}
+     * @return {Promise<PhysicalActivity | undefined>}
      * @throws {RepositoryException}
      */
-    public updateOrCreate(item: any): Promise<any> {
+    public updateOrCreate(item: any): Promise<PhysicalActivity | undefined> {
         const itemUp: any = this.activityMapper.transform(item)
-        return new Promise<any>((resolve, reject) => {
+        return new Promise<PhysicalActivity | undefined>((resolve, reject) => {
             this.Model.findOneAndUpdate({ start_time: itemUp.start_time, patient_id: itemUp.patient_id }, itemUp,
                 { new: true, upsert: true })
                 .exec()

@@ -124,7 +124,7 @@ export class PatientsSleepController {
         try {
             const query: IQuery = new Query().fromJSON(req.query)
             query.addFilter({ _id: req.params.sleep_id, patient_id: req.params.patient_id })
-            const result: Sleep = await this._sleepService
+            const result: Sleep | undefined = await this._sleepService
                 .getByIdAndPatient(req.params.sleep_id, req.params.patient_id, query)
             if (!result) return res.status(HttpStatus.NOT_FOUND).send(this.getMessageSleepNotFound())
             return res.status(HttpStatus.OK).send(result)

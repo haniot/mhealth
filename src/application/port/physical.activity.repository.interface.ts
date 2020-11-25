@@ -42,8 +42,8 @@ export interface IPhysicalActivityRepository extends IRepository<PhysicalActivit
      * Updates or creates a Physical Activity.
      *
      * @param item Physical Activity to be updated or created.
-     * @return {Promise<any>}
+     * @return {Promise<PhysicalActivity | undefined>}
      * @throws {RepositoryException}
      */
-    updateOrCreate(item: any): Promise<any>
+    updateOrCreate(item: any): Promise<PhysicalActivity | undefined>
 }

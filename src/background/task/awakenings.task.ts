@@ -13,6 +13,8 @@ import { ISleepRepository } from '../../application/port/sleep.repository.interf
  */
 @injectable()
 export class AwakeningsTask {
+    private static readonly MINIMUM_HOUR: number = 18
+    private static readonly MAXIMUM_HOUR: number = 6
     private static readonly MINIMUM_PATTERN_DURATION: number = 420000   // 7 minutes in milliseconds.
     private static readonly MINIMUM_STEPS: number = 7
 
@@ -25,11 +27,20 @@ export class AwakeningsTask {
 
     public async calculateAwakenings(sleep: Sleep): Promise<Sleep> {
         try {
-            // Filters the received sleep data set keeping only AWAKE elements lasting 7 minutes or more.
+            // Filters the received sleep data set, keeping only the AWAKE elements lasting 7 minutes or more
+            // which have the hour >= 18 or < 6.
             const sleepDataSet: Array<SleepPatternDataSet> =
                 sleep.pattern!.data_set.filter(elem => {
-                    return elem.name === Stages.AWAKE && elem.duration >= AwakeningsTask.MINIMUM_PATTERN_DURATION
+                    const elemHour = (new Date(elem.start_time)).getHours()
+                    return (elemHour >= AwakeningsTask.MINIMUM_HOUR || elemHour < AwakeningsTask.MAXIMUM_HOUR) &&
+                        elem.name === Stages.AWAKE && elem.duration >= AwakeningsTask.MINIMUM_PATTERN_DURATION
                 })
+
+            // If the filtered sleep pattern data set has no elements it returns the received Sleep.
+            if (!sleepDataSet.length) {
+                this._logger.info(`Awakenings successfully calculated for sleep with id: ${sleep.id}`)
+                return Promise.resolve(sleep)
+            }
 
             // Gets first start_time of Sleep data set in format YYYY-MM-dd.
             let startCurrent = this.generateSimpleDate(sleep.pattern?.data_set[0].start_time!)
@@ -67,8 +78,14 @@ export class AwakeningsTask {
             }
 
             sleep.awakenings = result.map(item => new SleepAwakening().fromJSON(item))
-            const sleepUp: Sleep = await this._sleepRepo.update(sleep)
+            const sleepUp: Sleep | undefined = await this._sleepRepo.update(sleep)
+
             this._logger.info(`Awakenings successfully calculated for sleep with id: ${sleep.id}`)
+
+            if (!sleepUp) {
+                sleep.awakenings = undefined
+                return Promise.resolve(sleep)
+            }
             return Promise.resolve(sleepUp)
         } catch (err) {
             return Promise.reject(err)

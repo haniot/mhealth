@@ -21,7 +21,7 @@ export class PatientsDevicesController {
     public async addDeviceFromPatient(@request() req: Request, @response() res: Response): Promise<Response> {
         try {
             const device: Device = new Device().fromJSON(req.body)
-            const result: Device = await this._service.addDevice(device, req.params.patient_id)
+            const result: Device | undefined = await this._service.addDevice(device, req.params.patient_id)
             return res.status(HttpStatus.CREATED).send(this.toJSONView(result))
         } catch (err) {
             const handlerError = ApiExceptionManager.build(err)
@@ -55,7 +55,7 @@ export class PatientsDevicesController {
         try {
             const query: Query = new Query().fromJSON(req.query)
             query.addFilter({ patient_id: req.params.patient_id })
-            const result: Device = await this._service.getById(req.params.device_id, query)
+            const result: Device | undefined = await this._service.getById(req.params.device_id, query)
             if (!result) return res.status(HttpStatus.NOT_FOUND).send(this.getMessageDeviceNotFound())
             return res.status(HttpStatus.OK).send(this.toJSONView(result))
         } catch (err) {
@@ -72,7 +72,7 @@ export class PatientsDevicesController {
         try {
             const device: Device = new Device().fromJSON(req.body)
             device.id = req.params.device_id
-            const result: Device = await this._service.updateDevice(device, req.params.patient_id)
+            const result: Device | undefined = await this._service.updateDevice(device, req.params.patient_id)
             if (!result) return res.status(HttpStatus.NOT_FOUND).send(this.getMessageDeviceNotFound())
             return res.status(HttpStatus.OK).send(this.toJSONView(result))
         } catch (err) {
@@ -94,9 +94,9 @@ export class PatientsDevicesController {
         }
     }
 
-    private toJSONView(item: Device | Array<Device>): object {
+    private toJSONView(item: Device | Array<Device> | undefined): object {
         if (item instanceof Array) return item.map(device => device.toJSON())
-        return item.toJSON()
+        return item?.toJSON()
     }
 
     private getMessageDeviceNotFound(): object {

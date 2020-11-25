@@ -29,11 +29,11 @@ export class PhysicalActivityService implements IPhysicalActivityService {
      * Adds a new PhysicalActivity or a list of PhysicalActivity.
      *
      * @param {PhysicalActivity | Array<PhysicalActivity>} activity
-     * @returns {(Promise<PhysicalActivity | MultiStatus<PhysicalActivity>)}
+     * @returns {(Promise<PhysicalActivity | MultiStatus<PhysicalActivity> | undefined)}
      * @throws {ValidationException | ConflictException | RepositoryException}
      */
     public async add(activity: PhysicalActivity | Array<PhysicalActivity>):
-        Promise<PhysicalActivity | MultiStatus<PhysicalActivity>> {
+        Promise<PhysicalActivity | MultiStatus<PhysicalActivity> | undefined> {
         if (activity instanceof Array) return this.addMultipleActivities(activity)
         return this.addActivity(activity)
     }
@@ -85,10 +85,10 @@ export class PhysicalActivityService implements IPhysicalActivityService {
      * Before adding, it is checked whether the activity already exists.
      *
      * @param activity PhysicalActivity
-     * @return {Promise<Activity>}
+     * @return {Promise<Activity | undefined>}
      * @throws {ValidationException | ConflictException | RepositoryException}
      */
-    private async addActivity(activity: PhysicalActivity): Promise<PhysicalActivity> {
+    private async addActivity(activity: PhysicalActivity): Promise<PhysicalActivity | undefined> {
         try {
             // 1. Validate the object.
             CreatePhysicalActivityValidator.validate(activity)
@@ -133,10 +133,10 @@ export class PhysicalActivityService implements IPhysicalActivityService {
      * @param activityId PhysicalActivity ID.
      * @param patientId Patient ID.
      * @param query Defines object to be used for queries.
-     * @return {Promise<Array<PhysicalActivity>>}
+     * @return {Promise<PhysicalActivity | undefined>}
      * @throws {RepositoryException}
      */
-    public getByIdAndPatient(activityId: string, patientId: string, query: IQuery): Promise<PhysicalActivity> {
+    public getByIdAndPatient(activityId: string, patientId: string, query: IQuery): Promise<PhysicalActivity | undefined> {
         ObjectIdValidator.validate(patientId, Strings.PATIENT.PARAM_ID_NOT_VALID_FORMAT)
         ObjectIdValidator.validate(activityId, Strings.PHYSICAL_ACTIVITY.PARAM_ID_NOT_VALID_FORMAT)
 

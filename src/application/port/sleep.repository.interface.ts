@@ -42,8 +42,8 @@ export interface ISleepRepository extends IRepository<Sleep> {
      * Updates or creates a Sleep.
      *
      * @param item Sleep to be updated or created.
-     * @return {Promise<Sleep>}
+     * @return {Promise<Sleep | undefined>}
      * @throws {RepositoryException}
      */
-    updateOrCreate(item: Sleep): Promise<Sleep>
+    updateOrCreate(item: Sleep): Promise<Sleep | undefined>
 }
