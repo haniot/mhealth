@@ -34,10 +34,10 @@ export class SleepService implements ISleepService {
      * Before adding, it is checked whether the sleep already exists.
      *
      * @param {Sleep | Array<Sleep>} sleep
-     * @returns {(Promise<Sleep>)}
+     * @returns {(Promise<Sleep | MultiStatus<Sleep> | undefined>)}
      * @throws {ConflictException | RepositoryException} If a data conflict occurs, as an existing sleep.
      */
-    public async add(sleep: Sleep | Array<Sleep>): Promise<Sleep | MultiStatus<Sleep>> {
+    public async add(sleep: Sleep | Array<Sleep>): Promise<Sleep | MultiStatus<Sleep> | undefined> {
         if (sleep instanceof Array) return this.addMultipleSleep(sleep)
         return this.addSleep(sleep)
     }
@@ -88,10 +88,10 @@ export class SleepService implements ISleepService {
      * Before adding, it is checked whether the sleep already exists.
      *
      * @param sleep Sleep
-     * @return {Promise<Sleep>}
+     * @return {Promise<Sleep | undefined>}
      * @throws {ValidationException | ConflictException | RepositoryException}
      */
-    private async addSleep(sleep: Sleep): Promise<Sleep> {
+    private async addSleep(sleep: Sleep): Promise<Sleep | undefined> {
         try {
             // 1. Validate the object.
             CreateSleepValidator.validate(sleep)
@@ -101,7 +101,8 @@ export class SleepService implements ISleepService {
             if (sleepExist) throw new ConflictException(Strings.SLEEP.ALREADY_REGISTERED)
 
             // 3. Add Sleep.
-            const sleepCreate: Sleep = await this._sleepRepository.create(sleep)
+            const sleepCreate: Sleep | undefined = await this._sleepRepository.create(sleep)
+            if (!sleepCreate) return Promise.resolve(sleepCreate)
 
             // 4. Calculate awakenings for the created sleep.
             return this._internalAwkCalculate(sleepCreate)
@@ -139,16 +140,16 @@ export class SleepService implements ISleepService {
      * @param sleepId Sleep unique identifier.
      * @param patientId Patient unique identifier.
      * @param query Defines object to be used for queries.
-     * @return {Promise<Array<Sleep>>}
+     * @return {Promise<Sleep | undefined>}
      * @throws {RepositoryException}
      */
-    public async getByIdAndPatient(sleepId: string, patientId: string, query: IQuery): Promise<Sleep> {
+    public async getByIdAndPatient(sleepId: string, patientId: string, query: IQuery): Promise<Sleep | undefined> {
         // 1. Validate params.
         ObjectIdValidator.validate(patientId, Strings.PATIENT.PARAM_ID_NOT_VALID_FORMAT)
         ObjectIdValidator.validate(sleepId, Strings.SLEEP.PARAM_ID_NOT_VALID_FORMAT)
 
         // 2. Find Sleep.
-        const sleepRepo: Sleep = await this._sleepRepository.findOne(query)
+        const sleepRepo: Sleep | undefined = await this._sleepRepository.findOne(query)
         if (!sleepRepo) return Promise.resolve(sleepRepo)
 
         // 3. Calculate awakenings for the returned sleep.

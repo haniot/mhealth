@@ -31,12 +31,12 @@ describe('AWAKENINGS TASK', () => {
     const dataSetItemTwoAwk: SleepPatternDataSet = new SleepPatternDataSet()
     dataSetItemTwoAwk.start_time = '2020-10-20T04:00:00.000Z'
     dataSetItemTwoAwk.name = Phases.AWAKE
-    dataSetItemTwoAwk.duration = 420000 // 7min milliseconds
+    dataSetItemTwoAwk.duration = 420000 // 7 min in milliseconds.
 
     const dataSetItemTwoAwk2: SleepPatternDataSet = new SleepPatternDataSet()
     dataSetItemTwoAwk2.start_time = '2020-10-20T06:00:00.000Z'
     dataSetItemTwoAwk2.name = Phases.AWAKE
-    dataSetItemTwoAwk2.duration = 420000 // 7min in milliseconds
+    dataSetItemTwoAwk2.duration = 420000
 
     const dataSetWithTwoAwk: Array<SleepPatternDataSet> = new Array<SleepPatternDataSet>()
     dataSetWithTwoAwk.push(dataSetItemTwoAwk)
@@ -46,31 +46,49 @@ describe('AWAKENINGS TASK', () => {
     const dataSetItemOneAwk: SleepPatternDataSet = new SleepPatternDataSet()
     dataSetItemOneAwk.start_time = '2020-10-21T04:00:00.000Z'
     dataSetItemOneAwk.name = Phases.AWAKE
-    dataSetItemOneAwk.duration = 420000 // 7min milliseconds
+    dataSetItemOneAwk.duration = 420000
 
     const dataSetItemOneAwk2: SleepPatternDataSet = new SleepPatternDataSet()
+    // It does not enter into the calculation because it does not have at least 7 steps at this time.
     dataSetItemOneAwk2.start_time = '2020-10-21T05:00:00.000Z'
     dataSetItemOneAwk2.name = Phases.AWAKE
-    dataSetItemOneAwk2.duration = 420000 // 7min in milliseconds
+    dataSetItemOneAwk2.duration = 420000
 
     const dataSetWithOneAwk: Array<SleepPatternDataSet> = new Array<SleepPatternDataSet>()
     dataSetWithOneAwk.push(dataSetItemOneAwk)
     dataSetWithOneAwk.push(dataSetItemOneAwk2)
 
-    // Sleep pattern data set without awakenings.
+    // Sleep pattern data set without awakenings (type other than AWAKE and duration less than 7 minutes).
     const dataSetItemWithoutAwk: SleepPatternDataSet = new SleepPatternDataSet()
-    dataSetItemWithoutAwk.start_time = '2020-10-22T02:00:00.000Z'
-    dataSetItemWithoutAwk.name = Phases.AWAKE
-    dataSetItemWithoutAwk.duration = 420000 // 7min milliseconds
+    dataSetItemWithoutAwk.start_time = '2020-10-20T04:00:00.000Z'
+    // It does not enter into the calculation because the type is different from AWAKE.
+    dataSetItemWithoutAwk.name = Phases.ASLEEP
+    dataSetItemWithoutAwk.duration = 420000
 
     const dataSetItemWithoutAwk2: SleepPatternDataSet = new SleepPatternDataSet()
-    dataSetItemWithoutAwk2.start_time = '2020-10-22T03:00:00.000Z'
+    dataSetItemWithoutAwk2.start_time = '2020-10-20T06:00:00.000Z'
     dataSetItemWithoutAwk2.name = Phases.AWAKE
-    dataSetItemWithoutAwk2.duration = 420000 // 7min in milliseconds
+    // It does not enter into the calculation because the duration is less than 7 minutes.
+    dataSetItemWithoutAwk2.duration = 419999
 
     const dataSetWithoutAwk: Array<SleepPatternDataSet> = new Array<SleepPatternDataSet>()
     dataSetWithoutAwk.push(dataSetItemWithoutAwk)
     dataSetWithoutAwk.push(dataSetItemWithoutAwk2)
+
+    // Sleep pattern data set without awakenings (hour < 18 or >= 6).
+    const otherDataSetItemWithoutAwk: SleepPatternDataSet = new SleepPatternDataSet()
+    otherDataSetItemWithoutAwk.start_time = '2020-10-20T20:00:00.000Z'
+    otherDataSetItemWithoutAwk.name = Phases.AWAKE
+    otherDataSetItemWithoutAwk.duration = 420000
+
+    const otherDataSetItemWithoutAwk2: SleepPatternDataSet = new SleepPatternDataSet()
+    otherDataSetItemWithoutAwk2.start_time = '2020-10-20T09:00:00.000Z'
+    otherDataSetItemWithoutAwk2.name = Phases.AWAKE
+    otherDataSetItemWithoutAwk2.duration = 420000
+
+    const otherDataSetWithoutAwk: Array<SleepPatternDataSet> = new Array<SleepPatternDataSet>()
+    otherDataSetWithoutAwk.push(otherDataSetItemWithoutAwk)
+    otherDataSetWithoutAwk.push(otherDataSetItemWithoutAwk2)
 
     // Sleep pattern data set for RPC timed out error.
     const dataSetItemRpcError: SleepPatternDataSet = new SleepPatternDataSet()
@@ -94,6 +112,11 @@ describe('AWAKENINGS TASK', () => {
     const sleepWithoutAwk: Sleep = new SleepMock()
     sleepWithoutAwk.awakenings = undefined
     sleepWithoutAwk.pattern!.data_set = dataSetWithoutAwk
+
+    // Other Sleep without awakenings.
+    const otherSleepWithoutAwk: Sleep = new SleepMock()
+    otherSleepWithoutAwk.awakenings = undefined
+    otherSleepWithoutAwk.pattern!.data_set = otherDataSetWithoutAwk
 
     const sleepRpcError: Sleep = new SleepMock()
     sleepRpcError.pattern!.data_set = dataSetRpcError
@@ -128,13 +151,16 @@ describe('AWAKENINGS TASK', () => {
                     await deleteAllSleep()
 
                     const result = await sleepRepository.create(sleepWithTwoAwk)
-                    sleepWithTwoAwk.id = result.id
+                    sleepWithTwoAwk.id = result?.id
 
                     const result2 = await sleepRepository.create(sleepWithOneAwk)
-                    sleepWithOneAwk.id = result2.id
+                    sleepWithOneAwk.id = result2?.id
 
                     const result3 = await sleepRepository.create(sleepWithoutAwk)
-                    sleepWithoutAwk.id = result3.id
+                    sleepWithoutAwk.id = result3?.id
+
+                    const result4 = await sleepRepository.create(otherSleepWithoutAwk)
+                    otherSleepWithoutAwk.id = result4?.id
                 } catch (err) {
                     throw new Error('Failure on AwakeningsTask test: ' + err.message)
                 }
@@ -162,8 +188,14 @@ describe('AWAKENINGS TASK', () => {
                 expect(sleepUp.awakenings![0].steps).to.eql(7)
             })
 
-            it('should return the Sleep without awakenings', async () => {
-                const sleepUp: Sleep = await awakeningsTask.calculateAwakenings(sleepWithoutAwk)
+            it('should return the Sleep without awakenings (type other than AWAKE or duration less than 7 minutes)',
+                async () => {
+                    const sleepUp: Sleep = await awakeningsTask.calculateAwakenings(sleepWithoutAwk)
+                    expect(sleepUp.awakenings).to.be.undefined
+                })
+
+            it('should return the Sleep without awakenings (hour < 18 or >= 6)', async () => {
+                const sleepUp: Sleep = await awakeningsTask.calculateAwakenings(otherSleepWithoutAwk)
                 expect(sleepUp.awakenings).to.be.undefined
             })
         })
@@ -174,7 +206,7 @@ describe('AWAKENINGS TASK', () => {
                     await deleteAllSleep()
 
                     const result = await sleepRepository.create(sleepRpcError)
-                    sleepRpcError.id = result.id
+                    sleepRpcError.id = result?.id
                 } catch (err) {
                     throw new Error('Failure on AwakeningsTask test: ' + err.message)
                 }

@@ -32,10 +32,10 @@ export interface ISleepService extends IService<Sleep> {
      * @param sleepId Sleep unique identifier.
      * @param patientId Patient unique identifier.
      * @param query Defines object to be used for queries.
-     * @return {Promise<Sleep>}
+     * @return {Promise<Sleep | undefined>}
      * @throws {RepositoryException}
      */
-    getByIdAndPatient(sleepId: string, patientId: string, query: IQuery): Promise<Sleep>
+    getByIdAndPatient(sleepId: string, patientId: string, query: IQuery): Promise<Sleep | undefined>
 
     /**
      * Removes sleep according to its unique identifier and related patient.

@@ -250,8 +250,8 @@ describe('Routes: patients.sleep.durations', () => {
     })
 })
 
-async function createSleep(sleep: Sleep): Promise<Sleep> {
-    const sleepSaved: Sleep = await sleepRepo.create(sleep)
+async function createSleep(sleep: Sleep): Promise<Sleep | undefined> {
+    const sleepSaved: Sleep | undefined = await sleepRepo.create(sleep)
     return Promise.resolve(sleepSaved)
 }
 

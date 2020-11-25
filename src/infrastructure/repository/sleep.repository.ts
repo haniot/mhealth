@@ -79,12 +79,12 @@ export class SleepRepository extends BaseRepository<Sleep, SleepEntity> implemen
      * Updates a Sleep.
      *
      * @param item Sleep to be updated.
-     * @return {Promise<Sleep>}
+     * @return {Promise<Sleep | undefined>}
      * @throws {RepositoryException}
      */
-    public update(item: Sleep): Promise<Sleep> {
+    public update(item: Sleep): Promise<Sleep | undefined> {
         const itemUp: any = this.sleepMapper.transform(item)
-        return new Promise<Sleep>((resolve, reject) => {
+        return new Promise<Sleep | undefined>((resolve, reject) => {
             this.Model.findOneAndUpdate({ start_time: itemUp.start_time, patient_id: itemUp.patient_id }, itemUp,
                 { new: true })
                 .exec()
@@ -100,12 +100,12 @@ export class SleepRepository extends BaseRepository<Sleep, SleepEntity> implemen
      * Updates or creates a Sleep.
      *
      * @param item Sleep to be updated or created.
-     * @return {Promise<Sleep>}
+     * @return {Promise<Sleep | undefined>}
      * @throws {RepositoryException}
      */
-    public updateOrCreate(item: Sleep): Promise<Sleep> {
+    public updateOrCreate(item: Sleep): Promise<Sleep | undefined> {
         const itemUp: any = this.sleepMapper.transform(item)
-        return new Promise<Sleep>((resolve, reject) => {
+        return new Promise<Sleep | undefined>((resolve, reject) => {
             this.Model.findOneAndUpdate({ start_time: itemUp.start_time, patient_id: itemUp.patient_id }, itemUp,
                 { new: true, upsert: true })
                 .exec()

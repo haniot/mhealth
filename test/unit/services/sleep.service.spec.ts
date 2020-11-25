@@ -673,7 +673,7 @@ describe('Services: SleepService', () => {
 
             it('should return the Sleep that was added (with calculated awakenings)', () => {
                 return sleepServiceWithEventBusMock.getByIdAndPatient(sleepWithTwoAwk.id!, sleepWithTwoAwk.patient_id, query)
-                    .then((result: Sleep | Array<Sleep>) => {
+                    .then((result: Sleep | Array<Sleep> | undefined) => {
                         result = result as Sleep
                         assert.isArray(result.awakenings)
                     })

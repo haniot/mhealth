@@ -11,10 +11,10 @@ export interface IService<T> {
      * Add a new item.
      *
      * @param item T to insert.
-     * @return {Promise<T>}
+     * @return {Promise<T | undefined>}
      * @throws {ValidationException | ConflictException | RepositoryException}
      */
-    add(item: T): Promise<T>
+    add(item: T): Promise<T | undefined>
 
     /**
      * Listing items according to parameter values.
@@ -30,19 +30,19 @@ export interface IService<T> {
      *
      * @param id Unique identifier.
      * @param query Defines object to be used for queries.
-     * @return {Promise<T>}
+     * @return {Promise<T | undefined>}
      * @throws {ValidationException | RepositoryException}
      */
-    getById(id: string, query: IQuery): Promise<T>
+    getById(id: string, query: IQuery): Promise<T | undefined>
 
     /**
      * Updates item data.
      *
      * @param item Containing the data to be updated
-     * @return {Promise<T>}
+     * @return {Promise<T | undefined>}
      * @throws {ValidationException | ConflictException | RepositoryException}
      */
-    update(item: T): Promise<T>
+    update(item: T): Promise<T | undefined>
 
     /**
      * Removes the item according to their unique identifier.
