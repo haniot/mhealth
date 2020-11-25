@@ -94,8 +94,9 @@ describe('Validators: CreateBloodPressureValidator', () => {
             try {
                 CreateBloodPressureValidator.validate(measurement)
             } catch (err) {
-                assert.propertyVal(err, 'message', 'Datetime: 12-04-2012'.concat(Strings.ERROR_MESSAGE.INVALID_DATE))
-                assert.propertyVal(err, 'description', 'Date must be in the format: yyyy-MM-dd\'T\'HH:mm:ssZ')
+                assert.propertyVal(err, 'message', Strings.ERROR_MESSAGE.DATE.INVALID_DATETIME_FORMAT
+                    .replace('{0}', '12-04-2012'))
+                assert.propertyVal(err, 'description', Strings.ERROR_MESSAGE.DATE.INVALID_DATETIME_FORMAT_DESC)
             } finally {
                 measurement.timestamp = DefaultEntityMock.BLOOD_PRESSURE.timestamp
             }

@@ -104,7 +104,8 @@ export abstract class BaseRepository<T extends Entity, TModel> implements IRepos
             } else if (err.name === 'CastError' || new RegExp(/(invalid format)/i).test(err)) {
                 if (err.name === 'CastError' && err.kind) {
                     if (err.kind === 'date') {
-                        return new ValidationException(`Datetime: ${err.value}`.concat(Strings.ERROR_MESSAGE.INVALID_DATE))
+                        return new ValidationException(Strings.ERROR_MESSAGE.DATE.INVALID_DATETIME_FORMAT
+                            .replace('{0}', err.value))
                     } else if (err.kind === 'ObjectId') {
                         return new ValidationException(Strings.ERROR_MESSAGE.UUID_NOT_VALID_FORMAT,
                             Strings.ERROR_MESSAGE.UUID_NOT_VALID_FORMAT_DESC)

@@ -456,9 +456,8 @@ describe('Routes: patients.physicalactivities', () => {
                     .expect(400)
                     .then(err => {
                         expect(err.body.code).to.eql(400)
-                        expect(err.body.message).to.eql('Datetime: 2019-12-35T12:52:59Z'
-                            .concat(Strings.ERROR_MESSAGE.INVALID_DATE))
-                        expect(err.body.description).to.eql(Strings.ERROR_MESSAGE.INVALID_DATE_DESC)
+                        expect(err.body.message).to.eql(Strings.ERROR_MESSAGE.DATE.INVALID_DATETIME_FORMAT
+                            .replace('{0}', '2019-12-35T12:52:59Z'))
                     })
             })
         })
@@ -1551,9 +1550,8 @@ describe('Routes: patients.physicalactivities', () => {
                         expect(res.body.error[13].message).to.eql(Strings.ERROR_MESSAGE.INVALID_FIELD
                             .replace('{0}', 'heart_rate_zones.fat_burn.duration'))
                         expect(res.body.error[13].description).to.eql(Strings.ERROR_MESSAGE.POSITIVE_INTEGER)
-                        expect(res.body.error[14].message).to.eql('Datetime: 2019-12-32T12:52:59Z'
-                            .concat(Strings.ERROR_MESSAGE.INVALID_DATE))
-                        expect(res.body.error[14].description).to.eql(Strings.ERROR_MESSAGE.INVALID_DATE_DESC)
+                        expect(res.body.error[14].message).to.eql(Strings.ERROR_MESSAGE.DATE.INVALID_DATETIME_FORMAT
+                            .replace('{0}', '2019-12-32T12:52:59Z'))
 
                         for (let i = 0; i < res.body.error.length; i++) {
                             expect(res.body.error[i].code).to.eql(HttpStatus.BAD_REQUEST)

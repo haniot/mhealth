@@ -88,6 +88,12 @@ import { SleepDurationRepository } from '../infrastructure/repository/sleep.dura
 import { SleepDuration } from '../application/domain/model/sleep.duration'
 import { SleepDurationEntity } from '../infrastructure/entity/sleep.duration.entity'
 import { SleepDurationEntityMapper } from '../infrastructure/entity/mapper/sleep.duration.entity.mapper'
+import { HandGrip } from '../application/domain/model/hand.grip'
+import { HandGripEntity } from '../infrastructure/entity/hand.grip.entity'
+import { HandGripEntityMapper } from '../infrastructure/entity/mapper/hand.grip.entity.mapper'
+import { CalfCircumference } from '../application/domain/model/calf.circumference'
+import { CalfCircumferenceEntity } from '../infrastructure/entity/calf.circumference.entity'
+import { CalfCircumferenceEntityMapper } from '../infrastructure/entity/mapper/calf.circumference.entity.mapper'
 
 export class IoC {
     private readonly _container: Container
@@ -194,6 +200,12 @@ export class IoC {
         this._container
             .bind<IEntityMapper<BodyFat, BodyFatEntity>>(Identifier.BODY_FAT_ENTITY_MAPPER)
             .to(BodyFatEntityMapper).inSingletonScope()
+        this._container
+            .bind<IEntityMapper<HandGrip, HandGripEntity>>(Identifier.HAND_GRIP_ENTITY_MAPPER)
+            .to(HandGripEntityMapper).inSingletonScope()
+        this._container
+            .bind<IEntityMapper<CalfCircumference, CalfCircumferenceEntity>>(Identifier.CALF_CIRCUMFERENCE_ENTITY_MAPPER)
+            .to(CalfCircumferenceEntityMapper).inSingletonScope()
         this._container
             .bind<IEntityMapper<PhysicalActivity, ActivityEntity>>(Identifier.ACTIVITY_ENTITY_MAPPER)
             .to(PhysicalActivityEntityMapper).inSingletonScope()

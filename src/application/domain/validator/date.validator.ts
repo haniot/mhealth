@@ -20,7 +20,7 @@ export class DateValidator {
         const monthLength = [31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31]
 
         // Check the ranges year
-        // InfluxDB The minimum timestamp is -9223372036854775806 or 1677-09-21T00:12:43.145224194Z.
+        // The minimum timestamp is -9223372036854775806 or 1677-09-21T00:12:43.145224194Z.
         // The maximum timestamp is 9223372036854775806 or 2262-04-11T23:47:16.854775806Z.
         if (year < 1678 || year > 2261) {
             throw new ValidationException(Strings.ERROR_MESSAGE.DATE.YEAR_NOT_ALLOWED

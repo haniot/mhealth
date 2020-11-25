@@ -5,5 +5,7 @@ export enum MeasurementTypes {
     HEIGHT = 'height',
     WAIST_CIRCUMFERENCE = 'waist_circumference',
     BODY_TEMPERATURE = 'body_temperature',
-    BODY_FAT = 'body_fat'
+    BODY_FAT = 'body_fat',
+    HAND_GRIP = 'hand_grip',
+    CALF_CIRCUMFERENCE = 'calf_circumference'
 }

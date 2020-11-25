@@ -10,7 +10,7 @@ export abstract class DefaultEntityMock {
         unit: MeasurementUnits.BLOOD_GLUCOSE,
         meal: MealTypes.PREPRANDIAL,
         type: MeasurementTypes.BLOOD_GLUCOSE,
-        timestamp: '2018-11-19T14:40:00Z',
+        timestamp: '2020-11-19T14:40:00.000Z',
         patient_id: '5a62be07d6f33400146c9b61',
         device_id: '5ca77314bc08ec205689a736'
     }
@@ -23,7 +23,7 @@ export abstract class DefaultEntityMock {
         pulse: 80,
         unit: MeasurementUnits.BLOOD_PRESSURE,
         type: MeasurementTypes.BLOOD_PRESSURE,
-        timestamp: '2018-11-19T14:40:00Z',
+        timestamp: '2020-11-19T14:40:00.000Z',
         patient_id: '5a62be07d6f33400146c9b61',
         device_id: '5ca77314bc08ec205689a736'
     }
@@ -33,7 +33,7 @@ export abstract class DefaultEntityMock {
         value: 36,
         unit: MeasurementUnits.TEMPERATURE,
         type: MeasurementTypes.BODY_TEMPERATURE,
-        timestamp: '2018-11-19T14:40:00Z',
+        timestamp: '2020-11-19T14:40:00.000Z',
         patient_id: '5a62be07d6f33400146c9b61',
         device_id: '5ca77314bc08ec205689a736'
     }
@@ -43,7 +43,7 @@ export abstract class DefaultEntityMock {
         value: 20,
         unit: MeasurementUnits.PERCENTUAL,
         type: MeasurementTypes.BODY_FAT,
-        timestamp: '2018-11-17T14:40:00Z',
+        timestamp: '2020-11-17T14:40:00Z',
         patient_id: '5a62be07d6f33400146c9b61',
         device_id: '5ca77314bc08ec205689a736'
     }
@@ -53,7 +53,7 @@ export abstract class DefaultEntityMock {
         value: 50,
         unit: MeasurementUnits.WEIGHT,
         type: MeasurementTypes.WEIGHT,
-        timestamp: '2018-11-19T14:40:00Z',
+        timestamp: '2020-11-19T14:40:00.000Z',
         body_fat: 20,
         patient_id: '5a62be07d6f33400146c9b61',
         device_id: '5ca77314bc08ec205689a736',
@@ -65,7 +65,7 @@ export abstract class DefaultEntityMock {
         value: 150,
         unit: MeasurementUnits.LENGTH,
         type: MeasurementTypes.HEIGHT,
-        timestamp: '2018-11-19T14:40:00Z',
+        timestamp: '2020-11-19T14:40:00.000Z',
         patient_id: '5a62be07d6f33400146c9b61',
         device_id: '5ca77314bc08ec205689a736'
     }
@@ -103,11 +103,31 @@ export abstract class DefaultEntityMock {
     }
 
     public static WAIST_CIRCUMFERENCE: any = {
-        id: '5cb488279ea138bd6abf936a',
+        id: '5cb488279ea138bd6abf936b',
         value: 70,
         unit: MeasurementUnits.LENGTH,
         type: MeasurementTypes.WAIST_CIRCUMFERENCE,
-        timestamp: '2018-11-19T14:40:00Z',
+        timestamp: '2020-11-19T14:40:00.000Z',
+        patient_id: '5a62be07d6f33400146c9b61',
+        device_id: '5ca77314bc08ec205689a736'
+    }
+
+    public static HAND_GRIP: any = {
+        id: '5cb488279ea138bd6abf936c',
+        value: 70,
+        unit: MeasurementUnits.WEIGHT,
+        type: MeasurementTypes.HAND_GRIP,
+        timestamp: '2020-11-19T14:40:00.000Z',
+        patient_id: '5a62be07d6f33400146c9b61',
+        device_id: '5ca77314bc08ec205689a736'
+    }
+
+    public static CALF_CIRCUMFERENCE: any = {
+        id: '5cb488279ea138bd6abf936d',
+        value: 70,
+        unit: MeasurementUnits.LENGTH,
+        type: MeasurementTypes.CALF_CIRCUMFERENCE,
+        timestamp: '2020-11-19T14:40:00.000Z',
         patient_id: '5a62be07d6f33400146c9b61',
         device_id: '5ca77314bc08ec205689a736'
     }
@@ -129,7 +149,9 @@ export abstract class DefaultEntityMock {
         body_fat: DefaultEntityMock.BODY_FAT,
         blood_pressure: DefaultEntityMock.BLOOD_PRESSURE,
         blood_glucose: DefaultEntityMock.BLOOD_GLUCOSE,
-        body_temperature: DefaultEntityMock.BODY_TEMPERATURE
+        body_temperature: DefaultEntityMock.BODY_TEMPERATURE,
+        hand_grip: DefaultEntityMock.HAND_GRIP,
+        calf_circumference: DefaultEntityMock.CALF_CIRCUMFERENCE
     }
 
     public static readonly SLEEP_AWAKENING: any = {

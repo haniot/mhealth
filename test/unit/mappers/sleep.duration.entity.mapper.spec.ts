@@ -3,7 +3,6 @@ import { SleepDurationEntityMapper } from '../../../src/infrastructure/entity/ma
 import { SleepDuration } from '../../../src/application/domain/model/sleep.duration'
 import { SleepDurationEntity } from '../../../src/infrastructure/entity/sleep.duration.entity'
 import { DefaultEntityMock } from '../../mocks/models/default.entity.mock'
-// import { DefaultEntityMock } from '../../mocks/models/default.entity.mock'
 
 describe('MAPPERS: SleepDurationEntityMapper', () => {
     const sleepDurationEntityMapper: SleepDurationEntityMapper = new SleepDurationEntityMapper()

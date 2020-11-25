@@ -17,15 +17,21 @@ import { Strings } from '../../../src/utils/strings'
 import { ObjectID } from 'bson'
 import { DIContainer } from '../../../src/di/di'
 import { Config } from '../../../src/utils/config'
+import { HandGrip } from '../../../src/application/domain/model/hand.grip'
+import { CalfCircumference } from '../../../src/application/domain/model/calf.circumference'
+import { IMeasurementRepository } from '../../../src/application/port/measurement.repository.interface'
+import { Query } from '../../../src/infrastructure/repository/query/query'
 
 const dbConnection: IConnectionDB = DIContainer.get(Identifier.MONGODB_CONNECTION)
+const measurementRepository: IMeasurementRepository = DIContainer.get(Identifier.MEASUREMENT_REPOSITORY)
 const app: App = DIContainer.get(Identifier.APP)
 const request = require('supertest')(app.getExpress())
 
-describe('Routes: PatientMeasurement', () => {
-
+describe('Routes: patients.measurements', () => {
     const bloodGlucose: BloodGlucose = new BloodGlucose().fromJSON(DefaultEntityMock.BLOOD_GLUCOSE)
     bloodGlucose.patient_id = DefaultEntityMock.BLOOD_GLUCOSE.patient_id
+    const otherBloodGlucose: BloodGlucose = new BloodGlucose().fromJSON(DefaultEntityMock.BLOOD_GLUCOSE)
+    otherBloodGlucose.patient_id = DefaultEntityMock.BLOOD_GLUCOSE.patient_id
     const bloodPressure: BloodPressure = new BloodPressure().fromJSON(DefaultEntityMock.BLOOD_PRESSURE)
     bloodPressure.patient_id = DefaultEntityMock.BLOOD_PRESSURE.patient_id
     const bodyTemperature: BodyTemperature = new BodyTemperature().fromJSON(DefaultEntityMock.BODY_TEMPERATURE)
@@ -38,6 +44,10 @@ describe('Routes: PatientMeasurement', () => {
     waistCircumference.patient_id = DefaultEntityMock.WAIST_CIRCUMFERENCE.patient_id
     const weight: Weight = new Weight().fromJSON(DefaultEntityMock.WEIGHT)
     weight.patient_id = DefaultEntityMock.WEIGHT.patient_id
+    const handGrip: HandGrip = new HandGrip().fromJSON(DefaultEntityMock.HAND_GRIP)
+    handGrip.patient_id = DefaultEntityMock.HAND_GRIP.patient_id
+    const calfCircumference: CalfCircumference = new CalfCircumference().fromJSON(DefaultEntityMock.CALF_CIRCUMFERENCE)
+    calfCircumference.patient_id = DefaultEntityMock.CALF_CIRCUMFERENCE.patient_id
     const measurement: Measurement = new Measurement().fromJSON(DefaultEntityMock.MEASUREMENT)
     measurement.patient_id = DefaultEntityMock.MEASUREMENT.patient_id
 
@@ -49,15 +59,18 @@ describe('Routes: PatientMeasurement', () => {
                 await deleteAllMeasurements()
                 const result = await createDevice()
                 bloodGlucose.device_id = result._id.toString()
+                otherBloodGlucose.device_id = result._id.toString()
                 bloodPressure.device_id = result._id.toString()
                 bodyTemperature.device_id = result._id.toString()
                 bodyFat.device_id = result._id.toString()
                 height.device_id = result._id.toString()
                 waistCircumference.device_id = result._id.toString()
                 weight.device_id = result._id.toString()
+                handGrip.device_id = result._id.toString()
+                calfCircumference.device_id = result._id.toString()
                 measurement.device_id = result._id.toString()
             } catch (err) {
-                throw new Error('Failure on PatientMeasurement test: ' + err.message)
+                throw new Error('Failure on patients.measurements test: ' + err.message)
             }
         }
     )
@@ -68,13 +81,21 @@ describe('Routes: PatientMeasurement', () => {
             await deleteAllMeasurements()
             await dbConnection.dispose()
         } catch (err) {
-            throw new Error('Failure on PatientMeasurement test: ' + err.message)
+            throw new Error('Failure on patients.measurements test: ' + err.message)
         }
     })
 
     describe('POST /v1/patients/:patient_id/measurements', () => {
         describe('save one measurement', () => {
             context('when save a unique measurement', () => {
+                before(async () => {
+                    try {
+                        await deleteAllMeasurements()
+                    } catch (err) {
+                        throw new Error('Failure on patients.measurements routes test: ' + err.message)
+                    }
+                })
+
                 it('should return status code 201 and the saved measurement', () => {
                     return request
                         .post(`/v1/patients/${bloodGlucose.patient_id}/measurements`)
@@ -83,18 +104,27 @@ describe('Routes: PatientMeasurement', () => {
                         .expect(201)
                         .then(res => {
                             expect(res.body).to.have.property('id')
-                            expect(res.body).to.have.property('type', bloodGlucose.type)
-                            expect(res.body).to.have.property('unit', bloodGlucose.unit)
-                            expect(res.body).to.have.property('device_id', bloodGlucose.device_id)
-                            expect(res.body).to.have.property('value', bloodGlucose.value)
-                            expect(res.body).to.have.property('timestamp')
-                            expect(res.body).to.have.property('meal', bloodGlucose.meal)
-                            bloodGlucose.id = res.body.id
+                            expect(res.body.timestamp).to.eql(bloodGlucose.timestamp)
+                            expect(res.body.type).to.eql(bloodGlucose.type)
+                            expect(res.body.value).to.eql(bloodGlucose.value)
+                            expect(res.body.unit).to.eql(bloodGlucose.unit)
+                            expect(res.body.device_id).to.eql(bloodGlucose.device_id)
+                            expect(res.body.meal).to.eql(bloodGlucose.meal)
                         })
                 })
             })
 
             context('when there are a measurement with same parameters', () => {
+                before(async () => {
+                    try {
+                        await deleteAllMeasurements()
+
+                        await createMeasurement(bloodGlucose)
+                    } catch (err) {
+                        throw new Error('Failure on patients.measurements routes test: ' + err.message)
+                    }
+                })
+
                 it('should return status code 409 and info message from duplicate items', () => {
                     return request
                         .post(`/v1/patients/${bloodGlucose.patient_id}/measurements`)
@@ -115,10 +145,8 @@ describe('Routes: PatientMeasurement', () => {
                         .set('Content-Type', 'application/json')
                         .expect(400)
                         .then(res => {
-                            expect(res.body).to.have.property('message',
-                                Strings.ERROR_MESSAGE.UUID_NOT_VALID_FORMAT)
-                            expect(res.body).to.have.property('description',
-                                Strings.ERROR_MESSAGE.UUID_NOT_VALID_FORMAT_DESC)
+                            expect(res.body).to.have.property('message', Strings.ERROR_MESSAGE.UUID_NOT_VALID_FORMAT)
+                            expect(res.body).to.have.property('description', Strings.ERROR_MESSAGE.UUID_NOT_VALID_FORMAT_DESC)
                         })
                 })
             })
@@ -126,15 +154,24 @@ describe('Routes: PatientMeasurement', () => {
 
         describe('save a list of measurements', () => {
             context('when save a list of measurements', () => {
+                before(async () => {
+                    try {
+                        await deleteAllMeasurements()
+                    } catch (err) {
+                        throw new Error('Failure on patients.measurements routes test: ' + err.message)
+                    }
+                })
+
                 it('should return a list of measurements', () => {
                     return request
                         .post(`/v1/patients/${bloodGlucose.patient_id}/measurements`)
-                        .send([bloodPressure.toJSON(), bodyTemperature.toJSON(), bodyFat.toJSON(),
-                            height.toJSON(), weight.toJSON(), waistCircumference.toJSON()])
+                        .send([bloodGlucose.toJSON(), bloodPressure.toJSON(), bodyTemperature.toJSON(), bodyFat.toJSON(),
+                            height.toJSON(), weight.toJSON(), waistCircumference.toJSON(), handGrip.toJSON(),
+                            calfCircumference.toJSON()])
                         .set('Content-Type', 'application/json')
                         .expect(207)
                         .then(res => {
-                            expect(res.body.success).to.have.lengthOf(6)
+                            expect(res.body.success).to.have.lengthOf(9)
                             expect(res.body.error).to.have.lengthOf(0)
                         })
                 })
@@ -144,24 +181,44 @@ describe('Routes: PatientMeasurement', () => {
 
     describe('GET /v1/patients/:patient_id/measurements/:measurement_id', () => {
         context('when get a unique measurement from patient', () => {
+            let result
+
+            before(async () => {
+                try {
+                    await deleteAllMeasurements()
+
+                    result = await createMeasurement(weight)
+                } catch (err) {
+                    throw new Error('Failure on patients.measurements routes test: ' + err.message)
+                }
+            })
+
             it('should return status code 200 and a measurement', () => {
                 return request
-                    .get(`/v1/patients/${bloodGlucose.patient_id}/measurements/${bloodGlucose.id}`)
+                    .get(`/v1/patients/${bloodGlucose.patient_id}/measurements/${result.id}`)
                     .set('Content-Type', 'application/json')
                     .expect(200)
                     .then(res => {
-                        expect(res.body).to.have.property('id', bloodGlucose.id)
-                        expect(res.body).to.have.property('type', bloodGlucose.type)
-                        expect(res.body).to.have.property('unit', bloodGlucose.unit)
-                        expect(res.body).to.have.property('device_id', bloodGlucose.device_id)
-                        expect(res.body).to.have.property('value', bloodGlucose.value)
-                        expect(res.body).to.have.property('timestamp')
-                        expect(res.body).to.have.property('meal', bloodGlucose.meal)
+                        expect(res.body.id).to.eql(result.id)
+                        expect(res.body.timestamp).to.eql(weight.timestamp)
+                        expect(res.body.type).to.eql(weight.type)
+                        expect(res.body.value).to.eql(weight.value)
+                        expect(res.body.unit).to.eql(weight.unit)
+                        expect(res.body.device_id).to.eql(weight.device_id)
+                        expect(res.body.body_fat).to.eql(weight.body_fat)
                     })
             })
         })
 
         context('when measurement is not founded', () => {
+            before(async () => {
+                try {
+                    await deleteAllMeasurements()
+                } catch (err) {
+                    throw new Error('Failure on patients.measurements routes test: ' + err.message)
+                }
+            })
+
             it('should return status code 404 and message from measurement not found', () => {
                 return request
                     .get(`/v1/patients/${measurement.patient_id}/measurements/${new ObjectID()}`)
@@ -190,6 +247,23 @@ describe('Routes: PatientMeasurement', () => {
 
     describe('GET /v1/patients/:patient_id/measurements', () => {
         context('when get all measurements from patient', () => {
+            before(async () => {
+                try {
+                    await deleteAllMeasurements()
+                    await createMeasurement(bloodGlucose)
+                    await createMeasurement(bloodPressure)
+                    await createMeasurement(bodyTemperature)
+                    await createMeasurement(bodyFat)
+                    await createMeasurement(weight)
+                    await createMeasurement(height)
+                    await createMeasurement(waistCircumference)
+                    await createMeasurement(handGrip)
+                    await createMeasurement(calfCircumference)
+                } catch (err) {
+                    throw new Error('Failure on patients.measurements routes test: ' + err.message)
+                }
+            })
+
             it('should return status code 200 and a list of measurements', () => {
                 return request
                     .get(`/v1/patients/${measurement.patient_id}/measurements`)
@@ -197,11 +271,19 @@ describe('Routes: PatientMeasurement', () => {
                     .expect(200)
                     .then(res => {
                         expect(res.body).is.an.instanceOf(Array)
-                        expect(res.body).to.have.lengthOf(8)
+                        expect(res.body).to.have.lengthOf(9)
                     })
             })
         })
         context('when there no are measurements from patient', () => {
+            before(async () => {
+                try {
+                    await deleteAllMeasurements()
+                } catch (err) {
+                    throw new Error('Failure on patients.measurements routes test: ' + err.message)
+                }
+            })
+
             it('should return status code 200 and a empty list', () => {
                 return request
                     .get(`/v1/patients/${new ObjectID()}/measurements`)
@@ -231,37 +313,68 @@ describe('Routes: PatientMeasurement', () => {
 
     describe('GET /v1/patients/:patient_id/measurements/last', () => {
         context('when get the last measurements from patient', () => {
+            before(async () => {
+                try {
+                    await deleteAllMeasurements()
+                    bloodGlucose.timestamp = '2020-11-21T14:40:00.000Z'
+                    await createMeasurement(bloodGlucose)
+                    otherBloodGlucose.timestamp = '2020-11-20T14:40:00.000Z'
+                    await createMeasurement(otherBloodGlucose)
+                } catch (err) {
+                    throw new Error('Failure on patients.measurements routes test: ' + err.message)
+                }
+            })
+
             it('should return status code 200 and a object with a last measurements for each type', () => {
                 return request
                     .get(`/v1/patients/${bloodGlucose.patient_id}/measurements/last`)
                     .set('Content-Type', 'application/json')
                     .expect(200)
                     .then(res => {
-                        expect(res.body.blood_glucose).to.not.equal({})
-                        expect(res.body.blood_pressure).to.not.eql({})
-                        expect(res.body.body_fat).to.not.eql({})
-                        expect(res.body.body_temperature).to.not.eql({})
-                        expect(res.body.height).to.not.eql({})
-                        expect(res.body.waist_circumference).to.not.eql({})
-                        expect(res.body.weight).to.not.eql({})
+                        expect(res.body.blood_glucose).to.have.property('id')
+                        expect(res.body.blood_glucose.timestamp).to.eql(bloodGlucose.timestamp)
+                        expect(res.body.blood_glucose.type).to.eql(bloodGlucose.type)
+                        expect(res.body.blood_glucose.value).to.eql(bloodGlucose.value)
+                        expect(res.body.blood_glucose.unit).to.eql(bloodGlucose.unit)
+                        expect(res.body.blood_glucose.device_id).to.eql(bloodGlucose.device_id)
+                        expect(res.body.blood_glucose.patient_id).to.eql(bloodGlucose.patient_id)
+                        expect(res.body.blood_glucose.meal).to.eql(bloodGlucose.meal)
+                        expect(res.body.blood_pressure).to.eql({})
+                        expect(res.body.body_fat).to.eql({})
+                        expect(res.body.body_temperature).to.eql({})
+                        expect(res.body.height).to.eql({})
+                        expect(res.body.waist_circumference).to.eql({})
+                        expect(res.body.weight).to.eql({})
+                        expect(res.body.hand_grip).to.eql({})
+                        expect(res.body.calf_circumference).to.eql({})
                     })
             })
         })
 
         context('when there are no measurements from patient', () => {
+            before(async () => {
+                try {
+                    await deleteAllMeasurements()
+                } catch (err) {
+                    throw new Error('Failure on patients.measurements routes test: ' + err.message)
+                }
+            })
+
             it('should return status code 200 and a object with empty measurements', () => {
                 return request
                     .get(`/v1/patients/${new ObjectID()}/measurements/last`)
                     .set('Content-Type', 'application/json')
                     .expect(200)
                     .then(res => {
-                        expect(res.body.blood_glucose).to.be.empty
-                        expect(res.body.blood_pressure).to.be.empty
-                        expect(res.body.body_fat).to.be.empty
-                        expect(res.body.body_temperature).to.be.empty
-                        expect(res.body.height).to.be.empty
-                        expect(res.body.waist_circumference).to.be.empty
-                        expect(res.body.weight).to.be.empty
+                        expect(res.body.blood_glucose).to.eql({})
+                        expect(res.body.blood_pressure).to.eql({})
+                        expect(res.body.body_fat).to.eql({})
+                        expect(res.body.body_temperature).to.eql({})
+                        expect(res.body.height).to.eql({})
+                        expect(res.body.waist_circumference).to.eql({})
+                        expect(res.body.weight).to.eql({})
+                        expect(res.body.hand_grip).to.eql({})
+                        expect(res.body.calf_circumference).to.eql({})
                     })
             })
         })
@@ -282,37 +395,68 @@ describe('Routes: PatientMeasurement', () => {
 
     describe('GET /v1/patients/:patient_id/measurements/last/:date', () => {
         context('when get the last measurements of patient from date', () => {
+            before(async () => {
+                try {
+                    await deleteAllMeasurements()
+                    bloodGlucose.timestamp = '2020-11-19T14:50:00.000Z'
+                    await createMeasurement(bloodGlucose)
+                    otherBloodGlucose.timestamp = '2020-11-19T14:40:00.000Z'
+                    await createMeasurement(otherBloodGlucose)
+                } catch (err) {
+                    throw new Error('Failure on patients.measurements routes test: ' + err.message)
+                }
+            })
+
             it('should return status code 200 and a object with a last measurements for each type', () => {
                 return request
-                    .get(`/v1/patients/${bloodGlucose.patient_id}/measurements/last/2018-11-19`)
+                    .get(`/v1/patients/${bloodGlucose.patient_id}/measurements/last/2020-11-19`)
                     .set('Content-Type', 'application/json')
                     .expect(200)
                     .then(res => {
-                        expect(res.body.blood_glucose).to.not.equal({})
-                        expect(res.body.blood_pressure).to.not.eql({})
-                        expect(res.body.body_fat).to.not.eql({})
-                        expect(res.body.body_temperature).to.not.eql({})
-                        expect(res.body.height).to.not.eql({})
-                        expect(res.body.waist_circumference).to.not.eql({})
-                        expect(res.body.weight).to.not.eql({})
+                        expect(res.body.blood_glucose).to.have.property('id')
+                        expect(res.body.blood_glucose.timestamp).to.eql(bloodGlucose.timestamp)
+                        expect(res.body.blood_glucose.type).to.eql(bloodGlucose.type)
+                        expect(res.body.blood_glucose.value).to.eql(bloodGlucose.value)
+                        expect(res.body.blood_glucose.unit).to.eql(bloodGlucose.unit)
+                        expect(res.body.blood_glucose.device_id).to.eql(bloodGlucose.device_id)
+                        expect(res.body.blood_glucose.patient_id).to.eql(bloodGlucose.patient_id)
+                        expect(res.body.blood_glucose.meal).to.eql(bloodGlucose.meal)
+                        expect(res.body.blood_pressure).to.eql({})
+                        expect(res.body.body_fat).to.eql({})
+                        expect(res.body.body_temperature).to.eql({})
+                        expect(res.body.height).to.eql({})
+                        expect(res.body.waist_circumference).to.eql({})
+                        expect(res.body.weight).to.eql({})
+                        expect(res.body.hand_grip).to.eql({})
+                        expect(res.body.calf_circumference).to.eql({})
                     })
             })
         })
 
         context('when there are no measurements from patient', () => {
+            before(async () => {
+                try {
+                    await deleteAllMeasurements()
+                } catch (err) {
+                    throw new Error('Failure on patients.measurements routes test: ' + err.message)
+                }
+            })
+
             it('should return status code 200 and a object with empty measurements', () => {
                 return request
                     .get(`/v1/patients/${new ObjectID()}/measurements/last/2020-07-13`)
                     .set('Content-Type', 'application/json')
                     .expect(200)
                     .then(res => {
-                        expect(res.body.blood_glucose).to.be.empty
-                        expect(res.body.blood_pressure).to.be.empty
-                        expect(res.body.body_fat).to.be.empty
-                        expect(res.body.body_temperature).to.be.empty
-                        expect(res.body.height).to.be.empty
-                        expect(res.body.waist_circumference).to.be.empty
-                        expect(res.body.weight).to.be.empty
+                        expect(res.body.blood_glucose).to.eql({})
+                        expect(res.body.blood_pressure).to.eql({})
+                        expect(res.body.body_fat).to.eql({})
+                        expect(res.body.body_temperature).to.eql({})
+                        expect(res.body.height).to.eql({})
+                        expect(res.body.waist_circumference).to.eql({})
+                        expect(res.body.weight).to.eql({})
+                        expect(res.body.hand_grip).to.eql({})
+                        expect(res.body.calf_circumference).to.eql({})
                     })
             })
         })
@@ -320,7 +464,7 @@ describe('Routes: PatientMeasurement', () => {
         context('when there are validation errors', () => {
             it('should return status code 400 and message from invalid patient id', () => {
                 return request
-                    .get('/v1/patients/123/measurements/last/2018-11-19')
+                    .get('/v1/patients/123/measurements/last/2020-11-19')
                     .set('Content-Type', 'application/json')
                     .expect(400)
                     .then(res => {
@@ -328,9 +472,10 @@ describe('Routes: PatientMeasurement', () => {
                         expect(res.body).to.have.property('description', Strings.ERROR_MESSAGE.UUID_NOT_VALID_FORMAT_DESC)
                     })
             })
+
             it('should return status code 400 and message from invalid date', () => {
                 return request
-                    .get('/v1/patients/123/measurements/last/19-11-2018')
+                    .get('/v1/patients/123/measurements/last/19-11-2020')
                     .set('Content-Type', 'application/json')
                     .expect(400)
                     .then(res => {
@@ -342,14 +487,29 @@ describe('Routes: PatientMeasurement', () => {
     })
 
     describe('DELETE /v1/patients/:patient_id/measurements/:measurement_id', () => {
+        let result
+
+        before(async () => {
+            try {
+                await deleteAllMeasurements()
+
+                result = await createMeasurement(bloodGlucose)
+            } catch (err) {
+                throw new Error('Failure on patients.measurements routes test: ' + err.message)
+            }
+        })
+
         context('when delete a measurement from patient', () => {
             it('should return status code 204 and no content', () => {
                 return request
-                    .delete(`/v1/patients/${bloodGlucose.patient_id}/measurements/${bloodGlucose.id}`)
+                    .delete(`/v1/patients/${bloodGlucose.patient_id}/measurements/${result.id}`)
                     .set('Content-Type', 'application/json')
                     .expect(204)
-                    .then(res => {
+                    .then(async res => {
                         expect(res.body).to.eql({})
+
+                        const countMeasurements = await measurementRepository.count(new Query())
+                        expect(countMeasurements).to.eql(0)
                     })
             })
         })
@@ -369,14 +529,19 @@ describe('Routes: PatientMeasurement', () => {
     })
 })
 
-async function deleteAllMeasurements() {
-    return await MeasurementRepoModel.deleteMany({})
-}
-
 async function createDevice() {
     return await DeviceRepoModel.create(DefaultEntityMock.DEVICE)
 }
 
 async function deleteAllDevices() {
     return await DeviceRepoModel.deleteMany({})
+}
+
+async function createMeasurement(measurement: Measurement) {
+    const measurementSaved: Measurement = await measurementRepository.create(measurement)
+    return Promise.resolve(measurementSaved)
+}
+
+async function deleteAllMeasurements() {
+    return await MeasurementRepoModel.deleteMany({})
 }

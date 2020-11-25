@@ -47,6 +47,8 @@ export abstract class Identifier {
     public static readonly WAIST_CIRCUMFERENCE_ENTITY_MAPPER: any = Symbol.for('WaistCircumferenceEntityMapper')
     public static readonly WEIGHT_ENTITY_MAPPER: any = Symbol.for('WeightEntityMapper')
     public static readonly BODY_FAT_ENTITY_MAPPER: any = Symbol.for('BodyFatEntityMapper')
+    public static readonly HAND_GRIP_ENTITY_MAPPER: any = Symbol.for('HandGripEntityMapper')
+    public static readonly CALF_CIRCUMFERENCE_ENTITY_MAPPER: any = Symbol.for('CalfCircumferenceEntityMapper')
     public static readonly ACTIVITY_ENTITY_MAPPER: any = Symbol.for('PhysicalActivityEntityMapper')
     public static readonly SLEEP_ENTITY_MAPPER: any = Symbol.for('SleepEntityMapper')
     public static readonly SLEEP_DURATION_ENTITY_MAPPER: any = Symbol.for('SleepDurationEntityMapper')

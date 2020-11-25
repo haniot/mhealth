@@ -23,6 +23,10 @@ import { WaistCircumferenceEntity } from '../entity/waist.circumference.entity'
 import { Weight } from '../../application/domain/model/weight'
 import { WeightEntity } from '../entity/weight.entity'
 import { IQuery } from '../../application/port/query.interface'
+import { HandGrip } from '../../application/domain/model/hand.grip'
+import { HandGripEntity } from '../entity/hand.grip.entity'
+import { CalfCircumference } from '../../application/domain/model/calf.circumference'
+import { CalfCircumferenceEntity } from '../entity/calf.circumference.entity'
 
 @injectable()
 export class MeasurementRepository extends BaseRepository<Measurement, MeasurementEntity> implements IMeasurementRepository {
@@ -44,6 +48,10 @@ export class MeasurementRepository extends BaseRepository<Measurement, Measureme
         readonly _waistCircumferenceEntityMapper: IEntityMapper<WaistCircumference, WaistCircumferenceEntity>,
         @inject(Identifier.WEIGHT_ENTITY_MAPPER)
         readonly _weightEntityMapper: IEntityMapper<Weight, WeightEntity>,
+        @inject(Identifier.HAND_GRIP_ENTITY_MAPPER)
+        readonly _handGripEntityMapper: IEntityMapper<HandGrip, HandGripEntity>,
+        @inject(Identifier.CALF_CIRCUMFERENCE_ENTITY_MAPPER)
+        readonly _calfCircumferenceEntityMapper: IEntityMapper<CalfCircumference, CalfCircumferenceEntity>,
         @inject(Identifier.LOGGER) readonly _logger: ILogger
     ) {
         super(_model, _measurementEntityMapper, _logger)
@@ -178,6 +186,10 @@ export class MeasurementRepository extends BaseRepository<Measurement, Measureme
                 return this._weightEntityMapper.transform(item)
             case(MeasurementTypes.BODY_FAT):
                 return this._bodyFatEntityMapper.transform(item)
+            case(MeasurementTypes.HAND_GRIP):
+                return this._handGripEntityMapper.transform(item)
+            case(MeasurementTypes.CALF_CIRCUMFERENCE):
+                return this._calfCircumferenceEntityMapper.transform(item)
             default:
                 return this.mapper.transform(item)
         }

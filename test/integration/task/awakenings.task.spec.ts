@@ -86,9 +86,15 @@ describe('AWAKENINGS TASK', () => {
     otherDataSetItemWithoutAwk2.name = Phases.AWAKE
     otherDataSetItemWithoutAwk2.duration = 420000
 
+    const otherDataSetItemWithoutAwk3: SleepPatternDataSet = new SleepPatternDataSet()
+    otherDataSetItemWithoutAwk3.start_time = '2020-10-21T05:00:00.000Z'
+    otherDataSetItemWithoutAwk3.name = Phases.AWAKE
+    otherDataSetItemWithoutAwk3.duration = 420000
+
     const otherDataSetWithoutAwk: Array<SleepPatternDataSet> = new Array<SleepPatternDataSet>()
     otherDataSetWithoutAwk.push(otherDataSetItemWithoutAwk)
     otherDataSetWithoutAwk.push(otherDataSetItemWithoutAwk2)
+    otherDataSetWithoutAwk.push(otherDataSetItemWithoutAwk3)
 
     // Sleep pattern data set for RPC timed out error.
     const dataSetItemRpcError: SleepPatternDataSet = new SleepPatternDataSet()

@@ -1,11 +1,11 @@
 import { ValidationException } from '../exception/validation.exception'
 import { MeasurementTypesValidator } from './measurement.types.validator'
 import { ObjectIdValidator } from './object.id.validator'
-import { BodyFat } from '../model/body.fat'
+import { HandGrip } from '../model/hand.grip'
 import { DateTimeValidator } from './date.time.validator'
 
-export class CreateBodyFatValidator {
-    public static validate(item: BodyFat): void | ValidationException {
+export class CreateHandGripValidator {
+    public static validate(item: HandGrip): void | ValidationException {
         const fields: Array<string> = []
 
         if (!item.value) fields.push('value')
@@ -20,7 +20,7 @@ export class CreateBodyFatValidator {
 
         if (fields.length) {
             throw new ValidationException('Required fields were not provided...',
-                'BodyFat validation: '.concat(fields.join(', ')).concat(' required!'))
+                'HandGrip validation: '.concat(fields.join(', ')).concat(' required!'))
         }
     }
 }

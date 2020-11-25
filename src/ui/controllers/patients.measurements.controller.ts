@@ -18,6 +18,8 @@ import { BodyTemperature } from '../../application/domain/model/body.temperature
 import { WaistCircumference } from '../../application/domain/model/waist.circumference'
 import { BodyFat } from '../../application/domain/model/body.fat'
 import { LastMeasurements } from '../../application/domain/model/last.measurements'
+import { HandGrip } from '../../application/domain/model/hand.grip'
+import { CalfCircumference } from '../../application/domain/model/calf.circumference'
 
 @controller('/v1/patients/:patient_id/measurements')
 export class PatientsMeasurementsController {
@@ -170,6 +172,14 @@ export class PatientsMeasurementsController {
                 const bodyFat = new BodyFat().fromJSON(item)
                 bodyFat.patient_id = item.patient_id
                 return bodyFat
+            case MeasurementTypes.HAND_GRIP:
+                const handGrip = new HandGrip().fromJSON(item)
+                handGrip.patient_id = item.patient_id
+                return handGrip
+            case MeasurementTypes.CALF_CIRCUMFERENCE:
+                const calfCircumference = new CalfCircumference().fromJSON(item)
+                calfCircumference.patient_id = item.patient_id
+                return calfCircumference
             default:
                 const measurement = new Measurement().fromJSON(item)
                 measurement.patient_id = item.patient_id
