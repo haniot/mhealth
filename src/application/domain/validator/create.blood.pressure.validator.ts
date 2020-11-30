@@ -1,8 +1,8 @@
 import { ValidationException } from '../exception/validation.exception'
 import { ObjectIdValidator } from './object.id.validator'
-import { DatetimeValidator } from './date.time.validator'
 import { BloodPressure } from '../model/blood.pressure'
 import { MeasurementTypesValidator } from './measurement.types.validator'
+import { DateTimeValidator } from './date.time.validator'
 
 export class CreateBloodPressureValidator {
     public static validate(item: BloodPressure): void | ValidationException {
@@ -15,7 +15,7 @@ export class CreateBloodPressureValidator {
         if (!item.type) fields.push('type')
         else MeasurementTypesValidator.validate(item.type)
         if (!item.timestamp) fields.push('timestamp')
-        else DatetimeValidator.validate(item.timestamp)
+        else DateTimeValidator.validate(item.timestamp)
         if (!item.patient_id) fields.push('patient_id')
         else ObjectIdValidator.validate(item.patient_id)
         if (item.device_id) ObjectIdValidator.validate(item.device_id)

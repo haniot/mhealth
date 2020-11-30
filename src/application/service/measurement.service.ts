@@ -35,6 +35,8 @@ import { ILogger } from '../../utils/custom.logger'
 import moment from 'moment'
 import { IntegrationEvent } from '../integration-event/event/integration.event'
 import { IIntegrationEventRepository } from '../port/integration.event.repository.interface'
+import { CreateHandGripValidator } from '../domain/validator/create.hand.grip.validator'
+import { CreateCalfCircumferenceValidator } from '../domain/validator/create.calf.circumference.validator'
 
 @injectable()
 export class MeasurementService implements IMeasurementService {
@@ -154,6 +156,12 @@ export class MeasurementService implements IMeasurementService {
                 case(MeasurementTypes.BODY_FAT):
                     CreateBodyFatValidator.validate(item)
                     break
+                case(MeasurementTypes.HAND_GRIP):
+                    CreateHandGripValidator.validate(item)
+                    break
+                case(MeasurementTypes.CALF_CIRCUMFERENCE):
+                    CreateCalfCircumferenceValidator.validate(item)
+                    break
                 default:
                     throw new ValidationException(
                         Strings.ENUM_VALIDATOR.NOT_MAPPED.concat(`type: ${item.type}`),
@@ -222,6 +230,8 @@ export class MeasurementService implements IMeasurementService {
             result.waist_circumference = await this._repository.getLast(patientId, MeasurementTypes.WAIST_CIRCUMFERENCE)
             result.weight = await this._repository.getLast(patientId, MeasurementTypes.WEIGHT)
             if (result.weight) result.weight = await this.addBmi(result.weight)
+            result.hand_grip = await this._repository.getLast(patientId, MeasurementTypes.HAND_GRIP)
+            result.calf_circumference = await this._repository.getLast(patientId, MeasurementTypes.CALF_CIRCUMFERENCE)
             return Promise.resolve(result)
         } catch (err) {
             return Promise.reject(err)
@@ -242,6 +252,9 @@ export class MeasurementService implements IMeasurementService {
                 await this._repository.getLastFromDate(patientId, MeasurementTypes.WAIST_CIRCUMFERENCE, date)
             result.weight = await this._repository.getLastFromDate(patientId, MeasurementTypes.WEIGHT, date)
             if (result.weight) result.weight = await this.addBmi(result.weight)
+            result.hand_grip = await this._repository.getLastFromDate(patientId, MeasurementTypes.HAND_GRIP, date)
+            result.calf_circumference =
+                await this._repository.getLastFromDate(patientId, MeasurementTypes.CALF_CIRCUMFERENCE, date)
             return Promise.resolve(result)
         } catch (err) {
             return Promise.reject(err)

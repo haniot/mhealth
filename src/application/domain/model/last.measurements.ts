@@ -9,6 +9,8 @@ import { WaistCircumference } from './waist.circumference'
 import { Weight } from './weight'
 import { BodyTemperature } from './body.temperature'
 import { Height } from './height'
+import { HandGrip } from './hand.grip'
+import { CalfCircumference } from './calf.circumference'
 
 export class LastMeasurements extends Entity implements IJSONSerializable, IJSONDeserializable<LastMeasurements> {
 
@@ -19,6 +21,8 @@ export class LastMeasurements extends Entity implements IJSONSerializable, IJSON
     private _height?: Height
     private _waist_circumference?: WaistCircumference
     private _weight?: Weight
+    private _hand_grip?: HandGrip
+    private _calf_circumference?: CalfCircumference
 
     constructor() {
         super()
@@ -80,6 +84,22 @@ export class LastMeasurements extends Entity implements IJSONSerializable, IJSON
         this._weight = value
     }
 
+    get hand_grip(): HandGrip | undefined {
+        return this._hand_grip
+    }
+
+    set hand_grip(value: HandGrip | undefined) {
+        this._hand_grip = value
+    }
+
+    get calf_circumference(): CalfCircumference | undefined {
+        return this._calf_circumference
+    }
+
+    set calf_circumference(value: CalfCircumference | undefined) {
+        this._calf_circumference = value
+    }
+
     public fromJSON(json: any): LastMeasurements {
         if (!json) return this
         if (typeof json === 'string' && JsonUtils.isJsonString(json)) {
@@ -93,6 +113,9 @@ export class LastMeasurements extends Entity implements IJSONSerializable, IJSON
         if (json.waist_circumference !== undefined)
             this.waist_circumference = new WaistCircumference().fromJSON(json.waist_circumference)
         if (json.weight !== undefined) this.weight = new Weight().fromJSON(json.weight)
+        if (json.hand_grip !== undefined) this.hand_grip = new HandGrip().fromJSON(json.hand_grip)
+        if (json.calf_circumference !== undefined)
+            this.calf_circumference = new CalfCircumference().fromJSON(json.calf_circumference)
         return this
     }
 
@@ -104,7 +127,9 @@ export class LastMeasurements extends Entity implements IJSONSerializable, IJSON
             body_temperature: this.body_temperature ? this.body_temperature.toJSON() : {},
             height: this.height ? this.height.toJSON() : {},
             waist_circumference: this.waist_circumference ? this.waist_circumference.toJSON() : {},
-            weight: this.weight ? this.weight.toJSON() : {}
+            weight: this.weight ? this.weight.toJSON() : {},
+            hand_grip: this.hand_grip ? this.hand_grip.toJSON() : {},
+            calf_circumference: this.calf_circumference ? this.calf_circumference.toJSON() : {}
         }
     }
 }

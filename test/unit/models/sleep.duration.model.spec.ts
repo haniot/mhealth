@@ -7,7 +7,7 @@ describe('MODELS: SleepDuration', () => {
 
     describe('fromJSON()', () => {
         context('when a json is passed', () => {
-            it('should return an SleepDuration from a complete json', () => {
+            it('should return a SleepDuration from a complete json', () => {
                 const result: SleepDuration = new SleepDuration().fromJSON(sleepDurationJSON)
 
                 assert.isUndefined(result.id)
@@ -16,7 +16,7 @@ describe('MODELS: SleepDuration', () => {
                 assert.propertyVal(result.data_set[0], 'value', sleepDurationJSON.data_set[0].value)
             })
 
-            it('should return an SleepDuration with some attributes equal to undefined from an empty json', () => {
+            it('should return a SleepDuration with some attributes equal to undefined from an empty json', () => {
                 const result: SleepDuration = new SleepDuration().fromJSON({})
 
                 assert.isUndefined(result.id)
@@ -24,7 +24,7 @@ describe('MODELS: SleepDuration', () => {
         })
 
         context('when the parameter is undefined', () => {
-            it('should return an SleepDuration with some attributes equal to undefined from an undefined json', () => {
+            it('should return a SleepDuration with some attributes equal to undefined from an undefined json', () => {
                 const result: SleepDuration = new SleepDuration().fromJSON(undefined)
 
                 assert.isUndefined(result.id)
@@ -32,7 +32,7 @@ describe('MODELS: SleepDuration', () => {
         })
 
         context('when the json is a string', () => {
-            it('should return an SleepDuration from a complete json', () => {
+            it('should return a SleepDuration from a complete json', () => {
                 const result: SleepDuration = new SleepDuration().fromJSON(JSON.stringify(sleepDurationJSON))
 
                 assert.isUndefined(result.id)
@@ -41,13 +41,13 @@ describe('MODELS: SleepDuration', () => {
                 assert.propertyVal(result.data_set[0], 'value', sleepDurationJSON.data_set[0].value)
             })
 
-            it('should return an SleepDuration with some attributes equal to undefined from an empty string', () => {
+            it('should return a SleepDuration with some attributes equal to undefined from an empty string', () => {
                 const result: SleepDuration = new SleepDuration().fromJSON(JSON.stringify(''))
 
                 assert.isUndefined(result.id)
             })
 
-            it('should return an SleepDuration with some attributes equal to undefined from an invalid string', () => {
+            it('should return a SleepDuration with some attributes equal to undefined from an invalid string', () => {
                 const result: SleepDuration = new SleepDuration().fromJSON('d52215d412')
 
                 assert.isUndefined(result.id)

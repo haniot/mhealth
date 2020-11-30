@@ -48,6 +48,8 @@ describe('Repositories: MeasurementRepository', () => {
             new EntityMapperMock(),
             new EntityMapperMock(),
             new EntityMapperMock(),
+            new EntityMapperMock(),
+            new EntityMapperMock(),
             new CustomLoggerMock())
 
     afterEach(() => {

@@ -355,9 +355,8 @@ describe('Routes: patients.sleep', () => {
                     .expect(400)
                     .then(err => {
                         expect(err.body.code).to.eql(400)
-                        expect(err.body.message).to.eql('Datetime: 2018-08-35T01:40:30Z'
-                            .concat(Strings.ERROR_MESSAGE.INVALID_DATE))
-                        expect(err.body.description).to.eql(Strings.ERROR_MESSAGE.INVALID_DATE_DESC)
+                        expect(err.body.message).to.eql(Strings.ERROR_MESSAGE.DATE.INVALID_DATETIME_FORMAT
+                            .replace('{0}', '2018-08-35T01:40:30Z'))
                     })
             })
         })
@@ -888,9 +887,8 @@ describe('Routes: patients.sleep', () => {
                         expect(res.body.error[11].message).to.eql(Strings.ERROR_MESSAGE.INVALID_FIELDS)
                         expect(res.body.error[11].description).to.eql('The names of the allowed data_set patterns are: ' +
                             'deep, light, rem, awake.')
-                        expect(res.body.error[12].message).to.eql('Datetime: 2019-12-35T12:52:59Z'
-                            .concat(Strings.ERROR_MESSAGE.INVALID_DATE))
-                        expect(res.body.error[12].description).to.eql(Strings.ERROR_MESSAGE.INVALID_DATE_DESC)
+                        expect(res.body.error[12].message).to.eql(Strings.ERROR_MESSAGE.DATE.INVALID_DATETIME_FORMAT
+                            .replace('{0}', '2019-12-35T12:52:59Z'))
 
                         for (let i = 0; i < res.body.error.length; i++) {
                             expect(res.body.error[i].code).to.eql(HttpStatus.BAD_REQUEST)
