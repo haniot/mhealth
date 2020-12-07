@@ -18,6 +18,7 @@ describe('MODELS: HandGrip', () => {
                 assert.propertyVal(result, 'timestamp', handGripJSON.timestamp)
                 assert.propertyVal(result, 'device_id', handGripJSON.device_id)
                 assert.propertyVal(result, 'patient_id', handGripJSON.patient_id)
+                assert.propertyVal(result, 'hand', handGripJSON.hand)
             })
 
             it('should return a HandGrip with some attributes equal to undefined from an empty json', () => {
@@ -48,6 +49,7 @@ describe('MODELS: HandGrip', () => {
                 assert.propertyVal(result, 'timestamp', handGripJSON.timestamp)
                 assert.propertyVal(result, 'device_id', handGripJSON.device_id)
                 assert.propertyVal(result, 'patient_id', handGripJSON.patient_id)
+                assert.propertyVal(result, 'hand', handGripJSON.hand)
             })
 
             it('should return a HandGrip with some attributes equal to undefined from an empty string', () => {
@@ -79,6 +81,7 @@ describe('MODELS: HandGrip', () => {
                 assert.propertyVal(result, 'unit', handGripJSON.unit)
                 assert.propertyVal(result, 'device_id', handGripJSON.device_id)
                 assert.propertyVal(result, 'patient_id', handGripJSON.patient_id)
+                assert.propertyVal(result, 'hand', handGripJSON.hand)
             })
 
             it('should return a JSON with all attributes equal to undefined from an incomplete HandGrip', () => {
@@ -91,6 +94,7 @@ describe('MODELS: HandGrip', () => {
                 assert.isUndefined(result.unit)
                 assert.isUndefined(result.device_id)
                 assert.isUndefined(result.patient_id)
+                assert.isUndefined(result.hand)
             })
         })
     })

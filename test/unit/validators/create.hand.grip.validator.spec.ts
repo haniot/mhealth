@@ -5,6 +5,7 @@ import { HandGripMock } from '../../mocks/models/hand.grip.mock'
 import { ValidationException } from '../../../src/application/domain/exception/validation.exception'
 import { MeasurementTypes } from '../../../src/application/domain/utils/measurement.types'
 import { Strings } from '../../../src/utils/strings'
+import { HandTypes } from '../../../src/application/domain/utils/hand.types'
 
 describe('VALIDATORS: CreateHandGripValidator', () => {
     let handGrip: HandGrip = new HandGripMock().generate()
@@ -45,7 +46,7 @@ describe('VALIDATORS: CreateHandGripValidator', () => {
                 assert.instanceOf(err, ValidationException)
                 assert.propertyVal(err, 'message', 'Required fields were not provided...')
                 assert.propertyVal(err, 'description', 'HandGrip validation: value, unit, timestamp, ' +
-                    'patient_id required!')
+                    'patient_id, hand required!')
             }
         })
     })
@@ -146,6 +147,23 @@ describe('VALIDATORS: CreateHandGripValidator', () => {
                 assert.instanceOf(err, ValidationException)
                 assert.propertyVal(err, 'message', Strings.ERROR_MESSAGE.UUID_NOT_VALID_FORMAT)
                 assert.propertyVal(err, 'description', Strings.ERROR_MESSAGE.UUID_NOT_VALID_FORMAT_DESC)
+            }
+        })
+    })
+
+    context('when the hand_grip hand is invalid', () => {
+        const handTypes: Array<string> = Object.values(HandTypes)
+
+        it('should throw a ValidationException for an unmapped type', () => {
+            try {
+                handGrip.hand = 'invalidHandType'
+                CreateHandGripValidator.validate(handGrip)
+                assert.fail()
+            } catch (err) {
+                assert.instanceOf(err, ValidationException)
+                assert.propertyVal(err, 'message', Strings.ENUM_VALIDATOR.NOT_MAPPED.concat('type: invalidHandType'))
+                assert.propertyVal(err, 'description', Strings.ENUM_VALIDATOR.NOT_MAPPED_DESC
+                    .concat(handTypes.join(', ').concat('.')))
             }
         })
     })
