@@ -60,7 +60,7 @@
     "inversify": "^5.0.1",
     "inversify-express-utils": "^6.3.2",
     "moment": "^2.29.1",
-    "mongoose": "^5.10.18",
+    "mongoose": "5.10.19",
     "morgan": "^1.10.0",
     "query-strings-parser": "^2.1.7",
     "reflect-metadata": "^0.1.13",

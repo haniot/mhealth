@@ -29,11 +29,11 @@ export class HandGripMock {
 
 
     private generateHandType(): HandTypes {
-        const debtTypes = {
+        const handTypes = {
             0: HandTypes.LEFT,
             1: HandTypes.RIGHT
         }
 
-        return debtTypes[Math.floor((Math.random() * 2))] // 0-1
+        return handTypes[Math.floor((Math.random() * 2))] // 0-1
     }
 }
