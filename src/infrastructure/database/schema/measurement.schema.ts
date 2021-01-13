@@ -30,7 +30,8 @@ const measurementSchema = new Mongoose.Schema({
         systolic: { type: Number }, // Blood Pressure
         diastolic: { type: Number },
         pulse: { type: Number }, // Weight
-        body_fat: { type: Number }
+        body_fat: { type: Number },
+        hand: { type: String }  // HandGrip
     },
     {
         timestamps: { createdAt: 'created_at', updatedAt: false },

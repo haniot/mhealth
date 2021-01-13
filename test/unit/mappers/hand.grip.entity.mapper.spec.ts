@@ -27,6 +27,7 @@ describe('MAPPERS: HandGripEntityMapper', () => {
                 assert.propertyVal(result, 'timestamp', handGrip.timestamp)
                 assert.propertyVal(result, 'device_id', handGrip.device_id)
                 assert.propertyVal(result, 'patient_id', handGrip.patient_id)
+                assert.propertyVal(result, 'hand', handGrip.hand)
             })
 
             it('should return an empty HandGripEntity from empty HandGrip', () => {
@@ -49,6 +50,7 @@ describe('MAPPERS: HandGripEntityMapper', () => {
                 assert.propertyVal(result, 'timestamp', handGripJSON.timestamp)
                 assert.propertyVal(result, 'device_id', handGripJSON.device_id)
                 assert.propertyVal(result, 'patient_id', handGripJSON.patient_id)
+                assert.propertyVal(result, 'hand', handGripJSON.hand)
             })
 
             it('should return a HandGrip with some attributes equal to undefined from an empty JSON', () => {
