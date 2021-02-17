@@ -1,5 +1,5 @@
 import { HandGrip } from '../../../src/application/domain/model/hand.grip'
-import { HandTypes } from '../../../src/application/domain/utils/hand.types'
+import { BodyMemberSides } from '../../../src/application/domain/utils/body.member.sides'
 
 export class HandGripMock {
     public static DEVICE_ID = '4b24cf16cb21322357e8d633'
@@ -13,7 +13,7 @@ export class HandGripMock {
         handGrip.timestamp = new Date().toISOString()
         handGrip.device_id = HandGripMock.DEVICE_ID
         handGrip.patient_id = HandGripMock.PATIENT_ID
-        handGrip.hand = this.generateHandType()
+        handGrip.hand = this.generateBodyMemberSide()
 
         return handGrip
     }
@@ -28,12 +28,12 @@ export class HandGripMock {
     }
 
 
-    private generateHandType(): HandTypes {
-        const handTypes = {
-            0: HandTypes.LEFT,
-            1: HandTypes.RIGHT
+    private generateBodyMemberSide(): BodyMemberSides {
+        const bodyMemberSides = {
+            0: BodyMemberSides.LEFT,
+            1: BodyMemberSides.RIGHT
         }
 
-        return handTypes[Math.floor((Math.random() * 2))] // 0-1
+        return bodyMemberSides[Math.floor((Math.random() * 2))] // 0-1
     }
 }

@@ -2,7 +2,7 @@ import { MeasurementTypes } from '../../../src/application/domain/utils/measurem
 import { MealTypes } from '../../../src/application/domain/utils/meal.types'
 import { MeasurementUnits } from '../../../src/application/domain/utils/measurement.units'
 import { DeviceTypes } from '../../../src/application/domain/utils/device.types'
-import { HandTypes } from '../../../src/application/domain/utils/hand.types'
+import { BodyMemberSides } from '../../../src/application/domain/utils/body.member.sides'
 
 export abstract class DefaultEntityMock {
     public static BLOOD_GLUCOSE: any = {
@@ -119,7 +119,7 @@ export abstract class DefaultEntityMock {
         unit: MeasurementUnits.WEIGHT,
         type: MeasurementTypes.HAND_GRIP,
         timestamp: '2020-11-19T14:40:00.000Z',
-        hand: HandTypes.RIGHT,
+        hand: BodyMemberSides.RIGHT,
         patient_id: '5a62be07d6f33400146c9b61',
         device_id: '5ca77314bc08ec205689a736'
     }
@@ -130,6 +130,7 @@ export abstract class DefaultEntityMock {
         unit: MeasurementUnits.LENGTH,
         type: MeasurementTypes.CALF_CIRCUMFERENCE,
         timestamp: '2020-11-19T14:40:00.000Z',
+        leg: BodyMemberSides.LEFT,
         patient_id: '5a62be07d6f33400146c9b61',
         device_id: '5ca77314bc08ec205689a736'
     }

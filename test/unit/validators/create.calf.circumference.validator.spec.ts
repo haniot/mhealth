@@ -5,6 +5,7 @@ import { ValidationException } from '../../../src/application/domain/exception/v
 import { MeasurementTypes } from '../../../src/application/domain/utils/measurement.types'
 import { Strings } from '../../../src/utils/strings'
 import { CalfCircumferenceMock } from '../../mocks/models/calf.circumference.mock'
+import { BodyMemberSides } from '../../../src/application/domain/utils/body.member.sides'
 
 describe('VALIDATORS: CreateCalfCircumferenceValidator', () => {
     let calfCircumference: CalfCircumference = new CalfCircumferenceMock().generate()
@@ -45,7 +46,7 @@ describe('VALIDATORS: CreateCalfCircumferenceValidator', () => {
                 assert.instanceOf(err, ValidationException)
                 assert.propertyVal(err, 'message', 'Required fields were not provided...')
                 assert.propertyVal(err, 'description', 'CalfCircumference validation: value, unit, timestamp, ' +
-                    'patient_id required!')
+                    'patient_id, leg required!')
             }
         })
     })
@@ -146,6 +147,23 @@ describe('VALIDATORS: CreateCalfCircumferenceValidator', () => {
                 assert.instanceOf(err, ValidationException)
                 assert.propertyVal(err, 'message', Strings.ERROR_MESSAGE.UUID_NOT_VALID_FORMAT)
                 assert.propertyVal(err, 'description', Strings.ERROR_MESSAGE.UUID_NOT_VALID_FORMAT_DESC)
+            }
+        })
+    })
+
+    context('when the calf circumference leg is invalid', () => {
+        const bodyMemberSides: Array<string> = Object.values(BodyMemberSides)
+
+        it('should throw a ValidationException for an unmapped type', () => {
+            try {
+                calfCircumference.leg = 'invalidLegSide'
+                CreateCalfCircumferenceValidator.validate(calfCircumference)
+                assert.fail()
+            } catch (err) {
+                assert.instanceOf(err, ValidationException)
+                assert.propertyVal(err, 'message', Strings.ENUM_VALIDATOR.NOT_MAPPED.concat('leg: invalidLegSide'))
+                assert.propertyVal(err, 'description', Strings.ENUM_VALIDATOR.NOT_MAPPED_DESC
+                    .concat(bodyMemberSides.join(', ').concat('.')))
             }
         })
     })

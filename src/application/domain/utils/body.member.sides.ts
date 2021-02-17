@@ -1,4 +1,4 @@
-export enum HandTypes {
+export enum BodyMemberSides {
     LEFT = 'left',
     RIGHT = 'right'
 }
