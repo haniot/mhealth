@@ -3,7 +3,7 @@ import { MeasurementTypesValidator } from './measurement.types.validator'
 import { ObjectIdValidator } from './object.id.validator'
 import { HandGrip } from '../model/hand.grip'
 import { DateTimeValidator } from './date.time.validator'
-import { HandTypesValidator } from './hand.types.validator'
+import { BodyMemberSidesValidator } from './body.member.sides.validator'
 
 export class CreateHandGripValidator {
     public static validate(item: HandGrip): void | ValidationException {
@@ -17,9 +17,9 @@ export class CreateHandGripValidator {
         else DateTimeValidator.validate(item.timestamp)
         if (!item.patient_id) fields.push('patient_id')
         else ObjectIdValidator.validate(item.patient_id)
-        if (item.device_id) ObjectIdValidator.validate(item.device_id)
         if (!item.hand) fields.push('hand')
-        else HandTypesValidator.validate(item.hand)
+        else BodyMemberSidesValidator.validate(item.hand, 'hand')
+        if (item.device_id) ObjectIdValidator.validate(item.device_id)
 
         if (fields.length) {
             throw new ValidationException('Required fields were not provided...',

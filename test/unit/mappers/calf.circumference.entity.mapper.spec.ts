@@ -27,6 +27,7 @@ describe('MAPPERS: CalfCircumferenceEntityMapper', () => {
                 assert.propertyVal(result, 'timestamp', calfCircumference.timestamp)
                 assert.propertyVal(result, 'device_id', calfCircumference.device_id)
                 assert.propertyVal(result, 'patient_id', calfCircumference.patient_id)
+                assert.propertyVal(result, 'leg', calfCircumference.leg)
             })
 
             it('should return an empty CalfCircumferenceEntity from empty CalfCircumference', () => {
@@ -49,6 +50,7 @@ describe('MAPPERS: CalfCircumferenceEntityMapper', () => {
                 assert.propertyVal(result, 'timestamp', calfCircumferenceJSON.timestamp)
                 assert.propertyVal(result, 'device_id', calfCircumferenceJSON.device_id)
                 assert.propertyVal(result, 'patient_id', calfCircumferenceJSON.patient_id)
+                assert.propertyVal(result, 'leg', calfCircumferenceJSON.leg)
             })
 
             it('should return a CalfCircumference with some attributes equal to undefined from an empty JSON', () => {

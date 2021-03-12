@@ -16,6 +16,7 @@ export class CalfCircumferenceEntityMapper implements IEntityMapper<CalfCircumfe
         if (json.timestamp !== undefined) result.timestamp = json.timestamp
         if (json.device_id !== undefined) result.device_id = json.device_id
         if (json.patient_id !== undefined) result.patient_id = json.patient_id
+        if (json.leg !== undefined) result.leg = json.leg
         return result
     }
 
@@ -33,6 +34,7 @@ export class CalfCircumferenceEntityMapper implements IEntityMapper<CalfCircumfe
         if (item.timestamp !== undefined) result.timestamp = item.timestamp
         if (item.device_id !== undefined) result.device_id = item.device_id
         if (item.patient_id !== undefined) result.patient_id = item.patient_id
+        if (item.leg !== undefined) result.leg = item.leg
         return result
     }
 

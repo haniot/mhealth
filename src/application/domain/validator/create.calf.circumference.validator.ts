@@ -3,6 +3,7 @@ import { MeasurementTypesValidator } from './measurement.types.validator'
 import { ObjectIdValidator } from './object.id.validator'
 import { CalfCircumference } from '../model/calf.circumference'
 import { DateTimeValidator } from './date.time.validator'
+import { BodyMemberSidesValidator } from './body.member.sides.validator'
 
 export class CreateCalfCircumferenceValidator {
     public static validate(item: CalfCircumference): void | ValidationException {
@@ -16,6 +17,8 @@ export class CreateCalfCircumferenceValidator {
         else DateTimeValidator.validate(item.timestamp)
         if (!item.patient_id) fields.push('patient_id')
         else ObjectIdValidator.validate(item.patient_id)
+        if (!item.leg) fields.push('leg')
+        else BodyMemberSidesValidator.validate(item.leg, 'leg')
         if (item.device_id) ObjectIdValidator.validate(item.device_id)
 
         if (fields.length) {

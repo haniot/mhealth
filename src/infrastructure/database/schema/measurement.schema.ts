@@ -31,7 +31,8 @@ const measurementSchema = new Mongoose.Schema({
         diastolic: { type: Number },
         pulse: { type: Number }, // Weight
         body_fat: { type: Number },
-        hand: { type: String }  // HandGrip
+        hand: { type: String },  // HandGrip
+        leg: { type: String }  // CalfCircumference
     },
     {
         timestamps: { createdAt: 'created_at', updatedAt: false },

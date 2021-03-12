@@ -18,6 +18,7 @@ describe('MODELS: CalfCircumference', () => {
                 assert.propertyVal(result, 'timestamp', calfCircumferenceJSON.timestamp)
                 assert.propertyVal(result, 'device_id', calfCircumferenceJSON.device_id)
                 assert.propertyVal(result, 'patient_id', calfCircumferenceJSON.patient_id)
+                assert.propertyVal(result, 'leg', calfCircumferenceJSON.leg)
             })
 
             it('should return a CalfCircumference with some attributes equal to undefined from an empty json', () => {
@@ -48,6 +49,7 @@ describe('MODELS: CalfCircumference', () => {
                 assert.propertyVal(result, 'timestamp', calfCircumferenceJSON.timestamp)
                 assert.propertyVal(result, 'device_id', calfCircumferenceJSON.device_id)
                 assert.propertyVal(result, 'patient_id', calfCircumferenceJSON.patient_id)
+                assert.propertyVal(result, 'leg', calfCircumferenceJSON.leg)
             })
 
             it('should return a CalfCircumference with some attributes equal to undefined from an empty string', () => {
@@ -79,6 +81,7 @@ describe('MODELS: CalfCircumference', () => {
                 assert.propertyVal(result, 'unit', calfCircumferenceJSON.unit)
                 assert.propertyVal(result, 'device_id', calfCircumferenceJSON.device_id)
                 assert.propertyVal(result, 'patient_id', calfCircumferenceJSON.patient_id)
+                assert.propertyVal(result, 'leg', calfCircumferenceJSON.leg)
             })
 
             it('should return a JSON with all attributes equal to undefined from an incomplete CalfCircumference', () => {
@@ -91,6 +94,7 @@ describe('MODELS: CalfCircumference', () => {
                 assert.isUndefined(result.unit)
                 assert.isUndefined(result.device_id)
                 assert.isUndefined(result.patient_id)
+                assert.isUndefined(result.leg)
             })
         })
     })

@@ -5,7 +5,7 @@ import { HandGripMock } from '../../mocks/models/hand.grip.mock'
 import { ValidationException } from '../../../src/application/domain/exception/validation.exception'
 import { MeasurementTypes } from '../../../src/application/domain/utils/measurement.types'
 import { Strings } from '../../../src/utils/strings'
-import { HandTypes } from '../../../src/application/domain/utils/hand.types'
+import { BodyMemberSides } from '../../../src/application/domain/utils/body.member.sides'
 
 describe('VALIDATORS: CreateHandGripValidator', () => {
     let handGrip: HandGrip = new HandGripMock().generate()
@@ -151,19 +151,19 @@ describe('VALIDATORS: CreateHandGripValidator', () => {
         })
     })
 
-    context('when the hand_grip hand is invalid', () => {
-        const handTypes: Array<string> = Object.values(HandTypes)
+    context('when the hand grip hand is invalid', () => {
+        const bodyMemberSides: Array<string> = Object.values(BodyMemberSides)
 
         it('should throw a ValidationException for an unmapped type', () => {
             try {
-                handGrip.hand = 'invalidHandType'
+                handGrip.hand = 'invalidHandSide'
                 CreateHandGripValidator.validate(handGrip)
                 assert.fail()
             } catch (err) {
                 assert.instanceOf(err, ValidationException)
-                assert.propertyVal(err, 'message', Strings.ENUM_VALIDATOR.NOT_MAPPED.concat('type: invalidHandType'))
+                assert.propertyVal(err, 'message', Strings.ENUM_VALIDATOR.NOT_MAPPED.concat('hand: invalidHandSide'))
                 assert.propertyVal(err, 'description', Strings.ENUM_VALIDATOR.NOT_MAPPED_DESC
-                    .concat(handTypes.join(', ').concat('.')))
+                    .concat(bodyMemberSides.join(', ').concat('.')))
             }
         })
     })
