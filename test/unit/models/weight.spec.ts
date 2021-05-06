@@ -13,6 +13,7 @@ describe('Models: Weight', () => {
                 assert.propertyVal(result, 'value', DefaultEntityMock.WEIGHT.value)
                 assert.propertyVal(result, 'timestamp', DefaultEntityMock.WEIGHT.timestamp)
                 assert.deepPropertyVal(result, 'body_fat', DefaultEntityMock.WEIGHT.body_fat)
+                assert.propertyVal(result, 'annual_variation', DefaultEntityMock.WEIGHT.annual_variation)
             })
         })
 
@@ -25,6 +26,7 @@ describe('Models: Weight', () => {
                 assert.propertyVal(result, 'value', DefaultEntityMock.WEIGHT.value)
                 assert.propertyVal(result, 'timestamp', DefaultEntityMock.WEIGHT.timestamp)
                 assert.deepPropertyVal(result, 'body_fat', DefaultEntityMock.WEIGHT.body_fat)
+                assert.propertyVal(result, 'annual_variation', DefaultEntityMock.WEIGHT.annual_variation)
             })
         })
 
@@ -38,7 +40,7 @@ describe('Models: Weight', () => {
                 assert.isUndefined(result.value, 'no value defined')
                 assert.isUndefined(result.timestamp, 'no timestamp defined')
                 assert.isUndefined(result.body_fat, 'no body_fat defined')
-
+                assert.isUndefined(result.annual_variation, 'no annual_variation defined')
             })
         })
 
@@ -52,6 +54,7 @@ describe('Models: Weight', () => {
                 assert.isUndefined(result.value, 'no value defined')
                 assert.isUndefined(result.timestamp, 'no timestamp defined')
                 assert.isUndefined(result.body_fat, 'no body_fat defined')
+                assert.isUndefined(result.annual_variation, 'no annual_variation defined')
             })
         })
 
@@ -65,6 +68,7 @@ describe('Models: Weight', () => {
                 assert.isUndefined(result.value, 'no value defined')
                 assert.isUndefined(result.timestamp, 'no timestamp defined')
                 assert.isUndefined(result.body_fat, 'no body_fat defined')
+                assert.isUndefined(result.annual_variation, 'no annual_variation defined')
             })
         })
 
@@ -78,6 +82,7 @@ describe('Models: Weight', () => {
                 assert.isUndefined(result.value, 'no value defined')
                 assert.isUndefined(result.timestamp, 'no timestamp defined')
                 assert.isUndefined(result.body_fat, 'no fat defined')
+                assert.isUndefined(result.annual_variation, 'no annual_variation defined')
             })
         })
     })
@@ -95,6 +100,7 @@ describe('Models: Weight', () => {
                 assert.propertyVal(result, 'value', DefaultEntityMock.WEIGHT.value)
                 assert.propertyVal(result, 'timestamp', DefaultEntityMock.WEIGHT.timestamp)
                 assert.deepPropertyVal(result, 'body_fat', DefaultEntityMock.WEIGHT.body_fat)
+                assert.propertyVal(result, 'annual_variation', DefaultEntityMock.WEIGHT.annual_variation)
             })
         })
 
@@ -109,6 +115,7 @@ describe('Models: Weight', () => {
                 assert.isUndefined(result.timestamp, 'no timestamp defined')
                 assert.isUndefined(result.body_fat, 'no body_fat defined')
                 assert.isUndefined(result.id, 'no id defined')
+                assert.isUndefined(result.annual_variation, 'no annual_variation defined')
             })
         })
     })

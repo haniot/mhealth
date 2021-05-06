@@ -58,7 +58,8 @@ export abstract class DefaultEntityMock {
         body_fat: 20,
         patient_id: '5a62be07d6f33400146c9b61',
         device_id: '5ca77314bc08ec205689a736',
-        bmi: 22.22
+        bmi: 22.22,
+        annual_variation: "no"
     }
 
     public static HEIGHT: any = {

@@ -1,5 +1,6 @@
 import { MeasurementTypes } from '../../../src/application/domain/utils/measurement.types'
 import { Weight } from '../../../src/application/domain/model/weight'
+import { ChoiceTypes } from '../../../src/application/domain/utils/choice.types'
 
 export class WeightMock extends Weight {
     public static DEVICE_ID = '4b24cf16cb21322357e8d633'
@@ -20,6 +21,7 @@ export class WeightMock extends Weight {
         super.patient_id = WeightMock.PATIENT_ID
         super.body_fat = Math.random() * 10 + 18 // 18-27
         super.bmi = Math.random() * 10 + 18 // 18-27
+        super.annual_variation = ChoiceTypes[Math.random() * 2]
     }
 
     private generateObjectId(): string {
