@@ -17,6 +17,7 @@ export class WeightEntityMapper implements IEntityMapper<Weight, WeightEntity> {
         if (json.device_id !== undefined) result.device_id = json.device_id
         if (json.body_fat !== undefined) result.body_fat = json.body_fat
         if (json.patient_id !== undefined) result.patient_id = json.patient_id
+        if (json.annual_variation !== undefined) result.annual_variation = json.annual_variation
         return result
     }
 
@@ -34,6 +35,7 @@ export class WeightEntityMapper implements IEntityMapper<Weight, WeightEntity> {
         if (item.device_id !== undefined) result.device_id = item.device_id
         if (item.body_fat !== undefined) result.body_fat = item.body_fat
         if (item.patient_id !== undefined) result.patient_id = item.patient_id
+        if (item.annual_variation !== undefined) result.annual_variation = item.annual_variation
         return result
     }
 

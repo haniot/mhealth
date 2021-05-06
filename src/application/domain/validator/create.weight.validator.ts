@@ -3,6 +3,7 @@ import { MeasurementTypesValidator } from './measurement.types.validator'
 import { ObjectIdValidator } from './object.id.validator'
 import { Weight } from '../model/weight'
 import { DateTimeValidator } from './date.time.validator'
+import { ChoiceTypesValidator } from './choice.types.validator'
 
 export class CreateWeightValidator {
     public static validate(item: Weight): void | ValidationException {
@@ -17,6 +18,7 @@ export class CreateWeightValidator {
         if (!item.patient_id) fields.push('patient_id')
         else ObjectIdValidator.validate(item.patient_id)
         if (item.device_id) ObjectIdValidator.validate(item.device_id)
+        if (item.annual_variation) ChoiceTypesValidator.validate(item.annual_variation)
 
         if (fields.length) {
             throw new ValidationException('Required fields were not provided...',
