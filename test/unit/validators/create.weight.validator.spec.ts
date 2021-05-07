@@ -4,12 +4,21 @@ import { Weight } from '../../../src/application/domain/model/weight'
 import { assert } from 'chai'
 import { MeasurementTypes } from '../../../src/application/domain/utils/measurement.types'
 import { Strings } from '../../../src/utils/strings'
+import { ChoiceTypes } from '../../../src/application/domain/utils/choice.types'
+import { ValidationException } from '../../../src/application/domain/exception/validation.exception'
 
 describe('Validators: CreateWeightValidator', () => {
     const measurement: Weight = new Weight().fromJSON(DefaultEntityMock.WEIGHT)
     measurement.patient_id = DefaultEntityMock.WEIGHT.patient_id
 
     it('should return undefined when the validation was successful', () => {
+        const result = CreateWeightValidator.validate(measurement)
+        assert.isUndefined(result)
+    })
+
+    it('should return undefined when the validation was successful (without some parameters)', () => {
+        measurement.device_id = undefined
+        measurement.annual_variation = undefined
         const result = CreateWeightValidator.validate(measurement)
         assert.isUndefined(result)
     })
@@ -118,6 +127,23 @@ describe('Validators: CreateWeightValidator', () => {
             } finally {
                 measurement.device_id = DefaultEntityMock.WEIGHT.device_id
             }
+        })
+
+        context('when the choice type is invalid', () => {
+            const choiceTypes: Array<string> = Object.values(ChoiceTypes)
+
+            it('should throw a ValidationException for an unmapped type', () => {
+                try {
+                    measurement.annual_variation = 'invalidChoiceTypes'
+                    CreateWeightValidator.validate(measurement)
+                    assert.fail()
+                } catch (err) {
+                    assert.instanceOf(err, ValidationException)
+                    assert.propertyVal(err, 'message', Strings.ENUM_VALIDATOR.NOT_MAPPED.concat('choice: invalidChoiceTypes'))
+                    assert.propertyVal(err, 'description', Strings.ENUM_VALIDATOR.NOT_MAPPED_DESC
+                        .concat(`${choiceTypes.join(', ')}.`))
+                }
+            })
         })
     })
 })

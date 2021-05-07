@@ -14,9 +14,9 @@ describe('Event: WeightLastSaveEvent', () => {
         })
 
         it('should attributes must have values passed as parameter', () => {
-            let timestamp = new Date()
+            const timestamp = new Date()
             const weight = new WeightMock()
-            let obj = new WeightLastSaveEvent(timestamp, weight)
+            const obj = new WeightLastSaveEvent(timestamp, weight)
             assert.propertyVal(obj, 'event_name', WeightLastSaveEvent.NAME)
             assert.propertyVal(obj, 'type', EventType.MEASUREMENT)
             assert.propertyVal(obj, 'timestamp', timestamp)
@@ -31,9 +31,9 @@ describe('Event: WeightLastSaveEvent', () => {
         })
 
         it('should return the object with the attributes populated', () => {
-            let timestamp = new Date()
+            const timestamp = new Date()
             const weight = new WeightMock()
-            let obj = new WeightLastSaveEvent(timestamp, weight).toJSON()
+            const obj = new WeightLastSaveEvent(timestamp, weight).toJSON()
             assert.propertyVal(obj, 'event_name', WeightLastSaveEvent.NAME)
             assert.propertyVal(obj, 'timestamp', timestamp)
             assert.propertyVal(obj, 'type', EventType.MEASUREMENT)
