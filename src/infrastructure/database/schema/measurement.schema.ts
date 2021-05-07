@@ -29,8 +29,8 @@ const measurementSchema = new Mongoose.Schema({
         meal: { type: String }, // Blood Glucose
         systolic: { type: Number }, // Blood Pressure
         diastolic: { type: Number },
-        pulse: { type: Number }, // Weight
-        body_fat: { type: Number },
+        pulse: { type: Number },
+        body_fat: { type: Number }, // Weight
         annual_variation: { type: String },
         hand: { type: String },  // HandGrip
         leg: { type: String }  // CalfCircumference

@@ -3,6 +3,7 @@ import { MealTypes } from '../../../src/application/domain/utils/meal.types'
 import { MeasurementUnits } from '../../../src/application/domain/utils/measurement.units'
 import { DeviceTypes } from '../../../src/application/domain/utils/device.types'
 import { BodyMemberSides } from '../../../src/application/domain/utils/body.member.sides'
+import { ChoiceTypes } from '../../../src/application/domain/utils/choice.types'
 
 export abstract class DefaultEntityMock {
     public static BLOOD_GLUCOSE: any = {
@@ -59,7 +60,7 @@ export abstract class DefaultEntityMock {
         patient_id: '5a62be07d6f33400146c9b61',
         device_id: '5ca77314bc08ec205689a736',
         bmi: 22.22,
-        annual_variation: "no"
+        annual_variation: ChoiceTypes.NO
     }
 
     public static HEIGHT: any = {

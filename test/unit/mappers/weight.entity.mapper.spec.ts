@@ -33,7 +33,7 @@ describe('Mappers: WeightEntityMapper', () => {
                 assert.isUndefined(result.value, 'no value defined')
                 assert.isUndefined(result.timestamp, 'no timestamp defined')
                 assert.isUndefined(result.body, 'no fat defined')
-                assert.isUndefined(result.annual_variation, 'no annual annual_variation')
+                assert.isUndefined(result.annual_variation, 'no annual_variation defined')
             })
 
             it('should return model without parameter for undefined json', () => {
@@ -47,7 +47,7 @@ describe('Mappers: WeightEntityMapper', () => {
                 assert.isUndefined(result.value, 'no value defined')
                 assert.isUndefined(result.timestamp, 'no timestamp defined')
                 assert.isUndefined(result.body_fat, 'no body_fat defined')
-                assert.isUndefined(result.annual_variation, 'no annual annual_variation')
+                assert.isUndefined(result.annual_variation, 'no annual_variation defined')
             })
 
         })

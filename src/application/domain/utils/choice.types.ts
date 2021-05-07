@@ -1,4 +1,4 @@
 export enum ChoiceTypes {
-  YES = 'yes',
-  NO = 'no'
+    YES = 'yes',
+    NO = 'no'
 }

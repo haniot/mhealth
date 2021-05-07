@@ -206,6 +206,7 @@ describe('Routes: patients.measurements', () => {
                         expect(res.body.unit).to.eql(weight.unit)
                         expect(res.body.device_id).to.eql(weight.device_id)
                         expect(res.body.body_fat).to.eql(weight.body_fat)
+                        expect(res.body.annual_variation).to.eql(weight.annual_variation)
                     })
             })
         })
