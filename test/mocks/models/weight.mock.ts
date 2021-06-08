@@ -20,6 +20,7 @@ export class WeightMock extends Weight {
         super.patient_id = WeightMock.PATIENT_ID
         super.body_fat = Math.random() * 10 + 18 // 18-27
         super.bmi = Math.random() * 10 + 18 // 18-27
+        super.annual_variation = this.chooseChoiceType()
     }
 
     private generateObjectId(): string {
@@ -30,4 +31,18 @@ export class WeightMock extends Weight {
         }
         return randS
     }
+
+    private chooseChoiceType(): ChoiceTypesMock {
+        switch (Math.floor(Math.random() * 2)) { // 0-1
+            case 0:
+                return ChoiceTypesMock.YES
+            default:
+                return ChoiceTypesMock.NO
+        }
+    }
+}
+
+export enum ChoiceTypesMock {
+    YES = 'yes',
+    NO = 'no'
 }

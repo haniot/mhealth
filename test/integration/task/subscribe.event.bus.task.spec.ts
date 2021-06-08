@@ -27,6 +27,7 @@ import { BodyTemperature } from '../../../src/application/domain/model/body.temp
 import { BloodGlucose } from '../../../src/application/domain/model/blood.glucose'
 import { BloodPressure } from '../../../src/application/domain/model/blood.pressure'
 import { Height } from '../../../src/application/domain/model/height'
+import { ChoiceTypes } from '../../../src/application/domain/utils/choice.types'
 
 const dbConnection: IConnectionDB = DIContainer.get(Identifier.MONGODB_CONNECTION)
 const rabbit: EventBusRabbitMQ = DIContainer.get(Identifier.RABBITMQ_EVENT_BUS)
@@ -94,6 +95,7 @@ describe('SUBSCRIBE EVENT BUS TASK', () => {
                     type: MeasurementTypes.WEIGHT,
                     timestamp: '2018-11-19T23:15:00Z',
                     body_fat: 21,
+                    annual_variation: ChoiceTypes.YES,
                     device_id: '5ca77314bc08ec205689a736'
                 })
                 weight.patient_id = DefaultEntityMock.WEIGHT.patient_id
@@ -114,8 +116,9 @@ describe('SUBSCRIBE EVENT BUS TASK', () => {
                         expect(weightResult.unit).to.eql(weight.unit)
                         expect(weightResult.timestamp).to.eql(new Date(weight.timestamp!))
                         expect(weightResult.device_id.toString()).to.eql(weight.device_id)
-                        expect(weightResult.body_fat).to.eql(weight.body_fat)
                         expect(weightResult.patient_id.toString()).to.eql(weight.patient_id)
+                        expect(weightResult.body_fat).to.eql(weight.body_fat)
+                        expect(weightResult.annual_variation).to.eql(weight.annual_variation)
 
                         done()
                     })

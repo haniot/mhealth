@@ -20,6 +20,7 @@ describe('Mappers: WeightEntityMapper', () => {
                 assert.propertyVal(result, 'value', DefaultEntityMock.WEIGHT.value)
                 assert.propertyVal(result, 'timestamp', DefaultEntityMock.WEIGHT.timestamp)
                 assert.deepPropertyVal(result, 'body_fat', DefaultEntityMock.WEIGHT.body_fat)
+                assert.propertyVal(result, 'annual_variation', DefaultEntityMock.WEIGHT.annual_variation)
             })
 
             it('should return model without parameters for empty json', () => {
@@ -32,6 +33,7 @@ describe('Mappers: WeightEntityMapper', () => {
                 assert.isUndefined(result.value, 'no value defined')
                 assert.isUndefined(result.timestamp, 'no timestamp defined')
                 assert.isUndefined(result.body, 'no fat defined')
+                assert.isUndefined(result.annual_variation, 'no annual_variation defined')
             })
 
             it('should return model without parameter for undefined json', () => {
@@ -45,6 +47,7 @@ describe('Mappers: WeightEntityMapper', () => {
                 assert.isUndefined(result.value, 'no value defined')
                 assert.isUndefined(result.timestamp, 'no timestamp defined')
                 assert.isUndefined(result.body_fat, 'no body_fat defined')
+                assert.isUndefined(result.annual_variation, 'no annual_variation defined')
             })
 
         })
@@ -59,6 +62,7 @@ describe('Mappers: WeightEntityMapper', () => {
                 assert.propertyVal(result, 'value', DefaultEntityMock.WEIGHT.value)
                 assert.propertyVal(result, 'timestamp', DefaultEntityMock.WEIGHT.timestamp)
                 assert.propertyVal(result, 'body_fat', DefaultEntityMock.WEIGHT.body_fat)
+                assert.propertyVal(result, 'annual_variation', DefaultEntityMock.WEIGHT.annual_variation)
             })
 
             it('should return a model entity with basic parameters for empty model', () => {
