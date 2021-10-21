@@ -18,7 +18,7 @@ describe('Validators: UpdateDeviceValidator', () => {
             device.id = '123'
             try {
                 UpdateDeviceValidator.validate(device)
-            } catch (err) {
+            } catch (err: any) {
                 assert.propertyVal(err, 'message', 'Some ID provided does not have a valid format!')
                 assert.propertyVal(err, 'description', 'A 24-byte hex ID similar to this: 507f191e810c19729de860ea is expected.')
                 device.id = DefaultEntityMock.DEVICE.id
@@ -29,7 +29,7 @@ describe('Validators: UpdateDeviceValidator', () => {
             device.patient_id = DefaultEntityMock.DEVICE.patient_id
             try {
                 UpdateDeviceValidator.validate(device)
-            } catch (err) {
+            } catch (err: any) {
                 assert.propertyVal(err, 'message', Strings.ERROR_MESSAGE.PARAMETER_COULD_NOT_BE_UPDATED)
                 assert.propertyVal(err, 'description',
                     Strings.ERROR_MESSAGE.PARAMETER_COULD_NOT_BE_UPDATED_DESC.concat('patient_id'))

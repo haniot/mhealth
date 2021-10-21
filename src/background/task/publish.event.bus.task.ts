@@ -28,7 +28,7 @@ export class PublishEventBusTask implements IBackgroundTask {
     public async stop(): Promise<void> {
         try {
             await this._eventBus.dispose()
-        } catch (err) {
+        } catch (err: any) {
             return Promise.reject(new Error(`Error stopping PublishEventBusTask! ${err.message}`))
         }
     }
@@ -58,7 +58,7 @@ export class PublishEventBusTask implements IBackgroundTask {
                             .concat(`saved event by name ${event.event_name} and ID: ${event.id}`))
                     })
             })
-        } catch (err) {
+        } catch (err: any) {
             this._logger.error(`Error retrieving saved events: ${err.message}`)
         }
     }

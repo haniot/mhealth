@@ -53,7 +53,7 @@ export class PatientsSleepController {
                         const sleepItem: Sleep = new Sleep().fromJSON(item)
                         sleepItem.patient_id = req.params.patient_id
                         sleepArr.push(sleepItem)
-                    } catch (err) {
+                    } catch (err: any) {
                         // when unable to successfully form the object through fromJSON()
                         let statusCode: number = HttpStatus.INTERNAL_SERVER_ERROR
                         if (err instanceof ValidationException) statusCode = HttpStatus.BAD_REQUEST
@@ -80,7 +80,7 @@ export class PatientsSleepController {
 
             const result: Sleep = await this._sleepService.add(sleepSave)
             return res.status(HttpStatus.CREATED).send(result)
-        } catch (err) {
+        } catch (err: any) {
             const handlerError = ApiExceptionManager.build(err)
             return res.status(handlerError.code)
                 .send(handlerError.toJSON())
@@ -104,7 +104,7 @@ export class PatientsSleepController {
             const count: number = await this._sleepService.count(query)
             res.setHeader('X-Total-Count', count)
             return res.status(HttpStatus.OK).send(result)
-        } catch (err) {
+        } catch (err: any) {
             const handlerError = ApiExceptionManager.build(err)
             return res.status(handlerError.code)
                 .send(handlerError.toJSON())
@@ -128,7 +128,7 @@ export class PatientsSleepController {
                 .getByIdAndPatient(req.params.sleep_id, req.params.patient_id, query)
             if (!result) return res.status(HttpStatus.NOT_FOUND).send(this.getMessageSleepNotFound())
             return res.status(HttpStatus.OK).send(result)
-        } catch (err) {
+        } catch (err: any) {
             const handlerError = ApiExceptionManager.build(err)
             return res.status(handlerError.code)
                 .send(handlerError.toJSON())
@@ -146,7 +146,7 @@ export class PatientsSleepController {
         try {
             await this._sleepService.removeByPatient(req.params.sleep_id, req.params.patient_id)
             return res.status(HttpStatus.NO_CONTENT).send()
-        } catch (err) {
+        } catch (err: any) {
             const handlerError = ApiExceptionManager.build(err)
             return res.status(handlerError.code)
                 .send(handlerError.toJSON())

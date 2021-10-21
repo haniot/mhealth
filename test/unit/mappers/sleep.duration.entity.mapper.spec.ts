@@ -17,7 +17,7 @@ describe('MAPPERS: SleepDurationEntityMapper', () => {
             it('should throw "Unsupported feature!" error', () => {
                 try {
                     sleepDurationEntityMapper.transform(new SleepDuration())
-                } catch (err) {
+                } catch (err: any) {
                     assert.propertyVal(err, 'message', 'Not implemented!')
                 }
             })
@@ -61,7 +61,7 @@ describe('MAPPERS: SleepDurationEntityMapper', () => {
             it('should throw an error', () => {
                 try {
                     sleepDurationEntityMapper.modelEntityToModel(new SleepDurationEntity())
-                } catch (err) {
+                } catch (err: any) {
                     assert.propertyVal(err, 'message', 'Not implemented!')
                 }
             })

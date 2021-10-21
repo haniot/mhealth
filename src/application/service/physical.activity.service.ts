@@ -60,7 +60,7 @@ export class PhysicalActivityService implements IPhysicalActivityService {
                 const statusSuccess: StatusSuccess<PhysicalActivity> =
                     new StatusSuccess<PhysicalActivity>(HttpStatus.CREATED, activityResult)
                 statusSuccessArr.push(statusSuccess)
-            } catch (err) {
+            } catch (err: any) {
                 let statusCode: number = HttpStatus.INTERNAL_SERVER_ERROR
                 if (err instanceof ValidationException) statusCode = HttpStatus.BAD_REQUEST
                 if (err instanceof ConflictException) statusCode = HttpStatus.CONFLICT

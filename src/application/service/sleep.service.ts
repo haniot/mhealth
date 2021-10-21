@@ -63,7 +63,7 @@ export class SleepService implements ISleepService {
                 // Create a StatusSuccess object for the construction of the MultiStatus response.
                 const statusSuccess: StatusSuccess<Sleep> = new StatusSuccess<Sleep>(HttpStatus.CREATED, sleepResult)
                 statusSuccessArr.push(statusSuccess)
-            } catch (err) {
+            } catch (err: any) {
                 let statusCode: number = HttpStatus.INTERNAL_SERVER_ERROR
                 if (err instanceof ValidationException) statusCode = HttpStatus.BAD_REQUEST
                 if (err instanceof ConflictException) statusCode = HttpStatus.CONFLICT
@@ -219,7 +219,7 @@ export class SleepService implements ISleepService {
         try {
             const sleepUp: Sleep = await this._awakeningsTask.calculateAwakenings(sleep)
             return Promise.resolve(sleepUp)
-        } catch (err) {
+        } catch (err: any) {
             this._logger.error(`An error occurred while attempting calculate awakenings `
                 .concat(`for the sleep with id: ${sleep.id}. ${err.message}`)
                 .concat(err.description ? ' ' + err.description : ''))

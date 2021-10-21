@@ -16,7 +16,7 @@ export class CreatePhysicalActivityValidator {
 
         try {
             CreateActivityValidator.validate(activity)
-        } catch (err) {
+        } catch (err: any) {
             if (err.message !== 'REQUIRED_FIELDS') throw err
             fields.push(err.description.split(','))
         }

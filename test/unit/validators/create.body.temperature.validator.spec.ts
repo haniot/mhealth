@@ -19,7 +19,7 @@ describe('Validators: CreateBodyTemperatureValidator', () => {
             measurement.value = undefined
             try {
                 CreateBodyTemperatureValidator.validate(measurement)
-            } catch (err) {
+            } catch (err: any) {
                 assert.propertyVal(err, 'message', 'Required fields were not provided...')
                 assert.propertyVal(err, 'description', 'BodyTemperature validation: value required!')
             } finally {
@@ -30,7 +30,7 @@ describe('Validators: CreateBodyTemperatureValidator', () => {
             measurement.unit = undefined
             try {
                 CreateBodyTemperatureValidator.validate(measurement)
-            } catch (err) {
+            } catch (err: any) {
                 assert.propertyVal(err, 'message', 'Required fields were not provided...')
                 assert.propertyVal(err, 'description', 'BodyTemperature validation: unit required!')
             } finally {
@@ -41,7 +41,7 @@ describe('Validators: CreateBodyTemperatureValidator', () => {
             measurement.type = undefined
             try {
                 CreateBodyTemperatureValidator.validate(measurement)
-            } catch (err) {
+            } catch (err: any) {
                 assert.propertyVal(err, 'message', 'Required fields were not provided...')
                 assert.propertyVal(err, 'description', 'BodyTemperature validation: type required!')
             }
@@ -50,7 +50,7 @@ describe('Validators: CreateBodyTemperatureValidator', () => {
             measurement.type = 'invalid'
             try {
                 CreateBodyTemperatureValidator.validate(measurement)
-            } catch (err) {
+            } catch (err: any) {
                 assert.propertyVal(err, 'message', Strings.ENUM_VALIDATOR.NOT_MAPPED.concat('type: invalid'))
                 assert.propertyVal(err, 'description',
                     Strings.ENUM_VALIDATOR.NOT_MAPPED_DESC.concat(Object.values(MeasurementTypes).join(', ').concat('.')))
@@ -62,7 +62,7 @@ describe('Validators: CreateBodyTemperatureValidator', () => {
             measurement.timestamp = undefined
             try {
                 CreateBodyTemperatureValidator.validate(measurement)
-            } catch (err) {
+            } catch (err: any) {
                 assert.propertyVal(err, 'message', 'Required fields were not provided...')
                 assert.propertyVal(err, 'description', 'BodyTemperature validation: timestamp required!')
             }
@@ -71,7 +71,7 @@ describe('Validators: CreateBodyTemperatureValidator', () => {
             measurement.timestamp = '12-04-2012'
             try {
                 CreateBodyTemperatureValidator.validate(measurement)
-            } catch (err) {
+            } catch (err: any) {
                 assert.propertyVal(err, 'message', Strings.ERROR_MESSAGE.DATE.INVALID_DATETIME_FORMAT
                     .replace('{0}', '12-04-2012'))
                 assert.propertyVal(err, 'description', Strings.ERROR_MESSAGE.DATE.INVALID_DATETIME_FORMAT_DESC)
@@ -83,7 +83,7 @@ describe('Validators: CreateBodyTemperatureValidator', () => {
             measurement.patient_id = undefined
             try {
                 CreateBodyTemperatureValidator.validate(measurement)
-            } catch (err) {
+            } catch (err: any) {
                 assert.propertyVal(err, 'message', 'Required fields were not provided...')
                 assert.propertyVal(err, 'description', 'BodyTemperature validation: patient_id required!')
             }
@@ -92,7 +92,7 @@ describe('Validators: CreateBodyTemperatureValidator', () => {
             measurement.patient_id = '123'
             try {
                 CreateBodyTemperatureValidator.validate(measurement)
-            } catch (err) {
+            } catch (err: any) {
                 assert.propertyVal(err, 'message', Strings.ERROR_MESSAGE.UUID_NOT_VALID_FORMAT)
                 assert.propertyVal(err, 'description', Strings.ERROR_MESSAGE.UUID_NOT_VALID_FORMAT_DESC)
             } finally {
@@ -103,7 +103,7 @@ describe('Validators: CreateBodyTemperatureValidator', () => {
             measurement.device_id = undefined
             try {
                 CreateBodyTemperatureValidator.validate(measurement)
-            } catch (err) {
+            } catch (err: any) {
                 assert.propertyVal(err, 'message', 'Required fields were not provided...')
                 assert.propertyVal(err, 'description', 'BodyTemperature validation: device_id required!')
             }
@@ -112,7 +112,7 @@ describe('Validators: CreateBodyTemperatureValidator', () => {
             measurement.device_id = '123'
             try {
                 CreateBodyTemperatureValidator.validate(measurement)
-            } catch (err) {
+            } catch (err: any) {
                 assert.propertyVal(err, 'message', Strings.ERROR_MESSAGE.UUID_NOT_VALID_FORMAT)
                 assert.propertyVal(err, 'description', Strings.ERROR_MESSAGE.UUID_NOT_VALID_FORMAT_DESC)
             }

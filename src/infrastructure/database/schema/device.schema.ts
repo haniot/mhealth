@@ -6,22 +6,22 @@ interface IDevice extends Mongoose.Document {
 const deviceSchema = new Mongoose.Schema({
         name: {
             type: String,
-            required: 'Name of device is required!'
+            required: true
         },
         address: {
             type: String,
-            required: 'Address of device is required!'
+            required: true
         },
         type: {
             type: String,
-            required: 'Type of device is required!'
+            required: true
         },
         model_number: {
             type: String
         },
         manufacturer: {
             type: String,
-            required: 'Manufacturer of device is required!'
+            required: true
         },
         patient_id: { type: Schema.Types.ObjectId }
     },

@@ -24,7 +24,7 @@ describe('Routes: PatientDevice', () => {
                 const mongoConfigs = Config.getMongoConfig()
                 await dbConnection.tryConnect(mongoConfigs.uri, mongoConfigs.options)
                 await deleteAllDevices()
-            } catch (err) {
+            } catch (err: any) {
                 throw new Error('Failure on PatientDevice test: ' + err.message)
             }
         }
@@ -34,7 +34,7 @@ describe('Routes: PatientDevice', () => {
         try {
             await deleteAllDevices()
             await dbConnection.dispose()
-        } catch (err) {
+        } catch (err: any) {
             throw new Error('Failure on PatientDevice test: ' + err.message)
         }
     })

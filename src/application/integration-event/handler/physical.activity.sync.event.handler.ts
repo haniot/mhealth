@@ -27,7 +27,7 @@ export class PhysicalActivitySyncEventHandler implements IIntegrationEventHandle
                 try {
                     await this.updateOrCreate(event, item)
                     countSuccess++
-                } catch (err) {
+                } catch (err: any) {
                     this._logger.warn(`An error occurred while attempting `
                         .concat(`perform the operation with the ${event.event_name} name event. ${err.message}`)
                         .concat(err.description ? ' ' + err.description : ''))
@@ -42,7 +42,7 @@ export class PhysicalActivitySyncEventHandler implements IIntegrationEventHandle
                 this._logger.info(
                     `Action for event ${event.event_name} associated with patient with ID: ${event.physical_activity.user_id}`
                         .concat('successfully performed!'))
-            } catch (err) {
+            } catch (err: any) {
                 this._logger.error(`An error occurred while attempting `
                     .concat(`perform the operation with the ${event.event_name} name event. ${err.message}`)
                     .concat(err.description ? ' ' + err.description : ''))

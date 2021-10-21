@@ -181,7 +181,7 @@ describe('Routes: patients.physicalactivities', () => {
             await dbConnection.tryConnect(mongoConfigs.uri, mongoConfigs.options)
 
             await deleteAllActivities()
-        } catch (err) {
+        } catch (err: any) {
             throw new Error('Failure on patients.physicalactivities routes test: ' + err.message)
         }
     })
@@ -191,7 +191,7 @@ describe('Routes: patients.physicalactivities', () => {
         try {
             await deleteAllActivities()
             await dbConnection.dispose()
-        } catch (err) {
+        } catch (err: any) {
             throw new Error('Failure on patients.physicalactivities routes test: ' + err.message)
         }
     })
@@ -203,7 +203,7 @@ describe('Routes: patients.physicalactivities', () => {
             before(async () => {
                 try {
                     await deleteAllActivities()
-                } catch (err) {
+                } catch (err: any) {
                     throw new Error('Failure on patients.physicalactivities routes test: ' + err.message)
                 }
             })
@@ -278,7 +278,7 @@ describe('Routes: patients.physicalactivities', () => {
                         heart_rate_zones: defaultActivity.heart_rate_zones ? defaultActivity.heart_rate_zones : undefined,
                         patient_id: defaultActivity.patient_id
                     })
-                } catch (err) {
+                } catch (err: any) {
                     throw new Error('Failure on patients.physicalactivities routes test: ' + err.message)
                 }
             })
@@ -1287,7 +1287,7 @@ describe('Routes: patients.physicalactivities', () => {
             before(async () => {
                 try {
                     await deleteAllActivities()
-                } catch (err) {
+                } catch (err: any) {
                     throw new Error('Failure on patients.physicalactivities routes test: ' + err.message)
                 }
             })
@@ -1359,7 +1359,7 @@ describe('Routes: patients.physicalactivities', () => {
                             patient_id: activity.patient_id
                         })
                     }
-                } catch (err) {
+                } catch (err: any) {
                     throw new Error('Failure on patients.physicalactivities routes test: ' + err.message)
                 }
             })
@@ -1415,7 +1415,7 @@ describe('Routes: patients.physicalactivities', () => {
             before(async () => {
                 try {
                     await deleteAllActivities()
-                } catch (err) {
+                } catch (err: any) {
                     throw new Error('Failure on patients.physicalactivities routes test: ' + err.message)
                 }
             })
@@ -1475,7 +1475,7 @@ describe('Routes: patients.physicalactivities', () => {
             before(async () => {
                 try {
                     await deleteAllActivities()
-                } catch (err) {
+                } catch (err: any) {
                     throw new Error('Failure on patients.physicalactivities routes test: ' + err.message)
                 }
             })
@@ -1619,7 +1619,7 @@ describe('Routes: patients.physicalactivities', () => {
                         levels: defaultActivity.levels ? defaultActivity.levels : undefined,
                         patient_id: defaultActivity.patient_id
                     })
-                } catch (err) {
+                } catch (err: any) {
                     throw new Error('Failure on patients.physicalactivities routes test: ' + err.message)
                 }
             })
@@ -1654,7 +1654,7 @@ describe('Routes: patients.physicalactivities', () => {
             before(async () => {
                 try {
                     await deleteAllActivities()
-                } catch (err) {
+                } catch (err: any) {
                     throw new Error('Failure on patients.physicalactivities routes test: ' + err.message)
                 }
             })
@@ -1674,7 +1674,7 @@ describe('Routes: patients.physicalactivities', () => {
             before(async () => {
                 try {
                     await deleteAllActivities()
-                } catch (err) {
+                } catch (err: any) {
                     throw new Error('Failure on patients.physicalactivities routes test: ' + err.message)
                 }
             })
@@ -1740,7 +1740,7 @@ describe('Routes: patients.physicalactivities', () => {
                         levels: defaultActivity.levels ? defaultActivity.levels : undefined,
                         patient_id: defaultActivity.patient_id
                     })
-                } catch (err) {
+                } catch (err: any) {
                     throw new Error('Failure on patients.physicalactivities routes test: ' + err.message)
                 }
             })
@@ -1827,7 +1827,7 @@ describe('Routes: patients.physicalactivities', () => {
                         levels: defaultActivity.levels ? defaultActivity.levels : undefined,
                         patient_id: defaultActivity.patient_id
                     })
-                } catch (err) {
+                } catch (err: any) {
                     throw new Error('Failure on patients.physicalactivities routes test: ' + err.message)
                 }
             })
@@ -1860,7 +1860,7 @@ describe('Routes: patients.physicalactivities', () => {
             before(async () => {
                 try {
                     await deleteAllActivities()
-                } catch (err) {
+                } catch (err: any) {
                     throw new Error('Failure on patients.physicalactivities routes test: ' + err.message)
                 }
             })
@@ -1883,7 +1883,7 @@ describe('Routes: patients.physicalactivities', () => {
             before(async () => {
                 try {
                     await deleteAllActivities()
-                } catch (err) {
+                } catch (err: any) {
                     throw new Error('Failure on patients.physicalactivities routes test: ' + err.message)
                 }
             })
@@ -1905,7 +1905,7 @@ describe('Routes: patients.physicalactivities', () => {
             before(async () => {
                 try {
                     await deleteAllActivities()
-                } catch (err) {
+                } catch (err: any) {
                     throw new Error('Failure on patients.physicalactivities routes test: ' + err.message)
                 }
             })
@@ -1946,7 +1946,7 @@ describe('Routes: patients.physicalactivities', () => {
                         heart_rate_zones: defaultActivity.heart_rate_zones ? defaultActivity.heart_rate_zones : undefined,
                         patient_id: defaultActivity.patient_id
                     })
-                } catch (err) {
+                } catch (err: any) {
                     throw new Error('Failure on patients.physicalactivities routes test: ' + err.message)
                 }
             })
@@ -1967,7 +1967,7 @@ describe('Routes: patients.physicalactivities', () => {
             before(async () => {
                 try {
                     await deleteAllActivities()
-                } catch (err) {
+                } catch (err: any) {
                     throw new Error('Failure on patients.physicalactivities routes test: ' + err.message)
                 }
             })
@@ -1987,7 +1987,7 @@ describe('Routes: patients.physicalactivities', () => {
             before(async () => {
                 try {
                     await deleteAllActivities()
-                } catch (err) {
+                } catch (err: any) {
                     throw new Error('Failure on patients.physicalactivities routes test: ' + err.message)
                 }
             })
@@ -2009,7 +2009,7 @@ describe('Routes: patients.physicalactivities', () => {
             before(async () => {
                 try {
                     await deleteAllActivities()
-                } catch (err) {
+                } catch (err: any) {
                     throw new Error('Failure on patients.physicalactivities routes test: ' + err.message)
                 }
             })

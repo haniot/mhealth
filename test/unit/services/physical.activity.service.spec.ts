@@ -644,7 +644,7 @@ describe('Services: PhysicalActivityService', () => {
 
                 try {
                     await activityService.getByIdAndPatient(activity.id!, activity.patient_id, query)
-                } catch (err) {
+                } catch (err: any) {
                     assert.propertyVal(err, 'message', Strings.PHYSICAL_ACTIVITY.PARAM_ID_NOT_VALID_FORMAT)
                     assert.propertyVal(err, 'description', Strings.ERROR_MESSAGE.UUID_NOT_VALID_FORMAT_DESC)
                 }
@@ -662,7 +662,7 @@ describe('Services: PhysicalActivityService', () => {
 
                 try {
                     await activityService.getByIdAndPatient(activity.id!, activity.patient_id, query)
-                } catch (err) {
+                } catch (err: any) {
                     assert.propertyVal(err, 'message', Strings.PATIENT.PARAM_ID_NOT_VALID_FORMAT)
                     assert.propertyVal(err, 'description', Strings.ERROR_MESSAGE.UUID_NOT_VALID_FORMAT_DESC)
                 }
@@ -717,7 +717,7 @@ describe('Services: PhysicalActivityService', () => {
 
                 try {
                     await activityService.getAllByPatient(activity.patient_id, query)
-                } catch (err) {
+                } catch (err: any) {
                     assert.propertyVal(err, 'message', Strings.PATIENT.PARAM_ID_NOT_VALID_FORMAT)
                     assert.propertyVal(err, 'description', Strings.ERROR_MESSAGE.UUID_NOT_VALID_FORMAT_DESC)
                 }

@@ -19,7 +19,7 @@ describe('VALIDATORS: CreateHandGripValidator', () => {
             try {
                 const result = CreateHandGripValidator.validate(handGrip)
                 assert.isUndefined(result)
-            } catch (err) {
+            } catch (err: any) {
                 assert.fail(err)
             }
         })
@@ -31,7 +31,7 @@ describe('VALIDATORS: CreateHandGripValidator', () => {
                 handGrip.type = undefined
                 CreateHandGripValidator.validate(handGrip)
                 assert.fail()
-            } catch (err) {
+            } catch (err: any) {
                 assert.instanceOf(err, ValidationException)
                 assert.propertyVal(err, 'message', 'Required fields were not provided...')
                 assert.propertyVal(err, 'description', 'HandGrip validation: type required!')
@@ -42,7 +42,7 @@ describe('VALIDATORS: CreateHandGripValidator', () => {
             try {
                 CreateHandGripValidator.validate(new HandGrip())
                 assert.fail()
-            } catch (err) {
+            } catch (err: any) {
                 assert.instanceOf(err, ValidationException)
                 assert.propertyVal(err, 'message', 'Required fields were not provided...')
                 assert.propertyVal(err, 'description', 'HandGrip validation: value, unit, timestamp, ' +
@@ -57,7 +57,7 @@ describe('VALIDATORS: CreateHandGripValidator', () => {
                 handGrip.timestamp = '01-07-2020'
                 CreateHandGripValidator.validate(handGrip)
                 assert.fail()
-            } catch (err) {
+            } catch (err: any) {
                 assert.instanceOf(err, ValidationException)
                 assert.propertyVal(err, 'message', Strings.ERROR_MESSAGE.DATE.INVALID_DATETIME_FORMAT
                     .replace('{0}', '01-07-2020'))
@@ -70,7 +70,7 @@ describe('VALIDATORS: CreateHandGripValidator', () => {
                 handGrip.timestamp = '2020-08-011T10:00:00.000Z'
                 CreateHandGripValidator.validate(handGrip)
                 assert.fail()
-            } catch (err) {
+            } catch (err: any) {
                 assert.instanceOf(err, ValidationException)
                 assert.propertyVal(err, 'message', Strings.ERROR_MESSAGE.DATE.INVALID_DATETIME_FORMAT
                     .replace('{0}', '2020-08-011T10:00:00.000Z'))
@@ -84,7 +84,7 @@ describe('VALIDATORS: CreateHandGripValidator', () => {
                 handGrip.timestamp = '2020-13-10T10:00:00.000Z'
                 CreateHandGripValidator.validate(handGrip)
                 assert.fail()
-            } catch (err) {
+            } catch (err: any) {
                 assert.instanceOf(err, ValidationException)
                 assert.propertyVal(err, 'message', Strings.ERROR_MESSAGE.DATE.INVALID_DATETIME_FORMAT
                     .replace('{0}', '2020-13-10T10:00:00.000Z'))
@@ -98,7 +98,7 @@ describe('VALIDATORS: CreateHandGripValidator', () => {
                 handGrip.timestamp = '2020-06-31T10:00:00.000Z'
                 CreateHandGripValidator.validate(handGrip)
                 assert.fail()
-            } catch (err) {
+            } catch (err: any) {
                 assert.instanceOf(err, ValidationException)
                 assert.propertyVal(err, 'message', Strings.ERROR_MESSAGE.DATE.INVALID_DATETIME_FORMAT
                     .replace('{0}', '2020-06-31T10:00:00.000Z'))
@@ -114,7 +114,7 @@ describe('VALIDATORS: CreateHandGripValidator', () => {
                 handGrip.type = 'invalidMeasurementType'
                 CreateHandGripValidator.validate(handGrip)
                 assert.fail()
-            } catch (err) {
+            } catch (err: any) {
                 assert.instanceOf(err, ValidationException)
                 assert.propertyVal(err, 'message', Strings.ENUM_VALIDATOR.NOT_MAPPED.concat('type: invalidMeasurementType'))
                 assert.propertyVal(err, 'description', Strings.ENUM_VALIDATOR.NOT_MAPPED_DESC
@@ -129,7 +129,7 @@ describe('VALIDATORS: CreateHandGripValidator', () => {
                 handGrip.patient_id = '123'
                 CreateHandGripValidator.validate(handGrip)
                 assert.fail()
-            } catch (err) {
+            } catch (err: any) {
                 assert.instanceOf(err, ValidationException)
                 assert.propertyVal(err, 'message', Strings.ERROR_MESSAGE.UUID_NOT_VALID_FORMAT)
                 assert.propertyVal(err, 'description', Strings.ERROR_MESSAGE.UUID_NOT_VALID_FORMAT_DESC)
@@ -143,7 +143,7 @@ describe('VALIDATORS: CreateHandGripValidator', () => {
                 handGrip.device_id = '123'
                 CreateHandGripValidator.validate(handGrip)
                 assert.fail()
-            } catch (err) {
+            } catch (err: any) {
                 assert.instanceOf(err, ValidationException)
                 assert.propertyVal(err, 'message', Strings.ERROR_MESSAGE.UUID_NOT_VALID_FORMAT)
                 assert.propertyVal(err, 'description', Strings.ERROR_MESSAGE.UUID_NOT_VALID_FORMAT_DESC)
@@ -159,7 +159,7 @@ describe('VALIDATORS: CreateHandGripValidator', () => {
                 handGrip.hand = 'invalidHandSide'
                 CreateHandGripValidator.validate(handGrip)
                 assert.fail()
-            } catch (err) {
+            } catch (err: any) {
                 assert.instanceOf(err, ValidationException)
                 assert.propertyVal(err, 'message', Strings.ENUM_VALIDATOR.NOT_MAPPED.concat('hand: invalidHandSide'))
                 assert.propertyVal(err, 'description', Strings.ENUM_VALIDATOR.NOT_MAPPED_DESC

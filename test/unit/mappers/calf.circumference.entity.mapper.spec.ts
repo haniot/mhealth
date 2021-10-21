@@ -76,7 +76,7 @@ describe('MAPPERS: CalfCircumferenceEntityMapper', () => {
             it('should throw an error', () => {
                 try {
                     calfCircumferenceEntityMapper.modelEntityToModel(new CalfCircumferenceEntity())
-                } catch (err) {
+                } catch (err: any) {
                     assert.propertyVal(err, 'message', 'Not implemented!')
                 }
             })

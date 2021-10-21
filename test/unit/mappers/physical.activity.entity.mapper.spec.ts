@@ -161,7 +161,7 @@ describe('Mappers: PhysicalActivityEntityMapper', () => {
             it('should throw an error', () => {
                 try {
                     new PhysicalActivityEntityMapper().modelEntityToModel(new PhysicalActivityEntity())
-                } catch (err) {
+                } catch (err: any) {
                     assert.propertyVal(err, 'message', 'Not implemented!')
                 }
             })

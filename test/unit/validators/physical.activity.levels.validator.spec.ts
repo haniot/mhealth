@@ -25,7 +25,7 @@ describe('Validators: PhysicalActivityLevelsValidator', () => {
                 levels = new Array<ActivityLevel>()
                 try {
                     PhysicalActivityLevelsValidator.validate(levels)
-                } catch (err) {
+                } catch (err: any) {
                     assert.equal(err.message, Strings.ERROR_MESSAGE.INVALID_FIELDS)
                     assert.equal(err.description, 'The levels array must have values for the following levels: ' +
                         'sedentary, lightly, fairly, very.')
@@ -50,7 +50,7 @@ describe('Validators: PhysicalActivityLevelsValidator', () => {
 
                 try {
                     PhysicalActivityLevelsValidator.validate(levels)
-                } catch (err) {
+                } catch (err: any) {
                     assert.equal(err.message, Strings.ERROR_MESSAGE.INVALID_FIELDS)
                     assert.equal(err.description, 'The names of the allowed levels are: sedentary, lightly, fairly, very.')
                 }
@@ -71,7 +71,7 @@ describe('Validators: PhysicalActivityLevelsValidator', () => {
 
                 try {
                     PhysicalActivityLevelsValidator.validate(levels)
-                } catch (err) {
+                } catch (err: any) {
                     assert.equal(err.message, Strings.ERROR_MESSAGE.INVALID_FIELDS)
                     assert.equal(err.description, 'The levels array must have values for the following levels: ' +
                         'sedentary, lightly, fairly, very.')
@@ -85,7 +85,7 @@ describe('Validators: PhysicalActivityLevelsValidator', () => {
                 levels[1].duration = undefined!
                 try {
                     PhysicalActivityLevelsValidator.validate(levels)
-                } catch (err) {
+                } catch (err: any) {
                     assert.equal(err.message, Strings.ERROR_MESSAGE.REQUIRED_FIELDS)
                     assert.equal(err.description, 'levels.duration'.concat(Strings.ERROR_MESSAGE.REQUIRED_FIELDS_DESC))
                 }
@@ -106,7 +106,7 @@ describe('Validators: PhysicalActivityLevelsValidator', () => {
 
                 try {
                     PhysicalActivityLevelsValidator.validate(levels)
-                } catch (err) {
+                } catch (err: any) {
                     assert.equal(err.message, Strings.ERROR_MESSAGE.INVALID_FIELDS)
                     assert.equal(err.description, 'The levels array must have values for the following levels: ' +
                         'sedentary, lightly, fairly, very.')
@@ -120,7 +120,7 @@ describe('Validators: PhysicalActivityLevelsValidator', () => {
                 levels[1].duration = -(Math.floor((Math.random() * 10 + 1) * 60000))
                 try {
                     PhysicalActivityLevelsValidator.validate(levels)
-                } catch (err) {
+                } catch (err: any) {
                     assert.equal(err.message, Strings.ERROR_MESSAGE.INVALID_FIELD
                         .replace('{0}', 'levels.duration'))
                     assert.equal(err.description, Strings.ERROR_MESSAGE.POSITIVE_INTEGER)

@@ -70,7 +70,7 @@ describe('Mappers: WaistCircumferenceEntityMapper', () => {
             it('should throw an error', () => {
                 try {
                     mapper.modelEntityToModel(new WaistCircumferenceEntity())
-                } catch (err) {
+                } catch (err: any) {
                     assert.propertyVal(err, 'message', 'Not implemented!')
                 }
             })

@@ -19,7 +19,7 @@ describe('Validators: CreateWaistCircumferenceValidator', () => {
             measurement.value = undefined
             try {
                 CreateWaistCircumferenceValidator.validate(measurement)
-            } catch (err) {
+            } catch (err: any) {
                 assert.propertyVal(err, 'message', 'Required fields were not provided...')
                 assert.propertyVal(err, 'description', 'WaistCircumference validation: value required!')
             } finally {
@@ -30,7 +30,7 @@ describe('Validators: CreateWaistCircumferenceValidator', () => {
             measurement.unit = undefined
             try {
                 CreateWaistCircumferenceValidator.validate(measurement)
-            } catch (err) {
+            } catch (err: any) {
                 assert.propertyVal(err, 'message', 'Required fields were not provided...')
                 assert.propertyVal(err, 'description', 'WaistCircumference validation: unit required!')
             } finally {
@@ -41,7 +41,7 @@ describe('Validators: CreateWaistCircumferenceValidator', () => {
             measurement.type = undefined
             try {
                 CreateWaistCircumferenceValidator.validate(measurement)
-            } catch (err) {
+            } catch (err: any) {
                 assert.propertyVal(err, 'message', 'Required fields were not provided...')
                 assert.propertyVal(err, 'description', 'WaistCircumference validation: type required!')
             }
@@ -50,7 +50,7 @@ describe('Validators: CreateWaistCircumferenceValidator', () => {
             measurement.type = 'invalid'
             try {
                 CreateWaistCircumferenceValidator.validate(measurement)
-            } catch (err) {
+            } catch (err: any) {
                 assert.propertyVal(err, 'message', Strings.ENUM_VALIDATOR.NOT_MAPPED.concat('type: invalid'))
                 assert.propertyVal(err, 'description',
                     Strings.ENUM_VALIDATOR.NOT_MAPPED_DESC.concat(Object.values(MeasurementTypes).join(', ').concat('.')))
@@ -62,7 +62,7 @@ describe('Validators: CreateWaistCircumferenceValidator', () => {
             measurement.timestamp = undefined
             try {
                 CreateWaistCircumferenceValidator.validate(measurement)
-            } catch (err) {
+            } catch (err: any) {
                 assert.propertyVal(err, 'message', 'Required fields were not provided...')
                 assert.propertyVal(err, 'description', 'WaistCircumference validation: timestamp required!')
             }
@@ -71,7 +71,7 @@ describe('Validators: CreateWaistCircumferenceValidator', () => {
             measurement.timestamp = '12-04-2012'
             try {
                 CreateWaistCircumferenceValidator.validate(measurement)
-            } catch (err) {
+            } catch (err: any) {
                 assert.propertyVal(err, 'message', Strings.ERROR_MESSAGE.DATE.INVALID_DATETIME_FORMAT
                     .replace('{0}', '12-04-2012'))
                 assert.propertyVal(err, 'description', Strings.ERROR_MESSAGE.DATE.INVALID_DATETIME_FORMAT_DESC)
@@ -83,7 +83,7 @@ describe('Validators: CreateWaistCircumferenceValidator', () => {
             measurement.patient_id = undefined
             try {
                 CreateWaistCircumferenceValidator.validate(measurement)
-            } catch (err) {
+            } catch (err: any) {
                 assert.propertyVal(err, 'message', 'Required fields were not provided...')
                 assert.propertyVal(err, 'description', 'WaistCircumference validation: patient_id required!')
             }
@@ -92,7 +92,7 @@ describe('Validators: CreateWaistCircumferenceValidator', () => {
             measurement.patient_id = '123'
             try {
                 CreateWaistCircumferenceValidator.validate(measurement)
-            } catch (err) {
+            } catch (err: any) {
                 assert.propertyVal(err, 'message', Strings.ERROR_MESSAGE.UUID_NOT_VALID_FORMAT)
                 assert.propertyVal(err, 'description', Strings.ERROR_MESSAGE.UUID_NOT_VALID_FORMAT_DESC)
             } finally {
@@ -103,7 +103,7 @@ describe('Validators: CreateWaistCircumferenceValidator', () => {
             measurement.device_id = undefined
             try {
                 CreateWaistCircumferenceValidator.validate(measurement)
-            } catch (err) {
+            } catch (err: any) {
                 assert.propertyVal(err, 'message', 'Required fields were not provided...')
                 assert.propertyVal(err, 'description', 'WaistCircumference validation: device_id required!')
             }
@@ -112,7 +112,7 @@ describe('Validators: CreateWaistCircumferenceValidator', () => {
             measurement.device_id = '123'
             try {
                 CreateWaistCircumferenceValidator.validate(measurement)
-            } catch (err) {
+            } catch (err: any) {
                 assert.propertyVal(err, 'message', Strings.ERROR_MESSAGE.UUID_NOT_VALID_FORMAT)
                 assert.propertyVal(err, 'description', Strings.ERROR_MESSAGE.UUID_NOT_VALID_FORMAT_DESC)
             }

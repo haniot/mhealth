@@ -23,7 +23,7 @@ describe('Validators: CreateActivityValidator', () => {
                 activity.start_time = undefined
                 try {
                     CreateActivityValidator.validate(activity)
-                } catch (err) {
+                } catch (err: any) {
                     assert.equal(err.message, 'REQUIRED_FIELDS')
                     assert.equal(err.description, 'start_time')
                 }
@@ -37,7 +37,7 @@ describe('Validators: CreateActivityValidator', () => {
                 activity.patient_id = ''
                 try {
                     CreateActivityValidator.validate(activity)
-                } catch (err) {
+                } catch (err: any) {
                     assert.equal(err.message, 'REQUIRED_FIELDS')
                     assert.equal(err.description, 'start_time, end_time, duration, patient_id')
                 }
@@ -52,7 +52,7 @@ describe('Validators: CreateActivityValidator', () => {
                 activity.patient_id = '5a62be07de34500146d9c544'
                 try {
                     CreateActivityValidator.validate(activity)
-                } catch (err) {
+                } catch (err: any) {
                     assert.equal(err.message, Strings.ERROR_MESSAGE.INVALID_FIELDS)
                     assert.equal(err.description, 'The end_time parameter can not contain an older date than ' +
                         'that the start_time parameter!')
@@ -66,7 +66,7 @@ describe('Validators: CreateActivityValidator', () => {
                 activity.duration = 11780000
                 try {
                     CreateActivityValidator.validate(activity)
-                } catch (err) {
+                } catch (err: any) {
                     assert.equal(err.message, Strings.ERROR_MESSAGE.INVALID_FIELDS)
                     assert.equal(err.description, 'duration value does not match values passed in start_time ' +
                         'and end_time parameters!')
@@ -79,7 +79,7 @@ describe('Validators: CreateActivityValidator', () => {
                 activity.duration = -1178000
                 try {
                     CreateActivityValidator.validate(activity)
-                } catch (err) {
+                } catch (err: any) {
                     assert.equal(err.message, Strings.ERROR_MESSAGE.INVALID_FIELD
                         .replace('{0}', 'duration'))
                     assert.equal(err.description, Strings.ERROR_MESSAGE.POSITIVE_INTEGER)
@@ -93,7 +93,7 @@ describe('Validators: CreateActivityValidator', () => {
                 activity.patient_id = '5a62be07de34500146d9c5442'
                 try {
                     CreateActivityValidator.validate(activity)
-                } catch (err) {
+                } catch (err: any) {
                     assert.equal(err.message, 'Parameter {patient_id} is not in valid format!')
                     assert.equal(err.description, Strings.ERROR_MESSAGE.UUID_NOT_VALID_FORMAT_DESC)
                 }
