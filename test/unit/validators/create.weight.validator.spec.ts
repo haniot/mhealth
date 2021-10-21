@@ -28,7 +28,7 @@ describe('Validators: CreateWeightValidator', () => {
             measurement.value = undefined
             try {
                 CreateWeightValidator.validate(measurement)
-            } catch (err) {
+            } catch (err: any) {
                 assert.propertyVal(err, 'message', 'Required fields were not provided...')
                 assert.propertyVal(err, 'description', 'Weight validation: value required!')
             } finally {
@@ -39,7 +39,7 @@ describe('Validators: CreateWeightValidator', () => {
             measurement.unit = undefined
             try {
                 CreateWeightValidator.validate(measurement)
-            } catch (err) {
+            } catch (err: any) {
                 assert.propertyVal(err, 'message', 'Required fields were not provided...')
                 assert.propertyVal(err, 'description', 'Weight validation: unit required!')
             } finally {
@@ -50,7 +50,7 @@ describe('Validators: CreateWeightValidator', () => {
             measurement.type = undefined
             try {
                 CreateWeightValidator.validate(measurement)
-            } catch (err) {
+            } catch (err: any) {
                 assert.propertyVal(err, 'message', 'Required fields were not provided...')
                 assert.propertyVal(err, 'description', 'Weight validation: type required!')
             }
@@ -59,7 +59,7 @@ describe('Validators: CreateWeightValidator', () => {
             measurement.type = 'invalid'
             try {
                 CreateWeightValidator.validate(measurement)
-            } catch (err) {
+            } catch (err: any) {
                 assert.propertyVal(err, 'message', Strings.ENUM_VALIDATOR.NOT_MAPPED.concat('type: invalid'))
                 assert.propertyVal(err, 'description',
                     Strings.ENUM_VALIDATOR.NOT_MAPPED_DESC.concat(Object.values(MeasurementTypes).join(', ').concat('.')))
@@ -71,7 +71,7 @@ describe('Validators: CreateWeightValidator', () => {
             measurement.timestamp = undefined
             try {
                 CreateWeightValidator.validate(measurement)
-            } catch (err) {
+            } catch (err: any) {
                 assert.propertyVal(err, 'message', 'Required fields were not provided...')
                 assert.propertyVal(err, 'description', 'Weight validation: timestamp required!')
             }
@@ -80,7 +80,7 @@ describe('Validators: CreateWeightValidator', () => {
             measurement.timestamp = '12-04-2012'
             try {
                 CreateWeightValidator.validate(measurement)
-            } catch (err) {
+            } catch (err: any) {
                 assert.propertyVal(err, 'message', Strings.ERROR_MESSAGE.DATE.INVALID_DATETIME_FORMAT
                     .replace('{0}', '12-04-2012'))
                 assert.propertyVal(err, 'description', Strings.ERROR_MESSAGE.DATE.INVALID_DATETIME_FORMAT_DESC)
@@ -92,7 +92,7 @@ describe('Validators: CreateWeightValidator', () => {
             measurement.patient_id = undefined
             try {
                 CreateWeightValidator.validate(measurement)
-            } catch (err) {
+            } catch (err: any) {
                 assert.propertyVal(err, 'message', 'Required fields were not provided...')
                 assert.propertyVal(err, 'description', 'Weight validation: patient_id required!')
             }
@@ -101,7 +101,7 @@ describe('Validators: CreateWeightValidator', () => {
             measurement.patient_id = '123'
             try {
                 CreateWeightValidator.validate(measurement)
-            } catch (err) {
+            } catch (err: any) {
                 assert.propertyVal(err, 'message', Strings.ERROR_MESSAGE.UUID_NOT_VALID_FORMAT)
                 assert.propertyVal(err, 'description', Strings.ERROR_MESSAGE.UUID_NOT_VALID_FORMAT_DESC)
             } finally {
@@ -112,7 +112,7 @@ describe('Validators: CreateWeightValidator', () => {
             measurement.device_id = undefined
             try {
                 CreateWeightValidator.validate(measurement)
-            } catch (err) {
+            } catch (err: any) {
                 assert.propertyVal(err, 'message', 'Required fields were not provided...')
                 assert.propertyVal(err, 'description', 'Weight validation: device_id required!')
             }
@@ -121,7 +121,7 @@ describe('Validators: CreateWeightValidator', () => {
             measurement.device_id = '123'
             try {
                 CreateWeightValidator.validate(measurement)
-            } catch (err) {
+            } catch (err: any) {
                 assert.propertyVal(err, 'message', Strings.ERROR_MESSAGE.UUID_NOT_VALID_FORMAT)
                 assert.propertyVal(err, 'description', Strings.ERROR_MESSAGE.UUID_NOT_VALID_FORMAT_DESC)
             } finally {
@@ -137,7 +137,7 @@ describe('Validators: CreateWeightValidator', () => {
                     measurement.annual_variation = 'invalidChoiceTypes'
                     CreateWeightValidator.validate(measurement)
                     assert.fail()
-                } catch (err) {
+                } catch (err: any) {
                     assert.instanceOf(err, ValidationException)
                     assert.propertyVal(err, 'message', Strings.ENUM_VALIDATOR.NOT_MAPPED.concat('choice: invalidChoiceTypes'))
                     assert.propertyVal(err, 'description', Strings.ENUM_VALIDATOR.NOT_MAPPED_DESC

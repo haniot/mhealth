@@ -198,7 +198,7 @@ export class MeasurementService implements IMeasurementService {
                     const statusSuccess: StatusSuccess<any> = new StatusSuccess<any>(HttpStatus.CREATED, measurement)
                     statusSuccessArr.push(statusSuccess)
                 }
-            } catch (err) {
+            } catch (err: any) {
                 let statusCode: number = HttpStatus.INTERNAL_SERVER_ERROR
                 if (err instanceof ValidationException) statusCode = HttpStatus.BAD_REQUEST
                 if (err instanceof ConflictException) statusCode = HttpStatus.CONFLICT
@@ -307,7 +307,7 @@ export class MeasurementService implements IMeasurementService {
                 }
             }
             return Promise.resolve()
-        } catch (err) {
+        } catch (err: any) {
             const patientId: string = data instanceof Array ? data[0].patient_id : data.patient_id
             this._logger.error(`Error at publish last measurement from ${patientId}: ${err.message}`)
             return Promise.resolve()

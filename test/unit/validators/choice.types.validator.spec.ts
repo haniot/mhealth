@@ -10,7 +10,7 @@ describe('VALIDATORS: ChoiceTypesValidator', () => {
             try {
                 const result = ChoiceTypesValidator.validate(ChoiceTypes.YES)
                 assert.isUndefined(result)
-            } catch (err) {
+            } catch (err: any) {
                 assert.fail(err)
             }
         })
@@ -23,7 +23,7 @@ describe('VALIDATORS: ChoiceTypesValidator', () => {
             try {
                 ChoiceTypesValidator.validate('invalidChoiceTypes')
                 assert.fail()
-            } catch (err) {
+            } catch (err: any) {
                 assert.instanceOf(err, ValidationException)
                 assert.propertyVal(err, 'message', Strings.ENUM_VALIDATOR.NOT_MAPPED.concat('choice: invalidChoiceTypes'))
                 assert.propertyVal(err, 'description', Strings.ENUM_VALIDATOR.NOT_MAPPED_DESC
@@ -35,7 +35,7 @@ describe('VALIDATORS: ChoiceTypesValidator', () => {
             try {
                 ChoiceTypesValidator.validate(undefined!)
                 assert.fail()
-            } catch (err) {
+            } catch (err: any) {
                 assert.instanceOf(err, ValidationException)
                 assert.propertyVal(err, 'message', Strings.ENUM_VALIDATOR.NOT_MAPPED.concat('choice: undefined'))
                 assert.propertyVal(err, 'description', Strings.ENUM_VALIDATOR.NOT_MAPPED_DESC
@@ -47,7 +47,7 @@ describe('VALIDATORS: ChoiceTypesValidator', () => {
             try {
                 ChoiceTypesValidator.validate(null!)
                 assert.fail()
-            } catch (err) {
+            } catch (err: any) {
                 assert.instanceOf(err, ValidationException)
                 assert.propertyVal(err, 'message', Strings.ENUM_VALIDATOR.NOT_MAPPED.concat('choice: null'))
                 assert.propertyVal(err, 'description', Strings.ENUM_VALIDATOR.NOT_MAPPED_DESC
@@ -59,7 +59,7 @@ describe('VALIDATORS: ChoiceTypesValidator', () => {
             try {
                 ChoiceTypesValidator.validate('')
                 assert.fail()
-            } catch (err) {
+            } catch (err: any) {
                 assert.instanceOf(err, ValidationException)
                 assert.propertyVal(err, 'message', Strings.ENUM_VALIDATOR.NOT_MAPPED.concat('choice: '))
                 assert.propertyVal(err, 'description', Strings.ENUM_VALIDATOR.NOT_MAPPED_DESC

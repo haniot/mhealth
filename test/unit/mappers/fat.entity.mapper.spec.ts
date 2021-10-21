@@ -70,7 +70,7 @@ describe('Mappers: BodyFatEntityMapper', () => {
             it('should throw an error', () => {
                 try {
                     mapper.modelEntityToModel(new BodyFatEntity())
-                } catch (err) {
+                } catch (err: any) {
                     assert.propertyVal(err, 'message', 'Not implemented!')
                 }
             })

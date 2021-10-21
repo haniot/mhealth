@@ -77,7 +77,7 @@ describe('Mappers: BloodPressureEntityMapper', () => {
             it('should throw an error', () => {
                 try {
                     mapper.modelEntityToModel(new BloodPressureEntity())
-                } catch (err) {
+                } catch (err: any) {
                     assert.propertyVal(err, 'message', 'Not implemented!')
                 }
             })

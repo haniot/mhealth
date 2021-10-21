@@ -21,7 +21,7 @@ describe('Validators: CreateBloodGlucoseValidator', () => {
             try {
                CreateBloodGlucoseValidator.validate(measurement)
 
-            } catch (err) {
+            } catch (err: any) {
                 assert.propertyVal(err, 'message', 'Required fields were not provided...')
                 assert.propertyVal(err, 'description', 'BloodGlucose validation: value required!')
             } finally {
@@ -32,7 +32,7 @@ describe('Validators: CreateBloodGlucoseValidator', () => {
             measurement.unit = undefined
             try {
                 CreateBloodGlucoseValidator.validate(measurement)
-            } catch (err) {
+            } catch (err: any) {
                 assert.propertyVal(err, 'message', 'Required fields were not provided...')
                 assert.propertyVal(err, 'description', 'BloodGlucose validation: unit required!')
             } finally {
@@ -43,7 +43,7 @@ describe('Validators: CreateBloodGlucoseValidator', () => {
             measurement.meal = undefined
             try {
                 CreateBloodGlucoseValidator.validate(measurement)
-            } catch (err) {
+            } catch (err: any) {
                 assert.propertyVal(err, 'message', 'Required fields were not provided...')
                 assert.propertyVal(err, 'description', 'BloodGlucose validation: meal required!')
             }
@@ -52,7 +52,7 @@ describe('Validators: CreateBloodGlucoseValidator', () => {
             measurement.meal = 'invalid'
             try {
                 CreateBloodGlucoseValidator.validate(measurement)
-            } catch (err) {
+            } catch (err: any) {
                 assert.propertyVal(err, 'message', Strings.ENUM_VALIDATOR.NOT_MAPPED.concat('meal: invalid'))
                 assert.propertyVal(err, 'description',
                     Strings.ENUM_VALIDATOR.NOT_MAPPED_DESC.concat(Object.values(MealTypes).join(', ').concat('.')))
@@ -64,7 +64,7 @@ describe('Validators: CreateBloodGlucoseValidator', () => {
             measurement.type = undefined
             try {
                 CreateBloodGlucoseValidator.validate(measurement)
-            } catch (err) {
+            } catch (err: any) {
                 assert.propertyVal(err, 'message', 'Required fields were not provided...')
                 assert.propertyVal(err, 'description', 'BloodGlucose validation: type required!')
             }
@@ -73,7 +73,7 @@ describe('Validators: CreateBloodGlucoseValidator', () => {
             measurement.type = 'invalid'
             try {
                 CreateBloodGlucoseValidator.validate(measurement)
-            } catch (err) {
+            } catch (err: any) {
                 assert.propertyVal(err, 'message', Strings.ENUM_VALIDATOR.NOT_MAPPED.concat('type: invalid'))
                 assert.propertyVal(err, 'description',
                     Strings.ENUM_VALIDATOR.NOT_MAPPED_DESC.concat(Object.values(MeasurementTypes).join(', ').concat('.')))
@@ -85,7 +85,7 @@ describe('Validators: CreateBloodGlucoseValidator', () => {
             measurement.timestamp = undefined
             try {
                 CreateBloodGlucoseValidator.validate(measurement)
-            } catch (err) {
+            } catch (err: any) {
                 assert.propertyVal(err, 'message', 'Required fields were not provided...')
                 assert.propertyVal(err, 'description', 'BloodGlucose validation: timestamp required!')
             }
@@ -94,7 +94,7 @@ describe('Validators: CreateBloodGlucoseValidator', () => {
             measurement.timestamp = '12-04-2012'
             try {
                 CreateBloodGlucoseValidator.validate(measurement)
-            } catch (err) {
+            } catch (err: any) {
                 assert.propertyVal(err, 'message', Strings.ERROR_MESSAGE.DATE.INVALID_DATETIME_FORMAT
                     .replace('{0}', '12-04-2012'))
                 assert.propertyVal(err, 'description', Strings.ERROR_MESSAGE.DATE.INVALID_DATETIME_FORMAT_DESC)
@@ -106,7 +106,7 @@ describe('Validators: CreateBloodGlucoseValidator', () => {
             measurement.patient_id = undefined
             try {
                 CreateBloodGlucoseValidator.validate(measurement)
-            } catch (err) {
+            } catch (err: any) {
                 assert.propertyVal(err, 'message', 'Required fields were not provided...')
                 assert.propertyVal(err, 'description', 'BloodGlucose validation: patient_id required!')
             }
@@ -115,7 +115,7 @@ describe('Validators: CreateBloodGlucoseValidator', () => {
             measurement.patient_id = '123'
             try {
                 CreateBloodGlucoseValidator.validate(measurement)
-            } catch (err) {
+            } catch (err: any) {
                 assert.propertyVal(err, 'message', Strings.ERROR_MESSAGE.UUID_NOT_VALID_FORMAT)
                 assert.propertyVal(err, 'description', Strings.ERROR_MESSAGE.UUID_NOT_VALID_FORMAT_DESC)
             } finally {
@@ -126,7 +126,7 @@ describe('Validators: CreateBloodGlucoseValidator', () => {
             measurement.device_id = undefined
             try {
                 CreateBloodGlucoseValidator.validate(measurement)
-            } catch (err) {
+            } catch (err: any) {
                 assert.propertyVal(err, 'message', 'Required fields were not provided...')
                 assert.propertyVal(err, 'description', 'BloodGlucose validation: device_id required!')
             }
@@ -135,7 +135,7 @@ describe('Validators: CreateBloodGlucoseValidator', () => {
             measurement.device_id = '123'
             try {
                 CreateBloodGlucoseValidator.validate(measurement)
-            } catch (err) {
+            } catch (err: any) {
                 assert.propertyVal(err, 'message', Strings.ERROR_MESSAGE.UUID_NOT_VALID_FORMAT)
                 assert.propertyVal(err, 'description', Strings.ERROR_MESSAGE.UUID_NOT_VALID_FORMAT_DESC)
             }

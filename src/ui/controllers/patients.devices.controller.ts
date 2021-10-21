@@ -23,7 +23,7 @@ export class PatientsDevicesController {
             const device: Device = new Device().fromJSON(req.body)
             const result: Device | undefined = await this._service.addDevice(device, req.params.patient_id)
             return res.status(HttpStatus.CREATED).send(this.toJSONView(result))
-        } catch (err) {
+        } catch (err: any) {
             const handlerError = ApiExceptionManager.build(err)
             return res.status(handlerError.code)
                 .send(handlerError.toJSON())
@@ -41,7 +41,7 @@ export class PatientsDevicesController {
             const count: number = await this._service.count(query)
             res.setHeader('X-Total-Count', count)
             return res.status(HttpStatus.OK).send(this.toJSONView(result))
-        } catch (err) {
+        } catch (err: any) {
             const handlerError = ApiExceptionManager.build(err)
             return res.status(handlerError.code)
                 .send(handlerError.toJSON())
@@ -58,7 +58,7 @@ export class PatientsDevicesController {
             const result: Device | undefined = await this._service.getById(req.params.device_id, query)
             if (!result) return res.status(HttpStatus.NOT_FOUND).send(this.getMessageDeviceNotFound())
             return res.status(HttpStatus.OK).send(this.toJSONView(result))
-        } catch (err) {
+        } catch (err: any) {
             const handlerError = ApiExceptionManager.build(err)
             return res.status(handlerError.code)
                 .send(handlerError.toJSON())
@@ -75,7 +75,7 @@ export class PatientsDevicesController {
             const result: Device | undefined = await this._service.updateDevice(device, req.params.patient_id)
             if (!result) return res.status(HttpStatus.NOT_FOUND).send(this.getMessageDeviceNotFound())
             return res.status(HttpStatus.OK).send(this.toJSONView(result))
-        } catch (err) {
+        } catch (err: any) {
             const handlerError = ApiExceptionManager.build(err)
             return res.status(handlerError.code)
                 .send(handlerError.toJSON())
@@ -87,7 +87,7 @@ export class PatientsDevicesController {
         try {
             await this._service.removeDevice(req.params.device_id, req.params.patient_id)
             return res.status(HttpStatus.NO_CONTENT).send()
-        } catch (err) {
+        } catch (err: any) {
             const handlerError = ApiExceptionManager.build(err)
             return res.status(handlerError.code)
                 .send(handlerError.toJSON())

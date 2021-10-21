@@ -143,7 +143,7 @@ describe('Routes: patients.sleep', () => {
             await dbConnection.tryConnect(mongoConfigs.uri, mongoConfigs.options)
 
             await deleteAllSleep()
-        } catch (err) {
+        } catch (err: any) {
             throw new Error('Failure on patients.sleep routes test: ' + err.message)
         }
     })
@@ -153,7 +153,7 @@ describe('Routes: patients.sleep', () => {
         try {
             await deleteAllSleep()
             await dbConnection.dispose()
-        } catch (err) {
+        } catch (err: any) {
             throw new Error('Failure on patients.sleep routes test: ' + err.message)
         }
     })
@@ -165,7 +165,7 @@ describe('Routes: patients.sleep', () => {
             before(async () => {
                 try {
                     await deleteAllSleep()
-                } catch (err) {
+                } catch (err: any) {
                     throw new Error('Failure on patients.sleep routes test: ' + err.message)
                 }
             })
@@ -225,7 +225,7 @@ describe('Routes: patients.sleep', () => {
                         type: defaultSleep.type,
                         patient_id: defaultSleep.patient_id
                     })
-                } catch (err) {
+                } catch (err: any) {
                     throw new Error('Failure on patients.sleep routes test: ' + err.message)
                 }
             })
@@ -634,7 +634,7 @@ describe('Routes: patients.sleep', () => {
             before(async () => {
                 try {
                     await deleteAllSleep()
-                } catch (err) {
+                } catch (err: any) {
                     throw new Error('Failure on patients.sleep routes test: ' + err.message)
                 }
             })
@@ -707,7 +707,7 @@ describe('Routes: patients.sleep', () => {
                             patient_id: sleep.patient_id
                         })
                     }
-                } catch (err) {
+                } catch (err: any) {
                     throw new Error('Failure on patients.sleep routes test: ' + err.message)
                 }
             })
@@ -758,7 +758,7 @@ describe('Routes: patients.sleep', () => {
             before(async () => {
                 try {
                     await deleteAllSleep()
-                } catch (err) {
+                } catch (err: any) {
                     throw new Error('Failure on patients.sleep routes test: ' + err.message)
                 }
             })
@@ -823,7 +823,7 @@ describe('Routes: patients.sleep', () => {
             before(async () => {
                 try {
                     await deleteAllSleep()
-                } catch (err) {
+                } catch (err: any) {
                     throw new Error('Failure on patients.sleep routes test: ' + err.message)
                 }
             })
@@ -935,7 +935,7 @@ describe('Routes: patients.sleep', () => {
                         type: defaultSleep.type,
                         patient_id: defaultSleep.patient_id
                     })
-                } catch (err) {
+                } catch (err: any) {
                     throw new Error('Failure on patients.sleep routes test: ' + err.message)
                 }
             })
@@ -968,7 +968,7 @@ describe('Routes: patients.sleep', () => {
             before(async () => {
                 try {
                     await deleteAllSleep()
-                } catch (err) {
+                } catch (err: any) {
                     throw new Error('Failure on patients.sleep routes test: ' + err.message)
                 }
             })
@@ -988,7 +988,7 @@ describe('Routes: patients.sleep', () => {
             before(async () => {
                 try {
                     await deleteAllSleep()
-                } catch (err) {
+                } catch (err: any) {
                     throw new Error('Failure on patients.sleep routes test: ' + err.message)
                 }
             })
@@ -1044,7 +1044,7 @@ describe('Routes: patients.sleep', () => {
                         type: defaultSleep.type,
                         patient_id: defaultSleep.patient_id
                     })
-                } catch (err) {
+                } catch (err: any) {
                     throw new Error('Failure on patients.sleep routes test: ' + err.message)
                 }
             })
@@ -1127,7 +1127,7 @@ describe('Routes: patients.sleep', () => {
                         type: defaultSleep.type,
                         patient_id: defaultSleep.patient_id
                     })
-                } catch (err) {
+                } catch (err: any) {
                     throw new Error('Failure on patients.sleep routes test: ' + err.message)
                 }
             })
@@ -1158,7 +1158,7 @@ describe('Routes: patients.sleep', () => {
             before(async () => {
                 try {
                     await deleteAllSleep()
-                } catch (err) {
+                } catch (err: any) {
                     throw new Error('Failure on patients.sleep routes test: ' + err.message)
                 }
             })
@@ -1181,7 +1181,7 @@ describe('Routes: patients.sleep', () => {
             before(async () => {
                 try {
                     await deleteAllSleep()
-                } catch (err) {
+                } catch (err: any) {
                     throw new Error('Failure on patients.sleep routes test: ' + err.message)
                 }
             })
@@ -1203,7 +1203,7 @@ describe('Routes: patients.sleep', () => {
             before(async () => {
                 try {
                     await deleteAllSleep()
-                } catch (err) {
+                } catch (err: any) {
                     throw new Error('Failure on patients.sleep routes test: ' + err.message)
                 }
             })
@@ -1240,7 +1240,7 @@ describe('Routes: patients.sleep', () => {
                         type: defaultSleep.type,
                         patient_id: defaultSleep.patient_id
                     })
-                } catch (err) {
+                } catch (err: any) {
                     throw new Error('Failure on patients.sleep routes test: ' + err.message)
                 }
             })
@@ -1261,7 +1261,7 @@ describe('Routes: patients.sleep', () => {
             before(async () => {
                 try {
                     await deleteAllSleep()
-                } catch (err) {
+                } catch (err: any) {
                     throw new Error('Failure on patients.sleep routes test: ' + err.message)
                 }
             })
@@ -1281,7 +1281,7 @@ describe('Routes: patients.sleep', () => {
             before(async () => {
                 try {
                     await deleteAllSleep()
-                } catch (err) {
+                } catch (err: any) {
                     throw new Error('Failure on patients.sleep routes test: ' + err.message)
                 }
             })
@@ -1303,7 +1303,7 @@ describe('Routes: patients.sleep', () => {
             before(async () => {
                 try {
                     await deleteAllSleep()
-                } catch (err) {
+                } catch (err: any) {
                     throw new Error('Failure on patients.sleep routes test: ' + err.message)
                 }
             })

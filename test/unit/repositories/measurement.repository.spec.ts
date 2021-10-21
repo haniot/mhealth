@@ -15,7 +15,7 @@ import { Weight } from '../../../src/application/domain/model/weight'
 import { Measurement } from '../../../src/application/domain/model/measurement'
 import { Query } from '../../../src/infrastructure/repository/query/query'
 
-require('sinon-mongoose')
+require('../../utils/sinon-mongoose')
 
 describe('Repositories: MeasurementRepository', () => {
     const bloodGlucose: BloodGlucose = new BloodGlucose().fromJSON(DefaultEntityMock.BLOOD_GLUCOSE)

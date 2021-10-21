@@ -134,7 +134,7 @@ describe('AWAKENINGS TASK', () => {
             await dbConnection.tryConnect(mongoConfigs.uri, mongoConfigs.options)
 
             await deleteAllSleep()
-        } catch (err) {
+        } catch (err: any) {
             throw new Error('Failure on AwakeningsTask test: ' + err.message)
         }
     })
@@ -145,7 +145,7 @@ describe('AWAKENINGS TASK', () => {
             await deleteAllSleep()
 
             await dbConnection.dispose()
-        } catch (err) {
+        } catch (err: any) {
             throw new Error('Failure on AwakeningsTask test: ' + err.message)
         }
     })
@@ -167,7 +167,7 @@ describe('AWAKENINGS TASK', () => {
 
                     const result4 = await sleepRepository.create(otherSleepWithoutAwk)
                     otherSleepWithoutAwk.id = result4?.id
-                } catch (err) {
+                } catch (err: any) {
                     throw new Error('Failure on AwakeningsTask test: ' + err.message)
                 }
             })
@@ -213,7 +213,7 @@ describe('AWAKENINGS TASK', () => {
 
                     const result = await sleepRepository.create(sleepRpcError)
                     sleepRpcError.id = result?.id
-                } catch (err) {
+                } catch (err: any) {
                     throw new Error('Failure on AwakeningsTask test: ' + err.message)
                 }
             })
@@ -222,7 +222,7 @@ describe('AWAKENINGS TASK', () => {
                 try {
                     const sleepUp: Sleep = await awakeningsTask.calculateAwakenings(sleepRpcError)
                     expect(sleepUp.awakenings).to.be.undefined
-                } catch (err) {
+                } catch (err: any) {
                     expect(err.message).to.eql('rpc timed out')
                 }
             })

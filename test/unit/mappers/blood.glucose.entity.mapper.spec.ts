@@ -74,7 +74,7 @@ describe('Mappers: BloodGlucoseEntityMapper', () => {
             it('should throw an error', () => {
                 try {
                     mapper.modelEntityToModel(new BloodGlucoseEntity())
-                } catch (err) {
+                } catch (err: any) {
                     assert.propertyVal(err, 'message', 'Not implemented!')
                 }
             })

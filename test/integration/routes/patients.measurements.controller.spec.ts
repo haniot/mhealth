@@ -69,7 +69,7 @@ describe('Routes: patients.measurements', () => {
                 handGrip.device_id = result._id.toString()
                 calfCircumference.device_id = result._id.toString()
                 measurement.device_id = result._id.toString()
-            } catch (err) {
+            } catch (err: any) {
                 throw new Error('Failure on patients.measurements test: ' + err.message)
             }
         }
@@ -80,7 +80,7 @@ describe('Routes: patients.measurements', () => {
             await deleteAllDevices()
             await deleteAllMeasurements()
             await dbConnection.dispose()
-        } catch (err) {
+        } catch (err: any) {
             throw new Error('Failure on patients.measurements test: ' + err.message)
         }
     })
@@ -91,7 +91,7 @@ describe('Routes: patients.measurements', () => {
                 before(async () => {
                     try {
                         await deleteAllMeasurements()
-                    } catch (err) {
+                    } catch (err: any) {
                         throw new Error('Failure on patients.measurements routes test: ' + err.message)
                     }
                 })
@@ -120,7 +120,7 @@ describe('Routes: patients.measurements', () => {
                         await deleteAllMeasurements()
 
                         await createMeasurement(bloodGlucose)
-                    } catch (err) {
+                    } catch (err: any) {
                         throw new Error('Failure on patients.measurements routes test: ' + err.message)
                     }
                 })
@@ -157,7 +157,7 @@ describe('Routes: patients.measurements', () => {
                 before(async () => {
                     try {
                         await deleteAllMeasurements()
-                    } catch (err) {
+                    } catch (err: any) {
                         throw new Error('Failure on patients.measurements routes test: ' + err.message)
                     }
                 })
@@ -188,7 +188,7 @@ describe('Routes: patients.measurements', () => {
                     await deleteAllMeasurements()
 
                     result = await createMeasurement(weight)
-                } catch (err) {
+                } catch (err: any) {
                     throw new Error('Failure on patients.measurements routes test: ' + err.message)
                 }
             })
@@ -215,7 +215,7 @@ describe('Routes: patients.measurements', () => {
             before(async () => {
                 try {
                     await deleteAllMeasurements()
-                } catch (err) {
+                } catch (err: any) {
                     throw new Error('Failure on patients.measurements routes test: ' + err.message)
                 }
             })
@@ -260,7 +260,7 @@ describe('Routes: patients.measurements', () => {
                     await createMeasurement(waistCircumference)
                     await createMeasurement(handGrip)
                     await createMeasurement(calfCircumference)
-                } catch (err) {
+                } catch (err: any) {
                     throw new Error('Failure on patients.measurements routes test: ' + err.message)
                 }
             })
@@ -280,7 +280,7 @@ describe('Routes: patients.measurements', () => {
             before(async () => {
                 try {
                     await deleteAllMeasurements()
-                } catch (err) {
+                } catch (err: any) {
                     throw new Error('Failure on patients.measurements routes test: ' + err.message)
                 }
             })
@@ -321,7 +321,7 @@ describe('Routes: patients.measurements', () => {
                     await createMeasurement(bloodGlucose)
                     otherBloodGlucose.timestamp = '2020-11-20T14:40:00.000Z'
                     await createMeasurement(otherBloodGlucose)
-                } catch (err) {
+                } catch (err: any) {
                     throw new Error('Failure on patients.measurements routes test: ' + err.message)
                 }
             })
@@ -356,7 +356,7 @@ describe('Routes: patients.measurements', () => {
             before(async () => {
                 try {
                     await deleteAllMeasurements()
-                } catch (err) {
+                } catch (err: any) {
                     throw new Error('Failure on patients.measurements routes test: ' + err.message)
                 }
             })
@@ -403,7 +403,7 @@ describe('Routes: patients.measurements', () => {
                     await createMeasurement(bloodGlucose)
                     otherBloodGlucose.timestamp = '2020-11-19T14:40:00.000Z'
                     await createMeasurement(otherBloodGlucose)
-                } catch (err) {
+                } catch (err: any) {
                     throw new Error('Failure on patients.measurements routes test: ' + err.message)
                 }
             })
@@ -438,7 +438,7 @@ describe('Routes: patients.measurements', () => {
             before(async () => {
                 try {
                     await deleteAllMeasurements()
-                } catch (err) {
+                } catch (err: any) {
                     throw new Error('Failure on patients.measurements routes test: ' + err.message)
                 }
             })
@@ -495,7 +495,7 @@ describe('Routes: patients.measurements', () => {
                 await deleteAllMeasurements()
 
                 result = await createMeasurement(bloodGlucose)
-            } catch (err) {
+            } catch (err: any) {
                 throw new Error('Failure on patients.measurements routes test: ' + err.message)
             }
         })

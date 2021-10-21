@@ -41,7 +41,7 @@ export class PatientsSleepDurationsController {
             const result: SleepDuration = await this._sleepDurationService
                 .getDurationByPatient(req.params.patient_id, req.params.start_date, req.params.end_date)
             return res.status(HttpStatus.OK).send(result)
-        } catch (err) {
+        } catch (err: any) {
             const handlerError = ApiExceptionManager.build(err)
             return res.status(handlerError.code)
                 .send(handlerError.toJSON())
