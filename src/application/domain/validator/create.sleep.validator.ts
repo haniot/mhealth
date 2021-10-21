@@ -13,7 +13,7 @@ export class CreateSleepValidator {
         try {
             // Validate common attributes of the activity.
             CreateActivityValidator.validate(sleep)
-        } catch (err) {
+        } catch (err: any) {
             if (err.message !== 'REQUIRED_FIELDS') throw err
             fields.push(err.description.split(','))
         }

@@ -10,7 +10,7 @@ import { SleepMock } from '../../mocks/models/sleep.mock'
 import { EntityMapperMock } from '../../mocks/models/entity.mapper.mock'
 import { Query } from '../../../src/infrastructure/repository/query/query'
 
-require('sinon-mongoose')
+require('../../utils/sinon-mongoose')
 
 describe('Repositories: SleepRepository', () => {
     const defaultSleep: Sleep = new SleepMock()

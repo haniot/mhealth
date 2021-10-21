@@ -19,7 +19,7 @@ describe('VALIDATORS: CreateCalfCircumferenceValidator', () => {
             try {
                 const result = CreateCalfCircumferenceValidator.validate(calfCircumference)
                 assert.isUndefined(result)
-            } catch (err) {
+            } catch (err: any) {
                 assert.fail(err)
             }
         })
@@ -31,7 +31,7 @@ describe('VALIDATORS: CreateCalfCircumferenceValidator', () => {
                 calfCircumference.type = undefined
                 CreateCalfCircumferenceValidator.validate(calfCircumference)
                 assert.fail()
-            } catch (err) {
+            } catch (err: any) {
                 assert.instanceOf(err, ValidationException)
                 assert.propertyVal(err, 'message', 'Required fields were not provided...')
                 assert.propertyVal(err, 'description', 'CalfCircumference validation: type required!')
@@ -42,7 +42,7 @@ describe('VALIDATORS: CreateCalfCircumferenceValidator', () => {
             try {
                 CreateCalfCircumferenceValidator.validate(new CalfCircumference())
                 assert.fail()
-            } catch (err) {
+            } catch (err: any) {
                 assert.instanceOf(err, ValidationException)
                 assert.propertyVal(err, 'message', 'Required fields were not provided...')
                 assert.propertyVal(err, 'description', 'CalfCircumference validation: value, unit, timestamp, ' +
@@ -57,7 +57,7 @@ describe('VALIDATORS: CreateCalfCircumferenceValidator', () => {
                 calfCircumference.timestamp = '01-07-2020'
                 CreateCalfCircumferenceValidator.validate(calfCircumference)
                 assert.fail()
-            } catch (err) {
+            } catch (err: any) {
                 assert.instanceOf(err, ValidationException)
                 assert.propertyVal(err, 'message', Strings.ERROR_MESSAGE.DATE.INVALID_DATETIME_FORMAT
                     .replace('{0}', '01-07-2020'))
@@ -70,7 +70,7 @@ describe('VALIDATORS: CreateCalfCircumferenceValidator', () => {
                 calfCircumference.timestamp = '2020-08-011T10:00:00.000Z'
                 CreateCalfCircumferenceValidator.validate(calfCircumference)
                 assert.fail()
-            } catch (err) {
+            } catch (err: any) {
                 assert.instanceOf(err, ValidationException)
                 assert.propertyVal(err, 'message', Strings.ERROR_MESSAGE.DATE.INVALID_DATETIME_FORMAT
                     .replace('{0}', '2020-08-011T10:00:00.000Z'))
@@ -84,7 +84,7 @@ describe('VALIDATORS: CreateCalfCircumferenceValidator', () => {
                 calfCircumference.timestamp = '2020-13-10T10:00:00.000Z'
                 CreateCalfCircumferenceValidator.validate(calfCircumference)
                 assert.fail()
-            } catch (err) {
+            } catch (err: any) {
                 assert.instanceOf(err, ValidationException)
                 assert.propertyVal(err, 'message', Strings.ERROR_MESSAGE.DATE.INVALID_DATETIME_FORMAT
                     .replace('{0}', '2020-13-10T10:00:00.000Z'))
@@ -98,7 +98,7 @@ describe('VALIDATORS: CreateCalfCircumferenceValidator', () => {
                 calfCircumference.timestamp = '2020-06-31T10:00:00.000Z'
                 CreateCalfCircumferenceValidator.validate(calfCircumference)
                 assert.fail()
-            } catch (err) {
+            } catch (err: any) {
                 assert.instanceOf(err, ValidationException)
                 assert.propertyVal(err, 'message', Strings.ERROR_MESSAGE.DATE.INVALID_DATETIME_FORMAT
                     .replace('{0}', '2020-06-31T10:00:00.000Z'))
@@ -114,7 +114,7 @@ describe('VALIDATORS: CreateCalfCircumferenceValidator', () => {
                 calfCircumference.type = 'invalidMeasurementType'
                 CreateCalfCircumferenceValidator.validate(calfCircumference)
                 assert.fail()
-            } catch (err) {
+            } catch (err: any) {
                 assert.instanceOf(err, ValidationException)
                 assert.propertyVal(err, 'message', Strings.ENUM_VALIDATOR.NOT_MAPPED.concat('type: invalidMeasurementType'))
                 assert.propertyVal(err, 'description', Strings.ENUM_VALIDATOR.NOT_MAPPED_DESC
@@ -129,7 +129,7 @@ describe('VALIDATORS: CreateCalfCircumferenceValidator', () => {
                 calfCircumference.patient_id = '123'
                 CreateCalfCircumferenceValidator.validate(calfCircumference)
                 assert.fail()
-            } catch (err) {
+            } catch (err: any) {
                 assert.instanceOf(err, ValidationException)
                 assert.propertyVal(err, 'message', Strings.ERROR_MESSAGE.UUID_NOT_VALID_FORMAT)
                 assert.propertyVal(err, 'description', Strings.ERROR_MESSAGE.UUID_NOT_VALID_FORMAT_DESC)
@@ -143,7 +143,7 @@ describe('VALIDATORS: CreateCalfCircumferenceValidator', () => {
                 calfCircumference.device_id = '123'
                 CreateCalfCircumferenceValidator.validate(calfCircumference)
                 assert.fail()
-            } catch (err) {
+            } catch (err: any) {
                 assert.instanceOf(err, ValidationException)
                 assert.propertyVal(err, 'message', Strings.ERROR_MESSAGE.UUID_NOT_VALID_FORMAT)
                 assert.propertyVal(err, 'description', Strings.ERROR_MESSAGE.UUID_NOT_VALID_FORMAT_DESC)
@@ -159,7 +159,7 @@ describe('VALIDATORS: CreateCalfCircumferenceValidator', () => {
                 calfCircumference.leg = 'invalidLegSide'
                 CreateCalfCircumferenceValidator.validate(calfCircumference)
                 assert.fail()
-            } catch (err) {
+            } catch (err: any) {
                 assert.instanceOf(err, ValidationException)
                 assert.propertyVal(err, 'message', Strings.ENUM_VALIDATOR.NOT_MAPPED.concat('leg: invalidLegSide'))
                 assert.propertyVal(err, 'description', Strings.ENUM_VALIDATOR.NOT_MAPPED_DESC

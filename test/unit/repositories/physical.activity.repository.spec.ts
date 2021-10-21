@@ -10,7 +10,7 @@ import { PhysicalActivityMock } from '../../mocks/models/physical.activity.mock'
 import { EntityMapperMock } from '../../mocks/models/entity.mapper.mock'
 import { Query } from '../../../src/infrastructure/repository/query/query'
 
-require('sinon-mongoose')
+require('../../utils/sinon-mongoose')
 
 describe('Repositories: PhysicalActivityRepository', () => {
     const defaultActivity: PhysicalActivity = new PhysicalActivityMock()

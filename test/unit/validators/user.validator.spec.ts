@@ -19,7 +19,7 @@ describe('Validators: UserValidator', () => {
             user.id = undefined
             try {
                 UserValidator.validate(user)
-            } catch (err) {
+            } catch (err: any) {
                 assert.propertyVal(err, 'message', 'Required fields were not provided...')
                 assert.propertyVal(err, 'description', 'User validation: id required!')
             } finally {
@@ -30,7 +30,7 @@ describe('Validators: UserValidator', () => {
             user.type = undefined
             try {
                 UserValidator.validate(user)
-            } catch (err) {
+            } catch (err: any) {
                 assert.propertyVal(err, 'message', 'Required fields were not provided...')
                 assert.propertyVal(err, 'description', 'User validation: type required!')
             } finally {
@@ -40,7 +40,7 @@ describe('Validators: UserValidator', () => {
         it('should throw an error for does not pass id and type', () => {
             try {
                 UserValidator.validate({} as User)
-            } catch (err) {
+            } catch (err: any) {
                 assert.propertyVal(err, 'message', 'Required fields were not provided...')
                 assert.propertyVal(err, 'description', 'User validation: id, type required!')
             }

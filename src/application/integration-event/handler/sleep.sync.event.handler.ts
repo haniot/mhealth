@@ -37,7 +37,7 @@ export class SleepSyncEventHandler implements IIntegrationEventHandler<SleepSync
                                 .concat(err.description ? ' ' + err.description : ''))
                         })
                     countSuccess++
-                } catch (err) {
+                } catch (err: any) {
                     this._logger.warn(`An error occurred while attempting `
                         .concat(`perform the operation with the ${event.event_name} name event. ${err.message}`)
                         .concat(err.description ? ' ' + err.description : ''))
@@ -60,7 +60,7 @@ export class SleepSyncEventHandler implements IIntegrationEventHandler<SleepSync
                 this._logger.info(
                     `Action for event ${event.event_name} associated with patient with ID: ${event.sleep.user_id}`
                         .concat(' successfully performed!'))
-            } catch (err) {
+            } catch (err: any) {
                 this._logger.error(`An error occurred while attempting `
                     .concat(`perform the operation with the ${event.event_name} name event. ${err.message}`)
                     .concat(err.description ? ' ' + err.description : ''))

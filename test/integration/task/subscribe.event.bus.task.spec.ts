@@ -60,7 +60,7 @@ describe('SUBSCRIBE EVENT BUS TASK', () => {
 
             subscribeEventBusTask.run()
             await timeout(2000)
-        } catch (err) {
+        } catch (err: any) {
             throw new Error('Failure on SubscribeEventBusTask test: ' + err.message)
         }
     })
@@ -74,7 +74,7 @@ describe('SUBSCRIBE EVENT BUS TASK', () => {
 
             await dbConnection.dispose()
             await subscribeEventBusTask.stop()
-        } catch (err) {
+        } catch (err: any) {
             throw new Error('Failure on SubscribeEventBusTask test: ' + err.message)
         }
     })
@@ -84,7 +84,7 @@ describe('SUBSCRIBE EVENT BUS TASK', () => {
             beforeEach(async () => {
                 try {
                     await deleteAllMeasurements()
-                } catch (err) {
+                } catch (err: any) {
                     throw new Error('Failure on SubscribeEventBusTask test: ' + err.message)
                 }
             })
@@ -130,7 +130,7 @@ describe('SUBSCRIBE EVENT BUS TASK', () => {
             beforeEach(async () => {
                 try {
                     await deleteAllMeasurements()
-                } catch (err) {
+                } catch (err: any) {
                     throw new Error('Failure on SubscribeEventBusTask test: ' + err.message)
                 }
             })
@@ -180,7 +180,7 @@ describe('SUBSCRIBE EVENT BUS TASK', () => {
         //     beforeEach(async () => {
         //         try {
         //             await deleteAllActivities()
-        //         } catch (err) {
+        //         } catch (err: any) {
         //             throw new Error('Failure on SubscribeEventBusTask test: ' + err.message)
         //         }
         //     })
@@ -258,7 +258,7 @@ describe('SUBSCRIBE EVENT BUS TASK', () => {
         //     beforeEach(async () => {
         //         try {
         //             await deleteAllActivities()
-        //         } catch (err) {
+        //         } catch (err: any) {
         //             throw new Error('Failure on SubscribeEventBusTask test: ' + err.message)
         //         }
         //     })
@@ -307,7 +307,7 @@ describe('SUBSCRIBE EVENT BUS TASK', () => {
         //     beforeEach(async () => {
         //         try {
         //             await deleteAllSleep()
-        //         } catch (err) {
+        //         } catch (err: any) {
         //             throw new Error('Failure on SubscribeEventBusTask test: ' + err.message)
         //         }
         //     })
@@ -385,7 +385,7 @@ describe('SUBSCRIBE EVENT BUS TASK', () => {
         //     beforeEach(async () => {
         //         try {
         //             await deleteAllSleep()
-        //         } catch (err) {
+        //         } catch (err: any) {
         //             throw new Error('Failure on SubscribeEventBusTask test: ' + err.message)
         //         }
         //     })
@@ -461,7 +461,7 @@ describe('SUBSCRIBE EVENT BUS TASK', () => {
                     measurementRepository.create(temp), measurementRepository.create(bloodPressure),
                     measurementRepository.create(glucose), measurementRepository.create(height)
                 ])
-            } catch (err) {
+            } catch (err: any) {
                 throw new Error('Failure on Subscribe UserDeleteEvent test: ' + err.message)
             }
         })

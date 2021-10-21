@@ -34,7 +34,7 @@ export class PatientsMeasurementsController {
             const result = await this._service.add(this.transform(req.body, req.params.patient_id))
             if (result.success && result.error) return res.status(HttpStatus.MULTI_STATUS).send(this.toJSONView(result))
             return res.status(HttpStatus.CREATED).send(this.toJSONView(result))
-        } catch (err) {
+        } catch (err: any) {
             const handlerError = ApiExceptionManager.build(err)
             return res.status(handlerError.code)
                 .send(handlerError.toJSON())
@@ -52,7 +52,7 @@ export class PatientsMeasurementsController {
             const count: number = await this._service.count(query)
             res.setHeader('X-Total-Count', count)
             return res.status(HttpStatus.OK).send(this.toJSONView(result))
-        } catch (err) {
+        } catch (err: any) {
             const handlerError = ApiExceptionManager.build(err)
             return res.status(handlerError.code)
                 .send(handlerError.toJSON())
@@ -66,7 +66,7 @@ export class PatientsMeasurementsController {
         try {
             const result: LastMeasurements = await this._service.getLast(req.params.patient_id)
             return res.status(HttpStatus.OK).send(result.toJSON())
-        } catch (err) {
+        } catch (err: any) {
             const handlerError = ApiExceptionManager.build(err)
             return res.status(handlerError.code)
                 .send(handlerError.toJSON())
@@ -78,7 +78,7 @@ export class PatientsMeasurementsController {
         try {
             const result: LastMeasurements = await this._service.getLastFromDate(req.params.patient_id, req.params.date)
             return res.status(HttpStatus.OK).send(result.toJSON())
-        } catch (err) {
+        } catch (err: any) {
             const handlerError = ApiExceptionManager.build(err)
             return res.status(handlerError.code)
                 .send(handlerError.toJSON())
@@ -93,7 +93,7 @@ export class PatientsMeasurementsController {
             const result: Measurement | undefined = await this._service.getById(req.params.measurement_id, query)
             if (!result) return res.status(HttpStatus.NOT_FOUND).send(this.getMessageMeasurementNotFound())
             return res.status(HttpStatus.OK).send(this.toJSONView(result))
-        } catch (err) {
+        } catch (err: any) {
             const handlerError = ApiExceptionManager.build(err)
             return res.status(handlerError.code)
                 .send(handlerError.toJSON())
@@ -107,7 +107,7 @@ export class PatientsMeasurementsController {
         try {
             await this._service.removeByPatient(req.params.measurement_id, req.params.patient_id)
             return res.status(HttpStatus.NO_CONTENT).send()
-        } catch (err) {
+        } catch (err: any) {
             const handlerError = ApiExceptionManager.build(err)
             return res.status(handlerError.code)
                 .send(handlerError.toJSON())

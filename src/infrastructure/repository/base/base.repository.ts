@@ -18,7 +18,7 @@ import { Strings } from '../../../utils/strings'
 @injectable()
 export abstract class BaseRepository<T extends Entity, TModel> implements IRepository<T> {
 
-    protected constructor(
+    constructor(
         readonly Model: any,
         readonly mapper: IEntityMapper<T, TModel>,
         readonly logger: ILogger

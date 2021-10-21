@@ -8,7 +8,7 @@ import { CustomLoggerMock } from '../../mocks/custom.logger.mock'
 import { assert } from 'chai'
 import { Query } from '../../../src/infrastructure/repository/query/query'
 
-require('sinon-mongoose')
+require('../../utils/sinon-mongoose')
 
 describe('Repositories: DeviceRepository', () => {
     const device: Device = new Device().fromJSON(DefaultEntityMock.DEVICE)

@@ -38,7 +38,7 @@ export class WeightSyncEventHandler implements IIntegrationEventHandler<WeightSy
                     const result: any = await this.updateOrCreate(event, item)
                     success.push(result)
                     countSuccess++
-                } catch (err) {
+                } catch (err: any) {
                     this._logger.warn(`An error occurred while attempting `
                         .concat(`perform the operation with the ${event.event_name} name event. ${err.message}`)
                         .concat(err.description ? ' ' + err.description : ''))
@@ -56,7 +56,7 @@ export class WeightSyncEventHandler implements IIntegrationEventHandler<WeightSy
                 this._logger.info(
                     `Action for event ${event.event_name} associated with patient with ID: ${event.weight.user_id}`
                         .concat('successfully performed!'))
-            } catch (err) {
+            } catch (err: any) {
                 this._logger.error(`An error occurred while attempting `
                     .concat(`perform the operation with the ${event.event_name} name event. ${err.message}`)
                     .concat(err.description ? ' ' + err.description : ''))

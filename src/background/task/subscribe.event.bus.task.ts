@@ -32,7 +32,7 @@ export class SubscribeEventBusTask implements IBackgroundTask {
     public async stop(): Promise<void> {
         try {
             await this._eventBus.dispose()
-        } catch (err) {
+        } catch (err: any) {
             return Promise.reject(new Error(`Error stopping SubscribeEventBusTask! ${err.message}`))
         }
     }

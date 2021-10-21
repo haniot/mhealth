@@ -76,7 +76,7 @@ describe('MAPPERS: HandGripEntityMapper', () => {
             it('should throw an error', () => {
                 try {
                     handGripEntityMapper.modelEntityToModel(new HandGripEntity())
-                } catch (err) {
+                } catch (err: any) {
                     assert.propertyVal(err, 'message', 'Not implemented!')
                 }
             })

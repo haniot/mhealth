@@ -53,7 +53,7 @@ export class PatientsActivityController {
                         const activityItem: PhysicalActivity = new PhysicalActivity().fromJSON(item)
                         activityItem.patient_id = req.params.patient_id
                         activitiesArr.push(activityItem)
-                    } catch (err) {
+                    } catch (err: any) {
                         // when unable to successfully form the object through fromJSON()
                         let statusCode: number = HttpStatus.INTERNAL_SERVER_ERROR
                         if (err instanceof ValidationException) statusCode = HttpStatus.BAD_REQUEST
@@ -80,7 +80,7 @@ export class PatientsActivityController {
 
             const result: PhysicalActivity = await this._activityService.add(physicalActivity)
             return res.status(HttpStatus.CREATED).send(result)
-        } catch (err) {
+        } catch (err: any) {
             const handlerError = ApiExceptionManager.build(err)
             return res.status(handlerError.code)
                 .send(handlerError.toJSON())
@@ -104,7 +104,7 @@ export class PatientsActivityController {
             const count: number = await this._activityService.count(query)
             res.setHeader('X-Total-Count', count)
             return res.status(HttpStatus.OK).send(result)
-        } catch (err) {
+        } catch (err: any) {
             const handlerError = ApiExceptionManager.build(err)
             return res.status(handlerError.code)
                 .send(handlerError.toJSON())
@@ -128,7 +128,7 @@ export class PatientsActivityController {
                 .getByIdAndPatient(req.params.physicalactivity_id, req.params.patient_id, query)
             if (!result) return res.status(HttpStatus.NOT_FOUND).send(this.getMessageNotActivityFound())
             return res.status(HttpStatus.OK).send(result)
-        } catch (err) {
+        } catch (err: any) {
             const handlerError = ApiExceptionManager.build(err)
             return res.status(handlerError.code)
                 .send(handlerError.toJSON())
@@ -146,7 +146,7 @@ export class PatientsActivityController {
         try {
             await this._activityService.removeByPatient(req.params.physicalactivity_id, req.params.patient_id)
             return res.status(HttpStatus.NO_CONTENT).send()
-        } catch (err) {
+        } catch (err: any) {
             const handlerError = ApiExceptionManager.build(err)
             return res.status(handlerError.code)
                 .send(handlerError.toJSON())

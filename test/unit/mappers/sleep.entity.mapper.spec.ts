@@ -101,7 +101,7 @@ describe('Mappers: SleepEntityMapper', () => {
             it('should throw an error', () => {
                 try {
                     new SleepEntityMapper().modelEntityToModel(new SleepEntity())
-                } catch (err) {
+                } catch (err: any) {
                     assert.propertyVal(err, 'message', 'Not implemented!')
                 }
             })

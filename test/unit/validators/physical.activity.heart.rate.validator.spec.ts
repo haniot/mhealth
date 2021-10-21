@@ -30,7 +30,7 @@ describe('Validators: HeartRateZoneValidator', () => {
             it('should throw a ValidationException', () => {
                 try {
                     HeartRateZoneValidator.validate(activityHeartRate)
-                } catch (err) {
+                } catch (err: any) {
                     assert.equal(err.message, Strings.ERROR_MESSAGE.REQUIRED_FIELDS)
                     assert.equal(err.description, 'heart_rate_zones.cardio'.concat(Strings.ERROR_MESSAGE.REQUIRED_FIELDS_DESC))
                 }
@@ -50,7 +50,7 @@ describe('Validators: HeartRateZoneValidator', () => {
             it('should throw a ValidationException', () => {
                 try {
                     HeartRateZoneValidator.validate(activityHeartRate)
-                } catch (err) {
+                } catch (err: any) {
                     assert.equal(err.message, Strings.ERROR_MESSAGE.REQUIRED_FIELDS)
                     assert.equal(err.description, 'heart_rate_zones.fat_burn, heart_rate_zones.cardio, heart_rate_zones.peak, ' +
                         'heart_rate_zones.out_of_range'.concat(Strings.ERROR_MESSAGE.REQUIRED_FIELDS_DESC))
@@ -68,7 +68,7 @@ describe('Validators: HeartRateZoneValidator', () => {
             it('should throw a ValidationException', () => {
                 try {
                     HeartRateZoneValidator.validate(activityHeartRate)
-                } catch (err) {
+                } catch (err: any) {
                     assert.equal(err.message, Strings.ERROR_MESSAGE.REQUIRED_FIELDS)
                     assert.equal(err.description, 'heart_rate_zones.out_of_range.min, ' +
                         'heart_rate_zones.out_of_range.max, heart_rate_zones.out_of_range.duration'
@@ -87,7 +87,7 @@ describe('Validators: HeartRateZoneValidator', () => {
             it('should throw a ValidationException', () => {
                 try {
                     HeartRateZoneValidator.validate(activityHeartRate)
-                } catch (err) {
+                } catch (err: any) {
                     assert.equal(err.message, Strings.ERROR_MESSAGE.REQUIRED_FIELDS)
                     assert.equal(err.description, 'heart_rate_zones.fat_burn.min, heart_rate_zones.fat_burn.max, ' +
                         'heart_rate_zones.fat_burn.duration'.concat(Strings.ERROR_MESSAGE.REQUIRED_FIELDS_DESC))
@@ -105,7 +105,7 @@ describe('Validators: HeartRateZoneValidator', () => {
             it('should throw a ValidationException', () => {
                 try {
                     HeartRateZoneValidator.validate(activityHeartRate)
-                } catch (err) {
+                } catch (err: any) {
                     assert.equal(err.message, Strings.ERROR_MESSAGE.REQUIRED_FIELDS)
                     assert.equal(err.description, 'heart_rate_zones.cardio.min, heart_rate_zones.cardio.max, ' +
                         'heart_rate_zones.cardio.duration'.concat(Strings.ERROR_MESSAGE.REQUIRED_FIELDS_DESC))
@@ -123,7 +123,7 @@ describe('Validators: HeartRateZoneValidator', () => {
             it('should throw a ValidationException', () => {
                 try {
                     HeartRateZoneValidator.validate(activityHeartRate)
-                } catch (err) {
+                } catch (err: any) {
                     assert.equal(err.message, Strings.ERROR_MESSAGE.REQUIRED_FIELDS)
                     assert.equal(err.description, 'heart_rate_zones.peak.min, heart_rate_zones.peak.max, ' +
                         'heart_rate_zones.peak.duration'.concat(Strings.ERROR_MESSAGE.REQUIRED_FIELDS_DESC))
@@ -141,7 +141,7 @@ describe('Validators: HeartRateZoneValidator', () => {
             it('should throw a ValidationException', () => {
                 try {
                     HeartRateZoneValidator.validate(activityHeartRate)
-                } catch (err) {
+                } catch (err: any) {
                     assert.equal(err.message, Strings.ERROR_MESSAGE.REQUIRED_FIELDS_NOT_VALID
                         .replace('{0}', 'heart_rate_zones.out_of_range.min'))
                     assert.equal(err.description, Strings.ERROR_MESSAGE.INTEGER_GREATER_ZERO)
@@ -160,7 +160,7 @@ describe('Validators: HeartRateZoneValidator', () => {
             it('should throw a ValidationException', () => {
                 try {
                     HeartRateZoneValidator.validate(activityHeartRate)
-                } catch (err) {
+                } catch (err: any) {
                     assert.equal(err.message, Strings.ERROR_MESSAGE.REQUIRED_FIELDS_NOT_VALID
                         .replace('{0}', 'heart_rate_zones.out_of_range.max'))
                     assert.equal(err.description, Strings.ERROR_MESSAGE.INTEGER_GREATER_ZERO)
@@ -180,7 +180,7 @@ describe('Validators: HeartRateZoneValidator', () => {
             it('should throw a ValidationException', () => {
                 try {
                     HeartRateZoneValidator.validate(activityHeartRate)
-                } catch (err) {
+                } catch (err: any) {
                     assert.equal(err.message, Strings.ERROR_MESSAGE.INVALID_FIELD
                         .replace('{0}', 'heart_rate_zones.out_of_range.duration'))
                     assert.equal(err.description, Strings.ERROR_MESSAGE.POSITIVE_INTEGER)
@@ -199,7 +199,7 @@ describe('Validators: HeartRateZoneValidator', () => {
             it('should throw a ValidationException', () => {
                 try {
                     HeartRateZoneValidator.validate(activityHeartRate)
-                } catch (err) {
+                } catch (err: any) {
                     assert.equal(err.message, Strings.ERROR_MESSAGE.REQUIRED_FIELDS_NOT_VALID
                         .replace('{0}', 'heart_rate_zones.fat_burn.min'))
                     assert.equal(err.description, Strings.ERROR_MESSAGE.INTEGER_GREATER_ZERO)
@@ -217,7 +217,7 @@ describe('Validators: HeartRateZoneValidator', () => {
             it('should throw a ValidationException', () => {
                 try {
                     HeartRateZoneValidator.validate(activityHeartRate)
-                } catch (err) {
+                } catch (err: any) {
                     assert.equal(err.message, Strings.ERROR_MESSAGE.REQUIRED_FIELDS_NOT_VALID
                         .replace('{0}', 'heart_rate_zones.fat_burn.max'))
                     assert.equal(err.description, Strings.ERROR_MESSAGE.INTEGER_GREATER_ZERO)
@@ -235,7 +235,7 @@ describe('Validators: HeartRateZoneValidator', () => {
             it('should throw a ValidationException', () => {
                 try {
                     HeartRateZoneValidator.validate(activityHeartRate)
-                } catch (err) {
+                } catch (err: any) {
                     assert.equal(err.message, Strings.ERROR_MESSAGE.INVALID_FIELD
                         .replace('{0}', 'heart_rate_zones.fat_burn.duration'))
                     assert.equal(err.description, Strings.ERROR_MESSAGE.POSITIVE_INTEGER)
@@ -253,7 +253,7 @@ describe('Validators: HeartRateZoneValidator', () => {
             it('should throw a ValidationException', () => {
                 try {
                     HeartRateZoneValidator.validate(activityHeartRate)
-                } catch (err) {
+                } catch (err: any) {
                     assert.equal(err.message, Strings.ERROR_MESSAGE.REQUIRED_FIELDS_NOT_VALID
                         .replace('{0}', 'heart_rate_zones.cardio.min'))
                     assert.equal(err.description, Strings.ERROR_MESSAGE.INTEGER_GREATER_ZERO)
@@ -271,7 +271,7 @@ describe('Validators: HeartRateZoneValidator', () => {
             it('should throw a ValidationException', () => {
                 try {
                     HeartRateZoneValidator.validate(activityHeartRate)
-                } catch (err) {
+                } catch (err: any) {
                     assert.equal(err.message, Strings.ERROR_MESSAGE.REQUIRED_FIELDS_NOT_VALID
                         .replace('{0}', 'heart_rate_zones.cardio.max'))
                     assert.equal(err.description, Strings.ERROR_MESSAGE.INTEGER_GREATER_ZERO)
@@ -289,7 +289,7 @@ describe('Validators: HeartRateZoneValidator', () => {
             it('should throw a ValidationException', () => {
                 try {
                     HeartRateZoneValidator.validate(activityHeartRate)
-                } catch (err) {
+                } catch (err: any) {
                     assert.equal(err.message, Strings.ERROR_MESSAGE.INVALID_FIELD
                         .replace('{0}', 'heart_rate_zones.cardio.duration'))
                     assert.equal(err.description, Strings.ERROR_MESSAGE.POSITIVE_INTEGER)
@@ -307,7 +307,7 @@ describe('Validators: HeartRateZoneValidator', () => {
             it('should throw a ValidationException', () => {
                 try {
                     HeartRateZoneValidator.validate(activityHeartRate)
-                } catch (err) {
+                } catch (err: any) {
                     assert.equal(err.message, Strings.ERROR_MESSAGE.REQUIRED_FIELDS_NOT_VALID
                         .replace('{0}', 'heart_rate_zones.peak.min'))
                     assert.equal(err.description, Strings.ERROR_MESSAGE.INTEGER_GREATER_ZERO)
@@ -325,7 +325,7 @@ describe('Validators: HeartRateZoneValidator', () => {
             it('should throw a ValidationException', () => {
                 try {
                     HeartRateZoneValidator.validate(activityHeartRate)
-                } catch (err) {
+                } catch (err: any) {
                     assert.equal(err.message, Strings.ERROR_MESSAGE.REQUIRED_FIELDS_NOT_VALID
                         .replace('{0}', 'heart_rate_zones.peak.max'))
                     assert.equal(err.description, Strings.ERROR_MESSAGE.INTEGER_GREATER_ZERO)
@@ -343,7 +343,7 @@ describe('Validators: HeartRateZoneValidator', () => {
             it('should throw a ValidationException', () => {
                 try {
                     HeartRateZoneValidator.validate(activityHeartRate)
-                } catch (err) {
+                } catch (err: any) {
                     assert.equal(err.message, Strings.ERROR_MESSAGE.INVALID_FIELD
                         .replace('{0}', 'heart_rate_zones.peak.duration'))
                     assert.equal(err.description, Strings.ERROR_MESSAGE.POSITIVE_INTEGER)

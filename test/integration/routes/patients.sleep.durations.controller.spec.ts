@@ -41,7 +41,7 @@ describe('Routes: patients.sleep.durations', () => {
             await dbConnection.tryConnect(mongoConfigs.uri, mongoConfigs.options)
 
             await deleteAllSleep()
-        } catch (err) {
+        } catch (err: any) {
             throw new Error('Failure on patients.sleep.durations routes test: ' + err.message)
         }
     })
@@ -51,7 +51,7 @@ describe('Routes: patients.sleep.durations', () => {
         try {
             await deleteAllSleep()
             await dbConnection.dispose()
-        } catch (err) {
+        } catch (err: any) {
             throw new Error('Failure on patients.sleep.durations routes test: ' + err.message)
         }
     })
@@ -67,7 +67,7 @@ describe('Routes: patients.sleep.durations', () => {
                     await createSleep(sleep)
                     await createSleep(sleep2)
                     await createSleep(sleep3)
-                } catch (err) {
+                } catch (err: any) {
                     throw new Error('Failure on patients.sleep.durations routes test: ' + err.message)
                 }
             })
@@ -150,7 +150,7 @@ describe('Routes: patients.sleep.durations', () => {
             before(async () => {
                 try {
                     await deleteAllSleep()
-                } catch (err) {
+                } catch (err: any) {
                     throw new Error('Failure on patients.sleep routes test: ' + err.message)
                 }
             })

@@ -41,7 +41,7 @@ describe('Validators: CreatePhysicalActivityValidator', () => {
                 activity.start_time = undefined
                 try {
                     CreatePhysicalActivityValidator.validate(activity)
-                } catch (err) {
+                } catch (err: any) {
                     assert.equal(err.message, Strings.ERROR_MESSAGE.REQUIRED_FIELDS)
                     assert.equal(err.description, 'start_time'.concat(Strings.ERROR_MESSAGE.REQUIRED_FIELDS_DESC))
                 }
@@ -55,7 +55,7 @@ describe('Validators: CreatePhysicalActivityValidator', () => {
                 activity.patient_id = ''
                 try {
                     CreatePhysicalActivityValidator.validate(activity)
-                } catch (err) {
+                } catch (err: any) {
                     assert.equal(err.message, Strings.ERROR_MESSAGE.REQUIRED_FIELDS)
                     assert.equal(err.description, 'start_time, end_time, duration, patient_id'
                         .concat(Strings.ERROR_MESSAGE.REQUIRED_FIELDS_DESC))
@@ -71,7 +71,7 @@ describe('Validators: CreatePhysicalActivityValidator', () => {
                 activity.patient_id = '5a62be07de34500146d9c544'
                 try {
                     CreatePhysicalActivityValidator.validate(activity)
-                } catch (err) {
+                } catch (err: any) {
                     assert.equal(err.message, Strings.ERROR_MESSAGE.INVALID_FIELDS)
                     assert.equal(err.description, 'The end_time parameter can not contain an older date than ' +
                         'that the start_time parameter!')
@@ -86,7 +86,7 @@ describe('Validators: CreatePhysicalActivityValidator', () => {
                     activity.duration = 11780000
                     try {
                         CreatePhysicalActivityValidator.validate(activity)
-                    } catch (err) {
+                    } catch (err: any) {
                         assert.equal(err.message, Strings.ERROR_MESSAGE.INVALID_FIELDS)
                         assert.equal(err.description, 'duration value does not match values passed in start_time ' +
                             'and end_time parameters!')
@@ -99,7 +99,7 @@ describe('Validators: CreatePhysicalActivityValidator', () => {
                 activity.duration = -1178000
                 try {
                     CreatePhysicalActivityValidator.validate(activity)
-                } catch (err) {
+                } catch (err: any) {
                     assert.equal(err.message, Strings.ERROR_MESSAGE.INVALID_FIELD
                         .replace('{0}', 'duration'))
                     assert.equal(err.description, Strings.ERROR_MESSAGE.POSITIVE_INTEGER)
@@ -113,7 +113,7 @@ describe('Validators: CreatePhysicalActivityValidator', () => {
                 activity.patient_id = '5a62be07de34500146d9c5442'
                 try {
                     CreatePhysicalActivityValidator.validate(activity)
-                } catch (err) {
+                } catch (err: any) {
                     assert.equal(err.message, 'Parameter {patient_id} is not in valid format!')
                     assert.equal(err.description, Strings.ERROR_MESSAGE.UUID_NOT_VALID_FORMAT_DESC)
                 }
@@ -129,7 +129,7 @@ describe('Validators: CreatePhysicalActivityValidator', () => {
                 activity.name = undefined
                 try {
                     CreatePhysicalActivityValidator.validate(activity)
-                } catch (err) {
+                } catch (err: any) {
                     assert.equal(err.message, Strings.ERROR_MESSAGE.REQUIRED_FIELDS)
                     assert.equal(err.description, 'name'.concat(Strings.ERROR_MESSAGE.REQUIRED_FIELDS_DESC))
                 }
@@ -142,7 +142,7 @@ describe('Validators: CreatePhysicalActivityValidator', () => {
                 activity.calories = undefined
                 try {
                     CreatePhysicalActivityValidator.validate(activity)
-                } catch (err) {
+                } catch (err: any) {
                     assert.equal(err.message, Strings.ERROR_MESSAGE.REQUIRED_FIELDS)
                     assert.equal(err.description, 'calories'.concat(Strings.ERROR_MESSAGE.REQUIRED_FIELDS_DESC))
                 }
@@ -155,7 +155,7 @@ describe('Validators: CreatePhysicalActivityValidator', () => {
                 activity.calories = -200
                 try {
                     CreatePhysicalActivityValidator.validate(activity)
-                } catch (err) {
+                } catch (err: any) {
                     assert.equal(err.message, Strings.ERROR_MESSAGE.INVALID_FIELD
                         .replace('{0}', 'calories'))
                     assert.equal(err.description, Strings.ERROR_MESSAGE.POSITIVE_NUMBER)
@@ -169,7 +169,7 @@ describe('Validators: CreatePhysicalActivityValidator', () => {
                 activity.steps = -1000
                 try {
                     CreatePhysicalActivityValidator.validate(activity)
-                } catch (err) {
+                } catch (err: any) {
                     assert.equal(err.message, Strings.ERROR_MESSAGE.INVALID_FIELD
                         .replace('{0}', 'steps'))
                     assert.equal(err.description, Strings.ERROR_MESSAGE.POSITIVE_INTEGER)
@@ -183,7 +183,7 @@ describe('Validators: CreatePhysicalActivityValidator', () => {
                 activity.distance = -1000
                 try {
                     CreatePhysicalActivityValidator.validate(activity)
-                } catch (err) {
+                } catch (err: any) {
                     assert.equal(err.message, Strings.ERROR_MESSAGE.INVALID_FIELD
                         .replace('{0}', 'distance'))
                     assert.equal(err.description, Strings.ERROR_MESSAGE.POSITIVE_INTEGER)
@@ -229,7 +229,7 @@ describe('Validators: CreatePhysicalActivityValidator', () => {
 
                 try {
                     CreatePhysicalActivityValidator.validate(activityTest)
-                } catch (err) {
+                } catch (err: any) {
                     assert.equal(err.message, Strings.ERROR_MESSAGE.INVALID_FIELDS)
                     assert.equal(err.description, 'The names of the allowed levels are: sedentary, lightly, fairly, very.')
                 }
@@ -273,7 +273,7 @@ describe('Validators: CreatePhysicalActivityValidator', () => {
 
                 try {
                     CreatePhysicalActivityValidator.validate(activityTest)
-                } catch (err) {
+                } catch (err: any) {
                     assert.equal(err.message, Strings.ERROR_MESSAGE.INVALID_FIELDS)
                     assert.equal(err.description, 'The levels array must have values for the following levels: ' +
                         'sedentary, lightly, fairly, very.')
@@ -286,7 +286,7 @@ describe('Validators: CreatePhysicalActivityValidator', () => {
                 if (activity.levels) activity.levels[1].duration = -60000
                 try {
                     CreatePhysicalActivityValidator.validate(activity)
-                } catch (err) {
+                } catch (err: any) {
                     assert.equal(err.message, Strings.ERROR_MESSAGE.INVALID_FIELD
                         .replace('{0}', 'levels.duration'))
                     assert.equal(err.description, Strings.ERROR_MESSAGE.POSITIVE_INTEGER)
@@ -300,7 +300,7 @@ describe('Validators: CreatePhysicalActivityValidator', () => {
                 if (activity.heart_rate_zones) activity.heart_rate_zones = new HeartRateZone()
                 try {
                     CreatePhysicalActivityValidator.validate(activity)
-                } catch (err) {
+                } catch (err: any) {
                     assert.equal(err.message, Strings.ERROR_MESSAGE.REQUIRED_FIELDS)
                     assert.equal(err.description, 'heart_rate_zones.fat_burn, heart_rate_zones.cardio, ' +
                         'heart_rate_zones.peak, heart_rate_zones.out_of_range'
@@ -320,7 +320,7 @@ describe('Validators: CreatePhysicalActivityValidator', () => {
             it('should throw a ValidationException', () => {
                 try {
                     CreatePhysicalActivityValidator.validate(activity)
-                } catch (err) {
+                } catch (err: any) {
                     assert.equal(err.message, Strings.ERROR_MESSAGE.INVALID_FIELD
                         .replace('{0}', 'heart_rate_average'))
                     assert.equal(err.description, Strings.ERROR_MESSAGE.INTEGER_GREATER_ZERO)
@@ -334,7 +334,7 @@ describe('Validators: CreatePhysicalActivityValidator', () => {
                 activity.heart_rate_zones!.fat_burn = new HeartRateZoneData()
                 try {
                     CreatePhysicalActivityValidator.validate(activity)
-                } catch (err) {
+                } catch (err: any) {
                     assert.equal(err.message, Strings.ERROR_MESSAGE.REQUIRED_FIELDS)
                     assert.equal(err.description, 'heart_rate_zones.fat_burn.min, heart_rate_zones.fat_burn.max, ' +
                         'heart_rate_zones.fat_burn.duration'.concat(Strings.ERROR_MESSAGE.REQUIRED_FIELDS_DESC))
@@ -349,7 +349,7 @@ describe('Validators: CreatePhysicalActivityValidator', () => {
                 activity.heart_rate_zones!.fat_burn!.duration = -600000
                 try {
                     CreatePhysicalActivityValidator.validate(activity)
-                } catch (err) {
+                } catch (err: any) {
                     assert.equal(err.message, Strings.ERROR_MESSAGE.INVALID_FIELD
                         .replace('{0}', 'heart_rate_zones.fat_burn.duration'))
                     assert.equal(err.description, Strings.ERROR_MESSAGE.POSITIVE_INTEGER)

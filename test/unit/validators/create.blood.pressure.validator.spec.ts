@@ -19,7 +19,7 @@ describe('Validators: CreateBloodPressureValidator', () => {
             measurement.systolic = undefined
             try {
                 CreateBloodPressureValidator.validate(measurement)
-            } catch (err) {
+            } catch (err: any) {
                 assert.propertyVal(err, 'message', 'Required fields were not provided...')
                 assert.propertyVal(err, 'description', 'BloodPressure validation: systolic required!')
             } finally {
@@ -30,7 +30,7 @@ describe('Validators: CreateBloodPressureValidator', () => {
             measurement.diastolic = undefined
             try {
                 CreateBloodPressureValidator.validate(measurement)
-            } catch (err) {
+            } catch (err: any) {
                 assert.propertyVal(err, 'message', 'Required fields were not provided...')
                 assert.propertyVal(err, 'description', 'BloodPressure validation: diastolic required!')
             } finally {
@@ -41,7 +41,7 @@ describe('Validators: CreateBloodPressureValidator', () => {
             measurement.pulse = undefined
             try {
                 CreateBloodPressureValidator.validate(measurement)
-            } catch (err) {
+            } catch (err: any) {
                 assert.propertyVal(err, 'message', 'Required fields were not provided...')
                 assert.propertyVal(err, 'description', 'BloodPressure validation: pulse required!')
             } finally {
@@ -52,7 +52,7 @@ describe('Validators: CreateBloodPressureValidator', () => {
             measurement.unit = undefined
             try {
                 CreateBloodPressureValidator.validate(measurement)
-            } catch (err) {
+            } catch (err: any) {
                 assert.propertyVal(err, 'message', 'Required fields were not provided...')
                 assert.propertyVal(err, 'description', 'BloodPressure validation: unit required!')
             } finally {
@@ -63,7 +63,7 @@ describe('Validators: CreateBloodPressureValidator', () => {
             measurement.type = undefined
             try {
                 CreateBloodPressureValidator.validate(measurement)
-            } catch (err) {
+            } catch (err: any) {
                 assert.propertyVal(err, 'message', 'Required fields were not provided...')
                 assert.propertyVal(err, 'description', 'BloodPressure validation: type required!')
             }
@@ -72,7 +72,7 @@ describe('Validators: CreateBloodPressureValidator', () => {
             measurement.type = 'invalid'
             try {
                 CreateBloodPressureValidator.validate(measurement)
-            } catch (err) {
+            } catch (err: any) {
                 assert.propertyVal(err, 'message', Strings.ENUM_VALIDATOR.NOT_MAPPED.concat('type: invalid'))
                 assert.propertyVal(err, 'description',
                     Strings.ENUM_VALIDATOR.NOT_MAPPED_DESC.concat(Object.values(MeasurementTypes).join(', ').concat('.')))
@@ -84,7 +84,7 @@ describe('Validators: CreateBloodPressureValidator', () => {
             measurement.timestamp = undefined
             try {
                 CreateBloodPressureValidator.validate(measurement)
-            } catch (err) {
+            } catch (err: any) {
                 assert.propertyVal(err, 'message', 'Required fields were not provided...')
                 assert.propertyVal(err, 'description', 'BloodPressure validation: timestamp required!')
             }
@@ -93,7 +93,7 @@ describe('Validators: CreateBloodPressureValidator', () => {
             measurement.timestamp = '12-04-2012'
             try {
                 CreateBloodPressureValidator.validate(measurement)
-            } catch (err) {
+            } catch (err: any) {
                 assert.propertyVal(err, 'message', Strings.ERROR_MESSAGE.DATE.INVALID_DATETIME_FORMAT
                     .replace('{0}', '12-04-2012'))
                 assert.propertyVal(err, 'description', Strings.ERROR_MESSAGE.DATE.INVALID_DATETIME_FORMAT_DESC)
@@ -105,7 +105,7 @@ describe('Validators: CreateBloodPressureValidator', () => {
             measurement.patient_id = undefined
             try {
                 CreateBloodPressureValidator.validate(measurement)
-            } catch (err) {
+            } catch (err: any) {
                 assert.propertyVal(err, 'message', 'Required fields were not provided...')
                 assert.propertyVal(err, 'description', 'BloodPressure validation: patient_id required!')
             }
@@ -114,7 +114,7 @@ describe('Validators: CreateBloodPressureValidator', () => {
             measurement.patient_id = '123'
             try {
                 CreateBloodPressureValidator.validate(measurement)
-            } catch (err) {
+            } catch (err: any) {
                 assert.propertyVal(err, 'message', Strings.ERROR_MESSAGE.UUID_NOT_VALID_FORMAT)
                 assert.propertyVal(err, 'description', Strings.ERROR_MESSAGE.UUID_NOT_VALID_FORMAT_DESC)
             } finally {
@@ -125,7 +125,7 @@ describe('Validators: CreateBloodPressureValidator', () => {
             measurement.device_id = undefined
             try {
                 CreateBloodPressureValidator.validate(measurement)
-            } catch (err) {
+            } catch (err: any) {
                 assert.propertyVal(err, 'message', 'Required fields were not provided...')
                 assert.propertyVal(err, 'description', 'BloodPressure validation: device_id required!')
             }
@@ -134,7 +134,7 @@ describe('Validators: CreateBloodPressureValidator', () => {
             measurement.device_id = '123'
             try {
                 CreateBloodPressureValidator.validate(measurement)
-            } catch (err) {
+            } catch (err: any) {
                 assert.propertyVal(err, 'message', Strings.ERROR_MESSAGE.UUID_NOT_VALID_FORMAT)
                 assert.propertyVal(err, 'description', Strings.ERROR_MESSAGE.UUID_NOT_VALID_FORMAT_DESC)
             }

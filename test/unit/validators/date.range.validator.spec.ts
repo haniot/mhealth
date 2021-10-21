@@ -9,7 +9,7 @@ describe('VALIDATORS: DateRangeValidator', () => {
             try {
                 DateRangeValidator.validate('2020-12-16', '2020-12-10')
                 assert.fail()
-            } catch (e) {
+            } catch (e: any) {
                 assert.instanceOf(e, ValidationException)
             }
         })
@@ -19,7 +19,7 @@ describe('VALIDATORS: DateRangeValidator', () => {
             try {
                 DateRangeValidator.validate('2019-01-01', '2020-01-02')
                 assert.fail()
-            } catch (e) {
+            } catch (e: any) {
                 assert.instanceOf(e, ValidationException)
                 assert.equal(e.message, Strings.ERROR_MESSAGE.DATE.RANGE_INVALID
                     .replace('{0}', '2019-01-01')
@@ -33,7 +33,7 @@ describe('VALIDATORS: DateRangeValidator', () => {
             try {
                 DateRangeValidator.validate('2019-11-16', '2020-12-16')
                 assert.fail()
-            } catch (e) {
+            } catch (e: any) {
                 assert.instanceOf(e, ValidationException)
                 assert.equal(e.message, Strings.ERROR_MESSAGE.DATE.RANGE_INVALID
                     .replace('{0}', '2019-11-16')
@@ -47,7 +47,7 @@ describe('VALIDATORS: DateRangeValidator', () => {
         it('should not throw ValidationException with between dates 2019-12-16 and 2019-12-25.', () => {
             try {
                 DateRangeValidator.validate('2019-12-16', '2019-12-25')
-            } catch (err) {
+            } catch (err: any) {
                 assert.fail(err)
             }
         })
@@ -55,7 +55,7 @@ describe('VALIDATORS: DateRangeValidator', () => {
         it('should not throw ValidationException with between dates 2018-12-25 and 2019-12-25.', () => {
             try {
                 DateRangeValidator.validate('2018-12-25', '2019-12-25')
-            } catch (err) {
+            } catch (err: any) {
                 assert.fail(err)
             }
         })
@@ -67,7 +67,7 @@ describe('VALIDATORS: DateRangeValidator', () => {
                 const result = DateRangeValidator
                     .dateDiffInDays(new Date('2019-11-14'), new Date('2019-12-16'))
                 assert.equal(result, 32)
-            } catch (err) {
+            } catch (err: any) {
                 assert.fail(err)
             }
         })
@@ -77,7 +77,7 @@ describe('VALIDATORS: DateRangeValidator', () => {
                 const result = DateRangeValidator
                     .dateDiffInDays(new Date('2019-12-16'), new Date('2019-11-14'))
                 assert.equal(result, -32)
-            } catch (err) {
+            } catch (err: any) {
                 assert.fail(err)
             }
         })
@@ -87,7 +87,7 @@ describe('VALIDATORS: DateRangeValidator', () => {
                 const result = DateRangeValidator
                     .dateDiffInDays(new Date('2019-12-16'), new Date('2019-12-16'))
                 assert.equal(result, 0)
-            } catch (err) {
+            } catch (err: any) {
                 assert.fail(err)
             }
         })
@@ -98,7 +98,7 @@ describe('VALIDATORS: DateRangeValidator', () => {
                 const result = DateRangeValidator
                     .dateDiffInDays(new Date('2018-12-26T23:59:59.999Z'), new Date('2019-12-26T17:58:43.155Z'))
                 assert.equal(result, 365)
-            } catch (err) {
+            } catch (err: any) {
                 assert.fail(err)
             }
         })
