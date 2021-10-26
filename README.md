@@ -11,6 +11,8 @@ RESTFul microservice API responsible for managing health measurements, physical 
   - Blood Glucose
   - Blood Pressure
   - Body Temperature
+  - Calf Circumference
+  - Hand Grip
   - Weight
   - Body Fat
   - Height
