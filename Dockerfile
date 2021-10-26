@@ -6,7 +6,7 @@ RUN mkdir -p /usr/src/mhealth
 WORKDIR /usr/src/mhealth
 
 # Install app dependencies
-COPY package.json /usr/src/mhealth/
+COPY package.json package-lock.json /usr/src/mhealth/
 RUN npm install
 
 # Copy app source
