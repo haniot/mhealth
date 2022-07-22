@@ -1,5 +1,6 @@
 import { CalfCircumference } from '../../../src/application/domain/model/calf.circumference'
 import { BodyMemberSides } from '../../../src/application/domain/utils/body.member.sides'
+import { DefaultFunctions } from '../utils/default.functions'
 
 export class CalfCircumferenceMock {
     public static DEVICE_ID = '4b24cf16cb21322357e8d633'
@@ -7,7 +8,7 @@ export class CalfCircumferenceMock {
 
     public generate(): CalfCircumference {
         const calfCircumference: CalfCircumference = new CalfCircumference()
-        calfCircumference.id = this.generateObjectId()
+        calfCircumference.id = DefaultFunctions.generateObjectId()
         calfCircumference.value = Math.random() * 10 + 20 // 20-29
         calfCircumference.unit = 'kg'
         calfCircumference.timestamp = new Date().toISOString()
@@ -17,16 +18,6 @@ export class CalfCircumferenceMock {
 
         return calfCircumference
     }
-
-    private generateObjectId(): string {
-        const chars = 'abcdef0123456789'
-        let randS = ''
-        for (let i = 0; i < 24; i++) {
-            randS += chars.charAt(Math.floor(Math.random() * chars.length))
-        }
-        return randS
-    }
-
 
     private generateBodyMemberSide(): BodyMemberSides {
         const bodyMemberSides = {

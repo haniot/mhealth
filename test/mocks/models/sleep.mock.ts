@@ -5,6 +5,7 @@ import { SleepPatternDataSet } from '../../../src/application/domain/model/sleep
 import { Phases } from '../../../src/application/domain/utils/phases'
 import { Stages } from '../../../src/application/domain/utils/stages'
 import { SleepAwakening } from '../../../src/application/domain/model/sleep.awakening'
+import { DefaultFunctions } from '../utils/default.functions'
 
 export class SleepMock extends Sleep {
 
@@ -14,7 +15,7 @@ export class SleepMock extends Sleep {
     }
 
     private generateSleep(): void {
-        super.id = this.generateObjectId()
+        super.id = DefaultFunctions.generateObjectId()
         super.start_time = new Date(1603767600000 + Math.floor((Math.random() * 1000))).toISOString()
         super.end_time = new Date(new Date(super.start_time)
             .setMilliseconds(Math.floor(Math.random() * 7 + 4) * 3.6e+6)).toISOString() // 4-10h in milliseconds
@@ -114,15 +115,6 @@ export class SleepMock extends Sleep {
         sleepAwakenings.push(sleepAwakening3)
 
         return sleepAwakenings
-    }
-
-    private generateObjectId(): string {
-        const chars = 'abcdef0123456789'
-        let randS = ''
-        for (let i = 0; i < 24; i++) {
-            randS += chars.charAt(Math.floor(Math.random() * chars.length))
-        }
-        return randS
     }
 
     private generateType(): SleepType {
