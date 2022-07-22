@@ -73,43 +73,43 @@ describe('Routes: patients.sleep.durations', () => {
 
             it('should return status code 200 and the total sleep durations of the day 2020-10-31 ' +
                 '(range 2020-10-30 ~ 2020-11-01)', () => {
-                return request
-                    .get(`/v1/patients/${sleep.patient_id}/date/2020-10-30/2020-11-01/sleep/durations`)
-                    .set('Content-Type', 'application/json')
-                    .expect(200)
-                    .then(res => {
-                        expect(res.body).to.have.property('summary')
-                        expect(res.body.data_set.length).to.eql(3)
-                        expect(res.body.data_set[0].date).to.eql('2020-10-30')
-                        expect(res.body.data_set[0].value).to.eql(0)
-                        expect(res.body.data_set[1].date).to.eql('2020-10-31')
-                        expect(res.body.data_set[1].value).to.not.eql(0)
-                        expect(res.body.data_set[2].date).to.eql('2020-11-01')
-                        expect(res.body.data_set[2].value).to.eql(0)
-                    })
-            })
+                    return request
+                        .get(`/v1/patients/${sleep.patient_id}/date/2020-10-30/2020-11-01/sleep/durations`)
+                        .set('Content-Type', 'application/json')
+                        .expect(200)
+                        .then(res => {
+                            expect(res.body).to.have.property('summary')
+                            expect(res.body.data_set.length).to.eql(3)
+                            expect(res.body.data_set[0].date).to.eql('2020-10-30')
+                            expect(res.body.data_set[0].value).to.eql(0)
+                            expect(res.body.data_set[1].date).to.eql('2020-10-31')
+                            expect(res.body.data_set[1].value).to.not.eql(0)
+                            expect(res.body.data_set[2].date).to.eql('2020-11-01')
+                            expect(res.body.data_set[2].value).to.eql(0)
+                        })
+                })
 
             it('should return status code 200 and the total sleep durations of the days 2020-10-31 and 2020-11-02 ' +
                 '(range 2020-10-30 ~ 2020-11-03)', () => {
-                return request
-                    .get(`/v1/patients/${sleep.patient_id}/date/2020-10-30/2020-11-03/sleep/durations`)
-                    .set('Content-Type', 'application/json')
-                    .expect(200)
-                    .then(res => {
-                        expect(res.body).to.have.property('summary')
-                        expect(res.body.data_set.length).to.eql(5)
-                        expect(res.body.data_set[0].date).to.eql('2020-10-30')
-                        expect(res.body.data_set[0].value).to.eql(0)
-                        expect(res.body.data_set[1].date).to.eql('2020-10-31')
-                        expect(res.body.data_set[1].value).to.not.eql(0)
-                        expect(res.body.data_set[2].date).to.eql('2020-11-01')
-                        expect(res.body.data_set[2].value).to.eql(0)
-                        expect(res.body.data_set[3].date).to.eql('2020-11-02')
-                        expect(res.body.data_set[3].value).to.not.eql(0)
-                        expect(res.body.data_set[4].date).to.eql('2020-11-03')
-                        expect(res.body.data_set[4].value).to.eql(0)
-                    })
-            })
+                    return request
+                        .get(`/v1/patients/${sleep.patient_id}/date/2020-10-30/2020-11-03/sleep/durations`)
+                        .set('Content-Type', 'application/json')
+                        .expect(200)
+                        .then(res => {
+                            expect(res.body).to.have.property('summary')
+                            expect(res.body.data_set.length).to.eql(5)
+                            expect(res.body.data_set[0].date).to.eql('2020-10-30')
+                            expect(res.body.data_set[0].value).to.eql(0)
+                            expect(res.body.data_set[1].date).to.eql('2020-10-31')
+                            expect(res.body.data_set[1].value).to.not.eql(0)
+                            expect(res.body.data_set[2].date).to.eql('2020-11-01')
+                            expect(res.body.data_set[2].value).to.eql(0)
+                            expect(res.body.data_set[3].date).to.eql('2020-11-02')
+                            expect(res.body.data_set[3].value).to.not.eql(0)
+                            expect(res.body.data_set[4].date).to.eql('2020-11-03')
+                            expect(res.body.data_set[4].value).to.eql(0)
+                        })
+                })
 
             it('should return status code 200 and data_set with values equal to 0 (range 2020-11-05 ~ 2020-11-08)', () => {
                 return request
@@ -139,7 +139,8 @@ describe('Routes: patients.sleep.durations', () => {
                         .then(res => {
                             expect(res.body.summary.total).to.eql(0)
                             expect(res.body.data_set.length).to.eql(1)
-                            expect(res.body.data_set[0].date).to.eql(DefaultFunctions.generateSimpleDate(new Date().toISOString()))
+                            expect(res.body.data_set[0].date)
+                                .to.eql(DefaultFunctions.generateSimpleDate(new Date().toISOString()))
                             expect(res.body.data_set[0].value).to.eql(0)
                         })
                 })
