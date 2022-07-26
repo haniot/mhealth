@@ -1,6 +1,6 @@
 {
   "name": "mhealth-service",
-  "version": "2.7.2",
+  "version": "2.8.0",
   "description": "RESTFul microservice API responsible for managing health measurements, physical activity and sleep.",
   "main": "dist/server.js",
   "scripts": {
@@ -60,7 +60,7 @@
     "inversify": "^6.0.1",
     "inversify-express-utils": "^6.4.3",
     "moment": "^2.29.4",
-    "mongoose": "^6.4.6",
+    "mongoose": "^6.4.7",
     "morgan": "^1.10.0",
     "query-strings-parser": "^2.1.12-lts",
     "reflect-metadata": "^0.1.13",
@@ -86,7 +86,7 @@
     "supertest": "^6.2.4",
     "ts-node": "^10.9.1",
     "tslint": "^6.1.3",
-    "typedoc": "^0.23.8",
+    "typedoc": "^0.23.9",
     "typescript": "^4.7.4"
   }
 }
