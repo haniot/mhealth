@@ -2,6 +2,7 @@ import { PhysicalActivity } from '../../../src/application/domain/model/physical
 import { HeartRateZone } from '../../../src/application/domain/model/heart.rate.zone'
 import { ActivityLevel } from '../../../src/application/domain/model/activityLevel'
 import { Levels } from '../../../src/application/domain/utils/levels'
+import { DefaultFunctions } from '../utils/default.functions'
 
 export class PhysicalActivityMock extends PhysicalActivity {
     public static PATIENT_ID = '5a62be07de34500146d9c544'
@@ -14,7 +15,7 @@ export class PhysicalActivityMock extends PhysicalActivity {
     private generatePhysicalActivity(type?: ActivityTypeMock): void {
         if (!type) type = this.chooseType()
 
-        super.id = this.generateObjectId()
+        super.id = DefaultFunctions.generateObjectId()
         super.start_time = new Date(1560826800000 + Math.floor((Math.random() * 1000))).toISOString()
         super.end_time = new Date(new Date(super.start_time)
             .setMilliseconds(Math.floor(Math.random() * 35 + 10) * 60000)).toISOString() // 10-45min in milliseconds
@@ -64,15 +65,6 @@ export class PhysicalActivityMock extends PhysicalActivity {
             }
         }
         return new HeartRateZone().fromJSON(activityHeartRateZoneJSON)
-    }
-
-    private generateObjectId(): string {
-        const chars = 'abcdef0123456789'
-        let randS = ''
-        for (let i = 0; i < 24; i++) {
-            randS += chars.charAt(Math.floor(Math.random() * chars.length))
-        }
-        return randS
     }
 
     private chooseType(): ActivityTypeMock {

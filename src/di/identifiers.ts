@@ -62,8 +62,9 @@ export abstract class Identifier {
     public static readonly BACKGROUND_SERVICE: any = Symbol.for('BackgroundService')
 
     // Tasks
-    public static readonly SUBSCRIBE_EVENT_BUS_TASK: any = Symbol.for('SubscribeEventBusTask')
     public static readonly PUBLISH_EVENT_BUS_TASK: any = Symbol.for('PublishEventBusTask')
+    public static readonly SUBSCRIBE_EVENT_BUS_TASK: any = Symbol.for('SubscribeEventBusTask')
+    public static readonly RPC_SERVER_EVENT_BUS_TASK: any = Symbol.for('RpcServerEventBusTask')
     public static readonly AWAKENINGS_TASK: any = Symbol.for('AwakeningsTask')
 
     // Log
