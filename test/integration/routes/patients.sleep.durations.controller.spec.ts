@@ -1,19 +1,18 @@
+import { expect } from 'chai'
+import { App } from '../../../src/app'
+import { Sleep } from '../../../src/application/domain/model/sleep'
 import { DIContainer } from '../../../src/di/di'
 import { Identifier } from '../../../src/di/identifiers'
-import { App } from '../../../src/app'
-import { expect } from 'chai'
-import { Sleep } from '../../../src/application/domain/model/sleep'
-import { SleepRepoModel } from '../../../src/infrastructure/database/schema/sleep.schema'
 import { IConnectionDB } from '../../../src/infrastructure/port/connection.db.interface'
-import { SleepMock } from '../../mocks/models/sleep.mock'
 import { Config } from '../../../src/utils/config'
-import { ISleepRepository } from '../../../src/application/port/sleep.repository.interface'
 import { Strings } from '../../../src/utils/strings'
+import { SleepMock } from '../../mocks/models/sleep.mock'
+import { DefaultFunctions } from '../../mocks/utils/default.functions'
+import { repoUtils } from '../utils/repository.utils'
 
 const dbConnection: IConnectionDB = DIContainer.get(Identifier.MONGODB_CONNECTION)
 const app: App = DIContainer.get(Identifier.APP)
 const request = require('supertest')(app.getExpress())
-const sleepRepo: ISleepRepository = DIContainer.get(Identifier.SLEEP_REPOSITORY)
 
 describe('Routes: patients.sleep.durations', () => {
     const sleep: Sleep = new SleepMock()
@@ -40,7 +39,7 @@ describe('Routes: patients.sleep.durations', () => {
             const mongoConfigs = Config.getMongoConfig()
             await dbConnection.tryConnect(mongoConfigs.uri, mongoConfigs.options)
 
-            await deleteAllSleep()
+            await repoUtils.deleteAllSleep()
         } catch (err: any) {
             throw new Error('Failure on patients.sleep.durations routes test: ' + err.message)
         }
@@ -49,7 +48,7 @@ describe('Routes: patients.sleep.durations', () => {
     // Deletes all sleep objects and stops DB connection.
     after(async () => {
         try {
-            await deleteAllSleep()
+            await repoUtils.deleteAllSleep()
             await dbConnection.dispose()
         } catch (err: any) {
             throw new Error('Failure on patients.sleep.durations routes test: ' + err.message)
@@ -62,11 +61,11 @@ describe('Routes: patients.sleep.durations', () => {
         context('when get sleep durations successfully', () => {
             before(async () => {
                 try {
-                    await deleteAllSleep()
+                    await repoUtils.deleteAllSleep()
 
-                    await createSleep(sleep)
-                    await createSleep(sleep2)
-                    await createSleep(sleep3)
+                    await repoUtils.createSleep(sleep)
+                    await repoUtils.createSleep(sleep2)
+                    await repoUtils.createSleep(sleep3)
                 } catch (err: any) {
                     throw new Error('Failure on patients.sleep.durations routes test: ' + err.message)
                 }
@@ -74,43 +73,43 @@ describe('Routes: patients.sleep.durations', () => {
 
             it('should return status code 200 and the total sleep durations of the day 2020-10-31 ' +
                 '(range 2020-10-30 ~ 2020-11-01)', () => {
-                return request
-                    .get(`/v1/patients/${sleep.patient_id}/date/2020-10-30/2020-11-01/sleep/durations`)
-                    .set('Content-Type', 'application/json')
-                    .expect(200)
-                    .then(res => {
-                        expect(res.body).to.have.property('summary')
-                        expect(res.body.data_set.length).to.eql(3)
-                        expect(res.body.data_set[0].date).to.eql('2020-10-30')
-                        expect(res.body.data_set[0].value).to.eql(0)
-                        expect(res.body.data_set[1].date).to.eql('2020-10-31')
-                        expect(res.body.data_set[1].value).to.not.eql(0)
-                        expect(res.body.data_set[2].date).to.eql('2020-11-01')
-                        expect(res.body.data_set[2].value).to.eql(0)
-                    })
-            })
+                    return request
+                        .get(`/v1/patients/${sleep.patient_id}/date/2020-10-30/2020-11-01/sleep/durations`)
+                        .set('Content-Type', 'application/json')
+                        .expect(200)
+                        .then(res => {
+                            expect(res.body).to.have.property('summary')
+                            expect(res.body.data_set.length).to.eql(3)
+                            expect(res.body.data_set[0].date).to.eql('2020-10-30')
+                            expect(res.body.data_set[0].value).to.eql(0)
+                            expect(res.body.data_set[1].date).to.eql('2020-10-31')
+                            expect(res.body.data_set[1].value).to.not.eql(0)
+                            expect(res.body.data_set[2].date).to.eql('2020-11-01')
+                            expect(res.body.data_set[2].value).to.eql(0)
+                        })
+                })
 
             it('should return status code 200 and the total sleep durations of the days 2020-10-31 and 2020-11-02 ' +
                 '(range 2020-10-30 ~ 2020-11-03)', () => {
-                return request
-                    .get(`/v1/patients/${sleep.patient_id}/date/2020-10-30/2020-11-03/sleep/durations`)
-                    .set('Content-Type', 'application/json')
-                    .expect(200)
-                    .then(res => {
-                        expect(res.body).to.have.property('summary')
-                        expect(res.body.data_set.length).to.eql(5)
-                        expect(res.body.data_set[0].date).to.eql('2020-10-30')
-                        expect(res.body.data_set[0].value).to.eql(0)
-                        expect(res.body.data_set[1].date).to.eql('2020-10-31')
-                        expect(res.body.data_set[1].value).to.not.eql(0)
-                        expect(res.body.data_set[2].date).to.eql('2020-11-01')
-                        expect(res.body.data_set[2].value).to.eql(0)
-                        expect(res.body.data_set[3].date).to.eql('2020-11-02')
-                        expect(res.body.data_set[3].value).to.not.eql(0)
-                        expect(res.body.data_set[4].date).to.eql('2020-11-03')
-                        expect(res.body.data_set[4].value).to.eql(0)
-                    })
-            })
+                    return request
+                        .get(`/v1/patients/${sleep.patient_id}/date/2020-10-30/2020-11-03/sleep/durations`)
+                        .set('Content-Type', 'application/json')
+                        .expect(200)
+                        .then(res => {
+                            expect(res.body).to.have.property('summary')
+                            expect(res.body.data_set.length).to.eql(5)
+                            expect(res.body.data_set[0].date).to.eql('2020-10-30')
+                            expect(res.body.data_set[0].value).to.eql(0)
+                            expect(res.body.data_set[1].date).to.eql('2020-10-31')
+                            expect(res.body.data_set[1].value).to.not.eql(0)
+                            expect(res.body.data_set[2].date).to.eql('2020-11-01')
+                            expect(res.body.data_set[2].value).to.eql(0)
+                            expect(res.body.data_set[3].date).to.eql('2020-11-02')
+                            expect(res.body.data_set[3].value).to.not.eql(0)
+                            expect(res.body.data_set[4].date).to.eql('2020-11-03')
+                            expect(res.body.data_set[4].value).to.eql(0)
+                        })
+                })
 
             it('should return status code 200 and data_set with values equal to 0 (range 2020-11-05 ~ 2020-11-08)', () => {
                 return request
@@ -140,7 +139,8 @@ describe('Routes: patients.sleep.durations', () => {
                         .then(res => {
                             expect(res.body.summary.total).to.eql(0)
                             expect(res.body.data_set.length).to.eql(1)
-                            expect(res.body.data_set[0].date).to.eql(generateSimpleDate(new Date().toISOString()))
+                            expect(res.body.data_set[0].date)
+                                .to.eql(DefaultFunctions.generateSimpleDate(new Date().toISOString()))
                             expect(res.body.data_set[0].value).to.eql(0)
                         })
                 })
@@ -149,7 +149,7 @@ describe('Routes: patients.sleep.durations', () => {
         context('when there are validation errors', () => {
             before(async () => {
                 try {
-                    await deleteAllSleep()
+                    await repoUtils.deleteAllSleep()
                 } catch (err: any) {
                     throw new Error('Failure on patients.sleep routes test: ' + err.message)
                 }
@@ -249,27 +249,3 @@ describe('Routes: patients.sleep.durations', () => {
         })
     })
 })
-
-async function createSleep(sleep: Sleep): Promise<Sleep | undefined> {
-    const sleepSaved: Sleep | undefined = await sleepRepo.create(sleep)
-    return Promise.resolve(sleepSaved)
-}
-
-async function deleteAllSleep() {
-    return SleepRepoModel.deleteMany({})
-}
-
-/**
- * Builds the date in format YYYY-MM-dd.
- *
- * @param dateString Date used to construct the final date.
- * @return {string}
- */
-function generateSimpleDate(dateString: string): string {
-    const date = new Date(dateString)
-    return [
-        date.getFullYear().toString(),
-        (date.getMonth() + 1).toString().padStart(2, '0'),
-        date.getDate().toString().padStart(2, '0')
-    ].join('-')
-}

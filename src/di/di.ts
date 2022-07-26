@@ -94,6 +94,7 @@ import { HandGripEntityMapper } from '../infrastructure/entity/mapper/hand.grip.
 import { CalfCircumference } from '../application/domain/model/calf.circumference'
 import { CalfCircumferenceEntity } from '../infrastructure/entity/calf.circumference.entity'
 import { CalfCircumferenceEntityMapper } from '../infrastructure/entity/mapper/calf.circumference.entity.mapper'
+import { RpcServerEventBusTask } from '../background/task/rpc.server.event.bus.task'
 
 export class IoC {
     private readonly _container: Container
@@ -243,6 +244,9 @@ export class IoC {
         this._container
             .bind<IBackgroundTask>(Identifier.SUBSCRIBE_EVENT_BUS_TASK)
             .to(SubscribeEventBusTask).inSingletonScope()
+        this._container
+            .bind<IBackgroundTask>(Identifier.RPC_SERVER_EVENT_BUS_TASK)
+            .to(RpcServerEventBusTask).inRequestScope()
         this._container
             .bind<AwakeningsTask>(Identifier.AWAKENINGS_TASK)
             .to(AwakeningsTask).inSingletonScope()

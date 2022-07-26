@@ -1,5 +1,6 @@
 import { MeasurementTypes } from '../../../src/application/domain/utils/measurement.types'
 import { Weight } from '../../../src/application/domain/model/weight'
+import { DefaultFunctions } from '../utils/default.functions'
 
 export class WeightMock extends Weight {
     public static DEVICE_ID = '4b24cf16cb21322357e8d633'
@@ -11,7 +12,7 @@ export class WeightMock extends Weight {
     }
 
     private generateWeight(): void {
-        super.id = this.generateObjectId()
+        super.id = DefaultFunctions.generateObjectId()
         super.value = Math.random() * 10 + 70 // 70-79
         super.unit = 'kg'
         super.timestamp = new Date().toISOString()
@@ -21,15 +22,6 @@ export class WeightMock extends Weight {
         super.body_fat = Math.random() * 10 + 18 // 18-27
         super.bmi = Math.random() * 10 + 18 // 18-27
         super.annual_variation = this.chooseChoiceType()
-    }
-
-    private generateObjectId(): string {
-        const chars = 'abcdef0123456789'
-        let randS = ''
-        for (let i = 0; i < 24; i++) {
-            randS += chars.charAt(Math.floor(Math.random() * chars.length))
-        }
-        return randS
     }
 
     private chooseChoiceType(): ChoiceTypesMock {

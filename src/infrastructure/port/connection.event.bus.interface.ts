@@ -23,9 +23,9 @@ export interface IConnectionEventBus {
               options?: any): Promise<void>
 
     createRpcServer(queueName: string,
-                    exchangeName: string,
-                    routingKeys: string[],
-                    options?: any): any
+              exchangeName: string,
+              routingKeys: string[],
+              options?: any): any
 
     rpcClient(exchangeName: string,
               resourceName: string,

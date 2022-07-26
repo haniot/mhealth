@@ -1,5 +1,6 @@
 import { HandGrip } from '../../../src/application/domain/model/hand.grip'
 import { BodyMemberSides } from '../../../src/application/domain/utils/body.member.sides'
+import { DefaultFunctions } from '../utils/default.functions'
 
 export class HandGripMock {
     public static DEVICE_ID = '4b24cf16cb21322357e8d633'
@@ -7,7 +8,7 @@ export class HandGripMock {
 
     public generate(): HandGrip {
         const handGrip: HandGrip = new HandGrip()
-        handGrip.id = this.generateObjectId()
+        handGrip.id = DefaultFunctions.generateObjectId()
         handGrip.value = Math.random() * 10 + 20 // 20-29
         handGrip.unit = 'kg'
         handGrip.timestamp = new Date().toISOString()
@@ -17,16 +18,6 @@ export class HandGripMock {
 
         return handGrip
     }
-
-    private generateObjectId(): string {
-        const chars = 'abcdef0123456789'
-        let randS = ''
-        for (let i = 0; i < 24; i++) {
-            randS += chars.charAt(Math.floor(Math.random() * chars.length))
-        }
-        return randS
-    }
-
 
     private generateBodyMemberSide(): BodyMemberSides {
         const bodyMemberSides = {
