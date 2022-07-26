@@ -11,6 +11,7 @@ import { EventBusRabbitMQ } from '../../../src/infrastructure/eventbus/rabbitmq/
 import { IConnectionDB } from '../../../src/infrastructure/port/connection.db.interface'
 import { Config } from '../../../src/utils/config'
 import { ILogger } from '../../../src/utils/custom.logger'
+import { Strings } from '../../../src/utils/strings'
 import { SleepMock } from '../../mocks/models/sleep.mock'
 import { DefaultFunctions } from '../../mocks/utils/default.functions'
 import { repoUtils } from '../utils/repository.utils'
@@ -117,8 +118,8 @@ describe('RPC SERVER EVENT BUS TASK', () => {
             })
 
             it('should return total sleep durations of the day 2022-05-01 (range 2022-04-30 ~ 2022-05-02)', (done) => {
-                eventBus
-                    .executeResource('mhealth.rpc', 'sleepdurations.aggregatebypatient', patientId, '2022-04-30', '2022-05-02')
+                eventBus.executeResource('mhealth.rpc', 'sleepdurations.aggregatebypatient',
+                    patientId, '2022-04-30', '2022-05-02')
                     .then(result => {
                         expect(result.summary.total).to.eql(result.data_set[1].value)
                         expect(result.data_set.length).to.eql(3)
@@ -187,60 +188,149 @@ describe('RPC SERVER EVENT BUS TASK', () => {
             })
         })
 
-        // context('when trying to retrieve fitbit devices through invalid query', () => {
-        //     before(async () => {
-        //         try {
-        //             await repoUtils.deleteAllSleep()
+        context('when trying to retrieve sleep durations through invalid parameters', () => {
+            before(async () => {
+                try {
+                    await repoUtils.deleteAllSleep()
 
-        //             // Creates FitbitDevice.
-        //             const fitbitDeviceCreated = await repoUtils.createSleep(fitbitDevice)
-        //             fitbitDevice.id = fitbitDeviceCreated?.id
-        //         } catch (err: any) {
-        //             throw new Error('Failure on Provider sleepdurations.aggregatebypatient test: ' + err.message)
-        //         }
-        //     })
+                    // Creates Sleep object.
+                    await repoUtils.createSleep(sleep)
+                } catch (err: any) {
+                    throw new Error('Failure on Provider sleepdurations.aggregatebypatient test: ' + err.message)
+                }
+            })
 
-        //     after(async () => {
-        //         try {
-        //             await repoUtils.deleteAllSleep()
-        //         } catch (err: any) {
-        //             throw new Error('Failure on Provider sleepdurations.aggregatebypatient test: ' + err.message)
-        //         }
-        //     })
+            after(async () => {
+                try {
+                    await repoUtils.deleteAllSleep()
+                } catch (err: any) {
+                    throw new Error('Failure on Provider sleepdurations.aggregatebypatient test: ' + err.message)
+                }
+            })
 
-        //     it('should return a ValidationException (query with an invalid ObjectID (_id))', (done) => {
-        //         eventBus.executeResource('mhealth.rpc', 'sleepdurations.aggregatebypatient', '?_id=123')
-        //             .then(() => {
-        //                 done(new Error('The find method of the repository should not function normally'))
-        //             })
-        //             .catch((err) => {
-        //                 try {
-        //                     expect(err.message).to.eql('Error: '.concat(Strings.ERROR_MESSAGE.UUID_NOT_VALID_FORMAT))
-        //                     done()
-        //                 } catch (err) {
-        //                     done(err)
-        //                 }
-        //             })
-        //     })
+            it('should return a ValidationException (invalid patient_id))', (done) => {
+                eventBus.executeResource('mhealth.rpc', 'sleepdurations.aggregatebypatient', '123', '2022-04-30', '2022-05-02')
+                    .then(() => {
+                        done(new Error('The find method of the repository should not function normally'))
+                    })
+                    .catch((err) => {
+                        try {
+                            expect(err.message).to.eql('Error: '.concat(Strings.PATIENT.PARAM_ID_NOT_VALID_FORMAT))
+                            done()
+                        } catch (err) {
+                            done(err)
+                        }
+                    })
+            })
 
-        //     it('should return a ValidationException (query with an invalid date (created_at))', (done) => {
-        //         eventBus.executeResource('mhealth.rpc', 'sleepdurations.aggregatebypatient', '?created_at=invalidCreatedAt')
-        //             .then(() => {
-        //                 done(new Error('The find method of the repository should not function normally'))
-        //             })
-        //             .catch((err) => {
-        //                 try {
-        //                     expect(err.message).to.eql('Error: '.concat(Strings.ERROR_MESSAGE.DATE.INVALID_DATETIME_FORMAT
-        //                         .replace('{0}', 'invalidCreatedAt')))
-        //                     done()
-        //                 } catch (err) {
-        //                     done(err)
-        //                 }
-        //             })
-        //     })
-        // })
+            it('should return a ValidationException (start date is not in valid format))', (done) => {
+                eventBus.executeResource('mhealth.rpc', 'sleepdurations.aggregatebypatient',
+                    patientId, '30-04-2022', '2022-05-02')
+                    .then(() => {
+                        done(new Error('The find method of the repository should not function normally'))
+                    })
+                    .catch((err) => {
+                        try {
+                            expect(err.message).to.eql('Error: '.concat(Strings.ERROR_MESSAGE.DATE.INVALID_FORMAT
+                                .replace('{0}', '30-04-2022')))
+                            done()
+                        } catch (err) {
+                            done(err)
+                        }
+                    })
+            })
 
-        context('when trying to retrieve sleep durations by patient ID, start date and end date through a query unsuccessful ' +
+            it('should return a ValidationException (end date is not in valid format ' +
+                'because month 02 has no day 29 in the year 2022))', (done) => {
+                    eventBus.executeResource('mhealth.rpc', 'sleepdurations.aggregatebypatient',
+                        patientId, '2022-02-28', '2022-02-29')
+                        .then(() => {
+                            done(new Error('The find method of the repository should not function normally'))
+                        })
+                        .catch((err) => {
+                            try {
+                                expect(err.message).to.eql('Error: '.concat(Strings.ERROR_MESSAGE.DATE.INVALID_FORMAT
+                                    .replace('{0}', '2022-02-29')))
+                                done()
+                            } catch (err) {
+                                done(err)
+                            }
+                        })
+                })
+
+            it('should return a ValidationException (start date is not in valid format because the year is less than 1678',
+                (done) => {
+                    eventBus.executeResource('mhealth.rpc', 'sleepdurations.aggregatebypatient',
+                        patientId, '1677-04-30', '2022-05-02')
+                        .then(() => {
+                            done(new Error('The find method of the repository should not function normally'))
+                        })
+                        .catch((err) => {
+                            try {
+                                expect(err.message).to.eql('Error: '.concat(Strings.ERROR_MESSAGE.DATE.YEAR_NOT_ALLOWED
+                                    .replace('{0}', '1677-04-30')))
+                                done()
+                            } catch (err) {
+                                done(err)
+                            }
+                        })
+                })
+
+            it('should return a ValidationException (end date is not in valid format because the year is greater than 2261',
+                (done) => {
+                    eventBus.executeResource('mhealth.rpc', 'sleepdurations.aggregatebypatient',
+                        patientId, '2022-04-30', '2262-05-02')
+                        .then(() => {
+                            done(new Error('The find method of the repository should not function normally'))
+                        })
+                        .catch((err) => {
+                            try {
+                                expect(err.message).to.eql('Error: '.concat(Strings.ERROR_MESSAGE.DATE.YEAR_NOT_ALLOWED
+                                    .replace('{0}', '2262-05-02')))
+                                done()
+                            } catch (err) {
+                                done(err)
+                            }
+                        })
+                })
+
+            it('should return a ValidationException (end date is less than start date)', (done) => {
+                eventBus.executeResource('mhealth.rpc', 'sleepdurations.aggregatebypatient',
+                    patientId, '2022-04-30', '2022-04-29')
+                    .then(() => {
+                        done(new Error('The find method of the repository should not function normally'))
+                    })
+                    .catch((err) => {
+                        try {
+                            expect(err.message).to.eql('Error: '.concat(Strings.ERROR_MESSAGE.DATE.RANGE_INVALID
+                                .replace('{0}', '2022-04-30').replace('{1}', '2022-04-29')))
+                            done()
+                        } catch (err) {
+                            done(err)
+                        }
+                    })
+            })
+
+            it('should return a ValidationException (the difference between start and end date is greater than 1 year)',
+                (done) => {
+                    eventBus.executeResource('mhealth.rpc', 'sleepdurations.aggregatebypatient',
+                        patientId, '2022-04-30', '2023-05-01')
+                        .then(() => {
+                            done(new Error('The find method of the repository should not function normally'))
+                        })
+                        .catch((err) => {
+                            try {
+                                expect(err.message).to.eql('Error: '.concat(Strings.ERROR_MESSAGE.DATE.RANGE_INVALID
+                                    .replace('{0}', '2022-04-30').replace('{1}', '2023-05-01')))
+                                done()
+                            } catch (err) {
+                                done(err)
+                            }
+                        })
+                })
+        })
+
+        context('when trying to retrieve sleep durations by patient ID, start date and end date unsuccessful ' +
             '(without MongoDB connection)', () => {
                 before(async () => {
                     try {
